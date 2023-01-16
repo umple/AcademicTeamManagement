@@ -6,7 +6,7 @@
     - [Benefit to Customer](#benefit-to-customer)
     - [Criteria for Success](#criteria-for-success)
 - [Expected Architecture](#expected-architecture)
-    - [Class Diagram]()
+    - [Class Diagram](#class-diagram)
 - [Anticipated Risks](#anticipated-risks)
 - [Legal and Social issues](#legal-and-social-issues)
 - [Initial Plans](#initial-plans)
