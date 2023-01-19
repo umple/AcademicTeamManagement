@@ -53,3 +53,9 @@ When the project is running it will be key to me that I can use my own server ..
 - #5. I will send you an example so you see the format that UOCampus provides, although please ensure your system is flexible so if the format changes it doesn't require a lot of software maintenance. 
 - #11 I believe I already sent you my output Excel fille. 
 - #16 removing students from groups might result in them being moved to another group
+
+## UOCampus .xls File
+- UOCampus currently gives a file called ps.xls when I ask for the class list. It is NOT an Excel file even though it has that extension. It is an html file containing a table ... take a look in a text editor.  But Excel wll successfully open it. Unofortunately this lacks email addresses (rather stupid) 
+- So I can also use Brightspace. To do that I go ingo the Grades tab, then Select Export, then Select key field 'both'. Then select all user details (Last Name, First Name, Email). the Export to CSV. I am attaching that file too. 
+- You will notice that the Brightspace file has students in both SEG4910 and SEG4911 because I have combined these sections
+- uploading the file without userids is kind of useless; historically what I have done is merge them. The ps.xls tells me the program of the student, hence whether they prefer French or English, which is very useful to know. Both have student ID as key, although the Brightspace one adds a # in front. It would be good if you could allow inputting of both, with matching of student ID so both types of info can be gathered. And if I do this over and over again, it would just add newly registered students, and tag situations where a student may have dropped (i.e. they disappear) without actually deleting them from the DB.
