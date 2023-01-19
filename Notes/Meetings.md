@@ -5,10 +5,10 @@
 - **Main painpoint:** tracking which students are signing up for which project
 - **UML class diagram:** 4 classes (Student, Project, Group and Course Section)
 - **Next meeting:** January 23, 2023 at 3 pm
-### To do: 
-- create at least 3 design alternatives
-- UML class diagram in umple
-- list of user stories
+- **To do:** 
+    - create at least 3 design alternatives
+    - UML class diagram in umple
+    - list of user stories
 
 ## 01/13/2023
 - Team meeting
