@@ -11,4 +11,4 @@
 ### Concerns:
 
 - What is the difference between Professor and Coordinator? And should we have both in our system? 
-- **Answer (01/19/2023):** There may not be a difference between coordinator and professor.
+    - **Answer (01/19/2023):** There may not be a difference between coordinator and professor.
