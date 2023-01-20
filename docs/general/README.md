@@ -1,5 +1,7 @@
 # Important Information
 
+Last Update: 1/19/2023
+
 ## Project Summary 1
 This project would automate many of the facilities of managing a large class of multi-person groups.
 
@@ -29,14 +31,15 @@ Constraint: A basic system MVP would used for this class itself when ready (idea
 - And when you have a minimal viable project, we would import the live data for your cohort. Then in the fall we would use it for the fall 2023 and winter 2024 cohort as I onboard them starting in July and November 2023. 
 - If you are willing to do this for certain, or if you want to meet with me to discuss first, then let me know. Either way, I can meet you either in my office or online. You would, as with all projects, do the project management. You would have a lot of lattitude as to the architecture and design, as long as you clear key decisions with me. I would want it to avoid heavy dependencies so it does not need regular security updates for example. It would be a website, not an app. I would be an admin of my course (of cause). Anybody would be able to see the proposed projects. Student teams would be able to see certain information about their team's progress.  I think I would want to rely on Teams as an external chat tool (with other profs being able to choose their own), so that functionality would be excluded.
 
-## EPAS Comparison
-- EPAS seems not to have a way for students to form groups independent of the project selection. This is a pain-point for me that I need to resolve. In a course like CSI4900 where one-person or two-person groups are common, this works. But for SEG, one of the hardest things is forming groups. So I would like to see the ability for a) The prof to upload the class list as I showed you, and for updates to it to be made at any time, either by a new upload or the prof just adding people manually; b) For students on the list to be able to say that they are fine for others to see their name and contact info; c) For students to be able to describe their interests; d) For students to be able to self-form into groups even if they have no project yet, and e) for students to be able to split/merge groups until the prof freezes this, and for the prof to be able to do this at any time.
-- EPAS relies on profs entering projects, but most SEG projects are not with profs. So the course co-ordinator needs to do this for external projects. 
-- Students too need to be able to enter their own projects (that would not be initially visible to other students) to be approved by the course co-ordinator. There ought to be a way for the co-ordinator to connect to the student (e.g. a link to Teams chat) so that the professor can request clarification or improvement to the description.
-- I would prefer a display of projects that was more list-like, with a detail pane opening if the entire description is to be viewed.
-- EPAS seems to rely on students expressing an interest in a project or a few, which is then visible to the project proposer who can accept/reject. But I need something a little more sophisticated. I would like groups to be able to a) tag or rank the projects they are interested in; b) mark that they are contacting the client (specifying when), and then mark that they have an agreement with the client. It would also be good if all students could see that other students are interested in certain projects, so they can perhaps join with each other.
-- There needs to be a way for the prof to initiate a chat (e.g. in Teams and perhaps also in email for students who don't check Te4ams) with students who have not yet found a project, formed a team
-I think for your work, you should defer features for ongoing project tracking after the start of a class. Just generate me a spreadsheet. I am going to send you the spreadsheet I have now as of today
+## Benefit to Customer
+- Better management and organization of the groups/projects
+- Allow course coordinators to determine students that do not have a team to work with or a project to work on.
+- Allow students to view available project and teams to join more easily.
+- Flexible and dynamic system that can work for more than one course.
+## Criteria For Success:
+- Continous meeting with Dr. Lethbride to go over progress.
+- Dedicating time each week to plan, design, implement, and communicate work on the project.
+- Follow the Agile Methodology for more successful project management.
 
 ## Considerations
 When the project is running it will be key to me that I can use my own server ... and with super low maintenance overhead. My guess is that your choices will work out OK, although it is not a combination I have personally used. I don't want any data stored in a cloud like AWS or Azure ... just another account to manage. Ideally there would be a Docker image with the software that would manage a directory where the data would be stored.
