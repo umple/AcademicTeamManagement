@@ -1,58 +1,50 @@
-# Outline
+# Academic Team Management
 
-- [Team Memebers and Roles](#team-members-and-roles)
-- [Objectives](#objectives)
-    - [Overview](#overview)
-    - [Benefit to Customer](#benefit-to-customer)
-    - [Criteria for Success](#criteria-for-success)
-- [Expected Architecture](#expected-architecture)
-    - [Class Diagram](#class-diagram)
-- [Anticipated Risks](#anticipated-risks)
-- [Legal and Social issues](#legal-and-social-issues)
-- [Initial Plans](#initial-plans)
-# Team Members and Roles:
+The `Academic Team Management` application is used to automate many of the facilities of managing a large class of multi-person groups and supports the following use cases:
 
-|Name|Student Number| Role|
-|---|---|---|
-|Akram El-Gaouny| 300109692| NA
-| Andre Lacroix | 300117612 | NA
-| Caroline Tippens | 3007691410| NA
-| Laith Grira| 300134752 | NA
-| Robert Basile | 300113103 | NA
+    1. Creating lists of projects with a title, description, and other metadata 
+    2. Importing lists of students from Excel
+    3. Enabling students to form teams, express interest in projects, express an interest in being matched with other students, etc... 
+    4. Allowing the professor and TAs to communicate with students using chat
+    5. Allowing the professor and TAs to take notes about progress, presentations, etc...
+    6. Exporting the data to Excel sheets
+    7. Allowing the professor or TAs to input grades
 
-# Objectives:
+The application is expected to be open-source and allow other professors from different educational institutions to adapt it as their project management system.
 
-### Overview
-- Create a project management system for courses that have projects as a main component.
-### Benefit to Customer
-- Better management and organization of the groups/projects
-- Allow course coordinators to determine students that do not have a team to work with or a project to work on.
-- Allow students to view available project and teams to join more easily.
-- Flexible and dynamic system that can work for more than one course.
-### Criteria For Success:
-- Continous meeting with Dr. Lethbride to go over progress.
-- Dedicating time each week to plan, design, implement, and communicate work on the project.
-- Follow the Agile Methodology for more successful project management.
+For more information check the [general](./docs/general/README.md) and [design](./docs/design/README.md) documents.
 
-# Expected Architecture:
+## Development
 
-It will most likely be a client-server architecture - technologies will be documented here when a decision has been reached.
+### Prerequisites
 
-### Class Diagram:
+    1. (Technologies TBD)
+    2. (Technologies TBD)
 
-- Link to [umple](https://cruise.umple.org/umpleonline/umple.php?model=230113sak5joa7booi)
-    - NOTE: Use GraphVizClass option for better Visualization
+### Linting
 
-# Anticipated Risks
+You can lint the code locally.
 
-1) Scope Creep:
-    - The project can be built to include lots of feature, so we must ensure that we select the most important features for SEG 4910.
-    - Continous discussions with Dr. Lethbridge to determine if a specific feature is important at this particular stage or not.
+```sh
 
-# Legal and Social Issues:
+```
 
-- None anticipated at this point.
+### Building
 
-# Initial Plans:
+```sh
 
-- To be updated in the coming weeks.
+```
+
+### Testing
+
+#### Unit Tests
+
+```sh
+
+```
+
+#### Integration Tests
+
+```sh
+
+```
