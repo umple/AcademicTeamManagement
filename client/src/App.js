@@ -1,19 +1,26 @@
 import './App.css';
-import ResponsiveAppBar from './Components/NavBar/ResponsiveAppBar';
-import ProjectListAccordion from './Components/ProjectListAccordion/ProjectListAccordion';
-
+import ResponsiveAppBar from './StaticComponents/NavBar/ResponsiveAppBar';
+import ProjectListAccordion from './ProjectListingView/Components/ProjectListAccordion/ProjectListAccordion';
+import ImportStudents from './ImportStudentsView/ImportStudents';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
-    <div>
+    <Router>
+      <div>
+        <div className="App">
+          <div id="nav">
+            <ResponsiveAppBar></ResponsiveAppBar>
+          </div>
+          <Routes >
+            <Route exact path='/' element={<ProjectListAccordion/>}></Route>
+            <Route path='/ImportStudentsView' element={<ImportStudents/>}></Route>
+          </Routes >
 
-      <div className="App">
-        <div id="nav">
-          <ResponsiveAppBar></ResponsiveAppBar>
+           
         </div>
-        <ProjectListAccordion></ProjectListAccordion>
       </div>
-    </div>
+    </Router>
 
   );
 }
