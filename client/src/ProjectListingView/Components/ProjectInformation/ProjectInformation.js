@@ -8,7 +8,6 @@ function ProjectInformation() {
         <div>
             <h1>CUSTOMERS</h1>
             <h2>GROUP</h2>
-
             <p>PROJECT DESCRIPTION</p>
             <Grid container spacing={1}>
                 <Grid item xs={2}>
