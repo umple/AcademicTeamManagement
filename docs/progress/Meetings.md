@@ -31,5 +31,6 @@
     -  Important : colour coding (e.g., one color per group)
 - **Next meeting:** January 30, 2023 at 3 pm
 - **To do:** 
+    - Update wireframes
     - Automation scripts
     - Finalize setting up back-end, front-end and database
