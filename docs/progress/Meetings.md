@@ -22,3 +22,15 @@
     - created user stories
     - refined the uml (https://cruise.umple.org/umpleonline/umple.php?model=230113sak5joa7booi)
     - discussed issues pre-emptively (security, accessibility, etc.)
+
+## 01/23/2023
+- Team and client (Professor Lethbridge) meeting
+- **Wireframe feedback:** 
+    -  Accordions are bad (should represent the list of projects as a modifiable table with abilities to add/remove metadata)
+    -  Student view: Should be able to combine both cohorts together, students should be able to form groups and projects, students should rank projects with (little, medium and lots of interest)
+    -  Important : colour coding (e.g., one color per group)
+- **Next meeting:** January 30, 2023 at 3 pm
+- **To do:** 
+    - Update wireframes
+    - Automation scripts
+    - Finalize setting up back-end, front-end and database
