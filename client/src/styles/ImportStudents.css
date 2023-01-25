@@ -1,0 +1,19 @@
+#uploadContainer {
+    border: 2px solid lightblue;
+    min-width: 50rem;
+    min-height: 25rem;
+    border-style: dashed;
+    display:  flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 2;
+}
+ 
+#uploadBtn{
+    border-radius: 20px;
+}
+
+#uploadFormRow1{
+    display: flex;
+}
+

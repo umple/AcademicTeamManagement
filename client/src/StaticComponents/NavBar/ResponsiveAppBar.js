@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 
 const pages = {page1:{key: 'Projects', value:'/'}, 
-               page2: {key:'Import Students', value:'/ImportStudents'}};
+               page2: {key:'Import Students', value:'/ImportStudentsView'}};
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -115,6 +115,7 @@ function ResponsiveAppBar() {
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {Object.entries(pages).map(([key,value]) => (
                 <Button  
+                  key = {key}
                   href={value.value}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
