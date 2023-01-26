@@ -12,4 +12,4 @@ flask = "*"
 python_version = "3.9"
 
 [scripts]
-start = "python app.py"
+start = "nodemon app.py"

@@ -7,6 +7,9 @@ $ pip install pipenv
 # Create a new virtual environment and `Pipfile`
 $ pipenv install
 
+# Install `nodemon` globally to run the server continuously
+$ npm install nodemon -g --save
+
 # Activate the virtual machine
 $ pipenv shell
 ```
