@@ -13,4 +13,4 @@ flask-restful = "*"
 python_version = "3.9"
 
 [scripts]
-start = "nodemon app.py"
+start = "nodemon run.py"
