@@ -20,5 +20,4 @@ services:
       - ${REACT}:3000
     depends_on:
       - flask-server
-  
-
+      
