@@ -6,7 +6,7 @@ WORKDIR /server
 COPY . .
 
 # install flask
-RUN pip install flask
+RUN pip install flask flask-cors
 
 #Expose container port 5000
 EXPOSE 5000

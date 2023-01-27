@@ -1,5 +1,9 @@
 FROM node:latest
 
+# Dynamically set the API endpoint, defaults to 5001
+ARG APP=5001
+ENV BACKEND_URL="http://localhost:${APP}"
+
 # Set the workdir was client
 WORKDIR /client
 

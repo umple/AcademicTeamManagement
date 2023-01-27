@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  flask-server:
+    image: academic-team-management-flask:latest
+    build: ./server
+    env_file:
+      - .env
+    ports:
+      - ${FLASK}:5000
+  react-server:
+    image: academic-team-management-react:latest
+    build: 
+      context: ./client
+      args:
+        - APP=${FLASK}
+    env_file:
+      - .env
+    ports:
+      - ${REACT}:3000
+    depends_on:
+      - flask-server
+  
+
