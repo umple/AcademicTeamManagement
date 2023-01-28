@@ -48,3 +48,9 @@ You can lint the code locally.
 ```sh
 
 ```
+
+#### Docker-compose command
+
+```sh
+docker-compose up -d --no-deps --build flask-server react-server
+```
