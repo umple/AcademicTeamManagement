@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import './ResponsiveAppBar.css';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
