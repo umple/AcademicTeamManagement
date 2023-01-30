@@ -20,9 +20,15 @@ services:
       - ${REACT}:3000
     depends_on:
       - flask-server
-  mongo:
+  mongodb:
     image: mongo
-    restart: always
+    container_name: mongodb
+    restart: unless-stopped
+    volumes:
+    - ./mongodb/database:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+    - PUID=1000
+    - PGID=1000
+    - MONGODB_INITDB_ROOT_USERNAME=example-user
+    ports:
+    - 27017:27017
