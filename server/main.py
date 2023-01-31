@@ -17,9 +17,8 @@ def import_excel():
     file = request.files["file"]
     if not file:
         return "No file selected", 400
-    data = pd.read_excel(file)
- 
-    return  jsonify(data.to_dict(orient="records"))
+    data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
+    return data.to_json(orient="records")
 
 if __name__ == "__main__":
     app.run()
