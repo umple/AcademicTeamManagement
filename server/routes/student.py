@@ -25,3 +25,6 @@ class StudentsAPI(Resource):
 
     def post(self):
         return StudentsController.post(self)
+    
+    def importExcelStudentInformation(self):
+        return StudentsController.importExcelStudentInformation(self)
