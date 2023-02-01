@@ -1,10 +1,9 @@
 from flask import request, Flask
 from flask_restful import Resource
 from app.models.student import Student as StudentModel, Students as StudentsListModel
-from flask import request
+from flask import request, app
 import pandas as pd
-import openpyxl
-from flask import app
+
 
 class Students(Resource):
     def get(self):
@@ -19,15 +18,6 @@ class Students(Resource):
         students = StudentsListModel.post(self,**data)
         return {"students": students}, 201
     
-    @app.route("/import-excel", methods=["POST"])
-    def importExcelStudentInformation(self):
-        print("here")
-        file = request.files["file"]
-        if not file:
-            return "No file selected", 400
-        data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
-        return data.to_json(orient="records")
-
 class Student(Resource):
     def get(self, id):
         student = StudentModel.get(self,id)
