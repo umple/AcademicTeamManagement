@@ -1,7 +1,5 @@
 name: 
-on:
-  push:
-
+on: [push, pull_request]
 jobs:
   build_react:
     timeout-minutes: 10
@@ -11,11 +9,31 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Node JS
         uses: actions/setup-node@v3
+      - name: Switch to client Directory
+        run: cd client
       - name: Build React Application
         run: |
-          cd client 
-          ls
           npm install --force 
           npm run build 
         env:
           CI: false
+      - name: Docker build
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          tags: react:latest
+  build_flask:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Init Python3
+        uses: actions/setup-python@v1
+      - name: Switch to Server Directory
+        run: cd server
+      - name: Docker build
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          tags: flask:latest
