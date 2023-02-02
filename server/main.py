@@ -17,8 +17,14 @@ def import_excel():
     file = request.files["file"]
     if not file:
         return "No file selected", 400
-    data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
-    return data.to_json(orient="records")
+    if file:
+        file_extension = file.filename.rsplit(".", 1)[1]
+        if file_extension == "xlsx":
+            data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
+            return data.to_json(orient="records")
+        elif file_extension == "csv":
+            data = pd.read_csv(file,na_values=["N/A", "na", "--","NaN", " "])
+            return data.to_json(orient="records")
 
 if __name__ == "__main__":
     app.run()
