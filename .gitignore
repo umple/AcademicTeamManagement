@@ -1,3 +1,1 @@
-mongodb/log
-mongodb/data/WiredTiger*
-mongodb/data/WiredTigerLog
+data

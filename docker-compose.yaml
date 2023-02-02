@@ -24,8 +24,6 @@ services:
     image: mongo
     container_name: mongodb
     restart: unless-stopped
-    volumes:
-    - ./mongodb/database:/data/db
     environment:
     - PUID=1000
     - PGID=1000
