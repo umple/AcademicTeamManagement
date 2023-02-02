@@ -13,6 +13,6 @@ jobs:
         uses: actions/setup-node@v3
       - name: Build React Application
         run: |
-          cd client
-          npm install --force
-          npm run build
+          cd client \
+          npm install --force \
+          npm run build \
