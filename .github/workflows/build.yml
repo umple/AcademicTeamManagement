@@ -21,6 +21,7 @@ jobs:
       - name: Docker build
         uses: docker/build-push-action@v4
         with:
+          file: ./Dockerfile
           push: false
           tags: react:latest
   build_flask:
@@ -37,6 +38,7 @@ jobs:
       - name: Docker build
         uses: docker/build-push-action@v4
         with:
+          file: ./Dockerfile
           push: false
           tags: flask:latest
 
