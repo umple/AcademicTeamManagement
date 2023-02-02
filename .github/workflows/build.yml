@@ -12,7 +12,8 @@ jobs:
       - name: Setup Node JS
         uses: actions/setup-node@v3
       - name: Build React Application
-        run: >
+        run: |
           cd client 
+          ls
           npm install --force 
           npm run build 
