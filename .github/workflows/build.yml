@@ -17,3 +17,5 @@ jobs:
           ls
           npm install --force 
           npm run build 
+        env:
+          CI: false
