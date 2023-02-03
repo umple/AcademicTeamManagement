@@ -1,5 +1,8 @@
 name: 
 on: [push, pull_request]
+env:
+  COMPOSE_DOCKER_CLI_BUILD: 0
+  DOCKER_BUILDKIT: 0
 jobs:
   build_react:
     timeout-minutes: 10
@@ -23,6 +26,8 @@ jobs:
         with:
           file: Dockerfile
           push: false
+        env:
+         DOCKER_BUILDKIT: 0
   build_flask:
     timeout-minutes: 10
     runs-on: ubuntu-latest
