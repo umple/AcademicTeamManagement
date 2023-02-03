@@ -1,5 +1,5 @@
 name: 
-on: [push, pull_request]
+on: [push]
 env:
   COMPOSE_DOCKER_CLI_BUILD: 0
   DOCKER_BUILDKIT: 0
