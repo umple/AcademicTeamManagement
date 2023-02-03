@@ -17,8 +17,8 @@ $ pipenv shell
 ## Run server
 
 ```bash
-# Execute the `start` script
-$ pipenv run start
+# Execute the `start-dev` script to use dev environment
+$ pipenv run start-dev
 ```
 
 ## FAQ
