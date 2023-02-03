@@ -42,5 +42,5 @@ jobs:
       - name: Docker build
         uses: docker/build-push-action@v4
         with:
-          file: ./Dockerfile
           push: false
+          context: server
