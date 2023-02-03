@@ -34,3 +34,15 @@
     - Update wireframes
     - Automation scripts
     - Finalize setting up back-end, front-end and database
+
+## 01/30/2023
+- Team and client (Professor Lethbridge) meeting
+- **Wireframe feedback:** 
+    -  Table with project info is good
+    -  Student view: Should be able to combine both cohorts together, students should be able to form groups and projects, students should rank projects with (little, medium and lots of interest)
+    -  Important : colour coding (e.g., one color per group)
+- **Next meeting:** February 6, 2023 at 3 pm
+- **To do:** 
+    - Update design for project ranking, project assignment, group formation, student view
+    - Token authorization
+    - link up database
