@@ -72,6 +72,8 @@ const ProjectTable = () => {
   const handleCreateNewRow = (values) => {
     tableData.push(values);
     setTableData([...tableData]);
+    console.log(tableData)
+    console.log(columns)
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
@@ -101,7 +103,7 @@ const ProjectTable = () => {
     csvExporter.generateCsv(data);
   };
   
-
+   
   return(
   <div>
     <MaterialReactTable
