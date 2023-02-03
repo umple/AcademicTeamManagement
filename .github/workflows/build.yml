@@ -3,6 +3,12 @@ on: [push]
 env:
   COMPOSE_DOCKER_CLI_BUILD: 0
   DOCKER_BUILDKIT: 0
+
+# cancel any in-progress job
+concurrency:
+  group:  ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   react-build:
     timeout-minutes: 10
