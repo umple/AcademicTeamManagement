@@ -32,7 +32,7 @@ const ImportStudents = () => {
 
         try {
 
-            const response = await fetch("http://localhost:3000/import-excel", {
+            const response = await fetch("/import-excel", {
                 method: "POST",
                 body: formData,
             });
