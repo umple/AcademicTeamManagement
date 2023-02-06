@@ -1,11 +1,24 @@
-from flask import Flask, request, jsonify
+from flask import Flask, redirect, request, session
 from flask_restful import Api
 from main import initialize_routes
+from requests_oauthlib import OAuth2Session
+from uuid import uuid4
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = str(uuid4())
 api = Api(app)
 
 initialize_routes(api)
+ 
+oauth = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URI, scope=["openid", "profile"])
+
+
+@app.route("/login", methods=['POST','GET'])
+def login():
+    authorization_url, state = oauth.authorization_url(f"{AUTHORITY}/oauth2/v2.0/authorize")
+    session["state"] = state
+    return redirect(authorization_url)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

@@ -3,6 +3,7 @@ import ResponsiveAppBar from './StaticComponents/NavBar/ResponsiveAppBar';
 import ProjectTable from './ProjectListingView/Components/ProjectTable/ProjectTable';
 import ImportStudents from './ImportStudentsView/ImportStudents';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import SignIn from './LoginView/SignIn';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
           <div id="nav">
             <ResponsiveAppBar></ResponsiveAppBar>
           </div>
-          <Routes >
+          <Routes>
+            <Route path='/' element={<SignIn/>}></Route>
             <Route exact path='/Projects' element={<ProjectTable/>}></Route>
             <Route path='/ImportStudents' element={<ImportStudents/>}></Route>
           </Routes >
