@@ -25,8 +25,8 @@ services:
     container_name: mongodb
     restart: unless-stopped
     environment:
-    - PUID=1000
-    - PGID=1000
-    - MONGODB_INITDB_ROOT_USERNAME=example-user
+    - PUID={PUID}
+    - PGID={PGID}
+    - MONGODB_INITDB_ROOT_USERNAME={MONGODB_INITDB_ROOT_USERNAME}
     ports:
-    - 27017:27017
+    - ${MONGO}:27017
