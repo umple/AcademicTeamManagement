@@ -7,11 +7,11 @@ import re
     the "é" to support accents in the first name and last name
     of students
 '''
-def handle_special_characters(students_list):
-    students_list = json.loads(students_list)
+def handle_special_characters(json_data):
+    json_data = json.loads(json_data)
     copyright_char_regex = r"©"
     new_list = []
-    for json_obj in students_list:
+    for json_obj in json_data:
         new_obj = {}
         for key, value in json_obj.items():
             if isinstance(value, str) and re.search(copyright_char_regex, value):
@@ -26,11 +26,11 @@ def handle_special_characters(students_list):
     remove the hashtag symbole from the json values that start 
     with it 
 '''
-def remove_hashtag_starting_characters(students_list):
-    students_list = json.loads(students_list)
+def remove_hashtag_starting_characters(json_data):
+    json_data = json.loads(json_data)
     hashtage_char_regex = r"#"
     new_list = []
-    for json_obj in students_list:
+    for json_obj in json_data:
         new_obj = {}
         for key, value in json_obj.items():
             if isinstance(value, str) and re.search(hashtage_char_regex, value) and value.index(hashtage_char_regex)==0:
