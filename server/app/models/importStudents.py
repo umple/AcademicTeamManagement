@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from app.utils.data_conversion import handle_special_characters, remove_hashtage_starting_characters
+from app.utils.data_conversion import clean_up_json_data
 import pandas as pd
 
 class ImportStudents(Resource):
@@ -12,7 +12,8 @@ class ImportStudents(Resource):
             file_extension = file.filename.rsplit(".", 1)[1]
             if file_extension == "xlsx":
                 data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
-                return remove_hashtage_starting_characters(data.to_json(orient="records"))
+                data = clean_up_json_data(data.to_json(orient="records"))
+                return data
             elif file_extension == "csv":
                 data = pd.read_csv(file,na_values=["N/A", "na", "--","NaN", " "])
                 return data.to_json(orient="records")

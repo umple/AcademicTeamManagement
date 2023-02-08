@@ -38,3 +38,11 @@ def remove_hashtage_starting_characters(students_list):
             new_obj[key] = value
         new_list.append(new_obj)
     return json.dumps(new_list)
+
+'''
+    clean up json data from the "#" and "Á©" symboles
+'''
+def clean_up_json_data(json_data):
+    json_data = handle_special_characters(json_data)
+    json_data = remove_hashtage_starting_characters(json_data)
+    return json_data
