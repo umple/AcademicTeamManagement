@@ -23,10 +23,10 @@ def handle_special_characters(students_list):
     return json.dumps(new_list)
 
 '''
-    remove the hashtage symbole from the json values that start 
+    remove the hashtag symbole from the json values that start 
     with it 
 '''
-def remove_hashtage_starting_characters(students_list):
+def remove_hashtag_starting_characters(students_list):
     students_list = json.loads(students_list)
     hashtage_char_regex = r"#"
     new_list = []
@@ -44,5 +44,5 @@ def remove_hashtage_starting_characters(students_list):
 '''
 def clean_up_json_data(json_data):
     json_data = handle_special_characters(json_data)
-    json_data = remove_hashtage_starting_characters(json_data)
+    json_data = remove_hashtag_starting_characters(json_data)
     return json_data
