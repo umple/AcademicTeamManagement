@@ -16,7 +16,8 @@ class ImportStudents(Resource):
                 return data
             elif file_extension == "csv":
                 data = pd.read_csv(file,na_values=["N/A", "na", "--","NaN", " "])
-                return data.to_json(orient="records")
+                data = clean_up_json_data(data.to_json(orient="records"))
+                return data
             else:
                 return "Could not convert file", 503
         else:
