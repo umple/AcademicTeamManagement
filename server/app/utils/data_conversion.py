@@ -16,8 +16,8 @@ def handle_special_characters(json_data):
         for key, value in json_obj.items():
             if isinstance(value, str) and re.search(copyright_char_regex, value):
                 value = re.sub(copyright_char_regex, "é", value)
-                Index = value.index('é') - 1
-                value = value[:Index] + value[Index + 1:]
+                Index = value.index('é') - 1 # store the index of the Á char
+                value = value[:Index] + value[Index + 1:] # remove the Á char
             new_obj[key] = value
         new_list.append(new_obj)
     return json.dumps(new_list)
@@ -34,7 +34,7 @@ def remove_hashtag_starting_characters(json_data):
         new_obj = {}
         for key, value in json_obj.items():
             if isinstance(value, str) and re.search(hashtage_char_regex, value) and value.index(hashtage_char_regex)==0:
-                value = value[1:]
+                value = value[1:] # copy the string from index 1 to ignore the first char which is the #
             new_obj[key] = value
         new_list.append(new_obj)
     return json.dumps(new_list)
