@@ -12,5 +12,4 @@
 
 ### Tests
  - [ ] Unit tests added/updated
- - [ ] Component tests added/updated
  - [ ] Integration tests added/updated
