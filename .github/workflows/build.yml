@@ -1,0 +1,64 @@
+name: 
+on: [push]
+env:
+  COMPOSE_DOCKER_CLI_BUILD: 0
+  DOCKER_BUILDKIT: 0
+
+# cancel the in-progress job related to the current PR
+concurrency:
+  group:  ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  react-build:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node JS
+        uses: actions/setup-node@v3
+      - name: Build React Application
+        run: |
+          npm install --force 
+          npm run build 
+        env:
+          CI: false
+      - name: Docker build
+        uses: docker/build-push-action@v4
+        with:
+          context: client
+          push: false
+        env:
+         DOCKER_BUILDKIT: 0
+  flask-build:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Init Python3
+        uses: actions/setup-python@v1
+      - name: Docker build
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          context: server
+  docker-compose:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    needs: [react-build, flask-build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: docker-compose build
+        run: docker compose up -d

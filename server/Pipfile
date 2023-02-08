@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-restful = "*"
+openpyxl = "*"
+pandas = "*"
 
 [dev-packages]
 

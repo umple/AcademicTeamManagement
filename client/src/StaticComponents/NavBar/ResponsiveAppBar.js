@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-const pages = {page1:{key: 'Projects', value:'/'}, 
+const pages = {page1:{key: 'Projects', value:'/Projects'}, 
                page2: {key:'Import Students', value:'/ImportStudents'}};
 
 function ResponsiveAppBar() {
@@ -35,7 +35,6 @@ function ResponsiveAppBar() {
       <AppBar sx={{ bgcolor: '#8f001a'}}>
         <Container id="m" maxWidth="xl">
           <Toolbar>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -49,9 +48,10 @@ function ResponsiveAppBar() {
                 letterSpacing: '.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
+                textTransform: 'none'
               }}
             >
-              LOGO
+               
             </Typography>
 
             {/* fluid menu options */}
@@ -86,7 +86,7 @@ function ResponsiveAppBar() {
               >
                 {Object.entries(pages).map(([key,value]) => (
                   <MenuItem key={key} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{key}</Typography>
+                    <Typography  style={{ textTransform: "none" }} textAlign="center">{pages[key].key}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -106,6 +106,7 @@ function ResponsiveAppBar() {
                 letterSpacing: '.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
+                textTransform: 'none'
               }}
             >
               LOGO
