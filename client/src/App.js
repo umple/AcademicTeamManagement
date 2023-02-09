@@ -4,6 +4,7 @@ import ProjectTable from './ProjectListingView/Components/ProjectTable/ProjectTa
 import ImportStudents from './ImportStudentsView/ImportStudents';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SignIn from './LoginView/SignIn';
+import HomePage from './HomePageView/HomePage';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
             <ResponsiveAppBar></ResponsiveAppBar>
           </div>
           <Routes>
-            <Route path='/' element={<SignIn/>}></Route>
+            <Route path='/' element={<HomePage/>}></Route>
+            <Route path='/login' element={<SignIn/>}></Route>
             <Route exact path='/Projects' element={<ProjectTable/>}></Route>
             <Route path='/ImportStudents' element={<ImportStudents/>}></Route>
           </Routes >
