@@ -62,6 +62,11 @@ const ImportStudents = () => {
           <MaterialReactTable
             columns={columns}
             data={data}
+            muiTablePaginationProps={{
+              rowsPerPageOptions: [5,50,100,150,200,250],
+              showFirstButton: false,
+              showLastButton: false,
+            }}
             renderTopToolbarCustomActions={() => (
                 <FormControl>
                 <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem'}}>
