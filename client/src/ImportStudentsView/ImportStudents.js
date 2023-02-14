@@ -63,7 +63,7 @@ const ImportStudents = () => {
             columns={columns}
             data={data}
             muiTablePaginationProps={{
-              rowsPerPageOptions: [5,50,100,150,200,250],
+              rowsPerPageOptions: [-1],
               showFirstButton: false,
               showLastButton: false,
             }}
