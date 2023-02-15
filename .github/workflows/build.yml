@@ -62,7 +62,5 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Pass Private Key as an ENV
-        run:  echo PRIVATE_KEY=${{secrets.PRIVATE_KEY}} >> .env
       - name: docker-compose build
-        run: docker compose up -d
+        run: docker compose up -d --build-arg PRIVATE_KEY=${{secrets.PRIVATE_KEY}}
