@@ -3,13 +3,14 @@ version: '3.8'
 services:
   flask-server:
     image: academic-team-management-flask:latest
-    build: ./server
+    build: 
+      context: ./server
+      args:
+        - PRIVATE_KEY=${PRIVATE_KEY}
     env_file:
       - .env
     ports:
       - ${FLASK}:5000
-    args:
-      - PRIVATE_KEY=${PRIVATE_KEY}
   react-server:
     image: academic-team-management-react:latest
     build: 
