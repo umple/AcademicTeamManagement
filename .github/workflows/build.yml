@@ -33,7 +33,7 @@ jobs:
           context: client
           push: false
         env:
-         DOCKER_BUILDKIT: 0
+          DOCKER_BUILDKIT: 0
   flask-build:
     timeout-minutes: 10
     runs-on: ubuntu-latest
@@ -50,6 +50,8 @@ jobs:
         with:
           push: false
           context: server
+          build-args: |
+            PRIVATE_KEY= ${{secrets.PRIVATE_KEY}}
   docker-compose:
     timeout-minutes: 10
     runs-on: ubuntu-latest
@@ -60,5 +62,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Pass Private Key as an ENV
+        run:  echo PRIVATE_KEY=${{secrets.PRIVATE_KEY}} >> .env
       - name: docker-compose build
         run: docker compose up -d

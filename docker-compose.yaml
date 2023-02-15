@@ -8,6 +8,8 @@ services:
       - .env
     ports:
       - ${FLASK}:5000
+    args:
+      - PRIVATE_KEY=${PRIVATE_KEY}
   react-server:
     image: academic-team-management-react:latest
     build: 
