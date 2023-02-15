@@ -51,7 +51,7 @@ jobs:
           push: false
           context: server
           build-args: |
-            PRIVATE_KEY= ${{secrets.PRIVATE_KEY}}
+            PRIVATE_KEY=${{secrets.PRIVATE_KEY}}
   docker-compose:
     timeout-minutes: 10
     runs-on: ubuntu-latest
