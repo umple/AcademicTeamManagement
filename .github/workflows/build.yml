@@ -63,4 +63,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: docker-compose build
-        run: docker compose up -d --build-arg PRIVATE_KEY=${{secrets.PRIVATE_KEY}}
+        run: docker compose up -d
