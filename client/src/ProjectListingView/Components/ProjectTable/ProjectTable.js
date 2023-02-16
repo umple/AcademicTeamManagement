@@ -264,7 +264,7 @@ const ProjectTable = () => {
           },
         }}
         muiTablePaginationProps={{
-          rowsPerPageOptions: [-1],
+          rowsPerPageOptions: [10, 25, 50, 100, { value: data.length, label: 'All' }],
           showFirstButton: false,
           showLastButton: false,
         }}
