@@ -9,6 +9,8 @@ flask-restful = "*"
 openpyxl = "*"
 pandas = "*"
 requests-oauthlib = "*"
+pymongo = "*"
+rsa = "*"
 
 [dev-packages]
 

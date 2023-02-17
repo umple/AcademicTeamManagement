@@ -3,7 +3,10 @@ version: '3.8'
 services:
   flask-server:
     image: academic-team-management-flask:latest
-    build: ./server
+    build: 
+      context: ./server
+      args:
+        - PRIVATE_KEY=${PRIVATE_KEY}
     env_file:
       - .env
     ports:

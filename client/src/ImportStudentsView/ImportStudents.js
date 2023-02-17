@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import MaterialReactTable from "material-react-table";
 import PublishIcon from '@mui/icons-material/Publish';
+
 const useStyles = makeStyles((theme) => ({
   input: {
     display: "none",
@@ -42,14 +43,20 @@ const ImportStudents = () => {
         body: formData,
       });
       const excelData = await response.json();
-      for (let p = 0; p < Object.keys(excelData).length; p++) {
-        data.push(excelData[p]);
-      }
+      const newData = [];
+      const newColumns = [];
       for (const column of Object.keys(excelData[0])) {
-        columns.push({ accessorKey: column, header: column });
+        newColumns.push({ accessorKey: column, header: column });
       }
-      setColumns([...columns]);
-      setData([...data]);
+      for (let p = 0; p < Object.keys(excelData).length; p++) {
+        const row = {};
+        for (const column of newColumns) {
+          row[column.accessorKey] = excelData[p][column.accessorKey];
+        }
+        newData.push(row);
+      }
+      setColumns(newColumns);
+      setData(newData);
     } catch (error) {
       setError(error.message);
     }
@@ -57,48 +64,39 @@ const ImportStudents = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {
-        <Box sx={{ p: 2 }}>
-          <MaterialReactTable
-            columns={columns}
-            data={data}
-            muiTablePaginationProps={{
-              rowsPerPageOptions: [-1],
-              showFirstButton: false,
-              showLastButton: false,
-            }}
-            renderTopToolbarCustomActions={() => (
-                <FormControl>
-                <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem'}}>
-                   
-                    <input
-                        accept="*"
-                        className={classes.input}
-                        id="contained-button-file"
-                        type="file"
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="contained-button-file">
-                        <Button variant="contained" component="span" color="success">
-                            Upload
-                        </Button>
-                    </label>
-                    {file && (
-                        <Typography variant="subtitle1">{file.name}</Typography>
-                    )}
-                    {error && <FormHelperText error>{error}</FormHelperText>}
-            
-                    <Button type="submit" variant="contained" endIcon={<PublishIcon/>}>
-                    Submit
+      <Box sx={{ p: 2 }}>
+        <MaterialReactTable
+          columns={columns}
+          data={data}
+          enablePagination={false}
+          renderTopToolbarCustomActions={() => (
+            <FormControl>
+              <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem'}}>
+                <input
+                  accept="*"
+                  className={classes.input}
+                  id="contained-button-file"
+                  type="file"
+                  onChange={handleChange}
+                />
+                <label htmlFor="contained-button-file">
+                  <Button variant="contained" component="span" color="success">
+                    Upload
+                  </Button>
+                </label>
+                {file && (
+                  <Typography variant="subtitle1">{file.name}</Typography>
+                )}
+                {error && <FormHelperText error>{error}</FormHelperText>}
+
+                <Button type="submit" variant="contained" endIcon={<PublishIcon/>}>
+                  Submit
                 </Button>
-              
-                </Box>
-                </FormControl>
-           
-            )}
-          />
-        </Box>
-      }
+              </Box>
+            </FormControl>
+          )}
+        />
+      </Box>
     </form>
   );
 };
