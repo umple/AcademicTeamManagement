@@ -2,6 +2,7 @@ import './App.css';
 import ResponsiveAppBar from './StaticComponents/NavBar/ResponsiveAppBar';
 import ProjectTable from './ProjectListingView/Components/ProjectTable/ProjectTable';
 import ImportStudents from './ImportStudentsView/ImportStudents';
+import Groups from './GroupView/GroupTable'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Routes >
             <Route exact path='/Projects' element={<ProjectTable/>}></Route>
             <Route path='/ImportStudents' element={<ImportStudents/>}></Route>
+            <Route path='/GroupView' element={<Groups/>}></Route>
           </Routes >
 
            

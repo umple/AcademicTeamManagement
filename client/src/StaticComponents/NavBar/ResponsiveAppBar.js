@@ -14,7 +14,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 
 const pages = {page1:{key: 'Projects', value:'/Projects'}, 
-               page2: {key:'Import Students', value:'/ImportStudents'}};
+               page2: {key:'Import Students', value:'/ImportStudents'},
+               page3: {key:'Groups', value:'/GroupView'}};
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
