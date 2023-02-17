@@ -1,24 +1,25 @@
 import React from 'react';
 import './ResponsiveAppBar.css';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, MenuItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
 import AdbIcon from '@mui/icons-material/Adb';
-import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-const pages = {page1:{key: 'Projects', value:'/Projects'}, 
-               page2: {key:'Import Students', value:'/ImportStudents'}};
+const pages = {
+  page1: {key: 'Home', value:'/'},
+  page2: {key: 'Projects', value:'/Projects'},
+  page3: {key:'Import Students', value:'/ImportStudents'}
+};
 
 function ResponsiveAppBar() {
+  const location = useLocation();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  if (location.pathname === "/login") {
+    return null; // don't show navbar on the login page
+  }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
