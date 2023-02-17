@@ -263,11 +263,7 @@ const ProjectTable = () => {
             size: 120,
           },
         }}
-        muiTablePaginationProps={{
-          rowsPerPageOptions: [10, 25, 50, 100, { value: data.length, label: 'All' }],
-          showFirstButton: false,
-          showLastButton: false,
-        }}
+        enablePagination={false}
         columns={columns}
         data={tableData}
         editingMode="modal"
