@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function LoginPage() {
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="sm">
