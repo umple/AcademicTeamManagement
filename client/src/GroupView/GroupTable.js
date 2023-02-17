@@ -21,14 +21,14 @@ import { Delete, Edit } from '@mui/icons-material';
 const data = [
   {
     group_id: 1,
-    members: ['Montgomery','b','c','Anonymous User','e'],
+    members: ['Jack Smith','Ronny Welsh','Jenna Sunn','Mark Boudreau','Emilie Lachance'],
     interest: 'Project D, E, and G',
     project: 'not assigned',
     notes: '',
   },
   {
     group_id: 2,
-    members: ['Anonymous User','Anonymous User','Anonymous User'],
+    members: ['Bob Anderson','Julina Robs','Maria Inkepen'],
     interest: '',
     project: 'Project G',
     notes: 'Ideally four students',
@@ -67,7 +67,6 @@ const ProjectTable = () => {
         ],
     [],
   );
-
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -135,13 +134,6 @@ const ProjectTable = () => {
   const handleExportData = () => {
     csvExporter.generateCsv(data);
   };
-
-  // Mock data to show project applications
-  const applications = [
-    { group: '21', date: 'January 1, 2023', description: 'After interviewing with the client we received confirmation by email that the client picked our team for the project.'},
-    { group: '27', date: 'January 10, 2023', description: 'After talking to the customer, they said that they are interested in having us develop their application.'}
-  ];
-  
    
   return(
   <Box sx={{ p: 2 }}>
@@ -190,7 +182,7 @@ const ProjectTable = () => {
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
             >
-              Create New Project
+              Create New Group
             </Button>
             <Button
             color="primary"
@@ -204,7 +196,7 @@ const ProjectTable = () => {
           </Box>
         )}
       />
-      <CreateNewProjectModal
+      <CreateNewGroupModal
         columns={columns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
@@ -214,8 +206,8 @@ const ProjectTable = () => {
   );
 };
 
-//Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
+//Modal to create new Group
+export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -231,7 +223,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Project</DialogTitle>
+      <DialogTitle textAlign="center">Create New Group</DialogTitle>
       <DialogContent>
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
@@ -257,53 +249,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
       <DialogActions sx={{ p: '1.25rem' }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create New Project
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
-
-//Modal to view application
-export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
-
-  const handleSubmit = () => {
-    //put your validation logic here
-    onSubmit();
-    onClose();
-  };
-
-  return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Project Application</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <Stack
-            sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
-            }}
-          >
-            <Box sx={{ width: '100%', maxWidth: 500 }}>
-              <Typography variant="body1" gutterBottom>
-              <Box fontWeight='fontWeightMedium' display='inline'>Group: </Box>
-              {data.group}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-              <Box fontWeight='fontWeightMedium' display='inline'>Description: </Box>
-              {data.description}
-              </Typography>
-            </Box>
-          </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="error" onClick={onClose} variant="contained">Reject</Button>
-        <Button color="success" onClick={handleSubmit} variant="contained">
-          Accept
+          Create
         </Button>
       </DialogActions>
     </Dialog>
