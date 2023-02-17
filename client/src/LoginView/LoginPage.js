@@ -26,25 +26,20 @@ export default function LoginPage() {
             Choose Your Institution to Login
           </Typography>
           <Box component="form" noValidate sx={{ mt: 1 }}>
-  
             <Link
               type="submit"
               fullWidth
               variant="contained"
-              href ="http://localhost:5000/login"
+              href = {`http://localhost:${process.env.flask}/api/login`}
               sx={{ mt: 3, mb: 2 }}
             >
               <Button size='large' variant="outlined" startIcon={<AccountBalanceIcon />}>
                 University of Ottawa
               </Button>
             </Link>
-   
           </Box>
         </Box>
- 
       </Container>
     </ThemeProvider>
   );
 }
-
- 

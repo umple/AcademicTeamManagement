@@ -13,7 +13,7 @@ def getDecryptedSecret(secretName):
     private_key = rsa.PrivateKey.load_pkcs1(private_key)
 
     # Decrypt the encrypted data
-    encrypted_data = open("../encSecrets/%s.enc" % secretName, "rb").read()
+    encrypted_data = open("./encSecrets/%s.enc" % secretName, "rb").read()
     decrypted_data = rsa.decrypt(encrypted_data, private_key)
 
     return decrypted_data.decode("utf-8").strip()

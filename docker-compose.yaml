@@ -13,6 +13,8 @@ services:
       - ${FLASK}:5000
   react-server:
     image: academic-team-management-react:latest
+    links:
+      - flask-server
     build: 
       context: ./client
       args:
