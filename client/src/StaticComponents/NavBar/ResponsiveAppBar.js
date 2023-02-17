@@ -9,7 +9,8 @@ import { Button } from '@mui/material';
 const pages = {
   page1: {key: 'Home', value:'/'},
   page2: {key: 'Projects', value:'/Projects'},
-  page3: {key:'Import Students', value:'/ImportStudents'}
+  page3: {key:'Groups', value:'/GroupView'},
+  page4: {key:'Import Students', value:'/ImportStudents'}
 };
 
 function ResponsiveAppBar() {
