@@ -20,11 +20,15 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Modal
+  FormControlLabel,
+  Checkbox,
+  FormLabel,
+  FormGroup,
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
-import { Delete, Edit } from '@mui/icons-material';
+import { ExportToCsv } from 'export-to-csv';
+import { Delete, Edit, Help } from '@mui/icons-material';
+import { createTheme } from '@mui/material/styles';
 
 // Mock data for table
 const data = [
@@ -34,7 +38,7 @@ const data = [
     client: 'Daniel Amyot',
     visibility: 'visible',
     interest: '0',
-    status: 'untouched',
+    status: 'new',
     group: 'not assigned',
     notes: 'Requires at least 3 students',
   },
@@ -177,6 +181,16 @@ const data = [
     group: 'not assigned',
     notes: 'Requires at least 4 students',
   },
+  {
+    project: 'Academic Team Management',
+    description: 'We want to helo Professor Lethbridge with the project formation for the Capstone project course.',
+    client: 'Timothy Lethbridge',
+    visibility: 'visible',
+    interest: '0',
+    status: 'proposed',
+    group: 'not assigned',
+    notes: '',
+  },
 ];
 
 
@@ -206,7 +220,7 @@ const ProjectTable = () => {
                 component="span"
                 sx={(theme) => ({
                   backgroundColor:
-                    cell.getValue() === 'untouched'
+                    cell.getValue() === 'new'
                       ? theme.palette.success.light
                       : cell.getValue() === 'interested students'
                       ? theme.palette.warning.light
@@ -216,6 +230,8 @@ const ProjectTable = () => {
                       ? theme.palette.secondary.main
                       : cell.getValue() === 'assigned'
                       ? theme.palette.error.dark
+                      : cell.getValue() === 'proposed'
+                      ? '#ef6694'
                       : theme.palette.info.dark,
                   borderRadius: '0.25rem',
                   color: '#fff',
@@ -549,31 +565,61 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
       <DialogTitle textAlign="center">Project Application</DialogTitle>
       <DialogContent>
         <form onSubmit={(e) => e.preventDefault()}>
-          <Stack
-            sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
-            }}
-          >
-            <Box sx={{ width: '100%', maxWidth: 500 }}>
-              <Typography variant="body1" gutterBottom>
-              <Box fontWeight='fontWeightMedium' display='inline'>Group: </Box>
-              {data.group}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-              <Box fontWeight='fontWeightMedium' display='inline'>Description: </Box>
-              {data.description}
-              </Typography>
-            </Box>
-          </Stack>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item>
+                <FormLabel component="legend">           
+                <Typography variant="body1" gutterBottom>
+                  <Box fontWeight='fontWeightMedium' display='inline'>Group: </Box>
+                </Typography>
+                {data.group}
+                </FormLabel>
+            </Grid>
+          </Grid>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item>
+                <FormLabel component="legend">           
+                <Typography variant="body1" gutterBottom>
+                  <Box fontWeight='fontWeightMedium' display='inline'>Description: </Box>
+                </Typography>
+                {data.description}
+                </FormLabel>
+            </Grid>
+          </Grid>
+          <Grid container alignItems="center" spacing={2} sx={{ mt: 1 }}>
+            <Grid item>
+                <FormLabel component="legend">
+                <Box fontWeight='fontWeightMedium' display='inline'>More students needed </Box>
+                <Tooltip title="Changes status to 'students needed' if ASSIGN button pressed" placement='right'>
+                  <Help/>
+                </Tooltip>
+                </FormLabel>
+                <FormGroup row>
+                <FormControlLabel
+                      value="start"
+                      control={<Checkbox />}
+                    />
+                </FormGroup>
+            </Grid>
+          </Grid>
+          <FormLabel component="legend" sx={{ mt: 1 }}>
+          <Box fontWeight='fontWeightMedium' display='inline'>Feedback: </Box>
+          </FormLabel>
+          <FormGroup row>
+          <TextField
+            sx={{ mt: 1 }}
+            fullWidth
+            multiline
+            maxRows={5}
+            hiddenLabel
+          />
+          </FormGroup>
         </form>
       </DialogContent>
       <DialogActions sx={{ p: '1.25rem' }}>
         <Button onClick={onClose}>Cancel</Button>
-        <Button color="error" onClick={onClose} variant="contained">Reject</Button>
+        <Button color="secondary" onClick={onClose} variant="contained">Send Feedback</Button>
         <Button color="success" onClick={handleSubmit} variant="contained">
-          Accept
+          Assign
         </Button>
       </DialogActions>
     </Dialog>
