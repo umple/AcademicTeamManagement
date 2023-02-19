@@ -25,12 +25,13 @@ export default function LoginPage() {
           <Typography component="h1" variant="h5">
             Choose Your Institution to Login
           </Typography>
+
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <Link
+              href={`http://localhost:${process.env.REACT_APP_FLASK}/api/login`}
               type="submit"
               fullWidth
               variant="contained"
-              href = {`http://localhost:${process.env.flask}/api/login`}
               sx={{ mt: 3, mb: 2 }}
             >
               <Button size='large' variant="outlined" startIcon={<AccountBalanceIcon />}>

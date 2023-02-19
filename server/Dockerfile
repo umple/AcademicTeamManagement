@@ -19,7 +19,4 @@ RUN pip install pipenv
 
 RUN pipenv install
 
-#Expose container port 5000
-EXPOSE 5000
-
 CMD ["pipenv", "run", "start-prod"]
