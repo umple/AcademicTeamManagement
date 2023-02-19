@@ -49,8 +49,16 @@ You can lint the code locally.
 
 ```
 
-#### Docker-compose command
+#### Deploy the docker compose
+
+1) First you need to get the private key and save it somewhere locally. You can ask someone on the team to give you the pem file
+2) Make sure you are in the main directory of the project
+3) Now that you have the file you need to add a base64 encoded .env variable (MAKE SURE YOU DON'T PUSH THAT FILE WITH PK in there)
+```sh
+echo PRIVATE_KEY="$(cat <<location of the pem file>> | base64)" >> .env
+```
+4) Run docker compose up
 
 ```sh
-docker-compose up -d --no-deps --build flask-server react-server
+docker compose up
 ```

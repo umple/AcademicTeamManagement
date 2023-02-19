@@ -38,7 +38,7 @@ const ImportStudents = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("/import-excel", {
+      const response = await fetch("api/import-excel", {
         method: "POST",
         body: formData,
       });

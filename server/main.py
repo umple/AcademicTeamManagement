@@ -5,8 +5,8 @@ from routes.importStudents import ImportStudentsAPI
 
 def initialize_routes(api: Api):
     # Student routes
-    api.add_resource(StudentAPI, '/student/<int:id>')
-    api.add_resource(StudentsAPI, '/student')
+    api.add_resource(StudentAPI, '/api/student/<int:id>')
+    api.add_resource(StudentsAPI, '/api/student')
 
     # Import students routes
-    api.add_resource(ImportStudentsAPI, '/import-excel')
+    api.add_resource(ImportStudentsAPI, '/api/import-excel')

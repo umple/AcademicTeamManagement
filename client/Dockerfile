@@ -1,8 +1,12 @@
 FROM node:latest
 
 # Dynamically set the API endpoint, defaults to 5001
-ARG APP=5001
-ENV BACKEND_URL="http://localhost:${APP}"
+ARG BACKEND_URL
+ARG APP
+
+ENV REACT_APP_FLASK $APP
+ENV REACT_APP_BACKEND_URL $BACKEND_URL
+
 
 # Set the workdir was client
 WORKDIR /client

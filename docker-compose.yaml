@@ -10,12 +10,15 @@ services:
     env_file:
       - .env
     ports:
-      - ${FLASK}:5000
+      - ${FLASK}:${FLASK}
   react-server:
     image: academic-team-management-react:latest
+    links:
+      - flask-server
     build: 
       context: ./client
       args:
+        - BACKEND_URL=http://flask-server:${FLASK}
         - APP=${FLASK}
     env_file:
       - .env

@@ -6,15 +6,17 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-restful = "*"
+flask-cors = "*"
 openpyxl = "*"
 pandas = "*"
+requests-oauthlib = "*"
 pymongo = "*"
 rsa = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.9"
+python_version = "3"
 
 [scripts]
 start-prod = "python run.py"

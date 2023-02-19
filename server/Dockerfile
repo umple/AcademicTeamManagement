@@ -1,6 +1,7 @@
 FROM python:3.8
 
 ARG PRIVATE_KEY
+
 # Env variable to specify the path of the private key in the container 
 ENV PRIVATE_KEY_PATH "/privateKey/AcademicTeamManagement.pem"
 
@@ -13,12 +14,9 @@ COPY encSecrets encSecrets
 
 WORKDIR /flaskApp
 
-# # install pipenv
+# install pipenv
 RUN pip install pipenv 
 
 RUN pipenv install
-
-# #Expose container port 5000
-EXPOSE 5000
 
 CMD ["pipenv", "run", "start-prod"]
