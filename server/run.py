@@ -17,7 +17,7 @@ initialize_routes(api)
 AUTHORITY = getDecryptedSecret("AUTHORITY")
 CLIENT_ID = getDecryptedSecret("CLIENT_ID")
 CLIENT_SECRET = getDecryptedSecret("CLIENT_SECRET")
-REDIRECT_URI = "http://react-server:%s"%os.getenv("REACT")
+REDIRECT_URI = "http://localhost:%s"%os.getenv("REACT")
 
 oauth = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URI, scope=["openid", "profile"])
 
