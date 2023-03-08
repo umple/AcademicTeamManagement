@@ -1,8 +1,9 @@
 from flask_restful import Resource
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import os
 
-client = MongoClient("mongodb://localhost",27017)
+client = MongoClient("mongodb://localhost", os.getEnv("MONGO"))
 #currently hard coded database and collection called fruits
 mydb = client["fruits"]
 mycol = mydb["fruits"]
