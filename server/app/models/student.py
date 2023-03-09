@@ -3,8 +3,8 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
 
-client = MongoClient("mongodb://localhost", os.getenv("MONGO"))
-# currently hard coded database and collection called fruits
+client = MongoClient("mongodb://localhost", int(os.getenv("MONGO")))
+#currently hard coded database and collection called fruits
 mydb = client["fruits"]
 mycol = mydb["fruits"]
 
