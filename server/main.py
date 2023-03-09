@@ -2,7 +2,6 @@ from flask_restful import Api
 from routes.student import StudentAPI, StudentsAPI
 from routes.importStudents import ImportStudentsAPI
 from security.auth import AuthenticationAPI
-from security.auth import AuthenticationAPI
 
 
 def initialize_routes(api: Api):
