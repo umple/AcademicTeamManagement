@@ -7,7 +7,7 @@ tasks.register('runFrontendLocally', Exec){
 }
 
 tasks.register("startMongo",Exec){
-    commandLine 'docker-compose', 'up'
+    commandLine 'docker-compose', 'up', 'mongodb'
 }
 
 tasks.register("composeDown", Exec){
