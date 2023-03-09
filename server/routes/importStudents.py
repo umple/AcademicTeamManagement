@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 from app.controllers.importStudents import ImportStudents as ImportStudentsController
 import json
 
-class ImportStudentsAPI(Resource):
+class ImportStudentsAPI(Resource ):
     def __init__(self):
         super(ImportStudentsAPI, self).__init__()
 

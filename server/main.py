@@ -6,7 +6,7 @@ from security.auth import AuthenticationAPI
 
 def initialize_routes(api: Api):
     # Student routes
-    # api.add_resource(StudentAPI, '/api/student/<int:id>')
+    api.add_resource(StudentAPI, '/api/student/<int:id>')
     api.add_resource(StudentsAPI, '/api/student')
 
     # Import students routes
