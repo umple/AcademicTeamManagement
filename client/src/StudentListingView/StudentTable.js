@@ -81,8 +81,8 @@ const data = [
     orgDefinedId: '11122',
     username: 'UBIPL062',
     team: 'Team 2',
-    lastName: 'Biden',
-    firstName: 'Joe',
+    lastName: 'Davis',
+    firstName: 'Harry',
     section: 'SEG4910W01',
     notes: ''
   },
