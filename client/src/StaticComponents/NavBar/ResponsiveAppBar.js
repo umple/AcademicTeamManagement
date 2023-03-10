@@ -12,7 +12,6 @@ const pages = {
   page3: {key:'Groups', value:'/GroupView'},
   page4: {key:'Import Students', value:'/ImportStudents'},
   page5: {key: 'Students', value:'/Students'}
-
 };
 
 function ResponsiveAppBar() {
