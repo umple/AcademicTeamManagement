@@ -1,6 +1,7 @@
 from flask_restful import Api
 from routes.student import StudentAPI, StudentsAPI
 from routes.importStudents import ImportStudentsAPI
+from security.auth import AuthenticationAPI
 
 
 def initialize_routes(api: Api):
@@ -10,3 +11,5 @@ def initialize_routes(api: Api):
 
     # Import students routes
     api.add_resource(ImportStudentsAPI, '/api/import-excel')
+    # Import security
+    api.add_resource(AuthenticationAPI, '/api/login')
