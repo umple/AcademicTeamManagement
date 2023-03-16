@@ -5,6 +5,7 @@ from flask_cors import CORS
 from main import initialize_routes
 from requests_oauthlib import OAuth2Session
 from uuid import uuid4
+from app.controllers import student_controller
 from app.utils.decryption_manager import getDecryptedSecret
 
 app = Flask(__name__)
@@ -12,7 +13,7 @@ app.config["SECRET_KEY"] = str(uuid4())
 api = Api(app)
 CORS(app, resources={r"*": {"origins": "*"}})
 
-initialize_routes(api)
+initialize_routes(app, api)
 
 AUTHORITY = getDecryptedSecret("AUTHORITY")
 CLIENT_ID = getDecryptedSecret("CLIENT_ID")
