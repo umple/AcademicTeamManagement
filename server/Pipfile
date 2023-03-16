@@ -12,6 +12,7 @@ pandas = "*"
 requests-oauthlib = "*"
 pymongo = "*"
 rsa = "*"
+numpy = "*"
 
 [dev-packages]
 
