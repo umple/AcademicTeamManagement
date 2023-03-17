@@ -1,4 +1,4 @@
-from __init__ import db
+from .__init__ import db
 from bson import ObjectId
 
 studentsCollection = db["students"]

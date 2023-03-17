@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 from bson import ObjectId
 import student
-from __init__ import db
+from .__init__ import db
 
 class TestStudentModel(unittest.TestCase):
     
