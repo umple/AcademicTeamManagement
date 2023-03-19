@@ -1,29 +1,28 @@
-from flask_restful import Resource
-from pymongo import MongoClient
-from bson.objectid import ObjectId
-import os
+from .__init__ import db
+from bson import ObjectId
 
-client = MongoClient("mongodb://localhost", int(os.getenv("MONGO")))
-#currently hard coded database and collection called fruits
-mydb = client["fruits"]
-mycol = mydb["fruits"]
+studentsCollection = db["students"]
 
-class Students(Resource):
-    def get(self):
-        return list(mycol.find())
+def get_all_student():
+    student_list = []
+    for document in studentsCollection.find():
+        document["_id"] = str(document["_id"])
+        student_list.append(document)
+    return student_list
 
-    def post(self, name):
-        mycol.insert_one({'name':name})
-        return self.get()
-        
-class Student(Resource):
-    def get(self, id):
-        return list(mycol.find({"_id" : ObjectId(id)}))
-    
-    def put(self, id, name):
-        mycol.update_one({"_id" : ObjectId(id)},{'name':name})
-        return list(mycol.find())
-    
-    def delete(self, id):
-        mycol.delete_one({"_id" : ObjectId(id)})
-        return list(mycol.find())
+def add_student(student_obj):
+    result = studentsCollection.insert_one(student_obj)
+    return result
+
+def get_student_by_id(id):
+    document = studentsCollection.find_one({"_id": ObjectId(id)})
+    document["_id"] = str(document["_id"])
+    return document
+
+def update_student_by_id(id, student_obj):
+    result = studentsCollection.replace_one({"_id": ObjectId(id)}, student_obj)
+    return result
+
+def delete_student_by_id(id):
+    result = studentsCollection.delete_one({"_id": ObjectId(id)})
+    return result
