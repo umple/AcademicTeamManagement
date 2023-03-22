@@ -6,6 +6,10 @@ tasks.register('runFrontendLocally', Exec){
     commandLine './scripts/runFrontendLocally.sh'
 }
 
+tasks.register('runUnitTests', Exec){
+    commandLine './scripts/runUnitTests.sh'
+}
+
 tasks.register("startMongo",Exec){
     commandLine 'docker-compose', 'up', 'mongodb'
 }

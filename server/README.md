@@ -21,6 +21,12 @@ $ pipenv shell
 $ pipenv run start-dev
 ```
 
+## Run Unit Tests
+```bash
+# Execute the `test-unit` script
+$ pipenv run test-unit
+```
+
 ## FAQ
 
 ### Environment issues

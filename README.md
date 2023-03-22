@@ -40,7 +40,8 @@ You can lint the code locally.
 #### Unit Tests
 
 ```sh
-
+# Unit tests
+$ ./gradlew runUnitTests
 ```
 
 #### Integration Tests
