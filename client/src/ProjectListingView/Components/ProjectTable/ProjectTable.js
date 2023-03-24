@@ -411,8 +411,10 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
   );
 
   const handleSubmit = () => {
-    //put your validation logic here
     onSubmit(values);
+    fetch("api/project", {method: "POST", body:[{"project":"fsadfsa"}]}).then(response => {response.json()}).then(data =>{
+ 
+    });
     onClose();
   };
 
