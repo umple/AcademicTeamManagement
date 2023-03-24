@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo,useEffect   } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -224,8 +224,23 @@ const ProjectTable = () => {
         return;
       }
       //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+      // tableData.splice(row.index, 1);
+      // setTableData([...tableData]);
+      fetch(`/api/project/delete/${row.index}`, {
+        method: "DELETE"
+      })
+        .then(response => {
+          if (response.ok) {
+            // if the row was successfully deleted from the server, remove it from the table
+            
+            setTableData(tableData.filter(r => r.id !== row.id));
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     [tableData],
   );

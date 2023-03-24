@@ -29,4 +29,30 @@ def add_Project():
     except:
         return {"message": "Internal server error."}, 503
 
+
+# PUT Request to update a student info
+@project_bp.route("/project/update", methods=["PUT"])
+def update_project_by_id(id):
+    try:
+        project_obj = request.json
+        result = project.update_project_by_id(id, project_obj)
+        if result:
+            return jsonify(str(result.modified_count)), 200
+        else:
+            return {"message": "Could not edit student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
+
+# DELETE Request to remove a student from the collection
+@project_bp.route("/project/delete/<id>", methods=["DELETE"])
+def delete_project_by_id(id):
+    try:
+        result = project.delete_project_by_id(id)
+        if result:
+            return jsonify(str(result.deleted_count)), 200
+        else:
+            return {"message": "Could not delete student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
+
  
