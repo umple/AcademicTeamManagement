@@ -1,4 +1,15 @@
+import os
 from pymongo import MongoClient
 
-client = MongoClient("mongodb://localhost:27017/")
+# Check if the MONGO env port exists, otherwise use 27017 by default
+PORT = int(os.getenv("MONGO")) if os.getenv("MONGO") else 27017
+
+client = MongoClient(
+        host=os.getenv("MONGODB_HOST"),
+        port=PORT,
+        username=os.getenv("MONGODB_INITDB_ROOT_USERNAME"),
+        password=os.getenv("MONGODB_INITDB_ROOT_PASSWORD"),
+        authSource="admin"
+)
+
 db = client["AcademicTeamManagementDB"]

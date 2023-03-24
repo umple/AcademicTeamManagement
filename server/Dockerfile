@@ -17,6 +17,11 @@ WORKDIR /flaskApp
 # install pipenv
 RUN pip install pipenv 
 
+# install dependencies
 RUN pipenv install
 
+# expose container port 5001
+EXPOSE 5001
+
+# start the backend server
 CMD ["pipenv", "run", "start-prod"]
