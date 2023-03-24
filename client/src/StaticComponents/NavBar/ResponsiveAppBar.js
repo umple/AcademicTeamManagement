@@ -36,8 +36,8 @@ function ResponsiveAppBar() {
   return (
    
       <AppBar sx={{ bgcolor: '#8f001a'}}>
-        <Container id="m" maxWidth="xl">
-          <Toolbar>
+        {/* <Container id="m" maxWidth="xl"> */}
+          <Toolbar style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography
               variant="h6"
               noWrap
@@ -58,7 +58,7 @@ function ResponsiveAppBar() {
             </Typography>
 
             {/* fluid menu options */}
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none'} }}>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -130,7 +130,7 @@ function ResponsiveAppBar() {
 
             
           </Toolbar>
-        </Container>
+        {/* </Container> */}
       </AppBar>
 
   );
