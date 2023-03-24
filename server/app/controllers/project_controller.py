@@ -31,7 +31,7 @@ def add_Project():
 
 
 # PUT Request to update a student info
-@project_bp.route("/project/update", methods=["PUT"])
+@project_bp.route("/project/update/<id>", methods=["PUT"])
 def update_project_by_id(id):
     try:
         project_obj = request.json

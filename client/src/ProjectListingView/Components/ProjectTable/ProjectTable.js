@@ -211,8 +211,28 @@ const handleAddRow = useCallback(
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      setTableData([...tableData]);
+      // tableData[row.index] = values;
+      // setTableData([...tableData]);
+      fetch(`api/project/update/${row.original._id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+      })
+        .then(response => {
+          if (response.ok) {
+            const updatedData = tableData.filter(
+              (data) => data._id !== row.original._id
+            );
+            setTableData(updatedData);
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
       exitEditingMode();
     }
   };
