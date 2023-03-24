@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo,useEffect   } from 'react';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -167,14 +167,23 @@ const ProjectTable = () => {
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(() => data);
+  const [tableData, setTableData] = useState([]);
+  useEffect(() => {
+    fetch("/api/projects")
+      .then(response => response.json())
+      .then(data => {
+        setTableData(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleCreateNewRow = (values) => {
     tableData.push(values);
     setTableData([...tableData]);
     console.log(tableData)
-    console.log(columns)
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
@@ -411,10 +420,20 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
   );
 
   const handleSubmit = () => {
-    onSubmit(values);
-    fetch("api/project", {method: "POST", body:[{"project":"fsadfsa"}]}).then(response => {response.json()}).then(data =>{
- 
+    fetch("api/project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+    })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error(error);
     });
+    onSubmit(values);
     onClose();
   };
 

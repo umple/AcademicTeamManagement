@@ -5,7 +5,7 @@ from . import project_bp
 
 
 # GET Request to retreive all students from the collection
-@project_bp.route("/project", methods=["GET"])
+@project_bp.route("/projects", methods=["GET"])
 def get_projects():
     try:
         project_list = project.get_all_projects()
@@ -21,7 +21,6 @@ def get_projects():
 def add_Project():
     try:
         project_obj = request.json
-        print(project_obj)
         result = project.add_project(project_obj)
         if result:
             return jsonify(str(result.inserted_id)), 201

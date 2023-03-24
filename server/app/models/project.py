@@ -11,5 +11,5 @@ def get_all_projects():
     return project_list
 
 def add_project(project_obj):
-    result = projectCollection.insert_one({"project":"asdfasdf"})
+    result = projectCollection.insert_one(project_obj)
     return result
