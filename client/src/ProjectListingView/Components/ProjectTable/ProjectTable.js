@@ -168,6 +168,8 @@ const ProjectTable = () => {
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     fetch("/api/projects")
       .then(response => response.json())
@@ -177,14 +179,35 @@ const ProjectTable = () => {
       .catch(error => {
         console.error(error);
       });
-  }, []);
+  }, [tableData]);
+
   const [validationErrors, setValidationErrors] = useState({});
 
-  const handleCreateNewRow = (values) => {
-    tableData.push(values);
-    setTableData([...tableData]);
-    console.log(tableData)
-  };
+ const handleCreateNewRow = (values) => {};
+
+  
+const handleAddRow = useCallback(
+  (newRowData) => {
+    setIsLoading(true);
+    fetch('api/projects', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newRowData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        setIsLoading(false);
+        setTableData(prevState => [...prevState, data]);
+      })
+      .catch(error => {
+        setIsLoading(false);
+        console.error(error);
+      });
+  },
+  []
+);
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
@@ -218,22 +241,19 @@ const ProjectTable = () => {
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
-      if (
-        !window.confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
-      ) {
+      if (!window.confirm(`Are you sure you want to delete ${row.getValue('Project')}`)) {
         return;
       }
-      //send api delete request here, then refetch or update local table data for re-render
-      // tableData.splice(row.index, 1);
-      // setTableData([...tableData]);
-      fetch(`/api/project/delete/${row.index}`, {
+
+      fetch(`api/project/delete/${row.original._id}`, {
         method: "DELETE"
       })
         .then(response => {
           if (response.ok) {
-            // if the row was successfully deleted from the server, remove it from the table
-            
-            setTableData(tableData.filter(r => r.id !== row.id));
+            const updatedData = tableData.filter(
+              (data) => data._id !== row.original._id
+            );
+            setTableData(updatedData);
           } else {
             console.error("Error deleting row");
           }
@@ -420,6 +440,7 @@ const ProjectTable = () => {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
+        onAddRow={handleAddRow}
       />
   </Box>
   );
