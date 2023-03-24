@@ -29,72 +29,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
 import { createTheme } from '@mui/material/styles';
-
-// Mock data for table
-const data = [
-  {
-    project: 'Potential project A: Mobile pre-surgery app for CHEO',
-    description: 'The customers write "Dr. Byrns and I started collaborating a few years ago on a mobile application to help teenagers and parents of kids awaiting surgery at CHEO better comply with fasting instructions and illness reporting in order to avoid (expensive) surgery cancellations. We have a good working Android prototype already and will have a pilot study deployed shortly.',
-    client: 'Daniel Amyot',
-    visibility: 'visible',
-    interest: '0',
-    status: 'new',
-    group: 'not assigned',
-    notes: 'Requires at least 3 students',
-  },
-  {
-    project: 'Potential project B: Exam database for Faculty of Medicine',
-    description: 'The Undergraduate (UG) team at the Department of Family Medicine (DFM) currently has the responsibility to create exams for the medical students every 12 weeks.  The UG exam questions are currently stored within an excel spreadsheet and have a number of columns that require calculations.',
-    client: 'Marisa Duval',
-    visibility: 'hidden',
-    interest: '4',
-    status: 'assigned',
-    group: '21',
-    notes: 'Maximum 2 students',
-  },
-  {
-    project: 'Potential project C: Enhancements to "Sim City" project for Faculty of Medicine',
-    description: 'A capstone group in 2022 has worked on software to help medical residents learn what it is like to practice, by simulating various practical situations in a gamified manner. This project would continue to develop that system.',
-    client: 'Marisa Duval',
-    visibility: 'visible',
-    interest: '5',
-    status: 'students needed',
-    group: '13',
-    notes: 'Requires 2 more students',
-  },
-  {
-    project: 'Project G: Academic Team Project managemente',
-    description: 'A capstone group in 2022 has worked on software to help medical residents learn what it is like to practice, by simulating various practical situations in a gamified manner. This project would continue to develop that system.',
-    client: 'Marisa Duval',
-    visibility: 'visible',
-    interest: '6',
-    status: 'interested students',
-    group: 'not assigned',
-    notes: 'Requires at least 4 students',
-  },
-  {
-    project: 'Potential project set E: Umple enhancements',
-    description: 'Umple is now being used extensively, with about one "compilation" per second in UmpleOnline. Umple is designed to allow real systems to be built by generating code in multiple languages from state machines and data models. It also generates diagrams so code becomes self-documenting.',
-    client: 'Timothy Lethbridge',
-    visibility: 'visible',
-    interest: '8',
-    status: 'pending approval',
-    group: 'not assigned',
-    notes: 'Requires at least 4 students',
-  },
-  {
-    project: 'Academic Team Management',
-    description: 'We want to helo Professor Lethbridge with the project formation for the Capstone project course.',
-    client: 'Timothy Lethbridge',
-    visibility: 'visible',
-    interest: '0',
-    status: 'proposed',
-    group: 'not assigned',
-    notes: '',
-  },
-];
-
-
+ 
 
 const ProjectTable = () => {
   // Columns for table
@@ -183,7 +118,7 @@ const ProjectTable = () => {
 
   const [validationErrors, setValidationErrors] = useState({});
 
- const handleCreateNewRow = (values) => {};
+  const handleCreateNewRow = (values) => {};
 
   
 const handleAddRow = useCallback(
@@ -210,6 +145,7 @@ const handleAddRow = useCallback(
 );
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
+    setIsLoading(true);
     if (!Object.keys(validationErrors).length) {
       // tableData[row.index] = values;
       // setTableData([...tableData]);
@@ -222,6 +158,7 @@ const handleAddRow = useCallback(
       })
         .then(response => {
           if (response.ok) {
+            setIsLoading(false);
             const updatedData = tableData.filter(
               (data) => data._id !== row.original._id
             );
