@@ -235,7 +235,7 @@ const handleAddRow = useCallback(
   const csvExporter = new ExportToCsv(csvOptions);
 
   const handleExportData = () => {
-    csvExporter.generateCsv(data);
+    csvExporter.generateCsv(tableData);
   };
 
   // Mock data to show interested students
