@@ -162,7 +162,6 @@ const handleAddRow = useCallback(
             const updatedData = tableData.filter(
               (data) => data._id !== row.original._id
             );
-            setTableData(updatedData);
           } else {
             console.error("Error deleting row");
           }
