@@ -15,7 +15,6 @@ import {
     title: {
       fontSize: "4rem",
       fontWeight: 700,
-      color: '#3f51b5',
     },
     column1: {
       paddingLeft: 50,
