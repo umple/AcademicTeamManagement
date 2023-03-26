@@ -66,3 +66,45 @@
     - Import student list:
         - Default at least 200 per page
         - clean up CSV (exra # symbols, french accents missing), end of line indivator, see program language (may need to merge 2 CSVs) 
+
+## 02/17/2023
+- Team and client (Professor Lethbridge) meeting
+- **Demos:** 
+    -  Showed update Projects and Student group
+    -  Showed import students list from csv
+- **Next meeting:** March 9, 2023 - Sprint Day
+- **To do:** 
+    - color coded rows
+    - interested projects as lists
+    - projects include names
+    - more dropdowns in cell value selection (way later)
+    - how to swap between classes
+    - what if project gets deleted?
+    - Specify interest column (not obvious from "Interest") 
+    - new prof 2024 (make sure system is stupid proof)
+    - projects should be suggested for "XYZ" section (like csi, ceg, or seg) + sections can work together
+    - home page for ease of use (more stupid proofing) + explanation
+    - pic details FSM for projects
+    - unassign or make the project unavailable
+    - Archive or complete the project
+    - Project goes back to new (maybe duplicate it if it’s being reworked on for the next cohort) 
+
+## 03/09/2023
+- Sprint Day
+- **Next meeting:** March 27, 2023 - with professor
+    -  Made sure app was deployed properly
+    -  Updated the tables
+- **To do:** 
+    - interested projects as lists
+    - projects include names
+    - more dropdowns in cell value selection (way later)
+    - how to swap between classes
+    - what if project gets deleted?
+    - Specify interest column (not obvious from "Interest") 
+    - new prof 2024 (make sure system is stupid proof)
+    - projects should be suggested for "XYZ" section (like csi, ceg, or seg) + sections can work together
+    - home page for ease of use (more stupid proofing) + explanation
+    - unassign or make the project unavailable
+    - Archive or complete the project
+    - Project goes back to new (maybe duplicate it if it’s being reworked on for the next cohort) 
+    - Student view
