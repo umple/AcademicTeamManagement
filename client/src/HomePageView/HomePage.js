@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     media: {
         height: 0,
-        paddingTop: "56.25%", // 16:9 aspect ratio
+        paddingTop: "75%", // 16:9 aspect ratio
     },
 }));
 const HomePage = () => {
@@ -39,12 +39,12 @@ const HomePage = () => {
                         We are a company that specializes in managing academic teams.
                     </Typography>
                 </Grid>
-                <Grid item  sm={4} className={classes.column2}>
+                <Grid item  sm={3} className={classes.column2}>
                     <Card className={classes.card} style={{boxShadow: '0px 3px 5px rgba(0,0,0,0.2)'}}>
                         <CardMedia
                             className={classes.media}
-                            image="https://source.unsplash.com/random"
-                            title="Random image"
+                            image="https://upload.wikimedia.org/wikipedia/en/5/5f/Uottawacoa.svg"
+                            title="uottawa logo"
                         />
                     </Card>
                 </Grid>
