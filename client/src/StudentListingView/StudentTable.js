@@ -26,6 +26,7 @@ import {
   FormGroup,
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
 import { createTheme } from '@mui/material/styles';
@@ -254,6 +255,14 @@ const StudentTable = () => {
             variant="contained"
             >
               Export All Data
+            </Button>
+            <Button
+              color="secondary"
+              startIcon={<FileUploadIcon />}
+              href="/ImportStudents"
+              variant="contained"
+            >
+              Import Students
             </Button>
           </Box>
         )}
