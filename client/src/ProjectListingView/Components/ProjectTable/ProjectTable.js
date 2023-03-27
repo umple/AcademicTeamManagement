@@ -147,8 +147,6 @@ const ProjectTable = () => {
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     setIsLoading(true);
     if (!Object.keys(validationErrors).length) {
-      // tableData[row.index] = values;
-      // setTableData([...tableData]);
       fetch(`api/project/update/${row.original._id}`, {
         method: "PUT",
         headers: {

@@ -97,7 +97,7 @@ const StudentTable = () => {
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      fetch(`api/project/update/${row.original._id}`, {
+      fetch(`api/stdent/update/${row.original._id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json'
@@ -150,9 +150,22 @@ const StudentTable = () => {
       ) {
         return;
       }
-      //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+      fetch(`api/student/delete/${row.original._id}`, {
+        method: "DELETE"
+      })
+        .then(response => {
+          if (response.ok) {
+            const updatedData = tableData.filter(
+              (data) => data._id !== row.original._id
+            );
+            setTableData(updatedData);
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     [tableData],
   );

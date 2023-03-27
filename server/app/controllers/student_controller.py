@@ -42,7 +42,7 @@ def get_student_by_id(id):
         return {"message": "Internal server error."}, 503
 
 # PUT Request to update a student info
-@student_bp.route("/student/<id>", methods=["PUT"])
+@student_bp.route("/student/update/<id>", methods=["PUT"])
 def update_student_by_id(id):
     try:
         student_obj = request.json
@@ -55,7 +55,7 @@ def update_student_by_id(id):
         return {"message": "Internal server error."}, 503
 
 # DELETE Request to remove a student from the collection
-@student_bp.route("/student/<id>", methods=["DELETE"])
+@student_bp.route("/student/delete/<id>", methods=["DELETE"])
 def delete_student_by_id(id):
     try:
         result = student.delete_student_by_id(id)
