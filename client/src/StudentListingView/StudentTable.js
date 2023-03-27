@@ -11,85 +11,11 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  FormControlLabel,
-  Checkbox,
-  FormLabel,
-  FormGroup,
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
-import { createTheme } from '@mui/material/styles';
-
-// Mock data for table
-const data = [
-  {
-    orgDefinedId: '11111',
-    username: 'UBIPL061',
-    team: 'Team 1',
-    lastName: 'Doe',
-    firstName: 'John',
-    section: 'SEG4910W00',
-    notes: 'Contacted about open market'
-  },
-  {
-    orgDefinedId: '11122',
-    username: 'UBIPL062',
-    team: 'Team 2',
-    lastName: 'Brown',
-    firstName: 'Catherine',
-    section: 'SEG4910W00',
-    notes: 'Failed a pre-requisite'
-  },
-  {
-    orgDefinedId: '11122',
-    username: 'UBIPL063',
-    team: 'Team 3',
-    lastName: 'Smith',
-    firstName: 'Jane',
-    section: 'SEG4910W01',
-    notes: 'Only speaks French'
-  },
-  {
-    orgDefinedId: '44444',
-    username: 'UBIPL064',
-    team: 'unassigned',
-    lastName: 'Doe',
-    firstName: 'John',
-    section: 'SEG4910W00',
-    notes: ''
-  },
-  {
-    orgDefinedId: '11122',
-    username: 'UBIPL065',
-    team: 'unassigned',
-    lastName: 'James',
-    firstName: 'Andrew',
-    section: 'SEG4910W00',
-    notes: 'Wants to work on a project with a friend'
-  },
-  {
-    orgDefinedId: '11122',
-    username: 'UBIPL062',
-    team: 'Team 2',
-    lastName: 'Davis',
-    firstName: 'Harry',
-    section: 'SEG4910W01',
-    notes: ''
-  },
-];
-
-
 
 
 const StudentTable = () => {
