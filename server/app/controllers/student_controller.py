@@ -5,7 +5,7 @@ from . import student_bp
 
 
 # GET Request to retreive all students from the collection
-@student_bp.route("/api/student", methods=["GET"])
+@student_bp.route("/students", methods=["GET"])
 def get_students():
     try:
         student_list = student.get_all_student()
@@ -17,7 +17,7 @@ def get_students():
         return {"message": "Internal server error."}, 503
 
 # POST Request to add a new student to the list
-@student_bp.route("/api/student", methods=["POST"])
+@student_bp.route("/student", methods=["POST"])
 def add_student():
     try:
         student_obj = request.json
@@ -30,7 +30,7 @@ def add_student():
         return {"message": "Internal server error."}, 503
 
 # GET Request to get a student by id
-@student_bp.route("/api/student/<id>", methods=["GET"])
+@student_bp.route("/student/<id>", methods=["GET"])
 def get_student_by_id(id):
     try:
         document = student.get_student_by_id(id)
@@ -42,7 +42,7 @@ def get_student_by_id(id):
         return {"message": "Internal server error."}, 503
 
 # PUT Request to update a student info
-@student_bp.route("/api/student/<id>", methods=["PUT"])
+@student_bp.route("/student/<id>", methods=["PUT"])
 def update_student_by_id(id):
     try:
         student_obj = request.json
@@ -55,7 +55,7 @@ def update_student_by_id(id):
         return {"message": "Internal server error."}, 503
 
 # DELETE Request to remove a student from the collection
-@student_bp.route("/api/student/<id>", methods=["DELETE"])
+@student_bp.route("/student/<id>", methods=["DELETE"])
 def delete_student_by_id(id):
     try:
         result = student.delete_student_by_id(id)

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -91,6 +91,7 @@ const data = [
 
 
 
+
 const StudentTable = () => {
   // Columns for table
   const columns = useMemo(
@@ -126,20 +127,70 @@ const StudentTable = () => {
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(() => data);
+  const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleCreateNewRow = (values) => {
-    tableData.push(values);
-    setTableData([...tableData]);
-    console.log(tableData)
-    console.log(columns)
-  };
+
+  useEffect(() => {
+    fetch("/api/students")
+      .then(response => response.json())
+      .then(data => {
+        setTableData(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, [tableData]);
+
+  const handleAddRow = useCallback(
+    (newRowData) => {
+      setIsLoading(true);
+      fetch('api/students', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newRowData)
+      })
+        .then(response => response.json())
+        .then(data => {
+          setIsLoading(false);
+          setTableData(prevState => [...prevState, data]);
+        })
+        .catch(error => {
+          setIsLoading(false);
+          console.error(error);
+        });
+    },
+    []
+  );
+  
+
+  const handleCreateNewRow = (values) => {};
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      setTableData([...tableData]);
+      fetch(`api/project/update/${row.original._id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+      })
+        .then(response => {
+          if (response.ok) {
+            setIsLoading(false);
+            const updatedData = tableData.filter(
+              (data) => data._id !== row.original._id
+            );
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
       exitEditingMode();
     }
   };
@@ -194,7 +245,7 @@ const StudentTable = () => {
   const csvExporter = new ExportToCsv(csvOptions);
 
   const handleExportData = () => {
-    csvExporter.generateCsv(data);
+    csvExporter.generateCsv(tableData);
   };
   
    
@@ -272,6 +323,7 @@ const StudentTable = () => {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
+        onAddRow={handleAddRow}
       />
   </Box>
   );
@@ -287,7 +339,19 @@ export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit }) => {
   );
 
   const handleSubmit = () => {
-    //put your validation logic here
+    fetch("api/student", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+    })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error(error);
+    });
     onSubmit(values);
     onClose();
   };
