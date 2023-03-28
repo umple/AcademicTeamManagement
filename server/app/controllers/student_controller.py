@@ -1,6 +1,9 @@
 from flask import jsonify, request
 from app.models import student
+# from app.controllers import  as import_controller
 from bson import ObjectId
+from app.utils.data_conversion import clean_up_json_data
+import pandas as pd
 from . import student_bp
 
 
@@ -63,5 +66,19 @@ def delete_student_by_id(id):
             return jsonify(str(result.deleted_count)), 200
         else:
             return {"message": "Could not delete student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
+
+@student_bp.route("/importStudent", methods=["POST"])
+def import_students(file):
+    try:
+        result = student.importStudents(file)
+        print(result)
+        for res in result:
+            m = student.add_student(res)
+            if m:
+                return jsonify(str(result.inserted_id)), 201
+            else:
+                return {"message": "Could not add student."}, 404
     except:
         return {"message": "Internal server error."}, 503

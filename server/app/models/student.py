@@ -1,5 +1,7 @@
 from .__init__ import db
 from bson import ObjectId
+from app.utils.data_conversion import clean_up_json_data
+import pandas as pd
 
 studentsCollection = db["students"]
 
@@ -26,3 +28,23 @@ def update_student_by_id(id, student_obj):
 def delete_student_by_id(id):
     result = studentsCollection.delete_one({"_id": ObjectId(id)})
     return result
+
+def importStudents(file):
+    if not file:
+        return "No file selected", 400
+    if file:
+        file_extension = file.filename.rsplit(".", 1)[1]
+        if file_extension == "xlsx":
+            data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
+            data = clean_up_json_data(data.to_json(orient="records"))
+            print(data)
+            return data
+        elif file_extension == "csv":
+            data = pd.read_csv(file,na_values=["N/A", "na", "--","NaN", " "])
+            data = clean_up_json_data(data.to_json(orient="records"))
+            print(data)
+            return data
+        else:
+            return "Could not convert file", 503
+    else:
+        return "Could not read file", 500

@@ -1,4 +1,6 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
+
+import { makeStyles } from "@material-ui/core/styles";
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -11,47 +13,60 @@ import {
   Stack,
   TextField,
   Tooltip,
+  Typography,
+  FormControl,
+  FormHelperText
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
+import PublishIcon from '@mui/icons-material/Publish';
+
+
+const useStyles = makeStyles((theme) => ({
+  input: {
+    display: "none",
+  },
+}));
+
 
 
 const StudentTable = () => {
   // Columns for table
   const columns = useMemo(
     () => [
-          {
-            accessorKey: 'orgDefinedId',
-            header: 'ID',
-          },
-          {
-            accessorKey: 'username',
-            header: 'Username',
-          },
-          {
-            accessorKey: 'firstName',
-            header: 'First Name',
-          },
-          {
-            accessorKey: 'lastName',
-            header: 'Last Name',
-          },
-          {
-            accessorKey: 'section',
-            header: 'Section',
-          },
-          {
-            accessorKey: 'notes',
-            header: 'Notes',
-          },
-        ],
+      {
+        accessorKey: 'orgDefinedId',
+        header: 'ID',
+      },
+      {
+        accessorKey: 'username',
+        header: 'Username',
+      },
+      {
+        accessorKey: 'firstName',
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'section',
+        header: 'Section',
+      },
+      {
+        accessorKey: 'notes',
+        header: 'Notes',
+      },
+    ],
     [],
   );
 
 
   // For the create profile modal
+  const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
@@ -67,7 +82,12 @@ const StudentTable = () => {
       .catch(error => {
         console.error(error);
       });
-  }, [tableData]);
+  }, []);
+
+  const handleChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
 
   const handleAddRow = useCallback(
     (newRowData) => {
@@ -91,9 +111,9 @@ const StudentTable = () => {
     },
     []
   );
-  
 
-  const handleCreateNewRow = (values) => {};
+
+  const handleCreateNewRow = (values) => { };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
@@ -141,7 +161,32 @@ const StudentTable = () => {
     boxShadow: 24,
     p: 4,
   };
+
+  const [file, setFile] = useState(null);
+  const [error, setError] = useState(null);
   
+  const handleImportSubmit = async (event) => {
+    event.preventDefault();
+    if (!file) {
+      setError("Please select a file.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("api/importStudent", {
+        method: "POST",
+        body: formData,
+      });
+      const excelData = await response.json();
+      console.log(excelData)
+
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
@@ -186,11 +231,11 @@ const StudentTable = () => {
   const handleExportData = () => {
     csvExporter.generateCsv(tableData);
   };
-  
-   
-  return(
-  <Box sx={{ p: 2 }}>
-    <MaterialReactTable
+
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
@@ -238,22 +283,50 @@ const StudentTable = () => {
               Create New Student
             </Button>
             <Button
-            color="primary"
-            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-            onClick={handleExportData}
-            startIcon={<FileDownloadIcon />}
-            variant="contained"
+              color="primary"
+              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+              onClick={handleExportData}
+              startIcon={<FileDownloadIcon />}
+              variant="contained"
             >
               Export All Data
             </Button>
-            <Button
+            <form onSubmit={handleImportSubmit}>
+                <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem' }}>
+                  <input
+                    accept="*"
+                    className={classes.input}
+                    id="contained-button-file"
+                    type="file"
+                    onChange={handleChange}
+                    startIcon={<FileUploadIcon />}
+                  />
+                  <label htmlFor="contained-button-file">
+                    <Button variant="contained" component="span" color="success">
+                      Upload
+                    </Button>
+                  </label>
+                  {file && (
+                    <Typography variant="subtitle1">{file.name}</Typography>
+                  )}
+                  {error && <FormHelperText error>{error}</FormHelperText>}
+                  <label>
+                    <Button type="submit" component="span" color="secondary" variant="contained" endIcon={<PublishIcon />}>
+                      Submit
+                    </Button>
+                  </label>
+
+                </Box>
+            </form>
+
+            {/* <Button
               color="secondary"
               startIcon={<FileUploadIcon />}
-              href="/ImportStudents"
+              onSubmit={handleImportSubmit}
               variant="contained"
             >
               Import Students
-            </Button>
+            </Button> */}
           </Box>
         )}
       />
@@ -264,7 +337,7 @@ const StudentTable = () => {
         onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
       />
-  </Box>
+    </Box>
   );
 };
 
@@ -285,12 +358,12 @@ export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit }) => {
       },
       body: JSON.stringify(values)
     })
-    .then(response => {
-      console.log(response);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.error(error);
+      });
     onSubmit(values);
     onClose();
   };
