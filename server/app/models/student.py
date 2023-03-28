@@ -6,16 +6,17 @@ import pandas as pd
 studentsCollection = db["students"]
 
 def get_all_student():
-    student_list = []
-    for document in studentsCollection.find():
-        document["_id"] = str(document["_id"])
-        student_list.append(document)
+    projection = {"_id": False}  # exclude the "_id" field from the result
+    student_list = [doc for doc in studentsCollection.find({}, projection)]
     return student_list
 
 def add_student(student_obj):
     result = studentsCollection.insert_one(student_obj)
     return result
 
+def add_import_student(student_obj):
+    studentsCollection.insert_one(student_obj)
+   
 def get_student_by_id(id):
     document = studentsCollection.find_one({"_id": ObjectId(id)})
     document["_id"] = str(document["_id"])
@@ -29,7 +30,7 @@ def delete_student_by_id(id):
     result = studentsCollection.delete_one({"_id": ObjectId(id)})
     return result
 
-def importStudents(file):
+def import_students(file):
     if not file:
         return "No file selected", 400
     if file:
@@ -37,12 +38,10 @@ def importStudents(file):
         if file_extension == "xlsx":
             data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
             data = clean_up_json_data(data.to_json(orient="records"))
-            print(data)
             return data
         elif file_extension == "csv":
             data = pd.read_csv(file,na_values=["N/A", "na", "--","NaN", " "])
             data = clean_up_json_data(data.to_json(orient="records"))
-            print(data)
             return data
         else:
             return "Could not convert file", 503

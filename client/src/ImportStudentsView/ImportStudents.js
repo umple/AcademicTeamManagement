@@ -16,11 +16,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ImportStudents = () => {
+const ImportStudents = (props) => {
   const classes = useStyles();
-  const [data, setData] = useState([]);
-  const [columns, setColumns] = useState([]);
   const [file, setFile] = useState(null);
+  const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
 
   const handleChange = (event) => {
@@ -38,25 +37,17 @@ const ImportStudents = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("api/import-excel", {
+      const response = await fetch("api/importStudent", {
         method: "POST",
         body: formData,
       });
       const excelData = await response.json();
-      const newData = [];
       const newColumns = [];
       for (const column of Object.keys(excelData[0])) {
         newColumns.push({ accessorKey: column, header: column });
       }
-      for (let p = 0; p < Object.keys(excelData).length; p++) {
-        const row = {};
-        for (const column of newColumns) {
-          row[column.accessorKey] = excelData[p][column.accessorKey];
-        }
-        newData.push(row);
-      }
-      setColumns(newColumns);
-      setData(newData);
+      props.updateColumns(newColumns);
+       
     } catch (error) {
       setError(error.message);
     }
@@ -64,13 +55,8 @@ const ImportStudents = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box sx={{ p: 2 }}>
-        <MaterialReactTable
-          columns={columns}
-          data={data}
-          enablePagination={false}
-          renderTopToolbarCustomActions={() => (
-            <FormControl>
+      
+        <FormControl>
               <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem'}}>
                 <input
                   accept="*"
@@ -94,9 +80,7 @@ const ImportStudents = () => {
                 </Button>
               </Box>
             </FormControl>
-          )}
-        />
-      </Box>
+   
     </form>
   );
 };

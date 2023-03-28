@@ -22,6 +22,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
 import PublishIcon from '@mui/icons-material/Publish';
+import ImportStudents from '../ImportStudentsView/ImportStudents';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 const StudentTable = () => {
-  // Columns for table
-  const columns = useMemo(
+  
+  const defaultColumns = useMemo(
     () => [
       {
         accessorKey: 'orgDefinedId',
@@ -57,15 +58,27 @@ const StudentTable = () => {
         header: 'Section',
       },
       {
-        accessorKey: 'notes',
-        header: 'Notes',
+        accessorKey: 'calculated final grade numerator',
+        header: 'Calculated Final Grade Numerator',
+      },
+      {
+        accessorKey: 'calculated final grade denominator',
+        header: 'Calculated Final Grade Denominator',
+      },
+      {
+        accessorKey: 'adjusted final grade numerator',
+        header: 'Adjusted Final Grade Numerator',
+      },
+      {
+        accessorKey: 'adjusted final grade denominator',
+        header: 'Adjusted Final Grade Denominator',
       },
     ],
     [],
   );
 
-
   // For the create profile modal
+  const [columns, setColumns] = useState([]);
   const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -83,12 +96,7 @@ const StudentTable = () => {
         console.error(error);
       });
   }, []);
-
-  const handleChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-
+ 
   const handleAddRow = useCallback(
     (newRowData) => {
       setIsLoading(true);
@@ -150,43 +158,7 @@ const StudentTable = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const style = {
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
-  const [file, setFile] = useState(null);
-  const [error, setError] = useState(null);
-  
-  const handleImportSubmit = async (event) => {
-    event.preventDefault();
-    if (!file) {
-      setError("Please select a file.");
-      return;
-    }
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch("api/importStudent", {
-        method: "POST",
-        body: formData,
-      });
-      const excelData = await response.json();
-      console.log(excelData)
-
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
+ 
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
@@ -232,7 +204,9 @@ const StudentTable = () => {
     csvExporter.generateCsv(tableData);
   };
 
-
+  function updateColumns(newColumns) {
+    setColumns(newColumns);
+  }
   return (
     <Box sx={{ p: 2 }}>
       <MaterialReactTable
@@ -245,7 +219,7 @@ const StudentTable = () => {
           },
         }}
         enablePagination={false}
-        columns={columns}
+        columns={columns.length < 1 ? defaultColumns : columns }
         data={tableData}
         editingMode="modal"
         enableColumnOrdering
@@ -291,34 +265,7 @@ const StudentTable = () => {
             >
               Export All Data
             </Button>
-            <form onSubmit={handleImportSubmit}>
-                <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem' }}>
-                  <input
-                    accept="*"
-                    className={classes.input}
-                    id="contained-button-file"
-                    type="file"
-                    onChange={handleChange}
-                    startIcon={<FileUploadIcon />}
-                  />
-                  <label htmlFor="contained-button-file">
-                    <Button variant="contained" component="span" color="success">
-                      Upload
-                    </Button>
-                  </label>
-                  {file && (
-                    <Typography variant="subtitle1">{file.name}</Typography>
-                  )}
-                  {error && <FormHelperText error>{error}</FormHelperText>}
-                  <label>
-                    <Button type="submit" component="span" color="secondary" variant="contained" endIcon={<PublishIcon />}>
-                      Submit
-                    </Button>
-                  </label>
-
-                </Box>
-            </form>
-
+            <ImportStudents  updateColumns={updateColumns}></ImportStudents>
             {/* <Button
               color="secondary"
               startIcon={<FileUploadIcon />}

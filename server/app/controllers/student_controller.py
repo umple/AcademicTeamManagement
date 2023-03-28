@@ -4,6 +4,7 @@ from app.models import student
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
 import pandas as pd
+import json
 from . import student_bp
 
 
@@ -70,15 +71,14 @@ def delete_student_by_id(id):
         return {"message": "Internal server error."}, 503
 
 @student_bp.route("/importStudent", methods=["POST"])
-def import_students(file):
+def import_students():
     try:
-        result = student.importStudents(file)
-        print(result)
-        for res in result:
-            m = student.add_student(res)
-            if m:
-                return jsonify(str(result.inserted_id)), 201
-            else:
-                return {"message": "Could not add student."}, 404
+        file = request.files["file"]
+        result = student.import_students(file)
+        json_dict = json.loads(result)
+ 
+        for res in json_dict:
+            student.add_import_student(res)
+        return result, 201
     except:
         return {"message": "Internal server error."}, 503
