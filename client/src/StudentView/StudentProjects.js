@@ -256,7 +256,7 @@ function AddProjectModal({ open, onClose, onSubmit }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newProject = { name, description, client, group, status };
+    const newProject = { name, description, client, group };
     onSubmit(newProject);
     setName('');
     setDescription('');
