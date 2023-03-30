@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
 
 import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -83,13 +84,15 @@ const StudentTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setIsLoading] = useState(false);
 
 
   useEffect(() => {
+    setIsLoading(true)
     fetch("/api/students")
       .then(response => response.json())
       .then(data => {
+        setIsLoading(false)
         setTableData(data);
       })
       .catch(error => {
@@ -125,6 +128,7 @@ const StudentTable = () => {
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
+      setIsLoading(true)
       fetch(`api/stdent/update/${row.original._id}`, {
         method: "PUT",
         headers: {
@@ -209,6 +213,9 @@ const StudentTable = () => {
   }
   return (
     <Box sx={{ p: 2 }}>
+      {loading ? (
+        <CircularProgress />
+      ) : 
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -266,17 +273,9 @@ const StudentTable = () => {
               Export All Data
             </Button>
             <ImportStudents  updateColumns={updateColumns}></ImportStudents>
-            {/* <Button
-              color="secondary"
-              startIcon={<FileUploadIcon />}
-              onSubmit={handleImportSubmit}
-              variant="contained"
-            >
-              Import Students
-            </Button> */}
           </Box>
         )}
-      />
+      /> };
       <CreateNewStudentModal
         columns={columns}
         open={createModalOpen}

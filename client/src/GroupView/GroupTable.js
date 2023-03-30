@@ -145,7 +145,7 @@ const ProjectTable = () => {
             },
             size: 120,
           },
-        }}
+        }}  
         enablePagination={false}
         columns={columns}
         data={tableData}

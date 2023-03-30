@@ -47,40 +47,33 @@ const ImportStudents = (props) => {
         newColumns.push({ accessorKey: column, header: column });
       }
       props.updateColumns(newColumns);
-       
+
     } catch (error) {
       setError(error.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      
-        <FormControl>
-              <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem'}}>
-                <input
-                  accept="*"
-                  className={classes.input}
-                  id="contained-button-file"
-                  type="file"
-                  onChange={handleChange}
-                />
-                <label htmlFor="contained-button-file">
-                  <Button variant="contained" component="span" color="success">
-                    Upload
-                  </Button>
-                </label>
-                {file && (
-                  <Typography variant="subtitle1">{file.name}</Typography>
-                )}
-                {error && <FormHelperText error>{error}</FormHelperText>}
-
-                <Button type="submit" variant="contained" endIcon={<PublishIcon/>}>
-                  Submit
-                </Button>
-              </Box>
-            </FormControl>
-   
+    <form onSubmit={handleSubmit} sx={{ gap: '1rem', p: '10rem' }}>
+      <input
+        accept="*"
+        className={classes.input}
+        id="contained-button-file"
+        type="file"
+        onChange={handleChange}
+      />
+      <label htmlFor="contained-button-file">
+        <Button variant="contained" color="success">
+          Upload
+        </Button>
+      </label>
+      {file && (
+        <Typography variant="subtitle1">{file.name}</Typography>
+      )}
+      {error && <FormHelperText error>{error}</FormHelperText>}
+      <Button type="submit" variant="contained" endIcon={<PublishIcon />}>
+        Submit
+      </Button>
     </form>
   );
 };
