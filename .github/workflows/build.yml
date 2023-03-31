@@ -3,6 +3,14 @@ on: [push]
 env:
   COMPOSE_DOCKER_CLI_BUILD: 0
   DOCKER_BUILDKIT: 0
+  FLASK: 5001
+  REACT: 3000
+  MONGO: 27017
+  MONGODB_HOST: mongodb_host
+  MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
+  MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
+  MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
+  PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
 
 # cancel the in-progress job related to the current PR
 concurrency:
@@ -10,30 +18,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  react-build:
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./client
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Node JS
-        uses: actions/setup-node@v3
-      - name: Build React Application
-        run: |
-          npm install --force 
-          npm run build 
-        env:
-          CI: false
-      - name: Docker build
-        uses: docker/build-push-action@v4
-        with:
-          context: client
-          push: false
-        env:
-          DOCKER_BUILDKIT: 0
+  # react-build:
+  #   timeout-minutes: 10
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./client
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - name: Setup Node JS
+  #       uses: actions/setup-node@v3
+  #     - name: Build React Application
+  #       run: |
+  #         npm install --force 
+  #         npm run build 
+  #       env:
+  #         CI: false
+  #     - name: Docker build
+  #       uses: docker/build-push-action@v4
+  #       with:
+  #         context: client
+  #         push: false
+  #       env:
+  #         DOCKER_BUILDKIT: 0
   flask-build:
     timeout-minutes: 10
     runs-on: ubuntu-latest
@@ -62,18 +70,5 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Make envfile
-        uses: ozaytsev86/create-env-file@v1
-        with:
-          FLASK: 5001
-          REACT: 3000
-          MONGO: 27017
-          MONGODB_HOST: mongodb_host
-          MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
-          MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
-          MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
-          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
-      - name: test
-        run: ls
       - name: docker-compose build
         run: docker compose up -d
