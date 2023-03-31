@@ -71,8 +71,8 @@ jobs:
           MONGODB_HOST: mongodb_host
           MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
           MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
-          MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
-          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}
+          MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
+          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
       - name: test
         run: ls
       - name: docker-compose build
