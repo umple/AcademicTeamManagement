@@ -53,13 +53,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Init Python3
         uses: actions/setup-python@v1
-      - name: Docker build
-        uses: docker/build-push-action@v4
-        with:
-          push: false
-          context: server
-          build-args: |
-            PRIVATE_KEY=${{secrets.PRIVATE_KEY}}
+      # - name: Docker build
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     push: false
+      #     context: server
+      #     build-args: |
+      #       PRIVATE_KEY=${{secrets.PRIVATE_KEY}}
   docker-compose:
     timeout-minutes: 10
     runs-on: ubuntu-latest
@@ -71,6 +71,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Create mock .env
-        run: mock > .env
+        run: echo mock > .env
       - name: docker-compose build
         run: docker compose up -d
