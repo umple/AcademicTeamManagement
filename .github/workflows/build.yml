@@ -18,30 +18,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # react-build:
-  #   timeout-minutes: 10
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ./client
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #     - name: Setup Node JS
-  #       uses: actions/setup-node@v3
-  #     - name: Build React Application
-  #       run: |
-  #         npm install --force 
-  #         npm run build 
-  #       env:
-  #         CI: false
-  #     - name: Docker build
-  #       uses: docker/build-push-action@v4
-  #       with:
-  #         context: client
-  #         push: false
-  #       env:
-  #         DOCKER_BUILDKIT: 0
+  react-build:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node JS
+        uses: actions/setup-node@v3
+      # - name: Build React Application
+      #   run: |
+      #     npm install --force 
+      #     npm run build 
+      #   env:
+      #     CI: false
+      # - name: Docker build
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     context: client
+      #     push: false
+      #   env:
+      #     DOCKER_BUILDKIT: 0
   flask-build:
     timeout-minutes: 10
     runs-on: ubuntu-latest
