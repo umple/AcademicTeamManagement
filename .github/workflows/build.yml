@@ -70,5 +70,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Create mock .env
+        run: mock > .env
       - name: docker-compose build
         run: docker compose up -d
