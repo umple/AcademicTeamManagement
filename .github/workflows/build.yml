@@ -63,16 +63,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1.3
-      with:
-        FLASK: 5001
-        REACT: 3000
-        MONGO: 27017
-        MONGODB_HOST: mongodb_host
-        MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
-        MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
-        MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
-        PRIVATE_KEY: ${{secrets.PRIVATE_KEY}
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          FLASK: 5001
+          REACT: 3000
+          MONGO: 27017
+          MONGODB_HOST: mongodb_host
+          MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
+          MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
+          MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
+          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}
       - name: test
         run: ls
       - name: docker-compose build
