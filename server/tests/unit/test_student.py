@@ -1,3 +1,6 @@
+import os
+os.environ['ENVIRONMENT'] = 'TESTING' # Set the environment to testing
+
 import unittest
 from unittest.mock import MagicMock
 from bson import ObjectId

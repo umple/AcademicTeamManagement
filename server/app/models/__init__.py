@@ -12,4 +12,10 @@ client = MongoClient(
         authSource="admin"
 )
 
-db = client["AcademicTeamManagementDB"]
+# Check if a testing environment is running
+if os.environ.get('ENVIRONMENT') == 'TESTING':
+    # Create a testing database
+    db = client["TestAcademicTeamManagementDB"]
+else:
+    # Main database
+    db = client["AcademicTeamManagementDB"]
