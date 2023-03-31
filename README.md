@@ -52,14 +52,20 @@ $ ./gradlew runUnitTests
 
 #### Deploy the docker compose
 
-1) First you need to get the private key and save it somewhere locally. You can ask someone on the team to give you the pem file
-2) Make sure you are in the main directory of the project
-3) Now that you have the file you need to add a base64 encoded .env variable (MAKE SURE YOU DON'T PUSH THAT FILE WITH PK in there)
-```sh
-echo PRIVATE_KEY="$(cat <<location of the pem file>> | base64)" >> .env
-```
-4) Run docker compose up
+1) First create a `.env` file locally. Please refer to the file `.env.template` for all the variables that need to be added.
+2) There are three secrets, please ask one of the code owners for these secrets to add them to your `.env` file
+3) Run docker compose up
 
 ```sh
 docker compose up
 ```
+
+### Managing the private key
+
+The PRIVATE_KEY in the .env file needs to be base64 encoded
+
+```
+$(cat <<location of the pem file>> | base64)
+```
+
+
