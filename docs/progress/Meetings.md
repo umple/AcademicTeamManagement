@@ -108,3 +108,17 @@
     - Archive or complete the project
     - Project goes back to new (maybe duplicate it if it’s being reworked on for the next cohort) 
     - Student view
+
+## 03/27/2023
+- Team and client (Professor Lethbridge) meeting
+- **Next meeting:** TBD
+    -  Showed API work
+    -  Demonstrated unit tests
+    -  Showed updated student list
+    -  Explaned authentication
+- **To do:** 
+    - Get roles for instructor and student
+    - Get access to the testing VM (Prof Lethbridge will do it)
+    - Finish UI components for student view
+    - Finish connecting UI with database
+    - Prepare for final presentation
