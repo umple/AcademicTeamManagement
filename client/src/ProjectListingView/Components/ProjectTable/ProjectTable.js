@@ -106,7 +106,7 @@ const ProjectTable = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/projects")
+    fetch("api/project")
       .then(response => response.json())
       .then(data => {
         setTableData(data);
@@ -124,7 +124,7 @@ const ProjectTable = () => {
 const handleAddRow = useCallback(
   (newRowData) => {
     setIsLoading(true);
-    fetch('api/projects', {
+    fetch('api/project', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
