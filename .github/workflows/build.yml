@@ -3,6 +3,14 @@ on: [push]
 env:
   COMPOSE_DOCKER_CLI_BUILD: 0
   DOCKER_BUILDKIT: 0
+  FLASK: 5001
+  REACT: 3000
+  MONGO: 27017
+  MONGODB_HOST: mongodb_host
+  MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
+  MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
+  MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
+  PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
 
 # cancel the in-progress job related to the current PR
 concurrency:
@@ -62,7 +70,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Add Private key to the .env
-        run: echo PRIVATE_KEY=${{secrets.PRIVATE_KEY}} >> .env
+      - name: Create mock .env
+        run: echo mock > .env
       - name: docker-compose build
         run: docker compose up -d

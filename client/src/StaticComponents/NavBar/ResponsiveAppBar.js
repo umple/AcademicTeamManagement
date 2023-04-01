@@ -10,7 +10,10 @@ const pages = {
   page1: {key: 'Home', value:'/'},
   page2: {key: 'Projects', value:'/Projects'},
   page3: {key:'Groups', value:'/GroupView'},
-  page4: {key: 'Students', value:'/Students'}
+  page4: {key: 'Students', value:'/Students'},
+  page5: {key: 'Student Projects', value:'/StudentProjects'},
+  page6: {key: 'Student Groups', value:'/StudentGroups'},
+  page7: {key: 'My Group', value:'/MyGroup'},
 };
 
 function ResponsiveAppBar() {
