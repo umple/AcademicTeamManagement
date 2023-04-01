@@ -97,7 +97,7 @@ const StudentTable = () => {
   useEffect(() => {
     const savedData = localStorage.getItem("columns");
     if (savedData) {
-      setColumns(JSON.parse(savedData));
+      setColumns   (JSON.parse(savedData));
     }
   }, []);
 
