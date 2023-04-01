@@ -11,6 +11,8 @@ def get_students():
         student_list = student.get_all_student()
         if student_list:
             return jsonify(student_list), 200
+        elif len(student_list) == 0:
+            return {"message": "Students list is empty."}, 200
         else:
             return {"message": "Students list not found."}, 404
     except:

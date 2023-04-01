@@ -9,7 +9,7 @@ client = MongoClient(
         port=PORT,
         username=os.getenv("MONGODB_INITDB_ROOT_USERNAME"),
         password=os.getenv("MONGODB_INITDB_ROOT_PASSWORD"),
-        authSource="admin"
+        authSource="AcademicTeamManagementDB"
 )
 
 # Check if a testing environment is running
