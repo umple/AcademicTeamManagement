@@ -104,8 +104,8 @@ const ProjectTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
+  
+  const fetchProjects = () => {
     fetch("/api/projects")
       .then(response => response.json())
       .then(data => {
@@ -114,7 +114,13 @@ const ProjectTable = () => {
       .catch(error => {
         console.error(error);
       });
-  }, [tableData]);
+  };
+
+ 
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -123,8 +129,7 @@ const ProjectTable = () => {
 
   const handleAddRow = useCallback(
     (newRowData) => {
-      setIsLoading(true);
-      fetch('api/projects', {
+      fetch('api/project', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -133,7 +138,6 @@ const ProjectTable = () => {
       })
         .then(response => response.json())
         .then(data => {
-          setIsLoading(false);
           setTableData(prevState => [...prevState, data]);
         })
         .catch(error => {
@@ -156,10 +160,10 @@ const ProjectTable = () => {
       })
         .then(response => {
           if (response.ok) {
-            setIsLoading(false);
             const updatedData = tableData.filter(
               (data) => data._id !== row.original._id
             );
+            fetchProjects();
           } else {
             console.error("Error deleting row");
           }
@@ -395,13 +399,14 @@ const ProjectTable = () => {
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
+        fetchProjects= {fetchProjects}
       />
     </Box>
   );
 };
 
 //Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
+export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects}) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -418,7 +423,9 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
       body: JSON.stringify(values)
     })
       .then(response => {
-        console.log(response);
+        if (response.ok){
+            fetchProjects();
+        }
       })
       .catch(error => {
         console.error(error);

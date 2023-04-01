@@ -79,6 +79,7 @@ def import_students():
  
         for res in json_dict:
             student.add_import_student(res)
+        
         return result, 201
     except:
         return {"message": "Internal server error."}, 503

@@ -1,7 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
-
 import { makeStyles } from "@material-ui/core/styles";
-import CircularProgress from '@material-ui/core/CircularProgress';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -13,16 +11,11 @@ import {
   IconButton,
   Stack,
   TextField,
-  Tooltip,
-  Typography,
-  FormControl,
-  FormHelperText
+  Tooltip
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { ExportToCsv } from 'export-to-csv';
-import { Delete, Edit, Help } from '@mui/icons-material';
-import PublishIcon from '@mui/icons-material/Publish';
+import { Delete, Edit } from '@mui/icons-material';
 import ImportStudents from '../ImportStudentsView/ImportStudents';
 
 
@@ -35,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const StudentTable = () => {
-  
+
   const defaultColumns = useMemo(
     () => [
       {
@@ -87,23 +80,30 @@ const StudentTable = () => {
   const [loading, setIsLoading] = useState(false);
 
 
+  const fetchStudents = async () => {
+    try {
+      const response = await fetch("/api/students");
+      const data = await response.json();
+      setTableData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   useEffect(() => {
-    setIsLoading(true)
-    fetch("/api/students")
-      .then(response => response.json())
-      .then(data => {
-        setIsLoading(false)
-        setTableData(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    fetchStudents();
   }, []);
- 
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("columns");
+    if (savedData) {
+      setColumns(JSON.parse(savedData));
+    }
+  }, []);
+
   const handleAddRow = useCallback(
     (newRowData) => {
-      setIsLoading(true);
-      fetch('api/students', {
+      fetch('api/student', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -112,24 +112,20 @@ const StudentTable = () => {
       })
         .then(response => response.json())
         .then(data => {
-          setIsLoading(false);
-          setTableData(prevState => [...prevState, data]);
+          fetchStudents();
         })
         .catch(error => {
-          setIsLoading(false);
           console.error(error);
         });
     },
     []
   );
-
-
+ 
   const handleCreateNewRow = (values) => { };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      setIsLoading(true)
-      fetch(`api/stdent/update/${row.original._id}`, {
+      fetch(`api/student/update/${row.original._id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json'
@@ -138,10 +134,7 @@ const StudentTable = () => {
       })
         .then(response => {
           if (response.ok) {
-            setIsLoading(false);
-            const updatedData = tableData.filter(
-              (data) => data._id !== row.original._id
-            );
+            fetchStudents();
           } else {
             console.error("Error deleting row");
           }
@@ -162,7 +155,7 @@ const StudentTable = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
- 
+
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
@@ -176,10 +169,7 @@ const StudentTable = () => {
       })
         .then(response => {
           if (response.ok) {
-            const updatedData = tableData.filter(
-              (data) => data._id !== row.original._id
-            );
-            setTableData(updatedData);
+            fetchStudents();
           } else {
             console.error("Error deleting row");
           }
@@ -211,84 +201,84 @@ const StudentTable = () => {
   function updateColumns(newColumns) {
     setColumns(newColumns);
   }
+
   return (
     <Box sx={{ p: 2 }}>
-      {loading ? (
-        <CircularProgress />
-      ) : 
-      <MaterialReactTable
-        displayColumnDefOptions={{
-          'mrt-row-actions': {
-            muiTableHeadCellProps: {
-              align: 'center',
+        <MaterialReactTable
+          displayColumnDefOptions={{
+            'mrt-row-actions': {
+              muiTableHeadCellProps: {
+                align: 'center',
+              },
+              size: 120,
             },
-            size: 120,
-          },
-        }}
-        enablePagination={false}
-        columns={columns.length < 1 ? defaultColumns : columns }
-        data={tableData}
-        editingMode="modal"
-        enableColumnOrdering
-        enableColumnResizing
-        columnResizeMode="onChange" //default is "onEnd"
-        defaultColumn={{
-          minSize: 100,
-          size: 150, //default size is usually 180
-        }}
-        enableEditing
-        initialState={{ showColumnFilters: false, density: 'compact' }}
-        onEditingRowSave={handleSaveRowEdits}
-        onEditingRowCancel={handleCancelRowEdits}
-        renderRowActions={({ row, table }) => (
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Tooltip arrow placement="left" title="Edit">
-              <IconButton onClick={() => table.setEditingRow(row)}>
-                <Edit />
-              </IconButton>
-            </Tooltip>
-            <Tooltip arrow placement="right" title="Delete">
-              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
-                <Delete />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )}
-        renderTopToolbarCustomActions={() => (
-          <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
-            <Button
-              color="success"
-              onClick={() => setCreateModalOpen(true)}
-              variant="contained"
-            >
-              Create New Student
-            </Button>
-            <Button
-              color="primary"
-              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-              onClick={handleExportData}
-              startIcon={<FileDownloadIcon />}
-              variant="contained"
-            >
-              Export All Data
-            </Button>
-            <ImportStudents  updateColumns={updateColumns}></ImportStudents>
-          </Box>
-        )}
-      /> };
+          }}
+          enablePagination={true}
+          columns={columns}
+          data={tableData}
+          editingMode="modal"
+          enableColumnOrdering
+          enableColumnResizing
+          columnResizeMode="onChange" //default is "onEnd"
+          defaultColumn={{
+            minSize: 100,
+            size: 150, //default size is usually 180
+          }}
+          enableEditing
+          initialState={{ showColumnFilters: false, density: 'compact' }}
+          onEditingRowSave={handleSaveRowEdits}
+          onEditingRowCancel={handleCancelRowEdits}
+          renderRowActions={({ row, table }) => (
+            <Box sx={{ display: 'flex', gap: '1rem' }}>
+              <Tooltip arrow placement="left" title="Edit">
+                <IconButton onClick={() => table.setEditingRow(row)}>
+                  <Edit />
+                </IconButton>
+              </Tooltip>
+              <Tooltip arrow placement="right" title="Delete">
+                <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+                  <Delete />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          )}
+          renderTopToolbarCustomActions={() => (
+            <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem' }}>
+              <Button
+                color="success"
+                onClick={() => setCreateModalOpen(true)}
+                variant="contained"
+              >
+                Create New Student
+              </Button>
+              <Button
+                color="primary"
+                //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                onClick={handleExportData}
+                startIcon={<FileDownloadIcon />}
+                variant="contained"
+              >
+                Export All Data
+              </Button>
+
+              <ImportStudents updateColumns={updateColumns} fetchStudents={fetchStudents} ></ImportStudents>
+            </Box>
+          )}
+        /> 
       <CreateNewStudentModal
-        columns={columns}
+        columns={defaultColumns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
+        fetchStudents={fetchStudents}
       />
     </Box>
   );
 };
 
 //Modal to create new student
-export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit }) => {
+export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit, fetchStudents }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -305,7 +295,9 @@ export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit }) => {
       body: JSON.stringify(values)
     })
       .then(response => {
-        console.log(response);
+        if (response.ok) {
+          fetchStudents();
+        }
       })
       .catch(error => {
         console.error(error);

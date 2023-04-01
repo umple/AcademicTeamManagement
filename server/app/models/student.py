@@ -6,8 +6,10 @@ import pandas as pd
 studentsCollection = db["students"]
 
 def get_all_student():
-    projection = {"_id": False}  # exclude the "_id" field from the result
-    student_list = [doc for doc in studentsCollection.find({}, projection)]
+    student_list = []
+    for document in studentsCollection.find():
+        document["_id"] = str(document["_id"])
+        student_list.append(document)
     return student_list
 
 def add_student(student_obj):
@@ -20,6 +22,15 @@ def add_import_student(student_obj):
 def get_student_by_id(id):
     document = studentsCollection.find_one({"_id": ObjectId(id)})
     document["_id"] = str(document["_id"])
+    return document
+
+def get_student_by_email(email):
+    document = studentsCollection.find_one({"Email": str(email)})
+    if document:
+        email_field = document.get("Email")
+        if isinstance(email_field, str):
+            document["Email"] = str(email_field)
+ 
     return document
 
 def update_student_by_id(id, student_obj):

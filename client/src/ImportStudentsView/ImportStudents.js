@@ -4,22 +4,23 @@ import { Box } from "@mui/material";
 import {
   Button,
   Typography,
-  FormControl,
   FormHelperText,
 } from "@material-ui/core";
-import MaterialReactTable from "material-react-table";
 import PublishIcon from '@mui/icons-material/Publish';
 
 const useStyles = makeStyles((theme) => ({
   input: {
     display: "none",
   },
+  buttonLabel: {
+    display: "inline-block",
+    marginRight: theme.spacing(1),
+  }
 }));
 
 const ImportStudents = (props) => {
   const classes = useStyles();
   const [file, setFile] = useState(null);
-  const [columns, setColumns] = useState([]);
   const [error, setError] = useState(null);
 
   const handleChange = (event) => {
@@ -46,15 +47,17 @@ const ImportStudents = (props) => {
       for (const column of Object.keys(excelData[0])) {
         newColumns.push({ accessorKey: column, header: column });
       }
+      newColumns.pop();
       props.updateColumns(newColumns);
-
+      props.fetchStudents();
     } catch (error) {
       setError(error.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} sx={{ gap: '1rem', p: '10rem' }}>
+    <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'row' }}> 
+    <form onSubmit={handleSubmit}>
       <input
         accept="*"
         className={classes.input}
@@ -62,8 +65,8 @@ const ImportStudents = (props) => {
         type="file"
         onChange={handleChange}
       />
-      <label htmlFor="contained-button-file">
-        <Button variant="contained" color="success">
+      <label htmlFor="contained-button-file" className={classes.buttonLabel}>
+        <Button variant="contained" color="success" component="span" >
           Upload
         </Button>
       </label>
@@ -75,6 +78,7 @@ const ImportStudents = (props) => {
         Submit
       </Button>
     </form>
+    </Box>
   );
 };
 
