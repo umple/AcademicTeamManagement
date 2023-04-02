@@ -407,6 +407,7 @@ const ProjectTable = () => {
 
 //Modal to create new project
 export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects}) => {
+  const [isFormValid, setIsFormValid] = useState(false);
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -425,6 +426,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
       .then(response => {
         if (response.ok){
             fetchProjects();
+            setValues({});
         }
       })
       .catch(error => {
@@ -435,37 +437,41 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
   };
 
   return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Project</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <Stack
-            sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
-            }}
-          >
-            {columns.map((column) => (
-              <TextField
-                key={column.accessorKey}
-                label={column.header}
-                name={column.accessorKey}
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.name]: e.target.value })
-                }
-              />
-            ))}
-          </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create New Project
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <form onSubmit={(e) => e.preventDefault()}>
+      <Dialog open={open}>
+        <DialogTitle textAlign="center">Create New Project</DialogTitle>
+        <DialogContent>
+            <Stack
+              sx={{
+                width: '100%',
+                minWidth: { xs: '300px', sm: '360px', md: '400px' },
+                gap: '1.5rem',
+              }}
+            >
+              {columns.map((column) => (
+                <TextField
+                  key={column.accessorKey}
+                  label={column.header}
+                  name={column.accessorKey}
+                  onChange={(e) => {
+                      setValues( { ...values, [e.target.name]: e.target.value })  
+                      // setIsFormValid(e.target.name !== 'Project' || e.target.value !== '');
+                    }
+                  }
+                />
+              ))}
+            </Stack>
+        
+        </DialogContent>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={onClose}>Cancel</Button>
+        
+          <Button color="secondary" onClick={handleSubmit} variant="contained" type="submit">
+            Create New Project
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </form>
   );
 };
 

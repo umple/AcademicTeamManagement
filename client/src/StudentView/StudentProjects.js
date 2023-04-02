@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Grid, Card, CardContent, Typography, Button, TextField, Modal, Dialog, DialogTitle, DialogContent, DialogActions, Stack } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -147,7 +147,8 @@ function StudentProjects() {
   };
   
   const filteredProjects = projects.filter((project) => {
-    return project.name.toLowerCase().includes(searchTerm.toLowerCase());
+    if (project.project !== undefined)
+      return project.project.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const handleOpen = () => {
@@ -157,6 +158,24 @@ function StudentProjects() {
   const handleClose = () => {
     setOpen(false);
   };
+
+
+  const fetchProjects = () => {
+    fetch("/api/projects")
+      .then(response => response.json())
+      .then(data => {
+        setProjects(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+ 
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   const handleSubmit = (newProject) => {
     setProjects([...projects, { ...newProject, id: projects.length + 1 }]);
