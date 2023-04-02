@@ -138,7 +138,7 @@ const mockProjects = [
 function StudentProjects() {
   const classes = useStyles();
 
-  const [projects, setProjects] = useState(mockProjects);
+  const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -146,10 +146,7 @@ function StudentProjects() {
     setSearchTerm(event.target.value);
   };
   
-  const filteredProjects = projects.filter((project) => {
-    if (project.project !== undefined)
-      return project.project.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  
 
   const handleOpen = () => {
     setOpen(true);
@@ -170,8 +167,6 @@ function StudentProjects() {
         console.error(error);
       });
   };
-
- 
 
   useEffect(() => {
     fetchProjects();
@@ -202,12 +197,12 @@ function StudentProjects() {
             </Button>
             <AddProjectModal open={open} onClose={handleClose} onSubmit={handleSubmit} />
         </Grid>
-        {filteredProjects.map((project) => (
+        {projects.map((project) => (
           <Grid item md={9} sm={12} xs={12} key={project.id}>
             <Card className={classes.root} style={{ padding: '1rem' }}>
               <CardContent>
                 <Typography variant="h5" component="h2" className={classes.bold}>
-                  {project.name}
+                  {project.project}
                 </Typography>
                 <Typography variant="body2" component="p" style={{ marginTop: '1rem' }}>
                   {project.description}

@@ -407,7 +407,6 @@ const ProjectTable = () => {
 
 //Modal to create new project
 export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects}) => {
-  const [isFormValid, setIsFormValid] = useState(false);
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
