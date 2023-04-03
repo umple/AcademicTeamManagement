@@ -13,6 +13,8 @@ requests-oauthlib = "*"
 pymongo = "*"
 rsa = "*"
 numpy = "*"
+flask-jwt-extended = "*"
+adal = "*"
 
 [dev-packages]
 
