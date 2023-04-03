@@ -91,7 +91,7 @@ class AuthenticationAPI(Resource):
         self.oauth = OAuth2Session(self.CLIENT_ID, redirect_uri=redirect_uri, scope=["openid", "profile"])
         authorization_url, state = self.oauth.authorization_url(f"{self.AUTHORITY}/oauth2/v2.0/authorize")
         session["state"] = state
-        return redirect(authorization_url)\
+        return redirect(authorization_url)
         
     def post(self):
         REDIRECT_URI = "http://localhost:%s/"%os.getenv("REACT")
