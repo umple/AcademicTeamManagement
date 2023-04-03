@@ -24,78 +24,80 @@ import {
   Checkbox,
   FormLabel,
   FormGroup,
+  Select, 
+  MenuItem
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
 import { createTheme } from '@mui/material/styles';
- 
+
 
 const ProjectTable = () => {
   // Columns for table
   const columns = useMemo(
     () => [
-          {
-            accessorKey: 'project',
-            header: 'Project',
-          },
-          {
-            accessorKey: 'description',
-            header: 'Description',
-          },
-          {
-            accessorKey: 'client',
-            header: 'Client',
-          },
-          {
-            accessorKey: 'status',
-            header: 'Status',
-            //custom conditional format and styling
-            Cell: ({ cell }) => (
-              <Box
-                component="span"
-                sx={(theme) => ({
-                  backgroundColor:
-                    cell.getValue() === 'new'
-                      ? theme.palette.success.light
-                      : cell.getValue() === 'interested students'
-                      ? theme.palette.warning.light
-                      : cell.getValue() === 'students needed'
+      {
+        accessorKey: 'project',
+        header: 'Project',
+      },
+      {
+        accessorKey: 'description',
+        header: 'Description',
+      },
+      {
+        accessorKey: 'client',
+        header: 'Client',
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        //custom conditional format and styling
+        Cell: ({ cell }) => (
+          <Box
+            component="span"
+            sx={(theme) => ({
+              backgroundColor:
+                cell.getValue() === 'new'
+                  ? theme.palette.success.light
+                  : cell.getValue() === 'interested students'
+                    ? theme.palette.warning.light
+                    : cell.getValue() === 'students needed'
                       ? theme.palette.primary.light
                       : cell.getValue() === 'pending approval'
-                      ? theme.palette.secondary.main
-                      : cell.getValue() === 'assigned'
-                      ? theme.palette.error.dark
-                      : cell.getValue() === 'proposed'
-                      ? '#ef6694'
-                      : theme.palette.info.dark,
-                  borderRadius: '0.25rem',
-                  color: '#fff',
-                  maxWidth: '9ch',
-                  p: '0.25rem',
-                })}
-              >
-                {cell.getValue()}
-              </Box>
-            ),
-          },
-          {
-            accessorKey: 'interest',
-            header: 'Interest',
-          },
-          {
-            accessorKey: 'group',
-            header: 'Group',
-          },
-          {
-            accessorKey: 'visibility',
-            header: 'Visibility',
-          },
-          {
-            accessorKey: 'notes',
-            header: 'Notes'
-          },
-        ],
+                        ? theme.palette.secondary.main
+                        : cell.getValue() === 'assigned'
+                          ? theme.palette.error.dark
+                          : cell.getValue() === 'proposed'
+                            ? '#ef6694'
+                            : theme.palette.info.dark,
+              borderRadius: '0.25rem',
+              color: '#fff',
+              maxWidth: '9ch',
+              p: '0.25rem',
+            })}
+          >
+            {cell.getValue()}
+          </Box>
+        ),
+      },
+      {
+        accessorKey: 'interest',
+        header: 'Interest',
+      },
+      {
+        accessorKey: 'group',
+        header: 'Group',
+      },
+      {
+        accessorKey: 'visibility',
+        header: 'Visibility',
+      },
+      {
+        accessorKey: 'notes',
+        header: 'Notes'
+      },
+    ],
     [],
   );
 
@@ -105,8 +107,8 @@ const ProjectTable = () => {
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    fetch("api/project")
+  const fetchProjects = () => {
+    fetch("/api/projects")
       .then(response => response.json())
       .then(data => {
         setTableData(data);
@@ -114,11 +116,18 @@ const ProjectTable = () => {
       .catch(error => {
         console.error(error);
       });
-  }, [tableData]);
+  };
 
+
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+  
   const [validationErrors, setValidationErrors] = useState({});
 
-  const handleCreateNewRow = (values) => {};
+  const handleCreateNewRow = (values) => { };
+
 
   
 const handleAddRow = useCallback(
@@ -136,19 +145,21 @@ const handleAddRow = useCallback(
         setIsLoading(false);
         setTableData(prevState => [...prevState, data]);
       })
-      .catch(error => {
-        setIsLoading(false);
-        console.error(error);
-      });
-  },
-  []
-);
+        .then(response => response.json())
+        .then(data => {
+          setTableData(prevState => [...prevState, data]);
+        })
+        .catch(error => {
+          setIsLoading(false);
+          console.error(error);
+        });
+    },
+    []
+  );
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     setIsLoading(true);
     if (!Object.keys(validationErrors).length) {
-      // tableData[row.index] = values;
-      // setTableData([...tableData]);
       fetch(`api/project/update/${row.original._id}`, {
         method: "PUT",
         headers: {
@@ -158,10 +169,10 @@ const handleAddRow = useCallback(
       })
         .then(response => {
           if (response.ok) {
-            setIsLoading(false);
             const updatedData = tableData.filter(
               (data) => data._id !== row.original._id
             );
+            fetchProjects();
           } else {
             console.error("Error deleting row");
           }
@@ -193,7 +204,7 @@ const handleAddRow = useCallback(
     boxShadow: 24,
     p: 4,
   };
-  
+
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
@@ -240,21 +251,21 @@ const handleAddRow = useCallback(
 
   // Mock data to show interested students
   const interestedStudents = [
-    { name: 'Jane Doe'},
-    { name: 'Calvin Klein'},
-    { name: 'Richard Brown'}
+    { name: 'Jane Doe' },
+    { name: 'Calvin Klein' },
+    { name: 'Richard Brown' }
   ];
 
   // Mock data to show project applications
   const applications = [
-    { group: '21', date: 'January 1, 2023', description: 'After interviewing with the client we received confirmation by email that the client picked our team for the project.'},
-    { group: '27', date: 'January 10, 2023', description: 'After talking to the customer, they said that they are interested in having us develop their application.'}
+    { group: '21', date: 'January 1, 2023', description: 'After interviewing with the client we received confirmation by email that the client picked our team for the project.' },
+    { group: '27', date: 'January 10, 2023', description: 'After talking to the customer, they said that they are interested in having us develop their application.' }
   ];
-  
-   
-  return(
-  <Box sx={{ p: 2 }}>
-    <MaterialReactTable
+
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
@@ -300,14 +311,14 @@ const handleAddRow = useCallback(
                         </TableCell>
                         <TableCell align="right">
                           <Button
-                              variant="outlined"
-                              color="warning"
-                              onClick={() => {
+                            variant="outlined"
+                            color="warning"
+                            onClick={() => {
                               console.info('View Profile', row);
-                              }}
-                              >
-                                View Profile
-                            </Button>
+                            }}
+                          >
+                            View Profile
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -317,7 +328,7 @@ const handleAddRow = useCallback(
             </Grid>
             <Grid item>
               <TableContainer component={Paper}>
-                <Table sx={{ }} size="small" aria-label="a dense table">
+                <Table sx={{}} size="small" aria-label="a dense table">
                   <TableHead>
                     <TableRow>
                       <TableCell>Project Applications</TableCell>
@@ -335,18 +346,18 @@ const handleAddRow = useCallback(
                         </TableCell>
                         <TableCell align="right">
                           <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={handleOpen}
-                              >
-                                View Application
-                            </Button>
-                            <ViewApplicationModal
-                              data={row}
-                              open={open}
-                              onClose={handleClose}
-                              onSubmit={() => setOpen(false)}
-                            />
+                            variant="outlined"
+                            color="secondary"
+                            onClick={handleOpen}
+                          >
+                            View Application
+                          </Button>
+                          <ViewApplicationModal
+                            data={row}
+                            open={open}
+                            onClose={handleClose}
+                            onSubmit={() => setOpen(false)}
+                          />
                         </TableCell>
                       </TableRow>
                     ))}
@@ -354,7 +365,7 @@ const handleAddRow = useCallback(
                 </Table>
               </TableContainer>
             </Grid>
-        </Grid>
+          </Grid>
         )}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -380,11 +391,11 @@ const handleAddRow = useCallback(
               Create New Project
             </Button>
             <Button
-            color="primary"
-            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-            onClick={handleExportData}
-            startIcon={<FileDownloadIcon />}
-            variant="contained"
+              color="primary"
+              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+              onClick={handleExportData}
+              startIcon={<FileDownloadIcon />}
+              variant="contained"
             >
               Export All Data
             </Button>
@@ -397,13 +408,23 @@ const handleAddRow = useCallback(
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
+        fetchProjects={fetchProjects}
       />
-  </Box>
+    </Box>
   );
 };
 
 //Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
+export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects }) => {
+
+  const cellValueMap = [ 
+    {value: 'new', label: 'success'},
+    {value:'interested students', label:'warning'},
+    {value:'students needed', label: 'primary'},
+    {value:'pending approval', label: 'secondary'},
+    {value: 'assigned', label:'error'},
+    {value: 'proposed', label:'default'}
+  ];
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -419,21 +440,24 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
       },
       body: JSON.stringify(values)
     })
-    .then(response => {
-      console.log(response);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(response => {
+        if (response.ok) {
+          fetchProjects();
+          setValues({});
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
     onSubmit(values);
     onClose();
   };
 
   return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Project</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+    <form onSubmit={(e) => e.preventDefault()}>
+      <Dialog open={open}>
+        <DialogTitle textAlign="center">Create New Project</DialogTitle>
+        <DialogContent>
           <Stack
             sx={{
               width: '100%',
@@ -441,26 +465,49 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit }) => {
               gap: '1.5rem',
             }}
           >
-            {columns.map((column) => (
-              <TextField
-                key={column.accessorKey}
-                label={column.header}
-                name={column.accessorKey}
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.name]: e.target.value })
-                }
-              />
-            ))}
+            {columns.map((column) => {
+              if (column.accessorKey === 'status') {
+                return (
+                  <Select
+                    key={column.accessorKey}
+                    label={column.header}
+                    name={column.accessorKey}
+                    value={values[column.accessorKey]}
+                    onChange={(e) => {
+                      setValues({ ...values, [e.target.name]: e.target.value })
+                    }}
+                  >
+                    {cellValueMap.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )
+              }
+              return (
+                <TextField
+                  key={column.accessorKey}
+                  label={column.header}
+                  name={column.accessorKey}
+                  value={values[column.accessorKey]}
+                  onChange={(e) => {
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }}
+                />
+              )
+            })}
+            
           </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create New Project
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogContent>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button color="secondary" onClick={handleSubmit} variant="contained" type="submit">
+            Create New Project
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </form>
   );
 };
 
@@ -481,51 +528,51 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
         <form onSubmit={(e) => e.preventDefault()}>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
-                <FormLabel component="legend">           
+              <FormLabel component="legend">
                 <Typography variant="body1" gutterBottom>
                   <Box fontWeight='fontWeightMedium' display='inline'>Group: </Box>
                 </Typography>
                 {data.group}
-                </FormLabel>
+              </FormLabel>
             </Grid>
           </Grid>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
-                <FormLabel component="legend">           
+              <FormLabel component="legend">
                 <Typography variant="body1" gutterBottom>
                   <Box fontWeight='fontWeightMedium' display='inline'>Description: </Box>
                 </Typography>
                 {data.description}
-                </FormLabel>
+              </FormLabel>
             </Grid>
           </Grid>
           <Grid container alignItems="center" spacing={2} sx={{ mt: 1 }}>
             <Grid item>
-                <FormLabel component="legend">
+              <FormLabel component="legend">
                 <Box fontWeight='fontWeightMedium' display='inline'>More students needed </Box>
                 <Tooltip title="Changes status to 'students needed' if ASSIGN button pressed" placement='right'>
-                  <Help/>
+                  <Help />
                 </Tooltip>
-                </FormLabel>
-                <FormGroup row>
+              </FormLabel>
+              <FormGroup row>
                 <FormControlLabel
-                      value="start"
-                      control={<Checkbox />}
-                    />
-                </FormGroup>
+                  value="start"
+                  control={<Checkbox />}
+                />
+              </FormGroup>
             </Grid>
           </Grid>
           <FormLabel component="legend" sx={{ mt: 1 }}>
-          <Box fontWeight='fontWeightMedium' display='inline'>Feedback: </Box>
+            <Box fontWeight='fontWeightMedium' display='inline'>Feedback: </Box>
           </FormLabel>
           <FormGroup row>
-          <TextField
-            sx={{ mt: 1 }}
-            fullWidth
-            multiline
-            maxRows={5}
-            hiddenLabel
-          />
+            <TextField
+              sx={{ mt: 1 }}
+              fullWidth
+              multiline
+              maxRows={5}
+              hiddenLabel
+            />
           </FormGroup>
         </form>
       </DialogContent>

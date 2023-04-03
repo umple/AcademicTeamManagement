@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Grid, Card, CardContent, Typography, Button, TextField, Modal, Dialog, DialogTitle, DialogContent, DialogActions, Stack } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -138,7 +138,7 @@ const mockProjects = [
 function StudentProjects() {
   const classes = useStyles();
 
-  const [projects, setProjects] = useState(mockProjects);
+  const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -146,9 +146,7 @@ function StudentProjects() {
     setSearchTerm(event.target.value);
   };
   
-  const filteredProjects = projects.filter((project) => {
-    return project.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  
 
   const handleOpen = () => {
     setOpen(true);
@@ -157,6 +155,22 @@ function StudentProjects() {
   const handleClose = () => {
     setOpen(false);
   };
+
+
+  const fetchProjects = () => {
+    fetch("/api/projects")
+      .then(response => response.json())
+      .then(data => {
+        setProjects(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   const handleSubmit = (newProject) => {
     setProjects([...projects, { ...newProject, id: projects.length + 1 }]);
@@ -183,12 +197,12 @@ function StudentProjects() {
             </Button>
             <AddProjectModal open={open} onClose={handleClose} onSubmit={handleSubmit} />
         </Grid>
-        {filteredProjects.map((project) => (
+        {projects.map((project) => (
           <Grid item md={9} sm={12} xs={12} key={project.id}>
             <Card className={classes.root} style={{ padding: '1rem' }}>
               <CardContent>
                 <Typography variant="h5" component="h2" className={classes.bold}>
-                  {project.name}
+                  {project.project}
                 </Typography>
                 <Typography variant="body2" component="p" style={{ marginTop: '1rem' }}>
                   {project.description}
@@ -261,7 +275,6 @@ function AddProjectModal({ open, onClose, onSubmit }) {
     setName('');
     setDescription('');
     setClient('');
-    
     setGroup('');
     onClose();
   };

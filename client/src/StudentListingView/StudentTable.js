@@ -1,4 +1,5 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
+import { makeStyles } from "@material-ui/core/styles";
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -10,136 +11,154 @@ import {
   IconButton,
   Stack,
   TextField,
-  Tooltip,
-  Typography,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  FormControlLabel,
-  Checkbox,
-  FormLabel,
-  FormGroup,
+  Tooltip
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { ExportToCsv } from 'export-to-csv';
-import { Delete, Edit, Help } from '@mui/icons-material';
-import { createTheme } from '@mui/material/styles';
+import { Delete, Edit } from '@mui/icons-material';
+import ImportStudents from '../ImportStudentsView/ImportStudents';
 
-// Mock data for table
-const data = [
-  {
-    orgDefinedId: '11111',
-    username: 'UBIPL061',
-    team: 'Team 1',
-    lastName: 'Doe',
-    firstName: 'John',
-    section: 'SEG4910W00',
-    notes: 'Contacted about open market'
+
+const useStyles = makeStyles((theme) => ({
+  input: {
+    display: "none",
   },
-  {
-    orgDefinedId: '11122',
-    username: 'UBIPL062',
-    team: 'Team 2',
-    lastName: 'Brown',
-    firstName: 'Catherine',
-    section: 'SEG4910W00',
-    notes: 'Failed a pre-requisite'
-  },
-  {
-    orgDefinedId: '11122',
-    username: 'UBIPL063',
-    team: 'Team 3',
-    lastName: 'Smith',
-    firstName: 'Jane',
-    section: 'SEG4910W01',
-    notes: 'Only speaks French'
-  },
-  {
-    orgDefinedId: '44444',
-    username: 'UBIPL064',
-    team: 'unassigned',
-    lastName: 'Doe',
-    firstName: 'John',
-    section: 'SEG4910W00',
-    notes: ''
-  },
-  {
-    orgDefinedId: '11122',
-    username: 'UBIPL065',
-    team: 'unassigned',
-    lastName: 'James',
-    firstName: 'Andrew',
-    section: 'SEG4910W00',
-    notes: 'Wants to work on a project with a friend'
-  },
-  {
-    orgDefinedId: '11122',
-    username: 'UBIPL062',
-    team: 'Team 2',
-    lastName: 'Davis',
-    firstName: 'Harry',
-    section: 'SEG4910W01',
-    notes: ''
-  },
-];
+}));
 
 
 
 const StudentTable = () => {
-  // Columns for table
-  const columns = useMemo(
+
+  const defaultColumns = useMemo(
     () => [
-          {
-            accessorKey: 'orgDefinedId',
-            header: 'ID',
-          },
-          {
-            accessorKey: 'username',
-            header: 'Username',
-          },
-          {
-            accessorKey: 'firstName',
-            header: 'First Name',
-          },
-          {
-            accessorKey: 'lastName',
-            header: 'Last Name',
-          },
-          {
-            accessorKey: 'section',
-            header: 'Section',
-          },
-          {
-            accessorKey: 'notes',
-            header: 'Notes',
-          },
-        ],
+      {
+        accessorKey: 'orgDefinedId',
+        header: 'orgDefinedId',
+      },
+      {
+        accessorKey: 'username',
+        header: 'Username',
+      },
+      {
+        accessorKey: 'lastName',
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'firstName',
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'email',
+        header: 'Email',
+      },
+      {
+        accessorKey: 'section',
+        header: 'Section',
+      },
+      {
+        accessorKey: 'calculated final grade numerator',
+        header: 'Calculated Final Grade Numerator',
+      },
+      {
+        accessorKey: 'calculated final grade denominator',
+        header: 'Calculated Final Grade Denominator',
+      },
+      {
+        accessorKey: 'adjusted final grade numerator',
+        header: 'Adjusted Final Grade Numerator',
+      },
+      {
+        accessorKey: 'adjusted final grade denominator',
+        header: 'Adjusted Final Grade Denominator',
+      },
+    ],
     [],
   );
 
-
   // For the create profile modal
+  const [columns, setColumns] = useState([]);
+  const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(() => data);
+  const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
+  const [loading, setIsLoading] = useState(false);
 
-  const handleCreateNewRow = (values) => {
-    tableData.push(values);
-    setTableData([...tableData]);
-    console.log(tableData)
-    console.log(columns)
+
+  const fetchStudents = async () => {
+    fetch('/api/students')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('There is no Students');
+        }
+      })
+      .then(data => {
+        setTableData(data);
+      })
+      .catch(error => {
+        console.error('There was a problem with the network request:', error);
+      });
   };
+
+
+  const readSavedJson = async () =>{ 
+      if (typeof localStorage.getItem("userColumns") === undefined){
+        setColumns(defaultColumns)
+      } else {
+        const userColumnsArray = JSON.parse(localStorage.getItem("userColumns"));
+        setColumns(userColumnsArray)
+      }
+  }
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+  useEffect(() => {
+    readSavedJson();
+  }, [columns]);
+
+  const handleAddRow = useCallback(
+    (newRowData) => {
+      fetch('api/student', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newRowData)
+      })
+        .then(response => response.json())
+        .then(data => {
+          fetchStudents();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    []
+  );
+
+  const handleCreateNewRow = (values) => { };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      setTableData([...tableData]);
+      fetch(`api/student/update/${row.original._id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+      })
+        .then(response => {
+          if (response.ok) {
+            fetchStudents();
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
       exitEditingMode();
     }
   };
@@ -148,23 +167,16 @@ const StudentTable = () => {
     setValidationErrors({});
   };
 
+  function updateColumns(newcolumns){
+    setColumns(newcolumns)
+    localStorage.setItem("userColumns",JSON.stringify(newcolumns))
+  }
 
   // For the model to view student applications
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const style = {
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-  
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
@@ -173,9 +185,19 @@ const StudentTable = () => {
       ) {
         return;
       }
-      //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+      fetch(`api/student/delete/${row.original._id}`, {
+        method: "DELETE"
+      })
+        .then(response => {
+          if (response.ok) {
+            fetchStudents();
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     [tableData],
   );
@@ -194,13 +216,12 @@ const StudentTable = () => {
   const csvExporter = new ExportToCsv(csvOptions);
 
   const handleExportData = () => {
-    csvExporter.generateCsv(data);
+    csvExporter.generateCsv(tableData);
   };
-  
-   
-  return(
-  <Box sx={{ p: 2 }}>
-    <MaterialReactTable
+ 
+  return (
+    <Box sx={{ p: 2 }}>
+      <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
@@ -209,7 +230,7 @@ const StudentTable = () => {
             size: 120,
           },
         }}
-        enablePagination={false}
+        enablePagination={true}
         columns={columns}
         data={tableData}
         editingMode="modal"
@@ -239,7 +260,7 @@ const StudentTable = () => {
           </Box>
         )}
         renderTopToolbarCustomActions={() => (
-          <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexDirection: 'row' }}>
             <Button
               color="success"
               onClick={() => setCreateModalOpen(true)}
@@ -248,22 +269,16 @@ const StudentTable = () => {
               Create New Student
             </Button>
             <Button
-            color="primary"
-            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-            onClick={handleExportData}
-            startIcon={<FileDownloadIcon />}
-            variant="contained"
+              color="primary"
+              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+              onClick={handleExportData}
+              startIcon={<FileDownloadIcon />}
+              variant="contained"
             >
               Export All Data
             </Button>
-            <Button
-              color="secondary"
-              startIcon={<FileUploadIcon />}
-              href="/ImportStudents"
-              variant="contained"
-            >
-              Import Students
-            </Button>
+
+            <ImportStudents fetchStudents={fetchStudents} updateColumns={updateColumns} ></ImportStudents>
           </Box>
         )}
       />
@@ -272,13 +287,15 @@ const StudentTable = () => {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
+        onAddRow={handleAddRow}
+        fetchStudents={fetchStudents}
       />
-  </Box>
+    </Box>
   );
 };
 
 //Modal to create new student
-export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit }) => {
+export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit, fetchStudents }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -287,7 +304,21 @@ export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit }) => {
   );
 
   const handleSubmit = () => {
-    //put your validation logic here
+    fetch("api/student", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+    })
+      .then(response => {
+        if (response.ok) {
+          fetchStudents();
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
     onSubmit(values);
     onClose();
   };
