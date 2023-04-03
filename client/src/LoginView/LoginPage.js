@@ -13,7 +13,6 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
 
   const handleLogin = async () => {
-    setLoading(true);
     try {
       // Call the API to initiate the OAuth2 flow
       const response = await axios({
@@ -24,8 +23,6 @@ export default function LoginPage() {
       window.location.replace(response.data);
     } catch (error) {
       setError('Failed to initiate login');
-    } finally {
-      setLoading(false);
     }
   };
 
