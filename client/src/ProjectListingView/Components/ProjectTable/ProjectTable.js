@@ -123,20 +123,27 @@ const ProjectTable = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
-
+  
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleCreateNewRow = (values) => { };
 
 
-  const handleAddRow = useCallback(
-    (newRowData) => {
-      fetch('api/project', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newRowData)
+  
+const handleAddRow = useCallback(
+  (newRowData) => {
+    setIsLoading(true);
+    fetch('api/project', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newRowData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        setIsLoading(false);
+        setTableData(prevState => [...prevState, data]);
       })
         .then(response => response.json())
         .then(data => {
