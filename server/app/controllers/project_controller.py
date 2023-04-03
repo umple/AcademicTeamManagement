@@ -5,7 +5,7 @@ from . import project_bp
 
 
 # GET Request to retreive all students from the collection
-@project_bp.route("/api/project", methods=["GET"])
+@project_bp.route("/projects", methods=["GET"])
 def get_projects():
     try:
         project_list = project.get_all_projects()
