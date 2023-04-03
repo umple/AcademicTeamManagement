@@ -33,10 +33,9 @@ const ImportStudents = (props) => {
       setError("Please select a file.");
       return;
     }
-
     const formData = new FormData();
     formData.append("file", file);
-
+    formData.append("columns",props.defaultColumns)
     try {
       const response = await fetch("api/importStudent", {
         method: "POST",
@@ -55,29 +54,34 @@ const ImportStudents = (props) => {
     }
   };
 
+
   return (
-    <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'row' }}> 
-    <form onSubmit={handleSubmit}>
-      <input
-        accept="*"
-        className={classes.input}
-        id="contained-button-file"
-        type="file"
-        onChange={handleChange}
-      />
-      <label htmlFor="contained-button-file" className={classes.buttonLabel}>
-        <Button variant="contained" color="success" component="span" >
-          Upload
+    <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'row' }}>
+      <form onSubmit={handleSubmit}>
+        <input
+          accept="*"
+          className={classes.input}
+          id="contained-button-file"
+          type="file"
+          onChange={handleChange}
+        />
+        <label htmlFor="contained-button-file" className={classes.buttonLabel}>
+          <Button variant="contained" color="success" component="span" >
+            Upload
+          </Button>
+        </label>
+     
+        <Button type="submit" variant="contained" endIcon={<PublishIcon />}>
+          Submit
         </Button>
-      </label>
-      {file && (
+      </form>
+
+      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+        {file && (
         <Typography variant="subtitle1">{file.name}</Typography>
-      )}
-      {error && <FormHelperText error>{error}</FormHelperText>}
-      <Button type="submit" variant="contained" endIcon={<PublishIcon />}>
-        Submit
-      </Button>
-    </form>
+        )}
+        {error && <FormHelperText error>{error}</FormHelperText>}
+      </Box>
     </Box>
   );
 };

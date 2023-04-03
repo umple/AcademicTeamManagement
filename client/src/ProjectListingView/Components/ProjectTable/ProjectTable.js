@@ -24,6 +24,8 @@ import {
   Checkbox,
   FormLabel,
   FormGroup,
+  Select, 
+  MenuItem
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
@@ -104,7 +106,7 @@ const ProjectTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const fetchProjects = () => {
     fetch("/api/projects")
       .then(response => response.json())
@@ -116,7 +118,7 @@ const ProjectTable = () => {
       });
   };
 
- 
+
 
   useEffect(() => {
     fetchProjects();
@@ -399,14 +401,23 @@ const ProjectTable = () => {
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
-        fetchProjects= {fetchProjects}
+        fetchProjects={fetchProjects}
       />
     </Box>
   );
 };
 
 //Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects}) => {
+export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects }) => {
+
+  const cellValueMap = [ 
+    {value: 'new', label: 'success'},
+    {value:'interested students', label:'warning'},
+    {value:'students needed', label: 'primary'},
+    {value:'pending approval', label: 'secondary'},
+    {value: 'assigned', label:'error'},
+    {value: 'proposed', label:'default'}
+  ];
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -423,9 +434,9 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
       body: JSON.stringify(values)
     })
       .then(response => {
-        if (response.ok){
-            fetchProjects();
-            setValues({});
+        if (response.ok) {
+          fetchProjects();
+          setValues({});
         }
       })
       .catch(error => {
@@ -440,31 +451,50 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
       <Dialog open={open}>
         <DialogTitle textAlign="center">Create New Project</DialogTitle>
         <DialogContent>
-            <Stack
-              sx={{
-                width: '100%',
-                minWidth: { xs: '300px', sm: '360px', md: '400px' },
-                gap: '1.5rem',
-              }}
-            >
-              {columns.map((column) => (
+          <Stack
+            sx={{
+              width: '100%',
+              minWidth: { xs: '300px', sm: '360px', md: '400px' },
+              gap: '1.5rem',
+            }}
+          >
+            {columns.map((column) => {
+              if (column.accessorKey === 'status') {
+                return (
+                  <Select
+                    key={column.accessorKey}
+                    label={column.header}
+                    name={column.accessorKey}
+                    value={values[column.accessorKey]}
+                    onChange={(e) => {
+                      setValues({ ...values, [e.target.name]: e.target.value })
+                    }}
+                  >
+                    {cellValueMap.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )
+              }
+              return (
                 <TextField
                   key={column.accessorKey}
                   label={column.header}
                   name={column.accessorKey}
+                  value={values[column.accessorKey]}
                   onChange={(e) => {
-                      setValues( { ...values, [e.target.name]: e.target.value })  
-                      // setIsFormValid(e.target.name !== 'Project' || e.target.value !== '');
-                    }
-                  }
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }}
                 />
-              ))}
-            </Stack>
-        
+              )
+            })}
+            
+          </Stack>
         </DialogContent>
         <DialogActions sx={{ p: '1.25rem' }}>
           <Button onClick={onClose}>Cancel</Button>
-        
           <Button color="secondary" onClick={handleSubmit} variant="contained" type="submit">
             Create New Project
           </Button>

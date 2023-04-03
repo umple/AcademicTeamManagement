@@ -33,19 +33,23 @@ const StudentTable = () => {
     () => [
       {
         accessorKey: 'orgDefinedId',
-        header: 'ID',
+        header: 'orgDefinedId',
       },
       {
         accessorKey: 'username',
         header: 'Username',
       },
       {
+        accessorKey: 'lastName',
+        header: 'Last Name',
+      },
+      {
         accessorKey: 'firstName',
         header: 'First Name',
       },
       {
-        accessorKey: 'lastName',
-        header: 'Last Name',
+        accessorKey: 'email',
+        header: 'Email',
       },
       {
         accessorKey: 'section',
@@ -81,24 +85,24 @@ const StudentTable = () => {
 
 
   const fetchStudents = async () => {
-    try {
-      const response = await fetch("/api/students");
-      const data = await response.json();
-      setTableData(data);
-    } catch (error) {
-      console.error(error);
-    }
+    fetch('/api/students')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('There is no Students');
+        }
+      })
+      .then(data => {
+        setTableData(data);
+      })
+      .catch(error => {
+        console.error('There was a problem with the network request:', error);
+      });
   };
-  
-  useEffect(() => {
-    fetchStudents();
-  }, []);
 
   useEffect(() => {
-    const savedData = localStorage.getItem("columns");
-    if (savedData) {
-      setColumns   (JSON.parse(savedData));
-    }
+    fetchStudents();
   }, []);
 
   const handleAddRow = useCallback(
@@ -120,7 +124,7 @@ const StudentTable = () => {
     },
     []
   );
- 
+
   const handleCreateNewRow = (values) => { };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
@@ -197,74 +201,70 @@ const StudentTable = () => {
   const handleExportData = () => {
     csvExporter.generateCsv(tableData);
   };
-
-  function updateColumns(newColumns) {
-    setColumns(newColumns);
-  }
-
+ 
   return (
     <Box sx={{ p: 2 }}>
-        <MaterialReactTable
-          displayColumnDefOptions={{
-            'mrt-row-actions': {
-              muiTableHeadCellProps: {
-                align: 'center',
-              },
-              size: 120,
+      <MaterialReactTable
+        displayColumnDefOptions={{
+          'mrt-row-actions': {
+            muiTableHeadCellProps: {
+              align: 'center',
             },
-          }}
-          enablePagination={true}
-          columns={columns}
-          data={tableData}
-          editingMode="modal"
-          enableColumnOrdering
-          enableColumnResizing
-          columnResizeMode="onChange" //default is "onEnd"
-          defaultColumn={{
-            minSize: 100,
-            size: 150, //default size is usually 180
-          }}
-          enableEditing
-          initialState={{ showColumnFilters: false, density: 'compact' }}
-          onEditingRowSave={handleSaveRowEdits}
-          onEditingRowCancel={handleCancelRowEdits}
-          renderRowActions={({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
-              <Tooltip arrow placement="left" title="Edit">
-                <IconButton onClick={() => table.setEditingRow(row)}>
-                  <Edit />
-                </IconButton>
-              </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
-                <IconButton color="error" onClick={() => handleDeleteRow(row)}>
-                  <Delete />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          )}
-          renderTopToolbarCustomActions={() => (
-            <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem' }}>
-              <Button
-                color="success"
-                onClick={() => setCreateModalOpen(true)}
-                variant="contained"
-              >
-                Create New Student
-              </Button>
-              <Button
-                color="primary"
-                //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                onClick={handleExportData}
-                startIcon={<FileDownloadIcon />}
-                variant="contained"
-              >
-                Export All Data
-              </Button>
+            size: 120,
+          },
+        }}
+        enablePagination={true}
+        columns={defaultColumns}
+        data={tableData}
+        editingMode="modal"
+        enableColumnOrdering
+        enableColumnResizing
+        columnResizeMode="onChange" //default is "onEnd"
+        defaultColumn={{
+          minSize: 100,
+          size: 150, //default size is usually 180
+        }}
+        enableEditing
+        initialState={{ showColumnFilters: false, density: 'compact' }}
+        onEditingRowSave={handleSaveRowEdits}
+        onEditingRowCancel={handleCancelRowEdits}
+        renderRowActions={({ row, table }) => (
+          <Box sx={{ display: 'flex', gap: '1rem' }}>
+            <Tooltip arrow placement="left" title="Edit">
+              <IconButton onClick={() => table.setEditingRow(row)}>
+                <Edit />
+              </IconButton>
+            </Tooltip>
+            <Tooltip arrow placement="right" title="Delete">
+              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
+        renderTopToolbarCustomActions={() => (
+          <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexDirection: 'row' }}>
+            <Button
+              color="success"
+              onClick={() => setCreateModalOpen(true)}
+              variant="contained"
+            >
+              Create New Student
+            </Button>
+            <Button
+              color="primary"
+              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+              onClick={handleExportData}
+              startIcon={<FileDownloadIcon />}
+              variant="contained"
+            >
+              Export All Data
+            </Button>
 
-              <ImportStudents updateColumns={updateColumns} fetchStudents={fetchStudents} ></ImportStudents>
-            </Box>
-          )}
-        /> 
+            <ImportStudents fetchStudents={fetchStudents} defaultColumns={defaultColumns} ></ImportStudents>
+          </Box>
+        )}
+      />
       <CreateNewStudentModal
         columns={defaultColumns}
         open={createModalOpen}

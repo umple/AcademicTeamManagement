@@ -275,7 +275,6 @@ function AddProjectModal({ open, onClose, onSubmit }) {
     setName('');
     setDescription('');
     setClient('');
-    
     setGroup('');
     onClose();
   };
