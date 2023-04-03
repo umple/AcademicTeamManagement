@@ -101,9 +101,22 @@ const StudentTable = () => {
       });
   };
 
+
+  const readSavedJson = async () =>{ 
+      if (typeof localStorage.getItem("userColumns") === undefined){
+        setColumns(defaultColumns)
+      } else {
+        const userColumnsArray = JSON.parse(localStorage.getItem("userColumns"));
+        setColumns(userColumnsArray)
+      }
+  }
+
   useEffect(() => {
     fetchStudents();
   }, []);
+  useEffect(() => {
+    readSavedJson();
+  }, [columns]);
 
   const handleAddRow = useCallback(
     (newRowData) => {
@@ -154,6 +167,10 @@ const StudentTable = () => {
     setValidationErrors({});
   };
 
+  function updateColumns(newcolumns){
+    setColumns(newcolumns)
+    localStorage.setItem("userColumns",JSON.stringify(newcolumns))
+  }
 
   // For the model to view student applications
   const [open, setOpen] = React.useState(false);
@@ -214,7 +231,7 @@ const StudentTable = () => {
           },
         }}
         enablePagination={true}
-        columns={defaultColumns}
+        columns={columns}
         data={tableData}
         editingMode="modal"
         enableColumnOrdering
@@ -261,12 +278,12 @@ const StudentTable = () => {
               Export All Data
             </Button>
 
-            <ImportStudents fetchStudents={fetchStudents} defaultColumns={defaultColumns} ></ImportStudents>
+            <ImportStudents fetchStudents={fetchStudents} updateColumns={updateColumns} ></ImportStudents>
           </Box>
         )}
       />
       <CreateNewStudentModal
-        columns={defaultColumns}
+        columns={columns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}

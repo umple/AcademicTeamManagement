@@ -35,7 +35,7 @@ const ImportStudents = (props) => {
     }
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("columns",props.defaultColumns)
+    // formData.append("columns",props.defaultColumns)
     try {
       const response = await fetch("api/importStudent", {
         method: "POST",
@@ -47,7 +47,7 @@ const ImportStudents = (props) => {
         newColumns.push({ accessorKey: column, header: column });
       }
       newColumns.pop();
-      props.updateColumns(newColumns);
+      props.updateColumns(newColumns)
       props.fetchStudents();
     } catch (error) {
       setError(error.message);

@@ -24,12 +24,12 @@ def get_student_by_id(id):
     document["_id"] = str(document["_id"])
     return document
 
-def get_student_by_email(email):
-    document = studentsCollection.find_one({"Email": str(email)})
+def get_student_by_username(username):
+    document = studentsCollection.find_one({"username": str(username)})
     if document:
-        email_field = document.get("Email")
-        if isinstance(email_field, str):
-            document["Email"] = str(email_field)
+        username_field = document.get("username")
+        if isinstance(username_field, str):
+            document["username"] = str(username_field)
  
     return document
 
@@ -41,24 +41,21 @@ def delete_student_by_id(id):
     result = studentsCollection.delete_one({"_id": ObjectId(id)})
     return result
 
-def import_students(data):
-    print(data)
-    # if not file:
-    #     return "No file selected", 400
-    # if file:
-    #     file_extension = file.filename.rsplit(".", 1)[1]
-    #     if file_extension == "xlsx":
-    #         data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "],usecols=columns)
-    #         data = clean_up_json_data(data.to_json(orient="records"))
-    #         print(data)
-    #         return data
-    #     elif file_extension == "csv":
-    #         print(columns)
-    #         data = pd.read_csv(file,na_values=["N/A", "na", "--","NaN", " "], usecols=columns)
-    #         data = clean_up_json_data(data.to_json(orient="records"))
-    #         print(data)
-    #         return data
-    #     else:
-    #         return "Could not convert file", 503
-    # else:
-    #     return "Could not read file", 500
+def import_students(file):
+    if not file:
+        return "No file selected", 400
+    if file:
+        file_extension = file.filename.rsplit(".", 1)[1]
+        if file_extension == "xlsx":
+            data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
+            data = clean_up_json_data(data.to_json(orient="records"))
+            return data
+        elif file_extension == "csv":
+            data = pd.read_csv(file,na_values=["N/A", "na", "--","NaN", " "])
+            data.columns = data.columns.str.lower()
+            data = clean_up_json_data(data.to_json(orient="records"))
+            return data
+        else:
+            return "Could not convert file", 503
+    else:
+        return "Could not read file", 500

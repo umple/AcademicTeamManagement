@@ -78,7 +78,8 @@ def import_students():
         json_dict = json.loads(result)
  
         for res in json_dict:
-            student.add_import_student(res)
+            if (student.get_student_by_username(res["username"]) == None):
+                student.add_import_student(res)
         
         return result, 201
     except:
