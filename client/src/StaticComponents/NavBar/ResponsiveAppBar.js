@@ -6,15 +6,24 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-const pages = {
+const studentPages = {
+  page1: {key: 'Home', value:'/StudentHome'},
+  page2: {key: 'Projects', value:'/StudentProjects'},
+  page3: {key: 'Groups', value:'/StudentGroups'},
+  page4: {key: 'My Group', value:'/MyGroup'},
+};
+
+const professorPages = {
   page1: {key: 'Home', value:'/'},
   page2: {key: 'Projects', value:'/Projects'},
   page3: {key:'Groups', value:'/GroupView'},
   page4: {key: 'Students', value:'/Students'},
-  page5: {key: 'Student Projects', value:'/StudentProjects'},
-  page6: {key: 'Student Groups', value:'/StudentGroups'},
-  page7: {key: 'My Group', value:'/MyGroup'},
 };
+
+const isStudent = true; // this needs to be set up using the token
+
+const pages = isStudent ? studentPages : professorPages;
+
 
 function ResponsiveAppBar() {
   const location = useLocation();
