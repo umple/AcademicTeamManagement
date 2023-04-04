@@ -213,6 +213,7 @@ const StudentTable = () => {
     },
     [tableData],
   );
+
   function getDate(){
     const today = new Date();
     const year = today.getFullYear();
@@ -222,7 +223,6 @@ const StudentTable = () => {
     return formattedDate
   }
 
-  // For exporting the table data
   const csvOptions = {
     filename: 'StudentsFromAcTeams-' + getDate(),
     fieldSeparator: ',',

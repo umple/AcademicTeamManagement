@@ -248,7 +248,7 @@ const ProjectTable = () => {
 
   // For exporting the table data
   const csvOptions = {
-    filename: 'StudentsFromAcTeams-' + getDate(),
+    filename: 'ProjectsFromAcTeams-' + getDate(),
     fieldSeparator: ',',
     quoteStrings: '"',
     decimalSeparator: '.',
