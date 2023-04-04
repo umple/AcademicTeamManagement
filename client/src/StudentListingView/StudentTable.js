@@ -193,7 +193,7 @@ const StudentTable = () => {
   const handleDeleteRow = useCallback(
     (row) => {
       if (
-        !window.confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
+        !window.confirm(`Are you sure you want to delete ${row.getValue('username')}`)
       ) {
         return;
       }
