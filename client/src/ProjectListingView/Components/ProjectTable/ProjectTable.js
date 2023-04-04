@@ -426,9 +426,14 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
     {value: 'assigned', label:'error'},
     {value: 'proposed', label:'default'}
   ];
+
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
+      if (column.accessorKey === 'status') {
+        acc[column.accessorKey ?? ''] = 'new';
+      } else {
+        acc[column.accessorKey ?? ''] = '';
+      }
       return acc;
     }, {}),
   );
@@ -500,9 +505,9 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
                   key={column.accessorKey}
                   name={column.accessorKey}
                   control={control}
-                  defaultValue=""
+                  defaultValue={column.accessorKey === 'status' ? 'new' : ''}
                   rules={{
-                    required: `${column.header} is required.`,
+                    required: column.accessorKey !== 'notes' ? `${column.header} is required.` : false,
                   }}
                   render={({ field }) => (
                     <TextField
