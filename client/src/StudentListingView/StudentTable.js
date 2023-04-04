@@ -103,7 +103,7 @@ const StudentTable = () => {
 
 
   const readSavedJson = async () =>{ 
-      if (typeof localStorage.getItem("userColumns") === undefined){
+      if (localStorage.getItem("userColumns") === null){
         setColumns(defaultColumns)
       } else {
         const userColumnsArray = JSON.parse(localStorage.getItem("userColumns"));
@@ -114,9 +114,10 @@ const StudentTable = () => {
   useEffect(() => {
     fetchStudents();
   }, []);
+
   useEffect(() => {
     readSavedJson();
-  }, [columns]);
+  }, []);
 
   const handleAddRow = useCallback(
     (newRowData) => {
