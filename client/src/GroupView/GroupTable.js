@@ -231,6 +231,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
               width: '100%',
               minWidth: { xs: '300px', sm: '360px', md: '400px' },
               gap: '1.5rem',
+              marginTop: '0.5rem',
             }}
           >
             {columns.map((column) => (
