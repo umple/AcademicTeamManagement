@@ -127,18 +127,25 @@ const ProjectTable = () => {
 
 //Modal to create new Group
 export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
-  const [values, setValues] = useState(() =>
-    columns.reduce((acc, column) => {
+  const [values, setValues] = useState(() => {
+    const initialValues = columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
       return acc;
-    }, {}),
-  );
+    }, {});
+
+    initialValues['project'] = 'not assigned';
+    return initialValues;
+  });
 
   const handleSubmit = () => {
-    //put your validation logic here
     onSubmit(values);
     onClose();
   };
+
+
+  const formColumns = columns.filter(
+    (column) => !['interest', 'project'].includes(column.accessorKey)
+  );
 
   return (
     <Dialog open={open}>
@@ -153,7 +160,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
               marginTop: '0.5rem',
             }}
           >
-            {columns.map((column) => (
+            {formColumns.map((column) => (
               <TextField
                 key={column.accessorKey}
                 label={column.header}
@@ -161,6 +168,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
                 onChange={(e) =>
                   setValues({ ...values, [e.target.name]: e.target.value })
                 }
+                required={column.accessorKey !== 'notes'}
               />
             ))}
           </Stack>

@@ -227,7 +227,6 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
   } = useForm();
 
   const handleSubmit = () => {
-    //put your validation logic here
     onSubmit(values);
     onClose();
   };
