@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -210,10 +211,20 @@ const ProjectTable = () => {
 export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
+      if (column.accessorKey === 'project') {
+        acc[column.accessorKey ?? ''] = 'not assigned';
+      } else {
+        acc[column.accessorKey ?? ''] = '';
+      }
       return acc;
     }, {}),
   );
+
+  const {
+    control,
+    handleSubmit: handleValidatedSubmit,
+    formState: { errors },
+  } = useForm();
 
   const handleSubmit = () => {
     //put your validation logic here
@@ -222,10 +233,10 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
   };
 
   return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Group</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+    <form onSubmit={handleValidatedSubmit(handleSubmit)}>
+      <Dialog open={open}>
+        <DialogTitle textAlign="center">Create New Group</DialogTitle>
+        <DialogContent>
           <Stack
             sx={{
               width: '100%',
@@ -234,26 +245,42 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
               marginTop: '0.5rem',
             }}
           >
-            {columns.map((column) => (
-              <TextField
-                key={column.accessorKey}
-                label={column.header}
-                name={column.accessorKey}
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.name]: e.target.value })
-                }
-              />
-            ))}
+            {columns.map((column) => {
+              if (column.accessorKey === 'project' || column.accessorKey === 'interest') {
+                return null;
+              }
+              return (
+                <Controller
+                  key={column.accessorKey}
+                  name={column.accessorKey}
+                  control={control}
+                  defaultValue={column.accessorKey === 'project' ? 'not assigned' : ''}
+                  rules={{
+                    required: column.accessorKey !== 'notes' ? `${column.header} is required.` : false,
+                  }}
+                  render={({ field }) => (
+                    <TextField
+                      label={
+                        `${column.header}${column.accessorKey !== 'notes' ? ' *' : ''}`
+                      }
+                      error={!!errors[column.accessorKey]}
+                      helperText={errors[column.accessorKey]?.message}
+                      {...field}
+                    />
+                  )}
+                />
+              );
+            })}
           </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogContent>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button color="secondary" onClick={handleValidatedSubmit(handleSubmit)} variant="contained" type="submit">
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </form>
   );
 };
 
