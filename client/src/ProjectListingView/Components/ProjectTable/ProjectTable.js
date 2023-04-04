@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -434,7 +434,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
   );
 
   const {
-    register,
+    control,
     handleSubmit: handleValidatedSubmit,
     formState: { errors },
   } = useForm();
@@ -460,6 +460,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
     onClose();
   };
 
+
   return (
     <form onSubmit={handleValidatedSubmit(handleSubmit)}>
       <Dialog open={open}>
@@ -470,7 +471,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
               width: '100%',
               minWidth: { xs: '300px', sm: '360px', md: '400px' },
               gap: '1.5rem',
-              marginTop: '10px',
+              marginTop: '0.5rem',
             }}
           >
             {columns.map((column) => {
@@ -483,7 +484,6 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
                     key={column.accessorKey}
                     control={
                       <Checkbox
-                        {...register('visibility')}
                         checked={values[column.accessorKey]}
                         onChange={(e) => {
                           setValues({ ...values, [e.target.name]: e.target.checked });
@@ -496,21 +496,24 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
                 );
               }
               return (
-                <TextField
+                <Controller
                   key={column.accessorKey}
-                  label={
-                    `${column.header}${column.accessorKey !== 'notes' ? ' *' : ''}`
-                  }
                   name={column.accessorKey}
-                  value={values[column.accessorKey]}
-                  onChange={(e) => {
-                    setValues({ ...values, [e.target.name]: e.target.value });
-                  }}
-                  {...register(column.accessorKey, {
+                  control={control}
+                  defaultValue=""
+                  rules={{
                     required: `${column.header} is required.`,
-                  })}
-                  error={!!errors[column.accessorKey]}
-                  helperText={errors[column.accessorKey]?.message}
+                  }}
+                  render={({ field }) => (
+                    <TextField
+                      label={
+                        `${column.header}${column.accessorKey !== 'notes' ? ' *' : ''}`
+                      }
+                      error={!!errors[column.accessorKey]}
+                      helperText={errors[column.accessorKey]?.message}
+                      {...field}
+                    />
+                  )}
                 />
               );
             })}
