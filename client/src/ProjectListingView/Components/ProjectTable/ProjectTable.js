@@ -116,11 +116,6 @@ const ProjectTable = () => {
   const [applications, setApplications] = useState(defaultApp);
 
   const fetchProjectApplication = () => {
-    // fetch("/api/fetchGroupApplication")
-    // .then(response => response.json())
-    // .then(data=> {
-    //     setApplications(data)
-    // })
   }
 
   const fetchProjects = () => {
@@ -169,7 +164,6 @@ const ProjectTable = () => {
   );
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    setIsLoading(true);
     if (!Object.keys(validationErrors).length) {
       fetch(`api/project/update/${row.original._id}`, {
         method: "PUT",
@@ -202,16 +196,7 @@ const ProjectTable = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const style = {
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
+ 
 
   // To delete the row
   const handleDeleteRow = useCallback(

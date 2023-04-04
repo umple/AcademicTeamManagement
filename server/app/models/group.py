@@ -8,11 +8,11 @@ import pandas as pd
 groupCollection = db["groups"]
 
 def get_all_groups():
-    groupCollection = []
+    group_Collection = []
     for document in groupCollection.find():
         document["_id"] = str(document["_id"])
-        groupCollection.append(document)
-    return groupCollection
+        group_Collection.append(document)
+    return group_Collection
 
 def add_group(group_obj):
     result = groupCollection.insert_one(group_obj)

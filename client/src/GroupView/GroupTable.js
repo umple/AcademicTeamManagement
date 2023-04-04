@@ -7,6 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   Stack,
   TextField,
@@ -21,14 +22,14 @@ import { Delete, Edit } from '@mui/icons-material';
 const data = [
   {
     group_id: 1,
-    members: ['Jack Smith','Ronny Welsh','Jenna Sunn','Mark Boudreau','Emilie Lachance'],
+    members: ['Jack Smith', 'Ronny Welsh', 'Jenna Sunn', 'Mark Boudreau', 'Emilie Lachance'],
     interest: 'Project D, E, and G',
     project: 'not assigned',
     notes: '',
   },
   {
     group_id: 2,
-    members: ['Bob Anderson','Julina Robs','Maria Inkepen'],
+    members: ['Bob Anderson', 'Julina Robs', 'Maria Inkepen'],
     interest: '',
     project: 'Project G',
     notes: 'Ideally four students',
@@ -39,34 +40,34 @@ const data = [
 
 const GroupTable = () => {
   // Columns for table
-  const columns = useMemo(
-    () => [
-          {
-            accessorKey: 'group_id',
-            header: 'Group',
-          },
-          {
-            accessorKey: 'members',
-            header: 'Members',
-            Cell: ({ cell }) => (
-              cell.getValue().map((i) => <tr>{i}</tr>)
-            ),
-          },
-          {
-            accessorKey: 'project',
-            header: 'Current Project',
-          },
-          {
-            accessorKey: 'interest',
-            header: 'Interested projects',
-          },
-          {
-            accessorKey: 'notes',
-            header: 'Notes'
-          },
-        ],
-    [],
-  );
+  const columns = useMemo(() => [
+    {
+      accessorKey: 'group_id',
+      header: 'Group',
+    },
+    {
+      accessorKey: 'members',
+      header: 'Members',
+      Cell: ({ cell }) => {
+        if (Array.isArray(cell.value) && cell.value.length > 0) {
+          cell.getValue().map((i) => <tr>{i}</tr>);
+        }
+      }
+    },
+    {
+      accessorKey: 'project',
+      header: 'Current Project',
+    },
+    {
+      accessorKey: 'interest',
+      header: 'Interested projects',
+    },
+    {
+      accessorKey: 'notes',
+      header: 'Notes'
+    },
+  ], []);
+
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -84,16 +85,15 @@ const GroupTable = () => {
       });
   };
 
-
-
   useEffect(() => {
     fetchGroups();
   }, []);
 
-  const handleCreateNewRow = (values) => {};
+  const handleCreateNewRow = (values) => { };
 
   const handleAddRow = useCallback(
     (newRowData) => {
+
       fetch('api/group', {
         method: 'POST',
         headers: {
@@ -135,7 +135,7 @@ const GroupTable = () => {
     boxShadow: 24,
     p: 4,
   };
-  
+
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
@@ -167,11 +167,11 @@ const GroupTable = () => {
   const handleExportData = () => {
     csvExporter.generateCsv(data);
   };
-   
-  return(
-  <Box sx={{ p: 2 }}>
-    <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Groups</Typography>
-    <MaterialReactTable
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Groups</Typography>
+      <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
@@ -179,7 +179,7 @@ const GroupTable = () => {
             },
             size: 120,
           },
-        }}  
+        }}
         enablePagination={false}
         columns={columns}
         data={tableData}
@@ -219,11 +219,11 @@ const GroupTable = () => {
               Create New Group
             </Button>
             <Button
-            color="primary"
-            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-            onClick={handleExportData}
-            startIcon={<FileDownloadIcon />}
-            variant="contained"
+              color="primary"
+              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+              onClick={handleExportData}
+              startIcon={<FileDownloadIcon />}
+              variant="contained"
             >
               Export All Data
             </Button>
@@ -236,13 +236,14 @@ const GroupTable = () => {
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
+        fetchGroups={fetchGroups}
       />
-  </Box>
+    </Box>
   );
 };
 
 //Modal to create new Group
-export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
+export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGroups }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -250,8 +251,44 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
     }, {}),
   );
 
+  const [inputs, setInputs] = useState(['']);
+
+  const addInput = () => {
+    if (inputs.length < 5) {
+      setInputs([...inputs, ''])
+    }
+  }
+
+  const handleInputChange = (index, value) => {
+    const newInputs = [...inputs]
+    newInputs[index] = value
+    setInputs(newInputs)
+  }
+
+  const handleRemoveInput = (index) => {
+    const newInputs = [...inputs]
+    newInputs.splice(index, 1)
+    setInputs(newInputs)
+  }
+
   const handleSubmit = () => {
-    //put your validation logic here
+    fetch("api/group", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+    })
+      .then(response => {
+        if (response.ok) {
+          fetchGroups();
+          setValues({});
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    console.log(values)
     onSubmit(values);
     onClose();
   };
@@ -268,16 +305,44 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
               gap: '1.5rem',
             }}
           >
-            {columns.map((column) => (
-              <TextField
-                key={column.accessorKey}
-                label={column.header}
-                name={column.accessorKey}
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.name]: e.target.value })
-                }
-              />
-            ))}
+            {columns.map((column) => {
+              if (column.accessorKey === 'members') {
+                const inputFields = inputs.map((input, i) => (
+                  <div key={`student-${i}`} style={{ display: 'block', marginTop: "0.5rem" }}>
+                  <TextField
+                    label={`Student ${i + 1}`}
+                    value={input}
+                    onChange={(e) => handleInputChange(i, e.target.value)}
+                  />
+                  <Button onClick={() => handleRemoveInput(i)}>Remove</Button>
+                </div>
+                ))
+
+                return (
+                  <div>
+                    {inputFields}
+                    {inputs.length < 5 && (
+                      <div style={{ display: 'block' }}>
+                        <Button onClick={addInput}>Add Student</Button>
+                      </div>
+                    )}
+                  </div>
+                )
+              }
+
+              return (
+                <TextField
+                  key={column.accessorKey}
+                  label={column.header}
+                  name={column.accessorKey}
+                  value={values[column.accessorKey]}
+                  onChange={(e) => {
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }}
+                />
+              )
+            })}
+
           </Stack>
         </form>
       </DialogContent>

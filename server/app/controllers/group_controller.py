@@ -1,13 +1,10 @@
 from flask import jsonify, request
 from app.models import group
-# from app.controllers import  as import_controller
 from bson import ObjectId
-from app.utils.data_conversion import clean_up_json_data
 import pandas as pd
 import json
 from . import group_bp
 
-# GET Request to retreive all students from the collection
 @group_bp.route("/groups", methods=["GET"])
 def get_groups():
     try:
