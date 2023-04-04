@@ -8,7 +8,7 @@ import json
 from . import group_bp
 
 # GET Request to retreive all students from the collection
-@group_bp.route("/retrieveGroups", methods=["GET"])
+@group_bp.route("/groups", methods=["GET"])
 def get_groups():
     try:
         group_list = group.get_all_groups()
@@ -22,9 +22,17 @@ def get_groups():
         return {"message": "Internal server error."}, 503
 
 
-@group_bp.route("/fetchGroupApplication", methods=["GET"])
-def fetch_group_application():
-    return None 
+@group_bp.route("/group", methods=["POST"])
+def add_group():
+    try:
+        group_obj = request.json
+        result = group.add_group(group_obj)
+        if result:
+            return jsonify(str(result.inserted_id)), 201
+        else:
+            return {"message": "Could not add student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
 
  
 

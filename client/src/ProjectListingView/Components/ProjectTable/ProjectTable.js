@@ -482,13 +482,13 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
                     key={column.accessorKey}
                     label={column.header}
                     name={column.accessorKey}
-                    value={column.accessorKey}
+                    value={values[column.accessorKey]}
                     onChange={(e) => {
                       setValues({ ...values, [e.target.name]: e.target.value })
                     }}
                   >
                     {cellValueMap.map((option) => (
-                      <MenuItem key={option.value} value={option.value} selected>
+                      <MenuItem key={option.value} value={option.value} >
                         {option.value}
                       </MenuItem>
                     ))}

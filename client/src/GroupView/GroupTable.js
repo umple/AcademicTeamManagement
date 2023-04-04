@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -70,10 +70,48 @@ const GroupTable = () => {
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(() => data);
+  const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
 
+  const fetchGroups = () => {
+    fetch("/api/groups")
+      .then(response => response.json())
+      .then(data => {
+        setTableData(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
   const handleCreateNewRow = (values) => {};
+
+  const handleAddRow = useCallback(
+    (newRowData) => {
+      fetch('api/group', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newRowData)
+      })
+        .then(response => {
+          if (response.ok) {
+            fetchGroups();
+          }
+        }).catch(error => {
+          console.error(error);
+        });
+    },
+    []
+  );
+
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
@@ -197,6 +235,7 @@ const GroupTable = () => {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
+        onAddRow={handleAddRow}
       />
   </Box>
   );

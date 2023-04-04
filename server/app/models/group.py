@@ -14,6 +14,11 @@ def get_all_groups():
         groupCollection.append(document)
     return groupCollection
 
+def add_group(group_obj):
+    result = groupCollection.insert_one(group_obj)
+    return result
+
+
 def add_student_to_group(student_obj):
     result = groupCollection.insert_one(student_obj)
     return result
