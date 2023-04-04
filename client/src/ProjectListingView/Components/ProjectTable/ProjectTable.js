@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -432,6 +433,12 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
     }, {}),
   );
 
+  const {
+    register,
+    handleSubmit: handleValidatedSubmit,
+    formState: { errors },
+  } = useForm();
+
   const handleSubmit = () => {
     fetch("api/project", {
       method: "POST",
@@ -454,7 +461,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
+    <form onSubmit={handleValidatedSubmit(handleSubmit)}>
       <Dialog open={open}>
         <DialogTitle textAlign="center">Create New Project</DialogTitle>
         <DialogContent>
@@ -463,46 +470,55 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
               width: '100%',
               minWidth: { xs: '300px', sm: '360px', md: '400px' },
               gap: '1.5rem',
+              marginTop: '10px',
             }}
           >
             {columns.map((column) => {
-              if (column.accessorKey === 'status') {
+              if (column.accessorKey === 'status' || column.accessorKey === 'interest') {
+                return null;
+              }
+              if (column.accessorKey === 'visibility') {
                 return (
-                  <Select
+                  <FormControlLabel
                     key={column.accessorKey}
-                    label={column.header}
-                    name={column.accessorKey}
-                    value={values[column.accessorKey]}
-                    onChange={(e) => {
-                      setValues({ ...values, [e.target.name]: e.target.value })
-                    }}
-                  >
-                    {cellValueMap.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.value}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )
+                    control={
+                      <Checkbox
+                        {...register('visibility')}
+                        checked={values[column.accessorKey]}
+                        onChange={(e) => {
+                          setValues({ ...values, [e.target.name]: e.target.checked });
+                        }}
+                        name={column.accessorKey}
+                      />
+                    }
+                    label="Visibility"
+                  />
+                );
               }
               return (
                 <TextField
                   key={column.accessorKey}
-                  label={column.header}
+                  label={
+                    `${column.header}${column.accessorKey !== 'notes' ? ' *' : ''}`
+                  }
                   name={column.accessorKey}
                   value={values[column.accessorKey]}
                   onChange={(e) => {
-                    setValues({ ...values, [e.target.name]: e.target.value })
+                    setValues({ ...values, [e.target.name]: e.target.value });
                   }}
+                  {...register(column.accessorKey, {
+                    required: `${column.header} is required.`,
+                  })}
+                  error={!!errors[column.accessorKey]}
+                  helperText={errors[column.accessorKey]?.message}
                 />
-              )
+              );
             })}
-            
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: '1.25rem' }}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" onClick={handleSubmit} variant="contained" type="submit">
+          <Button color="secondary" onClick={handleValidatedSubmit(handleSubmit)} variant="contained" type="submit">
             Create New Project
           </Button>
         </DialogActions>
