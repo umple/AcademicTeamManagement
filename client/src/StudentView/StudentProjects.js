@@ -68,7 +68,6 @@ const useStyles = makeStyles({
   textField: {
     '& .MuiInputLabel-root': {
       color: '#6b6b6b',
-      fontWeight: 'bold',
     },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
@@ -267,21 +266,59 @@ function AddProjectModal({ open, onClose, onSubmit }) {
   const [description, setDescription] = useState('');
   const [client, setClient] = useState('');
   const [group, setGroup] = useState('');
+  const [status] = useState('proposed');
+  const [nameError, setNameError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [clientError, setClientError] = useState(false);
+  const [groupError, setGroupError] = useState(false);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newProject = { name, description, client, group };
-    onSubmit(newProject);
-    setName('');
-    setDescription('');
-    setClient('');
-    setGroup('');
-    onClose();
+    let isValid = true;
+
+    if (!name) {
+      setNameError(true);
+      isValid = false;
+    } else {
+      setNameError(false);
+    }
+
+    if (!description) {
+      setDescriptionError(true);
+      isValid = false;
+    } else {
+      setDescriptionError(false);
+    }
+
+    if (!client) {
+      setClientError(true);
+      isValid = false;
+    } else {
+      setClientError(false);
+    }
+
+    if (!group) {
+      setGroupError(true);
+      isValid = false;
+    } else {
+      setGroupError(false);
+    }
+
+    if (isValid) {
+      const newProject = { name, description, client, group, status };
+      onSubmit(newProject);
+      setName('');
+      setDescription('');
+      setClient('');
+      setGroup('');
+      onClose();
+    }
   };
 
   return (
     <Dialog open={open}>
-      <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.5rem', textAlign: 'center' }}>Add Project</DialogTitle>
+      <DialogTitle sx={{ fontSize: '1.5rem', textAlign: 'center' }}>Add Project</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <Stack
@@ -300,6 +337,8 @@ function AddProjectModal({ open, onClose, onSubmit }) {
               onChange={(event) => setName(event.target.value)}
               variant="outlined"
               className={classes.textField}
+              error={nameError}
+              helperText={nameError && 'Name is required'}
             />
             <TextField
               fullWidth
@@ -311,6 +350,8 @@ function AddProjectModal({ open, onClose, onSubmit }) {
               className={classes.textField}
               multiline
               rows={4}
+              error={descriptionError}
+              helperText={descriptionError && 'Description is required'}
             />
             <TextField
               fullWidth
@@ -320,6 +361,8 @@ function AddProjectModal({ open, onClose, onSubmit }) {
               onChange={(event) => setClient(event.target.value)}
               variant="outlined"
               className={classes.textField}
+              error={clientError}
+              helperText={clientError && 'Client is required'}
             />
             <TextField
               fullWidth
@@ -329,6 +372,8 @@ function AddProjectModal({ open, onClose, onSubmit }) {
               onChange={(event) => setGroup(event.target.value)}
               variant="outlined"
               className={classes.textField}
+              error={groupError}
+              helperText={groupError && 'Group is required'}
             />
           </Stack>
         </form>
