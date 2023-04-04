@@ -20,9 +20,6 @@ def update_project_by_id(id, project_obj):
 
 def delete_project_by_id(id):
     result = projectCollection.delete_one({"_id": ObjectId(id)})
-    if result.deleted_count == 1:
-        return "Document deleted successfully"
-    else:
-        return "Error deleting document"
+    return result
 
 

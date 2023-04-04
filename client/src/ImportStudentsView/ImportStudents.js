@@ -49,6 +49,7 @@ const ImportStudents = (props) => {
       newColumns.pop();
       props.updateColumns(newColumns)
       props.fetchStudents();
+      props.handleImportSuccess(true)
     } catch (error) {
       setError(error.message);
     }
@@ -56,6 +57,7 @@ const ImportStudents = (props) => {
 
 
   return (
+  
     <Box sx={{ display: 'flex', gap: '1rem', flexDirection: 'row' }}>
       <form onSubmit={handleSubmit}>
         <input

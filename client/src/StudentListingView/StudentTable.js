@@ -17,6 +17,8 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit } from '@mui/icons-material';
 import ImportStudents from '../ImportStudentsView/ImportStudents';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -81,7 +83,15 @@ const StudentTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
-  const [loading, setIsLoading] = useState(false);
+
+  const [importSuccess, setImportSuccess] = useState(false);
+
+  function handleImportSuccess(success) {
+    setImportSuccess(success);
+    if (success) {
+      setTimeout(() => setImportSuccess(false), 4000); // 5 seconds delay
+    }
+  }
 
 
   const fetchStudents = async () => {
@@ -102,13 +112,13 @@ const StudentTable = () => {
   };
 
 
-  const readSavedJson = async () =>{ 
-      if (localStorage.getItem("userColumns") === null){
-        setColumns(defaultColumns)
-      } else {
-        const userColumnsArray = JSON.parse(localStorage.getItem("userColumns"));
-        setColumns(userColumnsArray)
-      }
+  const readSavedJson = async () => {
+    if (localStorage.getItem("userColumns") === null) {
+      setColumns(defaultColumns)
+    } else {
+      const userColumnsArray = JSON.parse(localStorage.getItem("userColumns"));
+      setColumns(userColumnsArray)
+    }
   }
 
   useEffect(() => {
@@ -168,9 +178,9 @@ const StudentTable = () => {
     setValidationErrors({});
   };
 
-  function updateColumns(newcolumns){
+  function updateColumns(newcolumns) {
     setColumns(newcolumns)
-    localStorage.setItem("userColumns",JSON.stringify(newcolumns))
+    localStorage.setItem("userColumns", JSON.stringify(newcolumns))
   }
 
   // For the model to view student applications
@@ -219,9 +229,13 @@ const StudentTable = () => {
   const handleExportData = () => {
     csvExporter.generateCsv(tableData);
   };
- 
+
   return (
     <Box sx={{ p: 2 }}>
+      {importSuccess && <Alert severity="success">
+        <AlertTitle>Success</AlertTitle>
+        success alert — <strong>successfully imported students!</strong>
+      </Alert>}
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -279,7 +293,7 @@ const StudentTable = () => {
               Export All Data
             </Button>
 
-            <ImportStudents fetchStudents={fetchStudents} updateColumns={updateColumns} ></ImportStudents>
+            <ImportStudents fetchStudents={fetchStudents} updateColumns={updateColumns} handleImportSuccess={handleImportSuccess}></ImportStudents>
           </Box>
         )}
       />

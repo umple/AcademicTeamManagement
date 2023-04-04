@@ -169,9 +169,6 @@ const handleAddRow = useCallback(
       })
         .then(response => {
           if (response.ok) {
-            const updatedData = tableData.filter(
-              (data) => data._id !== row.original._id
-            );
             fetchProjects();
           } else {
             console.error("Error deleting row");
@@ -217,10 +214,7 @@ const handleAddRow = useCallback(
       })
         .then(response => {
           if (response.ok) {
-            const updatedData = tableData.filter(
-              (data) => data._id !== row.original._id
-            );
-            setTableData(updatedData);
+            fetchProjects();
           } else {
             console.error("Error deleting row");
           }
@@ -229,7 +223,7 @@ const handleAddRow = useCallback(
           console.error(error);
         });
     },
-    [tableData],
+    [],
   );
 
   // For exporting the table data

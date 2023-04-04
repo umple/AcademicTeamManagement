@@ -19,7 +19,7 @@ def get_projects():
         return {"message": "Internal server error."}, 503
  
 # POST Request to add a new student to the list
-@project_bp.route("/api/project", methods=["POST"])
+@project_bp.route("/project", methods=["POST"])
 def add_Project():
     try:
         project_obj = request.json
@@ -33,10 +33,11 @@ def add_Project():
 
 
 # PUT Request to update a student info
-@project_bp.route("/api/project/update/<id>", methods=["PUT"])
+@project_bp.route("/project/update/<id>", methods=["PUT"])
 def update_project_by_id(id):
     try:
         project_obj = request.json
+        print(project_obj)
         result = project.update_project_by_id(id, project_obj)
         if result:
             return jsonify(str(result.modified_count)), 200
@@ -46,7 +47,7 @@ def update_project_by_id(id):
         return {"message": "Internal server error."}, 503
 
 # DELETE Request to remove a student from the collection
-@project_bp.route("/api/project/delete/<id>", methods=["DELETE"])
+@project_bp.route("/project/delete/<id>", methods=["DELETE"])
 def delete_project_by_id(id):
     try:
         result = project.delete_project_by_id(id)

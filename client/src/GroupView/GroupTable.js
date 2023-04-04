@@ -73,12 +73,7 @@ const ProjectTable = () => {
   const [tableData, setTableData] = useState(() => data);
   const [validationErrors, setValidationErrors] = useState({});
 
-  const handleCreateNewRow = (values) => {
-    tableData.push(values);
-    setTableData([...tableData]);
-    console.log(tableData)
-    console.log(columns)
-  };
+  const handleCreateNewRow = (values) => {};
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
