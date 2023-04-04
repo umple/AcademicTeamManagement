@@ -24,8 +24,9 @@ import {
   Checkbox,
   FormLabel,
   FormGroup,
-  Select, 
-  MenuItem
+  Select,
+  MenuItem,
+  InputLabel
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
@@ -126,7 +127,7 @@ const ProjectTable = () => {
     fetch("/api/projects")
       .then(response => response.json())
       .then(data => {
-        
+
         setTableData(data);
       })
       .catch(error => {
@@ -139,34 +140,28 @@ const ProjectTable = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
-  
+
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleCreateNewRow = (values) => { };
 
 
-  
-const handleAddRow = useCallback(
-  (newRowData) => {
-    setIsLoading(true);
-    fetch('api/project', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newRowData)
-    })
-      .then(response => response.json())
-      .then(data => {
-        setIsLoading(false);
-        setTableData(prevState => [...prevState, data]);
+
+  const handleAddRow = useCallback(
+    (newRowData) => {
+      setIsLoading(true);
+      fetch('api/project', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newRowData)
       })
-        .then(response => response.json())
-        .then(data => {
-          setTableData(prevState => [...prevState, data]);
-        })
-        .catch(error => {
-          setIsLoading(false);
+        .then(response => {
+          if (response.ok) {
+            fetchProjects();
+          }
+        }).catch(error => {
           console.error(error);
         });
     },
@@ -242,8 +237,18 @@ const handleAddRow = useCallback(
     [],
   );
 
+  function getDate(){
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate
+  }
+
   // For exporting the table data
   const csvOptions = {
+    filename: 'StudentsFromAcTeams-' + getDate(),
     fieldSeparator: ',',
     quoteStrings: '"',
     decimalSeparator: '.',
@@ -267,7 +272,9 @@ const handleAddRow = useCallback(
   ];
 
   return (
+  
     <Box sx={{ p: 2 }}>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Projects</Typography>
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -420,13 +427,13 @@ const handleAddRow = useCallback(
 //Modal to create new project
 export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects }) => {
 
-  const cellValueMap = [ 
-    {value: 'new', label: 'success'},
-    {value:'interested students', label:'warning'},
-    {value:'students needed', label: 'primary'},
-    {value:'pending approval', label: 'secondary'},
-    {value: 'assigned', label:'error'},
-    {value: 'proposed', label:'default'}
+  const cellValueMap = [
+    { value: 'new', label: 'success' },
+    { value: 'interested students', label: 'warning' },
+    { value: 'students needed', label: 'primary' },
+    { value: 'pending approval', label: 'secondary' },
+    { value: 'assigned', label: 'error' },
+    { value: 'proposed', label: 'default' }
   ];
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
@@ -475,13 +482,13 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
                     key={column.accessorKey}
                     label={column.header}
                     name={column.accessorKey}
-                    value={values[column.accessorKey]}
+                    value={column.accessorKey}
                     onChange={(e) => {
                       setValues({ ...values, [e.target.name]: e.target.value })
                     }}
                   >
                     {cellValueMap.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
+                      <MenuItem key={option.value} value={option.value} selected>
                         {option.value}
                       </MenuItem>
                     ))}
@@ -500,7 +507,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
                 />
               )
             })}
-            
+
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: '1.25rem' }}>

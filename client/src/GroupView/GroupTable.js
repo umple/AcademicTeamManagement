@@ -37,7 +37,7 @@ const data = [
 
 
 
-const ProjectTable = () => {
+const GroupTable = () => {
   // Columns for table
   const columns = useMemo(
     () => [
@@ -132,6 +132,7 @@ const ProjectTable = () => {
    
   return(
   <Box sx={{ p: 2 }}>
+    <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Groups</Typography>
     <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -251,4 +252,4 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
   );
 };
 
-export default ProjectTable;
+export default GroupTable;

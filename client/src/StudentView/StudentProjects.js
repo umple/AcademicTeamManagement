@@ -143,7 +143,7 @@ function StudentProjects() {
 
   const handleProjectApplication = (event, project) => {
     event.preventDefault();
-    fetch("add/project/application", {
+    fetch("api/add/project/application", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

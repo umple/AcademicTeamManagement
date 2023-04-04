@@ -11,7 +11,8 @@ import {
   IconButton,
   Stack,
   TextField,
-  Tooltip
+  Tooltip,
+  Typography
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
@@ -232,6 +233,7 @@ const StudentTable = () => {
 
   return (
     <Box sx={{ p: 2 }}>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Students</Typography>
       {importSuccess && <Alert severity="success">
         <AlertTitle>Success</AlertTitle>
         success alert — <strong>successfully imported students!</strong>

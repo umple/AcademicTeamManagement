@@ -20,16 +20,17 @@ def get_project_application():
  
 @project_application_bp.route("/add/project/application", methods=["POST"])
 def add_project_application():
-    try:
-        print(request.json)
-        project_obj = request.json
-        result = projectApplication.add_project_application(project_obj)
-        if result:
-            return jsonify(str(result.inserted_id)), 201
-        else:
-            return {"message": "Could not add student."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+    print(request.json)
+    # try:
+    #     project_obj = request.json
+    #     print(project_obj)
+    #     result = projectApplication.add_project_application(project_obj)
+    #     if result:
+    #         return jsonify(str(result.inserted_id)), 201
+    #     else:
+    #         return {"message": "Could not add student."}, 404
+    # except:
+    #     return {"message": "Internal server error."}, 503
 
 
 
