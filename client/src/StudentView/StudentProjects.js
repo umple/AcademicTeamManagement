@@ -19,7 +19,7 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
-    display: 'block',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: '32px',
     marginBottom: '32px',
@@ -161,7 +161,7 @@ function StudentProjects() {
 
   return (
     <Container>
-      <Typography variant="h1" align="center" fontWeight="fontWeightBold">
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold">
         Student Projects
       </Typography>
       <Box>
@@ -170,7 +170,7 @@ function StudentProjects() {
           spacing={1}
           justifyContent="center"
           alignItems="center"
-          style={{ marginLeft: "0.5rem" }}
+          style={{display: "block"}}
         >
           <Grid container md={9} sm={12} xs={12}>
             <TextField
@@ -198,10 +198,8 @@ function StudentProjects() {
           </Grid>
         
           {projects.map((project) => (
-            <form className={classes.formContainer}
-              onSubmit={(event) => handleProjectApplication(event, project)}
-            >
-              <Grid item md={9} sm={12} xs={12} key={project.id}>
+            <form className={classes.formContainer} onSubmit={(event) => handleProjectApplication(event, project)}>
+              <Grid  key={project.id}>
                 <Card className={classes.root} style={{ padding: "1rem" }}>
                   <CardContent>
                     <Typography
