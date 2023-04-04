@@ -21,6 +21,8 @@ def add_student_to_group(student_obj):
 def add_import_student(student_obj):
     studentsCollection.insert_one(student_obj)
    
+# def retrieve_groups_for_project():
+#     results = groupCollection.find({"flask": flask_variable})
 # def get_student_by_id(id):
 #     document = studentsCollection.find_one({"_id": ObjectId(id)})
 #     document["_id"] = str(document["_id"])

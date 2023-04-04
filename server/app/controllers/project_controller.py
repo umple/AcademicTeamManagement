@@ -57,4 +57,3 @@ def delete_project_by_id(id):
             return {"message": "Could not delete student."}, 404
     except:
         return {"message": "Internal server error."}, 503
-

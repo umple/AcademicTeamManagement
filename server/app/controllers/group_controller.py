@@ -21,9 +21,10 @@ def get_groups():
     except:
         return {"message": "Internal server error."}, 503
 
-# POST Request to add a new student to the list
-# @group_bp.route("/addGroupMember", methods=["POST"])
-# def add_student_to_group():
+
+@group_bp.route("/fetchGroupApplication", methods=["GET"])
+def fetch_group_application():
+    return None 
 
  
 

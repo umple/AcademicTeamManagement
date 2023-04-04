@@ -101,16 +101,32 @@ const ProjectTable = () => {
     [],
   );
 
+  // Mock data to show project applications
+  const defaultApp = [
+    { group: '21', date: 'January 1, 2023', description: 'After interviewing with the client we received confirmation by email that the client picked our team for the project.' },
+    { group: '27', date: 'January 10, 2023', description: 'After talking to the customer, they said that they are interested in having us develop their application.' }
+  ];
+
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [applications, setApplications] = useState(defaultApp);
+
+  const fetchProjectApplication = () => {
+    // fetch("/api/fetchGroupApplication")
+    // .then(response => response.json())
+    // .then(data=> {
+    //     setApplications(data)
+    // })
+  }
 
   const fetchProjects = () => {
     fetch("/api/projects")
       .then(response => response.json())
       .then(data => {
+        
         setTableData(data);
       })
       .catch(error => {
@@ -249,13 +265,6 @@ const handleAddRow = useCallback(
     { name: 'Calvin Klein' },
     { name: 'Richard Brown' }
   ];
-
-  // Mock data to show project applications
-  const applications = [
-    { group: '21', date: 'January 1, 2023', description: 'After interviewing with the client we received confirmation by email that the client picked our team for the project.' },
-    { group: '27', date: 'January 10, 2023', description: 'After talking to the customer, they said that they are interested in having us develop their application.' }
-  ];
-
 
   return (
     <Box sx={{ p: 2 }}>

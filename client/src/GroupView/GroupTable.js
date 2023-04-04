@@ -102,7 +102,7 @@ const ProjectTable = () => {
   const handleDeleteRow = useCallback(
     (row) => {
       if (
-        !window.confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
+        !window.confirm(`Are you sure you want to delete group: ${row.getValue('group_id')}`)
       ) {
         return;
       }
