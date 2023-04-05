@@ -99,6 +99,7 @@ const StudentTable = () => {
       });
   };
 
+
   const readSavedJson = async () => { 
     const userColumnsData = localStorage.getItem("userColumns");
     
