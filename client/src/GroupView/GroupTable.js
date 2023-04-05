@@ -39,7 +39,29 @@ const data = [
 
 
 const GroupTable = () => {
-  // Columns for table
+  
+  // For the create profile modal
+  const [isLoading, setIsLoading] = useState(true);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [validationErrors, setValidationErrors] = useState({});
+  
+  const fetchGroups = () => {
+    fetch("/api/groups")
+    .then(response => response.json())
+    .then(data => {
+      setTableData(data);
+      setIsLoading(false)
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  };
+  
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+  
   const columns = useMemo(() => [
     {
       accessorKey: 'group_id',
@@ -49,8 +71,8 @@ const GroupTable = () => {
       accessorKey: 'members',
       header: 'Members',
       Cell: ({ cell }) => {
-        if (Array.isArray(cell.value) && cell.value.length > 0) {
-          cell.getValue().map((i) => <tr>{i}</tr>);
+        if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
+          return  cell.getValue("members").map((item,index) => <tr>{item}</tr>);
         }
       }
     },
@@ -67,28 +89,16 @@ const GroupTable = () => {
       header: 'Notes'
     },
   ], []);
-
-
-  // For the create profile modal
-  const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState([]);
-  const [validationErrors, setValidationErrors] = useState({});
-
-  const fetchGroups = () => {
-    fetch("/api/groups")
-      .then(response => response.json())
-      .then(data => {
-        setTableData(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  const rowProps = (row) => {
+    console.log(row)
+    const { members } = row.original;
+    const isMembersArray = Array.isArray(members) && members.length > 0;
+    return {
+      style: {
+        backgroundColor: isMembersArray ? '#c8e6c9' : '#ffffff',
+      },
+    };
   };
-
-  useEffect(() => {
-    fetchGroups();
-  }, []);
-
   const handleCreateNewRow = (values) => { };
 
   const handleAddRow = useCallback(
@@ -171,6 +181,7 @@ const GroupTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Groups</Typography>
+       
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -183,7 +194,7 @@ const GroupTable = () => {
         enablePagination={false}
         columns={columns}
         data={tableData}
-        editingMode="modal"
+        editingMode="row"
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
@@ -228,7 +239,7 @@ const GroupTable = () => {
             </Button>
           </Box>
         )}
-      />
+      />  
       <CreateNewGroupModal
         columns={columns}
         open={createModalOpen}
