@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -20,27 +19,27 @@ import { ExportToCsv } from 'export-to-csv'; //or use your library of choice her
 import { Delete, Edit } from '@mui/icons-material';
 
 const GroupTable = () => {
-  
+
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
-  
+
   const fetchGroups = () => {
     fetch("/api/groups")
-    .then(response => response.json())
-    .then(data => {
-      setTableData(data);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(response => response.json())
+      .then(data => {
+        setTableData(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
-  
+
   useEffect(() => {
     fetchGroups();
   }, []);
-  
+
   const columns = useMemo(() => [
     {
       accessorKey: 'group_id',
@@ -51,7 +50,7 @@ const GroupTable = () => {
       header: 'Members',
       Cell: ({ cell }) => {
         if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
-          return  cell.getValue("members").map((item,index) => <tr>{item}</tr>);
+          return cell.getValue("members").map((item, index) => <tr>{item}</tr>);
         }
       }
     },
@@ -68,7 +67,7 @@ const GroupTable = () => {
       header: 'Notes'
     },
   ], []);
-  
+
   const handleCreateNewRow = (values) => { };
 
   const handleAddRow = useCallback(
@@ -176,7 +175,7 @@ const GroupTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Groups</Typography>
-       
+
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -234,7 +233,7 @@ const GroupTable = () => {
             </Button>
           </Box>
         )}
-      />  
+      />
       <CreateNewGroupModal
         columns={columns}
         open={createModalOpen}
@@ -251,20 +250,10 @@ const GroupTable = () => {
 export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGroups }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      if (column.accessorKey === 'project') {
-        acc[column.accessorKey ?? ''] = 'not assigned';
-      } else {
-        acc[column.accessorKey ?? ''] = '';
-      }
+      acc[column.accessorKey ?? ''] = '';
       return acc;
     }, {}),
   );
-
-  const {
-    control,
-    handleSubmit: handleValidatedSubmit,
-    formState: { errors },
-  } = useForm();
 
   const [inputs, setInputs] = useState(['']);
 
@@ -285,9 +274,8 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
     newInputs.splice(index, 1)
     setInputs(newInputs)
   }
- 
+  values["members"] = inputs
   const handleSubmit = () => {
-    
     fetch("api/group", {
       method: "POST",
       headers: {
@@ -309,38 +297,30 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
     onSubmit(values);
     onClose();
   };
- 
-  const handleFormSubmit = (data) => {
-    handleValidatedSubmit(() => handleSubmit(data))(data);
-  };
-  return (
 
-    <form onSubmit={handleValidatedSubmit(handleSubmit)}>
-      <Dialog open={open}>
-        <DialogTitle textAlign="center">Create New Group</DialogTitle>
-        <DialogContent>
+  return (
+    <Dialog open={open}>
+      <DialogTitle textAlign="center">Create New Group</DialogTitle>
+      <DialogContent>
+        <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
               width: '100%',
               minWidth: { xs: '300px', sm: '360px', md: '400px' },
               gap: '1.5rem',
-              marginTop: '0.5rem',
             }}
           >
             {columns.map((column) => {
-              if (column.accessorKey === 'project' || column.accessorKey === 'interest') {
-                return null;
-              }
               if (column.accessorKey === 'members') {
                 const inputFields = inputs.map((input, i) => (
                   <div key={`student-${i}`} style={{ display: 'block', marginTop: "0.5rem" }}>
-                  <TextField
-                    label={`Student ${i + 1}`}
-                    value={input}
-                    onChange={(e) => handleInputChange(i, e.target.value)}
-                  />
-                  <Button onClick={() => handleRemoveInput(i)}>Remove</Button>
-                </div>
+                    <TextField
+                      label={`Student ${i + 1}`}
+                      value={input}
+                      onChange={(e) => handleInputChange(i, e.target.value)}
+                    />
+                    <Button onClick={() => handleRemoveInput(i)}>Remove</Button>
+                  </div>
                 ))
 
                 return (
@@ -354,38 +334,34 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
                   </div>
                 )
               }
+
               return (
-                <Controller
+                <TextField
                   key={column.accessorKey}
+                  label={column.header}
                   name={column.accessorKey}
-                  control={control}
-                  defaultValue={column.accessorKey === 'project' ? 'not assigned' : ''}
-                  rules={{
-                    required: column.accessorKey !== 'notes' ? `${column.header} is required.` : false,
+                  value={values[column.accessorKey]}
+                  onChange={(e) => {
+                    setValues({ ...values, [e.target.name]: e.target.value });
                   }}
-                  render={({ field }) => (
-                    <TextField
-                      label={
-                        `${column.header}${column.accessorKey !== 'notes' ? ' *' : ''}`
-                      }
-                      error={!!errors[column.accessorKey]}
-                      helperText={errors[column.accessorKey]?.message}
-                      {...field}
-                    />
-                  )}
+                  inputProps={{
+                    required: true,
+                  }}
                 />
-              );
+
+              )
             })}
+
           </Stack>
-        </DialogContent>
-        <DialogActions sx={{ p: '1.25rem' }}>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" onClick={handleValidatedSubmit(handleSubmit)} variant="contained" type="submit">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </form>
+        </form>
+      </DialogContent>
+      <DialogActions sx={{ p: '1.25rem' }}>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button color="secondary" onClick={handleSubmit} variant="contained">
+          Create
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
