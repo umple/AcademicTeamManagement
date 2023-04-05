@@ -18,26 +18,6 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
 import { Delete, Edit } from '@mui/icons-material';
 
-// Mock data for table
-const data = [
-  {
-    group_id: 1,
-    members: ['Jack Smith', 'Ronny Welsh', 'Jenna Sunn', 'Mark Boudreau', 'Emilie Lachance'],
-    interest: 'Project D, E, and G',
-    project: 'not assigned',
-    notes: '',
-  },
-  {
-    group_id: 2,
-    members: ['Bob Anderson', 'Julina Robs', 'Maria Inkepen'],
-    interest: '',
-    project: 'Project G',
-    notes: 'Ideally four students',
-  },
-];
-
-
-
 const GroupTable = () => {
   
   // For the create profile modal
