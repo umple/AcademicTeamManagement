@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import MaterialReactTable from 'material-react-table';
 import {
@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   Stack,
   TextField,
@@ -18,73 +19,99 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
 import { Delete, Edit } from '@mui/icons-material';
 
-// Mock data for table
-const data = [
-  {
-    group_id: 1,
-    members: ['Jack Smith','Ronny Welsh','Jenna Sunn','Mark Boudreau','Emilie Lachance'],
-    interest: 'Project D, E, and G',
-    project: 'not assigned',
-    notes: '',
-  },
-  {
-    group_id: 2,
-    members: ['Bob Anderson','Julina Robs','Maria Inkepen'],
-    interest: '',
-    project: 'Project G',
-    notes: 'Ideally four students',
-  },
-];
-
-
-
-const ProjectTable = () => {
-  // Columns for table
-  const columns = useMemo(
-    () => [
-          {
-            accessorKey: 'group_id',
-            header: 'Group',
-          },
-          {
-            accessorKey: 'members',
-            header: 'Members',
-            Cell: ({ cell }) => (
-              cell.getValue().map((i) => <tr>{i}</tr>)
-            ),
-          },
-          {
-            accessorKey: 'project',
-            header: 'Current Project',
-          },
-          {
-            accessorKey: 'interest',
-            header: 'Interested projects',
-          },
-          {
-            accessorKey: 'notes',
-            header: 'Notes'
-          },
-        ],
-    [],
-  );
-
+const GroupTable = () => {
+  
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(() => data);
+  const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
-
-  const handleCreateNewRow = (values) => {
-    tableData.push(values);
-    setTableData([...tableData]);
-    console.log(tableData)
-    console.log(columns)
+  
+  const fetchGroups = () => {
+    fetch("/api/groups")
+    .then(response => response.json())
+    .then(data => {
+      setTableData(data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
   };
+  
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+  
+  const columns = useMemo(() => [
+    {
+      accessorKey: 'group_id',
+      header: 'Group',
+    },
+    {
+      accessorKey: 'members',
+      header: 'Members',
+      Cell: ({ cell }) => {
+        if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
+          return  cell.getValue("members").map((item,index) => <tr>{item}</tr>);
+        }
+      }
+    },
+    {
+      accessorKey: 'project',
+      header: 'Current Project',
+    },
+    {
+      accessorKey: 'interest',
+      header: 'Interested projects',
+    },
+    {
+      accessorKey: 'notes',
+      header: 'Notes'
+    },
+  ], []);
+  
+  const handleCreateNewRow = (values) => { };
+
+  const handleAddRow = useCallback(
+    (newRowData) => {
+
+      fetch('api/group', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newRowData)
+      })
+        .then(response => {
+          if (response.ok) {
+            fetchGroups();
+          }
+        }).catch(error => {
+          console.error(error);
+        });
+    },
+    []
+  );
+
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      setTableData([...tableData]);
+      fetch(`api/group/update/${row.original._id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+      })
+        .then(response => {
+          if (response.ok) {
+            fetchGroups();
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
       exitEditingMode();
     }
   };
@@ -103,18 +130,28 @@ const ProjectTable = () => {
     boxShadow: 24,
     p: 4,
   };
-  
+
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
       if (
-        !window.confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
+        !window.confirm(`Are you sure you want to delete group: ${row.getValue('group_id')}`)
       ) {
         return;
       }
-      //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+      fetch(`api/group/delete/${row.original._id}`, {
+        method: "DELETE"
+      })
+        .then(response => {
+          if (response.ok) {
+            fetchGroups();
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     [tableData],
   );
@@ -133,12 +170,14 @@ const ProjectTable = () => {
   const csvExporter = new ExportToCsv(csvOptions);
 
   const handleExportData = () => {
-    csvExporter.generateCsv(data);
+    csvExporter.generateCsv(tableData);
   };
-   
-  return(
-  <Box sx={{ p: 2 }}>
-    <MaterialReactTable
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Groups</Typography>
+       
+      <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
@@ -146,7 +185,7 @@ const ProjectTable = () => {
             },
             size: 120,
           },
-        }}  
+        }}
         enablePagination={false}
         columns={columns}
         data={tableData}
@@ -186,29 +225,30 @@ const ProjectTable = () => {
               Create New Group
             </Button>
             <Button
-            color="primary"
-            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-            onClick={handleExportData}
-            startIcon={<FileDownloadIcon />}
-            variant="contained"
+              color="primary"
+              onClick={handleExportData}
+              startIcon={<FileDownloadIcon />}
+              variant="contained"
             >
               Export All Data
             </Button>
           </Box>
         )}
-      />
+      />  
       <CreateNewGroupModal
         columns={columns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
+        onAddRow={handleAddRow}
+        fetchGroups={fetchGroups}
       />
-  </Box>
+    </Box>
   );
 };
 
 //Modal to create new Group
-export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
+export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGroups }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       if (column.accessorKey === 'project') {
@@ -226,7 +266,45 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
     formState: { errors },
   } = useForm();
 
+  const [inputs, setInputs] = useState(['']);
+
+  const addInput = () => {
+    if (inputs.length < 5) {
+      setInputs([...inputs, ''])
+    }
+  }
+
+  const handleInputChange = (index, value) => {
+    const newInputs = [...inputs]
+    newInputs[index] = value
+    setInputs(newInputs)
+  }
+
+  const handleRemoveInput = (index) => {
+    const newInputs = [...inputs]
+    newInputs.splice(index, 1)
+    setInputs(newInputs)
+  }
+  values["members"] = inputs
   const handleSubmit = () => {
+    fetch("api/group", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+    })
+      .then(response => {
+        if (response.ok) {
+          fetchGroups();
+          setValues({});
+          setInputs([])
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
     onSubmit(values);
     onClose();
   };
@@ -247,6 +325,29 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
             {columns.map((column) => {
               if (column.accessorKey === 'project' || column.accessorKey === 'interest') {
                 return null;
+              }
+              if (column.accessorKey === 'members') {
+                const inputFields = inputs.map((input, i) => (
+                  <div key={`student-${i}`} style={{ display: 'block', marginTop: "0.5rem" }}>
+                  <TextField
+                    label={`Student ${i + 1}`}
+                    value={input}
+                    onChange={(e) => handleInputChange(i, e.target.value)}
+                  />
+                  <Button onClick={() => handleRemoveInput(i)}>Remove</Button>
+                </div>
+                ))
+
+                return (
+                  <div>
+                    {inputFields}
+                    {inputs.length < 5 && (
+                      <div style={{ display: 'block' }}>
+                        <Button onClick={addInput}>Add Student</Button>
+                      </div>
+                    )}
+                  </div>
+                )
               }
               return (
                 <Controller
@@ -283,4 +384,4 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
   );
 };
 
-export default ProjectTable;
+export default GroupTable;

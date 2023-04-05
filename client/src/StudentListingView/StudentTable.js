@@ -11,12 +11,15 @@ import {
   IconButton,
   Stack,
   TextField,
-  Tooltip
+  Tooltip,
+  Typography
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit } from '@mui/icons-material';
 import ImportStudents from '../ImportStudentsView/ImportStudents';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -24,8 +27,6 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
   },
 }));
-
-
 
 const StudentTable = () => {
 
@@ -81,7 +82,15 @@ const StudentTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
-  const [loading, setIsLoading] = useState(false);
+
+  const [importSuccess, setImportSuccess] = useState(false);
+
+  function handleImportSuccess(success) {
+    setImportSuccess(success);
+    if (success) {
+      setTimeout(() => setImportSuccess(false), 4000); // 5 seconds delay
+    }
+  }
 
 
   const fetchStudents = async () => {
@@ -102,21 +111,25 @@ const StudentTable = () => {
   };
 
 
-  const readSavedJson = async () =>{ 
-      if (typeof localStorage.getItem("userColumns") === undefined){
-        setColumns(defaultColumns)
-      } else {
-        const userColumnsArray = JSON.parse(localStorage.getItem("userColumns"));
-        setColumns(userColumnsArray)
-      }
-  }
+ 
+  const readSavedJson = async () => { 
+    const userColumnsData = localStorage.getItem("userColumns");
+    
+    if (userColumnsData === null || typeof userColumnsData === "undefined") {
+      setColumns(defaultColumns);
+    } else {
+      const userColumnsArray = JSON.parse(userColumnsData);
+      setColumns(userColumnsArray);
+    }
+  }   
 
   useEffect(() => {
     fetchStudents();
   }, []);
+
   useEffect(() => {
     readSavedJson();
-  }, [columns]);
+  }, []);
 
   const handleAddRow = useCallback(
     (newRowData) => {
@@ -167,9 +180,9 @@ const StudentTable = () => {
     setValidationErrors({});
   };
 
-  function updateColumns(newcolumns){
+  function updateColumns(newcolumns) {
     setColumns(newcolumns)
-    localStorage.setItem("userColumns",JSON.stringify(newcolumns))
+    localStorage.setItem("userColumns", JSON.stringify(newcolumns))
   }
 
   // For the model to view student applications
@@ -181,7 +194,7 @@ const StudentTable = () => {
   const handleDeleteRow = useCallback(
     (row) => {
       if (
-        !window.confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
+        !window.confirm(`Are you sure you want to delete ${row.getValue('username')}`)
       ) {
         return;
       }
@@ -202,8 +215,17 @@ const StudentTable = () => {
     [tableData],
   );
 
-  // For exporting the table data
+  function getDate(){
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate
+  }
+
   const csvOptions = {
+    filename: 'StudentsFromAcTeams-' + getDate(),
     fieldSeparator: ',',
     quoteStrings: '"',
     decimalSeparator: '.',
@@ -218,9 +240,14 @@ const StudentTable = () => {
   const handleExportData = () => {
     csvExporter.generateCsv(tableData);
   };
- 
+
   return (
     <Box sx={{ p: 2 }}>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Students</Typography>
+      {importSuccess && <Alert severity="success">
+        <AlertTitle>Success</AlertTitle>
+        success alert — <strong>successfully imported students!</strong>
+      </Alert>}
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -278,7 +305,7 @@ const StudentTable = () => {
               Export All Data
             </Button>
 
-            <ImportStudents fetchStudents={fetchStudents} updateColumns={updateColumns} ></ImportStudents>
+            <ImportStudents fetchStudents={fetchStudents} updateColumns={updateColumns} handleImportSuccess={handleImportSuccess}></ImportStudents>
           </Box>
         )}
       />
