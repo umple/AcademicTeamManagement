@@ -38,7 +38,7 @@ services:
     ports:
       - ${MONGO}:27017
     volumes:
-      - ~/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ${INIT_MOUNT}
       - academic-team-management-data:/data/db
 volumes:
   academic-team-management-data:

@@ -55,7 +55,7 @@ $ ./gradlew runUnitTests
 1) First create a `.env` file locally. Please refer to the file `.env.template` for all the variables that need to be added.
 2) There are three secrets, please ask one of the code owners for these secrets to add them to your `.env` file
 
-3) Copy the `init-mongo.js` into `~/`
+3) (If you are on macOS) Copy the `init-mongo.js` into `~/`
 
 ```
 cp ./init-mongo.js ~/init-mongo.js
