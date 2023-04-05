@@ -220,7 +220,6 @@ const GroupTable = () => {
             </Button>
             <Button
               color="primary"
-              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
               onClick={handleExportData}
               startIcon={<FileDownloadIcon />}
               variant="contained"
@@ -270,7 +269,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
     newInputs.splice(index, 1)
     setInputs(newInputs)
   }
-
+  values["members"] = inputs
   const handleSubmit = () => {
     fetch("api/group", {
       method: "POST",
@@ -283,12 +282,13 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
         if (response.ok) {
           fetchGroups();
           setValues({});
+          setInputs([])
         }
       })
       .catch(error => {
         console.error(error);
       });
-    console.log(values)
+
     onSubmit(values);
     onClose();
   };
