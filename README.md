@@ -58,13 +58,26 @@ $ ./gradlew runUnitTests
 3) Copy the `init-mongo.js` into `~/`
 
 ```
-cp ./mongo-init.js ~/mongo-init.js
+cp ./init-mongo.js ~/init-mongo.js
 ```
 
-4) Run docker compose up with the --no-deps flags to rebuild the images 
+4) Run docker compose down to remove all the images and stop all the containers running
+
+If you do not want to remove the attached mongodb volume:
 
 ```sh
-docker compose up --no-deps -d
+docker compose down --rmi all
+```
+
+If you want to remove the attached volume 
+
+```sh
+docker compose down --rmi all -v
+```
+5) Run docker compose up with the --no-deps flags to rebuild the images 
+
+```sh
+docker compose up
 ```
 
 ### Troubleshooting the deployment
@@ -74,7 +87,7 @@ Flask (503):
 - The issue is quite possible with mongo
 - Run the following code to hard-reset the system (NOTE: This should be done with extreme care and ONLY WHEN NECESSARY as it deletes volumes)
 
-```
+``` sh
 docker compose down --rmi all -v 
 ```
 
