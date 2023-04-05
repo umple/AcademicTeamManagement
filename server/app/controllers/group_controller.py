@@ -31,6 +31,30 @@ def add_group():
     except:
         return {"message": "Internal server error."}, 503
 
+# PUT Request to update a student info
+@group_bp.route("/group/update/<id>", methods=["PUT"])
+def update_group_by_id(id):
+    try:
+        group_obj = request.json
+        result = group.update_group_by_id(id, group_obj)
+        if result:
+            return jsonify(str(result.modified_count)), 200
+        else:
+            return {"message": "Could not edit student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
+
+# DELETE Request to remove a student from the collection
+@group_bp.route("/group/delete/<id>", methods=["DELETE"])
+def delete_group_by_id(id):
+    try:
+        result = group.delete_group_by_id(id)
+        if result:
+            return jsonify(str(result.deleted_count)), 200
+        else:
+            return {"message": "Could not delete student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
  
 
 

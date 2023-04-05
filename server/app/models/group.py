@@ -25,19 +25,11 @@ def add_student_to_group(student_obj):
 
 def add_import_student(student_obj):
     studentsCollection.insert_one(student_obj)
-   
-# def retrieve_groups_for_project():
-#     results = groupCollection.find({"flask": flask_variable})
-# def get_student_by_id(id):
-#     document = studentsCollection.find_one({"_id": ObjectId(id)})
-#     document["_id"] = str(document["_id"])
-#     return document
 
-# def update_student_by_id(id, student_obj):
-#     result = studentsCollection.replace_one({"_id": ObjectId(id)}, student_obj)
-#     return result
+def update_group_by_id(id, project_obj):
+    result = groupCollection.replace_one({"_id": ObjectId(id)}, project_obj)
+    return result
 
-# def delete_student_by_id(id):
-#     result = studentsCollection.delete_one({"_id": ObjectId(id)})
-#     return result
-
+def delete_group_by_id(id):
+    result = groupCollection.delete_one({"_id": ObjectId(id)})
+    return result

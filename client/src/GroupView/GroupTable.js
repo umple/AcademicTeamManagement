@@ -41,7 +41,6 @@ const data = [
 const GroupTable = () => {
   
   // For the create profile modal
-  const [isLoading, setIsLoading] = useState(true);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
@@ -51,7 +50,6 @@ const GroupTable = () => {
     .then(response => response.json())
     .then(data => {
       setTableData(data);
-      setIsLoading(false)
     })
     .catch(error => {
       console.error(error);
@@ -125,8 +123,23 @@ const GroupTable = () => {
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      setTableData([...tableData]);
+      fetch(`api/group/update/${row.original._id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+      })
+        .then(response => {
+          if (response.ok) {
+            fetchGroups();
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
       exitEditingMode();
     }
   };
@@ -154,9 +167,19 @@ const GroupTable = () => {
       ) {
         return;
       }
-      //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+      fetch(`api/group/delete/${row.original._id}`, {
+        method: "DELETE"
+      })
+        .then(response => {
+          if (response.ok) {
+            fetchGroups();
+          } else {
+            console.error("Error deleting row");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     [tableData],
   );
@@ -194,7 +217,7 @@ const GroupTable = () => {
         enablePagination={false}
         columns={columns}
         data={tableData}
-        editingMode="row"
+        editingMode="modal"
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
