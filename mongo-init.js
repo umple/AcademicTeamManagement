@@ -1,10 +1,10 @@
-db = db.getSiblingDB("$MONGO_INITDB_DATABASE");
+db = db.getSiblingDB("AcademicTeamManagementDB");
 db.students.drop();
 
 db.createUser(
     { 
-        user: "$MONGO_INITDB_ROOT_USERNAME", 
-        pwd : "$MONGO_INITDB_ROOT_PASSWORD", 
+        user: "root", 
+        pwd : "pass", 
         roles: [
             {
                 role: "readWrite", 
