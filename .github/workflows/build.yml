@@ -10,6 +10,7 @@ env:
   MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
   MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
   MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
+  INIT_MOUNT: "./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro"
   PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
 
 # cancel the in-progress job related to the current PR

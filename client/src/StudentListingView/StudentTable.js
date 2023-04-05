@@ -25,8 +25,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const StudentTable = () => {
 
   const defaultColumns = useMemo(
