@@ -55,16 +55,27 @@ $ ./gradlew runUnitTests
 1) First create a `.env` file locally. Please refer to the file `.env.template` for all the variables that need to be added.
 2) There are three secrets, please ask one of the code owners for these secrets to add them to your `.env` file
 
-3) Copy the `mongo-init.js` into `~/`
+3) Copy the `init-mongo.js` into `~/`
 
 ```
 cp ./mongo-init.js ~/mongo-init.js
 ```
 
-4) Run docker compose up
+4) Run docker compose up with the --no-deps flags to rebuild the images 
 
 ```sh
-docker compose up
+docker compose up --no-deps -d
+```
+
+### Troubleshooting the deployment
+
+Flask (503):
+
+- The issue is quite possible with mongo
+- Run the following code to hard-reset the system (NOTE: This should be done with extreme care and ONLY WHEN NECESSARY as it deletes volumes)
+
+```
+docker compose down --rmi all -v 
 ```
 
 ### Managing the private key
