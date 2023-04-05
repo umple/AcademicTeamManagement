@@ -87,16 +87,7 @@ const GroupTable = () => {
       header: 'Notes'
     },
   ], []);
-  const rowProps = (row) => {
-    console.log(row)
-    const { members } = row.original;
-    const isMembersArray = Array.isArray(members) && members.length > 0;
-    return {
-      style: {
-        backgroundColor: isMembersArray ? '#c8e6c9' : '#ffffff',
-      },
-    };
-  };
+  
   const handleCreateNewRow = (values) => { };
 
   const handleAddRow = useCallback(
