@@ -285,8 +285,9 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
     newInputs.splice(index, 1)
     setInputs(newInputs)
   }
-  values["members"] = inputs
+ 
   const handleSubmit = () => {
+    
     fetch("api/group", {
       method: "POST",
       headers: {
@@ -298,7 +299,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
         if (response.ok) {
           fetchGroups();
           setValues({});
-          setInputs([])
+          setInputs([]);
         }
       })
       .catch(error => {
@@ -308,8 +309,12 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
     onSubmit(values);
     onClose();
   };
-
+ 
+  const handleFormSubmit = (data) => {
+    handleValidatedSubmit(() => handleSubmit(data))(data);
+  };
   return (
+
     <form onSubmit={handleValidatedSubmit(handleSubmit)}>
       <Dialog open={open}>
         <DialogTitle textAlign="center">Create New Group</DialogTitle>

@@ -27,7 +27,8 @@ import {
   FormGroup,
   Select,
   MenuItem,
-  InputLabel
+  InputLabel,
+  FormControl
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
@@ -139,7 +140,6 @@ const ProjectTable = () => {
 
   const [validationErrors, setValidationErrors] = useState({});
 
-  const handleCreateNewRow = (values) => { };
 
 
 
@@ -197,7 +197,7 @@ const ProjectTable = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
- 
+
 
   // To delete the row
   const handleDeleteRow = useCallback(
@@ -223,7 +223,7 @@ const ProjectTable = () => {
     [],
   );
 
-  function getDate(){
+  function getDate() {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -259,7 +259,7 @@ const ProjectTable = () => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Projects</Typography>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Projects</Typography>
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -401,7 +401,6 @@ const ProjectTable = () => {
         columns={columns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
         fetchProjects={fetchProjects}
       />
@@ -410,7 +409,7 @@ const ProjectTable = () => {
 };
 
 //Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects }) => {
+export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects }) => {
 
   const cellValueMap = [
     { value: 'new', label: 'success' },
@@ -423,11 +422,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
 
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      if (column.accessorKey === 'status') {
-        acc[column.accessorKey ?? ''] = 'new';
-      } else {
-        acc[column.accessorKey ?? ''] = '';
-      }
+      acc[column.accessorKey ?? ''] = '';
       return acc;
     }, {}),
   );
@@ -438,30 +433,32 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
     formState: { errors },
   } = useForm();
 
-  const handleSubmit = () => {
+
+  const handleSubmit = (data) => {
+    console.log(data)
     fetch("api/project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(values)
+      body: JSON.stringify(data)
     })
       .then(response => {
         if (response.ok) {
           fetchProjects();
-          setValues({});
         }
       })
       .catch(error => {
         console.error(error);
       });
-    onSubmit(values);
     onClose();
   };
 
-
+  const handleFormSubmit = (data) => {
+    handleValidatedSubmit(() => handleSubmit(data))(data);
+  };
   return (
-    <form onSubmit={handleValidatedSubmit(handleSubmit)}>
+    <form onSubmit={handleFormSubmit}>
       <Dialog open={open}>
         <DialogTitle textAlign="center">Create New Project</DialogTitle>
         <DialogContent>
@@ -476,21 +473,31 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
             {columns.map((column) => {
               if (column.accessorKey === 'status') {
                 return (
-                  <Select
+                  <Controller
                     key={column.accessorKey}
-                    label={column.header}
                     name={column.accessorKey}
-                    value={values[column.accessorKey]}
-                    onChange={(e) => {
-                      setValues({ ...values, [e.target.name]: e.target.value })
-                    }}
-                  >
-                    {cellValueMap.map((option) => (
-                      <MenuItem key={option.value} value={option.value} >
-                        {option.value}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    control={control}
+                    defaultValue={column.accessorKey === 'status' ? 'new' : ''}
+                    render={({ field }) => (
+                      <FormControl>
+                        <InputLabel>{column.header}</InputLabel>
+                        <Select
+                          {...field}
+                          value={values[column.accessorKey]}
+                          onChange={(e) => {
+                            setValues({ ...values, [e.target.name]: e.target.value });
+                            field.onChange(e);
+                          }}
+                        >
+                          {cellValueMap.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    )}
+                  />
                 )
               }
               if (column.accessorKey === 'visibility') {
