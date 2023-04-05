@@ -1,0 +1,35 @@
+name: "Build Check"
+on: [push]
+env:
+  COMPOSE_DOCKER_CLI_BUILD: 0
+  DOCKER_BUILDKIT: 0
+  FLASK: 5001
+  REACT: 3000
+  MONGO: 27017
+  MONGODB_HOST: mongodb_host
+  MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
+  MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
+  MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
+  PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+
+# cancel the in-progress job related to the current PR
+concurrency:
+  group:  ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docker-compose:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    needs: [react-build, flask-build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Add mock .env
+        run: mock > .env
+      - name: docker-compose build
+        run: docker compose up -d
+    
