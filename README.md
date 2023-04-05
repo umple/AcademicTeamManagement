@@ -54,14 +54,7 @@ $ ./gradlew runUnitTests
 
 1) First create a `.env` file locally. Please refer to the file `.env.template` for all the variables that need to be added.
 2) There are three secrets, please ask one of the code owners for these secrets to add them to your `.env` file
-
-3) Copy the `mongo-init.js` into `~/`
-
-```
-cp ./mongo-init.js ~/mongo-init.js
-```
-
-4) Run docker compose up
+3) Run docker compose up
 
 ```sh
 docker compose up

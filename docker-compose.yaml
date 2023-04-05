@@ -27,20 +27,19 @@ services:
     depends_on:
       - flask-server
   mongodb:
-    image: mongo:latest
+    image: mongo
     container_name: mongodb
     restart: unless-stopped
     hostname: ${MONGODB_HOST}
     environment:
-      MONGODB_INITDB_DATABASE: ${MONGODB_INITDB_DATABASE}
-      MONGODB_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME}
-      MONGODB_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD}
+      - MONGODB_INITDB_DATABASE=${MONGODB_INITDB_DATABASE}
+      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_INITDB_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_INITDB_ROOT_PASSWORD}
     ports:
       - ${MONGO}:27017
     volumes:
-      - ~/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./init-db.js:/docker-entrypoint-initdb.d/init-db.js:ro
       - academic-team-management-data:/data/db
 volumes:
   academic-team-management-data:
     driver: local
-
