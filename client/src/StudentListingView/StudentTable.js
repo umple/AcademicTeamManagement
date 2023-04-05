@@ -101,16 +101,15 @@ const StudentTable = () => {
       });
   };
 
-  const readSavedJson = async () => { 
-    const userColumnsData = localStorage.getItem("userColumns");
-    
-    if (userColumnsData === null || typeof userColumnsData === "undefined") {
-      setColumns(defaultColumns);
-    } else {
-      const userColumnsArray = JSON.parse(userColumnsData);
-      setColumns(userColumnsArray);
-    }
-  }  
+
+  const readSavedJson = async () =>{ 
+      if (typeof localStorage.getItem("userColumns") === undefined){
+        setColumns(defaultColumns)
+      } else {
+        const userColumnsArray = JSON.parse(localStorage.getItem("userColumns"));
+        setColumns(userColumnsArray)
+      }
+  }
 
   useEffect(() => {
     fetchStudents();
