@@ -38,6 +38,7 @@ def add_Project():
 def update_project_by_id(id):
     try:
         project_obj = request.json
+        print(project_obj)
         result = project.update_project_by_id(id, project_obj)
         if result:
             return jsonify(str(result.modified_count)), 200

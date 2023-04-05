@@ -36,7 +36,7 @@ const HomePage = () => {
                         Academic Team Management
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                        We are a company that specializes in managing academic teams.
+                        Managing academic teams for capstone courses at the University of Ottawa
                     </Typography>
                 </Grid>
                 <Grid item  sm={3} className={classes.column2}>
