@@ -17,13 +17,14 @@ def get_projects():
             return {"message": "Project list not found."}, 404
     except:
         return {"message": "Internal server error."}, 503
- 
+
 # POST Request to add a new student to the list
 @project_bp.route("/project", methods=["POST"])
 def add_Project():
     try:
         project_obj = request.json
         result = project.add_project(project_obj)
+        print("Hello")
         if result:
             return jsonify(str(result.inserted_id)), 201
         else:

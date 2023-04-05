@@ -28,8 +28,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const StudentTable = () => {
 
   const defaultColumns = useMemo(
@@ -113,14 +111,17 @@ const StudentTable = () => {
   };
 
 
-  const readSavedJson = async () => {
-    if (localStorage.getItem("userColumns") === null) {
-      setColumns(defaultColumns)
+ 
+  const readSavedJson = async () => { 
+    const userColumnsData = localStorage.getItem("userColumns");
+    
+    if (userColumnsData === null || typeof userColumnsData === "undefined") {
+      setColumns(defaultColumns);
     } else {
-      const userColumnsArray = JSON.parse(localStorage.getItem("userColumns"));
-      setColumns(userColumnsArray)
+      const userColumnsArray = JSON.parse(userColumnsData);
+      setColumns(userColumnsArray);
     }
-  }
+  }   
 
   useEffect(() => {
     fetchStudents();
