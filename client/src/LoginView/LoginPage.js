@@ -28,7 +28,7 @@ export default function LoginPage() {
 
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <Link
-              href={`http://localhost:${process.env.REACT_APP_FLASK}/api/login`}
+              href={`http://localhost:${process.env.REACT_APP_FLASK}/login`}
               type="submit"
               fullWidth
               variant="contained"
