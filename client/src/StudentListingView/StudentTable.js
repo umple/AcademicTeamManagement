@@ -20,11 +20,34 @@ import { Delete, Edit } from '@mui/icons-material';
 import ImportStudents from '../ImportStudentsView/ImportStudents';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { FileUpload as FileUploadIcon } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Paper } from '@material-ui/core';
+
 
 
 const useStyles = makeStyles((theme) => ({
   input: {
     display: "none",
+  },
+  dialogTitle: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    '& h2': {
+      fontWeight: 'bold',
+    },
+  },
+  closeButton: {
+    color: theme.palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  modalContent: {
+    padding: theme.spacing(2),
   },
 }));
 
@@ -53,7 +76,7 @@ const StudentTable = () => {
         header: 'Email',
       },
       {
-        accessorKey: 'section',
+        accessorKey: 'sections',
         header: 'Section',
       },
       {
@@ -77,12 +100,11 @@ const StudentTable = () => {
   );
 
   // For the create profile modal
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState(defaultColumns);
   const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
-
   const [importSuccess, setImportSuccess] = useState(false);
 
   function handleImportSuccess(success) {
@@ -91,7 +113,6 @@ const StudentTable = () => {
       setTimeout(() => setImportSuccess(false), 4000); // 5 seconds delay
     }
   }
-
 
   const fetchStudents = async () => {
     fetch('/api/students')
@@ -110,25 +131,8 @@ const StudentTable = () => {
       });
   };
 
-
- 
-  const readSavedJson = async () => { 
-    const userColumnsData = localStorage.getItem("userColumns");
-    
-    if (userColumnsData === null || typeof userColumnsData === "undefined") {
-      setColumns(defaultColumns);
-    } else {
-      const userColumnsArray = JSON.parse(userColumnsData);
-      setColumns(userColumnsArray);
-    }
-  }   
-
   useEffect(() => {
     fetchStudents();
-  }, []);
-
-  useEffect(() => {
-    readSavedJson();
   }, []);
 
   const handleAddRow = useCallback(
@@ -180,11 +184,6 @@ const StudentTable = () => {
     setValidationErrors({});
   };
 
-  function updateColumns(newcolumns) {
-    setColumns(newcolumns)
-    localStorage.setItem("userColumns", JSON.stringify(newcolumns))
-  }
-
   // For the model to view student applications
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -215,7 +214,7 @@ const StudentTable = () => {
     [tableData],
   );
 
-  function getDate(){
+  function getDate() {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -241,9 +240,17 @@ const StudentTable = () => {
     csvExporter.generateCsv(tableData);
   };
 
+
+  const [isImportModalOpen, setImportModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setImportModalOpen(false);
+  }
+
+
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Students</Typography>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Students</Typography>
       {importSuccess && <Alert severity="success">
         <AlertTitle>Success</AlertTitle>
         success alert — <strong>successfully imported students!</strong>
@@ -304,8 +311,29 @@ const StudentTable = () => {
             >
               Export All Data
             </Button>
+            <Button
+              color="warning"
+              onClick={() => setImportModalOpen(true)}
+              startIcon={<FileUploadIcon />}
+              variant="contained"
+            >
+              Import Students
+            </Button>
 
-            <ImportStudents fetchStudents={fetchStudents} updateColumns={updateColumns} handleImportSuccess={handleImportSuccess}></ImportStudents>
+            <Dialog PaperComponent={Paper} PaperProps={{ className: classes.dialogPaper }} scroll='paper' open={isImportModalOpen} onClose={() => setImportModalOpen(false)}>
+              <DialogTitle className={classes.dialogTitle}>Import Students  <IconButton className={classes.closeButton} onClick={() => setImportModalOpen(false)}>
+                <CloseIcon />
+              </IconButton></DialogTitle>
+
+
+              <ImportStudents
+                fetchStudents={fetchStudents}
+                columns={columns}
+                handleImportSuccess={handleImportSuccess}
+                closeModal={closeModal}
+              />
+
+            </Dialog>
           </Box>
         )}
       />
