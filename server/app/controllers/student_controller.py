@@ -77,13 +77,18 @@ def delete_student_by_id(id):
 def import_students():
     try:
         file = request.files["file"]
-        result = student.import_students(file)
+        columns = json.loads(request.form["column"])
+        accessor_keys = [column['accessorKey'] for column in columns]
+
+        result = student.import_students(file, accessor_keys)
         json_dict = json.loads(result)
- 
+
         for res in json_dict:
             if (student.get_student_by_username(res["username"]) == None):
                 student.add_import_student(res)
         
         return result, 201
-    except:
-        return {"message": "Internal server error."}, 503
+    except 400:
+        return {"message": "Excel format does not match"}, 400
+    except 500:
+        return {"message": "Internal server error."}, 500

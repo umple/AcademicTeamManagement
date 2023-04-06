@@ -77,7 +77,7 @@ const StudentTable = () => {
   );
 
   // For the create profile modal
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState(defaultColumns);
   const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -305,7 +305,7 @@ const StudentTable = () => {
               Export All Data
             </Button>
 
-            <ImportStudents fetchStudents={fetchStudents} updateColumns={updateColumns} handleImportSuccess={handleImportSuccess}></ImportStudents>
+            <ImportStudents fetchStudents={fetchStudents} columns= {columns} updateColumns={updateColumns} handleImportSuccess={handleImportSuccess}></ImportStudents>
           </Box>
         )}
       />

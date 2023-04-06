@@ -2,6 +2,7 @@ from .__init__ import db
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
 import pandas as pd
+from flask import jsonify
 
 studentsCollection = db["students"]
 
@@ -42,22 +43,27 @@ def update_student_by_id(id, student_obj):
 def delete_student_by_id(id):
     result = studentsCollection.delete_one({"_id": ObjectId(id)})
     return result
-
-def import_students(file):
+def import_students(file, accessor_keys):
+    # accessor_keys = [d["accessorKey"] for d in columns]
     if not file:
         return "No file selected", 400
-    if file:
-        file_extension = file.filename.rsplit(".", 1)[1]
-        if file_extension == "xlsx":
-            data = pd.read_excel(file,na_values=["N/A", "na", "--","NaN", " "])
-            data = clean_up_json_data(data.to_json(orient="records"))
-            return data
-        elif file_extension == "csv":
-            data = pd.read_csv(file,na_values=["N/A", "na", "--","NaN", " "])
-            data.columns = data.columns.str.lower()
-            data = clean_up_json_data(data.to_json(orient="records"))
-            return data
-        else:
-            return "Could not convert file", 503
+
+    file_extension = file.filename.rsplit(".", 1)[1]
+    if file_extension == "xlsx":
+        data = pd.read_excel(file, na_values=["N/A", "na", "--", "NaN", " "])
+    elif file_extension == "csv":
+        data = pd.read_csv(file, na_values=["N/A", "na", "--", "NaN", " "])
+        data.columns = data.columns.str.lower()
     else:
-        return "Could not read file", 500
+        return "Could not convert file", 503
+    
+    
+    for col in accessor_keys:
+        if col not in list(data.columns):
+            return "Column not found in file", 400
+
+
+    data_json = data.to_json(orient="records")
+    cleaned_data = clean_up_json_data(data_json)
+
+    return cleaned_data

@@ -35,6 +35,7 @@ const ImportStudents = (props) => {
     }
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("column", JSON.stringify(props.columns))
     // formData.append("columns",props.defaultColumns)
     try {
       const response = await fetch("api/importStudent", {
@@ -80,7 +81,7 @@ const ImportStudents = (props) => {
 
       <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
         {file && (
-        <Typography variant="subtitle1">{file.name}</Typography>
+        <Typography variant="subtitle1" numberOfLines={1}>{file.name}</Typography>
         )}
         {error && <FormHelperText error>{error}</FormHelperText>}
       </Box>
