@@ -80,8 +80,8 @@ def import_students():
         file = request.files["file"]
         columns = json.loads(request.form["column"])
         accessor_keys = [column['accessorKey'] for column in columns]
-
         result = student.import_students(file, accessor_keys)
+
         json_dict = json.loads(result)
 
         for res in json_dict:
@@ -89,7 +89,5 @@ def import_students():
                 student.add_import_student(res)
         
         return result, 201
-    except 400:
-        return {"message": "Excel format does not match"}, 400
-    except 500:
+    except :
         return {"message": "Internal server error."}, 500

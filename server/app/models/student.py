@@ -42,25 +42,34 @@ def update_student_by_id(id, student_obj):
 def delete_student_by_id(id):
     result = studentsCollection.delete_one({"_id": ObjectId(id)})
     return result
+
+
+
 def import_students(file, accessor_keys):
-    # accessor_keys = [d["accessorKey"] for d in columns]
-    if not file:
+    if not file or not file.filename:
         return "No file selected", 400
 
     file_extension = file.filename.rsplit(".", 1)[1]
     if file_extension == "xlsx":
         data = pd.read_excel(file, na_values=["N/A", "na", "--", "NaN", " "])
+        data.columns = data.columns.str.lower()
+        saved_copy = data.columns.copy()
     elif file_extension == "csv":
         data = pd.read_csv(file, na_values=["N/A", "na", "--", "NaN", " "])
         data.columns = data.columns.str.lower()
+        data.columns = [col.replace(" ", "") for col in data.columns]
+        saved_copy = data.columns.copy()
     else:
-        return "Could not convert file", 503
+        return "Invalid file format", 400
     
-    for col in data.columns:
-        if col not in accessor_keys:
-            return "Column not found in file", 400
+    if not accessor_keys or not isinstance(accessor_keys, (list, set)):
+        return "Invalid accessor keys", 400
+
+    missing_columns = set(accessor_keys) - set(list(saved_copy))
+    print(accessor_keys)
+    if missing_columns:
+        return f"Column(s) not found in file: {', '.join(missing_columns)}", 400
 
     data_json = data.to_json(orient="records")
     cleaned_data = clean_up_json_data(data_json)
-
     return cleaned_data
