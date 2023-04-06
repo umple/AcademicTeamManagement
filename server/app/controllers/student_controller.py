@@ -76,6 +76,7 @@ def delete_student_by_id(id):
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
     try:
+        
         file = request.files["file"]
         columns = json.loads(request.form["column"])
         accessor_keys = [column['accessorKey'] for column in columns]

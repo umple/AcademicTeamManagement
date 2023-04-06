@@ -33,7 +33,6 @@ def get_student_by_username(username):
         username_field = document.get("username")
         if isinstance(username_field, str):
             document["username"] = str(username_field)
- 
     return document
 
 def update_student_by_id(id, student_obj):
@@ -57,11 +56,9 @@ def import_students(file, accessor_keys):
     else:
         return "Could not convert file", 503
     
-    
-    for col in accessor_keys:
-        if col not in list(data.columns):
+    for col in data.columns:
+        if col not in accessor_keys:
             return "Column not found in file", 400
-
 
     data_json = data.to_json(orient="records")
     cleaned_data = clean_up_json_data(data_json)
