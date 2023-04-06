@@ -74,7 +74,7 @@ const StudentTable = () => {
         header: 'Email',
       },
       {
-        accessorKey: 'section',
+        accessorKey: 'sections',
         header: 'Section',
       },
       {

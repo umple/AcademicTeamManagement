@@ -53,21 +53,35 @@ def import_students(file, accessor_keys):
     if file_extension == "xlsx":
         data = pd.read_excel(file, na_values=["N/A", "na", "--", "NaN", " "])
         data.columns = data.columns.str.lower()
-        saved_copy = data.columns.copy()
     elif file_extension == "csv":
         data = pd.read_csv(file, na_values=["N/A", "na", "--", "NaN", " "])
         data.columns = data.columns.str.lower()
         data.columns = [col.replace(" ", "") for col in data.columns]
-        saved_copy = data.columns.copy()
     else:
         return "Invalid file format", 400
-    
-    if not accessor_keys or not isinstance(accessor_keys, (list, set)):
-        return "Invalid accessor keys", 400
 
-    missing_columns = set(accessor_keys) - set(list(saved_copy))
+    excel_headers = data.columns.to_list()
+    excel_headers.pop()
+
+    for i in range(len(excel_headers)):
+        excel_headers[i] = excel_headers[i].lower().replace( " ", "" )
+    for i in range(len(accessor_keys)):
+        accessor_keys[i] = accessor_keys[i].lower().replace( " ", "" )
+
+    print("-------------Data-Columns-----------------")
+    print(excel_headers)
+    print("-------------Accessor Keys----------------")
     print(accessor_keys)
-    if missing_columns:
+
+    missing_columns = []
+    for i in excel_headers:
+        if i not in accessor_keys:
+            missing_columns.append(i)
+    
+    print("-------------Missing Columns Keys----------------")
+    print(missing_columns)
+
+    if len(missing_columns) != 0:
         return f"Column(s) not found in file: {', '.join(missing_columns)}", 400
 
     data_json = data.to_json(orient="records")
