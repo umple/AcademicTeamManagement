@@ -31,18 +31,20 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
   },
   dialogTitle: {
-    backgroundColor: theme.palette.info.main,
-    color: theme.palette.warning.contrastText,
-    textAlign: "center",
-    paddingTop: theme.spacing(2),
-    display: "inline-block",
-    width: "100%",
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    '& h2': {
+      fontWeight: 'bold',
+    },
   },
   closeButton: {
-    position: 'absolute',
-    top: theme.spacing(1),
-    right: theme.spacing(1),
     color: theme.palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
   modalContent: {
     padding: theme.spacing(2),
@@ -181,7 +183,7 @@ const StudentTable = () => {
   const handleCancelRowEdits = () => {
     setValidationErrors({});
   };
-  
+
   // For the model to view student applications
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -318,12 +320,12 @@ const StudentTable = () => {
               Import Students
             </Button>
 
-            <Dialog  scroll='paper'open={isImportModalOpen} onClose={() => setImportModalOpen(false)}>
-              <DialogTitle className={classes.dialogTitle}>Import Students</DialogTitle>
-              <IconButton className={classes.closeButton} onClick={() => setImportModalOpen(false)}>
+            <Dialog PaperComponent={Paper} PaperProps={{ className: classes.dialogPaper }} scroll='paper' open={isImportModalOpen} onClose={() => setImportModalOpen(false)}>
+              <DialogTitle className={classes.dialogTitle}>Import Students  <IconButton className={classes.closeButton} onClick={() => setImportModalOpen(false)}>
                 <CloseIcon />
-              </IconButton>
-              
+              </IconButton></DialogTitle>
+
+
               <ImportStudents
                 fetchStudents={fetchStudents}
                 columns={columns}
