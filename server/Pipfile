@@ -15,6 +15,9 @@ rsa = "*"
 numpy = "*"
 flask-jwt-extended = "*"
 adal = "*"
+flask-session = "*"
+msal = "*"
+jwt = "*"
 
 [dev-packages]
 
