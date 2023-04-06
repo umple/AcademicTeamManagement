@@ -68,19 +68,11 @@ def import_students(file, accessor_keys):
     for i in range(len(accessor_keys)):
         accessor_keys[i] = accessor_keys[i].lower().replace( " ", "" )
 
-    print("-------------Data-Columns-----------------")
-    print(excel_headers)
-    print("-------------Accessor Keys----------------")
-    print(accessor_keys)
-
     missing_columns = []
     for i in excel_headers:
         if i not in accessor_keys:
             missing_columns.append(i)
     
-    print("-------------Missing Columns Keys----------------")
-    print(missing_columns)
-
     if len(missing_columns) != 0:
         return f"Column(s) not found in file: {', '.join(missing_columns)}", 400
 
