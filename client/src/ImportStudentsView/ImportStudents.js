@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
   fileBox: {
     display: "flex",
@@ -24,18 +25,19 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     border: "2px dashed #ccc",
     borderRadius: "4px",
-    p: "1rem",
-    mb: "1rem",
+    padding: "2rem",
+    width: "80%",
   },
   uploadButton: {
-    mt: "1rem",
+    marginTop: "2rem",
+    fontSize: "1.2rem",
   },
   submitButton: {
-    mt: "1rem",
+    marginTop: "2rem",
     alignSelf: "flex-end",
-  }
+    fontSize: "1.2rem",
+  },
 }));
-
 
 const ImportStudents = (props) => {
   const classes = useStyles();
@@ -80,7 +82,7 @@ const ImportStudents = (props) => {
 
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '30px' }}>
       <form onSubmit={handleSubmit} className={classes.container}>
         {file ? (
           <Box className={classes.fileBox}>
