@@ -9,6 +9,7 @@ import {
   DialogTitle,
   Stack,
   TextField,
+  Typography
 } from '@mui/material';
 
 // Mock data for table
@@ -76,6 +77,7 @@ const ProjectTable = () => {
    
   return(
   <Box sx={{ p: 2 }}>
+    <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Student Groups</Typography>
     <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
