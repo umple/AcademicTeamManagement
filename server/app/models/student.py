@@ -13,7 +13,7 @@ def get_all_student():
     return student_list
 
 def add_student(student_obj):
-    if (get_student_by_username(student_obj["username"] == None)):
+    if (get_student_by_username(student_obj["username"] ) == None):
         result = studentsCollection.insert_one(student_obj)
         return result
     return None
