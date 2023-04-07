@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './ResponsiveAppBar.css';
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, MenuItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -6,6 +6,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 
+// Nav elements to display for the students
 const studentPages = {
   page1: {key: 'Home', value:'/StudentHome'},
   page2: {key: 'Projects', value:'/StudentProjects'},
@@ -13,6 +14,7 @@ const studentPages = {
   page4: {key: 'My Group', value:'/MyGroup'},
 };
 
+// Nav elements to display for the professor
 const professorPages = {
   page1: {key: 'Home', value:'/'},
   page2: {key: 'Projects', value:'/Projects'},
@@ -20,19 +22,27 @@ const professorPages = {
   page4: {key: 'Students', value:'/Students'},
 };
 
-const isStudent = true; // this needs to be set up using the token
 
-const pages = isStudent ? studentPages : professorPages;
+const ResponsiveAppBar = () => {
 
-
-function ResponsiveAppBar() {
   const location = useLocation();
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [isStudent, setIsStudent] = useState(true); // By default, we set the user to Student
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  useEffect(() => {
+    // Get user type information from the /getusertype endpoint
+    fetch("http://localhost:5001/getusertype", {
+      method: 'GET',
+      credentials: 'include' // include cookies in the request
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.userType) setIsStudent(data.userType === 'student');
+      });
+  }, [setIsStudent])
 
-  if (location.pathname === "/login") {
-    return null; // don't show navbar on the login page
-  }
+  // set the nav elements according to the user type
+  const pages = isStudent ? studentPages : professorPages;
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -42,8 +52,13 @@ function ResponsiveAppBar() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
- 
 
+  // don't show navbar on the login page
+  if (location.pathname === "/login") {
+    return null;
+  }
+ 
+  
   return (
    
       <AppBar sx={{ bgcolor: '#8f001a'}}>
