@@ -56,7 +56,7 @@ const StudentTable = () => {
   const defaultColumns = useMemo(
     () => [
       {
-        accessorKey: 'orgDefinedId',
+        accessorKey: 'orgdefinedid',
         header: 'orgDefinedId',
       },
       {
@@ -64,11 +64,11 @@ const StudentTable = () => {
         header: 'Username',
       },
       {
-        accessorKey: 'lastName',
+        accessorKey: 'lastname',
         header: 'Last Name',
       },
       {
-        accessorKey: 'firstName',
+        accessorKey: 'firstname',
         header: 'First Name',
       },
       {
