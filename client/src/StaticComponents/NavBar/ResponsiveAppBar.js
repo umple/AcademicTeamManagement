@@ -31,7 +31,7 @@ const ResponsiveAppBar = () => {
 
   useEffect(() => {
     // Get user type information from the /getusertype endpoint
-    fetch("http://localhost:5001/getusertype", {
+    fetch(`http://localhost:${process.env.REACT_APP_FLASK}/getusertype`, {
       method: 'GET',
       credentials: 'include' // include cookies in the request
     })
@@ -58,7 +58,7 @@ const ResponsiveAppBar = () => {
     return null;
   }
  
-  
+
   return (
    
       <AppBar sx={{ bgcolor: '#8f001a'}}>
