@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -12,61 +12,58 @@ import {
   Typography
 } from '@mui/material';
 
-// Mock data for table
-const data = [
-  {
-    group_id: 1,
-    members: ['Jack Smith','Ronny Welsh','Jenna Sunn','Mark Boudreau','Emilie Lachance'],
-    interest: 'Project D, E, and G',
-    project: 'not assigned',
-    notes: '',
-  },
-  {
-    group_id: 2,
-    members: ['Bob Anderson','Julina Robs','Maria Inkepen'],
-    interest: '',
-    project: 'Project G',
-    notes: 'Ideally four students',
-  },
-];
-
-
-
-const ProjectTable = () => {
-  // Columns for table
-  const columns = useMemo(
-    () => [
-          {
-            accessorKey: 'group_id',
-            header: 'Group',
-          },
-          {
-            accessorKey: 'members',
-            header: 'Members',
-            Cell: ({ cell }) => (
-              cell.getValue().map((i) => <tr>{i}</tr>)
-            ),
-          },
-          {
-            accessorKey: 'project',
-            header: 'Current Project',
-          },
-          {
-            accessorKey: 'interest',
-            header: 'Interested projects',
-          },
-          {
-            accessorKey: 'notes',
-            header: 'Notes'
-          },
-        ],
-    [],
-  );
+const StudentGroupTable = () => {
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState(() => data);
+  const [tableData, setTableData] = useState({});
   const [validationErrors, setValidationErrors] = useState({});
+  // Columns for table
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'group_id',
+        header: 'Group',
+      },
+      {
+        accessorKey: 'members',
+        header: 'Members',
+        Cell: ({ cell }) => (
+          cell.getValue().map((i) => <tr>{i}</tr>)
+        ),
+      },
+      {
+        accessorKey: 'project',
+        header: 'Current Project',
+      },
+      {
+        accessorKey: 'interest',
+        header: 'Interested projects',
+      },
+      {
+        accessorKey: 'notes',
+        header: 'Notes'
+      },
+    ],
+    [],
+  );
+
+  const fetchGroups = () => {
+    fetch("/api/groups")
+      .then(response => response.json())
+      .then(data => {
+        setTableData(data)
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+
 
   const handleCreateNewRow = (values) => {
     tableData.push(values);
@@ -74,11 +71,12 @@ const ProjectTable = () => {
     console.log(tableData)
     console.log(columns)
   };
-   
-  return(
-  <Box sx={{ p: 2 }}>
-    <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Student Groups</Typography>
-    <MaterialReactTable
+
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Student Groups</Typography>
+      <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
@@ -100,22 +98,35 @@ const ProjectTable = () => {
         }}
         enableEditing
         initialState={{ showColumnFilters: false, density: 'compact' }}
-        renderRowActions={({ row, table }) => (
-          <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-            <Button>Join</Button>
-          </Box>
-        )}
-        renderTopToolbarCustomActions={() => (
-          <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
-            <Button
-              color="success"
-              onClick={() => setCreateModalOpen(true)}
-              variant="contained"
-            >
-              Create New Group
-            </Button>
-          </Box>
-        )}
+        renderRowActions={({ row, table }) => {
+          const handleJoinClick = async (row) => {
+            fetch('api/add/group/member', {
+              method: 'POST', // or 'PUT', 'DELETE', etc.
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(row)
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json();
+              })
+              .then(data => {
+                 console.log(data)
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+          };
+
+          return (
+            <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
+              <Button onClick={() => handleJoinClick(row)}>Join</Button>
+            </Box>
+          );
+        }}
       />
       <CreateNewGroupModal
         columns={columns}
@@ -123,7 +134,7 @@ const ProjectTable = () => {
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
       />
-  </Box>
+    </Box>
   );
 };
 
@@ -177,4 +188,4 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
   );
 };
 
-export default ProjectTable;
+export default StudentGroupTable;

@@ -1,14 +1,30 @@
 // MyGroup.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 
-const MyGroup = ({ group, onJoinProject }) => {
+const MyGroup = ({ onJoinProject }) => {
+  const [group, setGroup] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Make API call to get group information
+    fetch("api/retrieve/curr/user/group")
+      .then((response) => response.json())
+      .then((data) => {
+        setGroup(data);
+        setLoading(false);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
   return (
     <Box sx={{ mt: 3 }}>
       <Typography variant="h4" gutterBottom>
         My Group
       </Typography>
-      {group ? (
+      {loading ? (
+        <Typography variant="h6">Loading group information...</Typography>
+      ) : group ? (
         <Box>
           <Typography variant="h6">Group ID: {group.groupId}</Typography>
           <Typography variant="h6">Members: {group.members.join(", ")}</Typography>

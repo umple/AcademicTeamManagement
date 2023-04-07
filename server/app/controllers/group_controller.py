@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
 from app.models import group
 from bson import ObjectId
 import pandas as pd
@@ -58,18 +58,22 @@ def delete_group_by_id(id):
  
 
 
-# # GET Request to get a student by id
-# @student_bp.route("/associateGroupToProject", methods=["GET"])
-# def get_student_by_id(id):
-#     try:
-#         document = groups.get_student_by_id(id)
-#         if document:
-#             return jsonify(document), 200
-#         else:
-#             return {"message": "Students list not found."}, 404
-#     except:
-#         return {"message": "Internal server error."}, 503
-
+# GET Request to get a student by id
+@group_bp.route("/add/group/member", methods=["POST"])
+def add_student_to_group():
+    data = json.loads(request.data)
+    row_id = data["original"]["_id"]
+    group_obj = group.get_group(row_id)
+    curr_user = session.get("user")["preferred_username"]
+    
+    if group_obj and group.add_student_to_group(curr_user, group_obj['_id']):
+        return jsonify({"message": f"Added {curr_user} to group {group_obj['_id']}"})
+    else:
+        return jsonify({"error": "Failed to add student to group"}), 400
+    
+@group_bp.route("retrieve/curr/user/group",methods=["GET"])
+def get_curr_user_group():
+    
 # # PUT Request to update a student info
 # @student_bp.route("/student/update/<id>", methods=["PUT"])
 # def update_student_by_id(id):
