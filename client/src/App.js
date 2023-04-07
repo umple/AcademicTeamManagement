@@ -7,11 +7,14 @@ import Groups from './GroupView/GroupTable'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './LoginView/LoginPage';
 import HomePage from './HomePageView/HomePage';
+import StudentHomePage from './HomePageView/StudentHomePage';
 import StudentProjects from './StudentView/StudentProjects';
 import StudentGroups from './StudentView/StudentGroupTable';
 import MyGroup from './StudentView/MyGroup';
 
-function App() {
+
+const App = () => {
+
   return (
     <Router>
       <div>
@@ -26,6 +29,7 @@ function App() {
             <Route path='/ImportStudents' element={<ImportStudents/>}></Route>
             <Route path='/Students' element={<StudentTable/>}></Route>
             <Route path='/GroupView' element={<Groups/>}></Route>
+            <Route path='/StudentHome' element={<StudentHomePage/>}></Route>
             <Route path='/StudentProjects' element={<StudentProjects/>}></Route>
             <Route path='/StudentGroups' element={<StudentGroups/>}></Route>
             <Route path='/MyGroup' element={<MyGroup/>}></Route>

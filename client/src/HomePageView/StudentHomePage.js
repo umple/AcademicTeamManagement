@@ -1,4 +1,5 @@
 // Imports
+import React, { useState, useEffect } from 'react';
 import {
     makeStyles,
     Grid,
@@ -29,6 +30,19 @@ import {
   // StudentHomePage Component
   function StudentHomePage() {
     const classes = useStyles();
+    const [userName, setUserName] = useState("student");
+
+    useEffect(() => {
+      // Get user name information from the /getusername endpoint
+      fetch(`http://localhost:${process.env.REACT_APP_FLASK}/getusername`, {
+        method: 'GET',
+        credentials: 'include' // include cookies in the request
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.username) setUserName(data.username);
+        });
+    }, [setUserName])
   
     return (
       <div className={classes.root}>
@@ -38,7 +52,7 @@ import {
               Academic Team Management
             </Typography>
             <Typography variant="h2" className={classes.welcomeText} gutterBottom>
-              Welcome Student!
+              Welcome {userName}!
             </Typography>
           </Grid>
         </Grid>
