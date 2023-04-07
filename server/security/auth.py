@@ -1,7 +1,8 @@
 import os
-from flask import redirect, request, session, render_template, url_for
-from flask_session import Session 
+from flask import jsonify, redirect, request, session, render_template, url_for
 from app.utils.auth_helpers import get_redirection_url_for_user
+from flask_cors import cross_origin
+from flask_session import Session
 import requests
 import msal
 import app_config
@@ -17,7 +18,6 @@ def authentication(app):
     def index():
         if not session.get("user"):
             return redirect(url_for("login"))
-        
         user_role = session.get("user")["roles"][0] # get the user role, by default we use the first role
         return redirect(get_redirection_url_for_user(user_role))
 
@@ -57,6 +57,15 @@ def authentication(app):
             headers={'Authorization': 'Bearer ' + token['access_token']},
             ).json()
         return render_template('display.html', result=graph_data) # we should change this to point to the front-end
+    
+    @cross_origin(supports_credentials=True)
+    @app.route("/getusertype")
+    def getusertype():
+        if not session.get("user"):
+            return jsonify({"error": "not logged in"}), 401, {'Access-Control-Allow-Credentials': 'true'}
+
+        response = {"userType": session["user"]["roles"][0]}
+        return jsonify(response), 200, {'Access-Control-Allow-Credentials': 'true'}
 
 
     def _load_cache():
