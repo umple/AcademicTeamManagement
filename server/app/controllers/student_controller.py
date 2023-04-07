@@ -76,14 +76,18 @@ def delete_student_by_id(id):
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
     try:
+        
         file = request.files["file"]
-        result = student.import_students(file)
+        columns = json.loads(request.form["column"])
+        accessor_keys = [column['accessorKey'] for column in columns]
+
+        result = student.import_students(file, accessor_keys)
         json_dict = json.loads(result)
- 
+
         for res in json_dict:
             if (student.get_student_by_username(res["username"]) == None):
                 student.add_import_student(res)
         
         return result, 201
-    except:
-        return {"message": "Internal server error."}, 503
+    except :
+        return {"message": "Internal server error."}, 500

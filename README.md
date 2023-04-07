@@ -77,7 +77,7 @@ docker compose down --rmi all -v
 5) Run docker compose up with the --no-deps flags to rebuild the images 
 
 ```sh
-docker compose up
+docker compose up -d
 ```
 
 ### Troubleshooting the deployment
