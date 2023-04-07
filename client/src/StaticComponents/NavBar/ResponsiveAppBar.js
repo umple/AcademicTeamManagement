@@ -5,6 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 // Nav elements to display for the students
 const studentPages = {
@@ -62,7 +63,6 @@ const ResponsiveAppBar = () => {
   return (
    
       <AppBar sx={{ bgcolor: '#8f001a'}}>
-        {/* <Container id="m" maxWidth="xl"> */}
           <Toolbar style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography
               variant="h6"
@@ -153,10 +153,15 @@ const ResponsiveAppBar = () => {
                 </Button >
                 ))}
             </Box>
-
+            <Button
+              href={`http://localhost:${process.env.REACT_APP_FLASK}/api/logout`}
+              onClick={handleCloseNavMenu}
+              variant="outlined"
+              endIcon={<LogoutIcon/>}
+              sx={{ my: 2, color: 'white', borderColor: 'white' }}
+            >Log out</Button>
             
           </Toolbar>
-        {/* </Container> */}
       </AppBar>
 
   );
