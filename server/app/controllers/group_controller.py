@@ -1,4 +1,4 @@
-from flask import jsonify, request, session
+from flask import jsonify, request, session, make_response
 from app.models import group
 from bson import ObjectId
 import pandas as pd
@@ -71,9 +71,12 @@ def add_student_to_group():
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
-@group_bp.route("retrieve/curr/user/group",methods=["GET"])
+@group_bp.route("retrieve/curr/user/group", methods=["GET"])
 def get_curr_user_group():
-    
+    user_group = group.get_user_group(session.get("user")["name"])
+    return user_group
+
+    # return group.get_user_group(session.get("user")["name"]), 200 
 # # PUT Request to update a student info
 # @student_bp.route("/student/update/<id>", methods=["PUT"])
 # def update_student_by_id(id):

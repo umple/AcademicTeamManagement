@@ -3,7 +3,7 @@ from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
 import app.models.student as student
 import pandas as pd
-
+import json
 
 groupCollection = db["groups"]
 
@@ -41,12 +41,26 @@ def add_student_to_group(student_email, group_id):
     return False
 
 
+
+ 
+def get_user_group(user_name):
+    group_collection = groupCollection.find_one({"members": user_name})
+    if group_collection:
+        # Convert the ObjectId to a string
+        group_collection["_id"] = str(group_collection["_id"])
+        group_collection_json = json.dumps(group_collection)
+        return group_collection_json
+    else:
+        return None
+
+
+
 def add_import_student(student_obj):
     studentsCollection.insert_one(student_obj)
 
 def update_group_by_id(id, project_obj):
     result = groupCollection.replace_one({"_id": ObjectId(id)}, project_obj)
-    return result
+    return json.dumps(result)
 
 def delete_group_by_id(id):
     result = groupCollection.delete_one({"_id": ObjectId(id)})
