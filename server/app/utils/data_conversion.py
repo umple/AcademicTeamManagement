@@ -39,10 +39,24 @@ def remove_hashtag_starting_characters(json_data):
         new_list.append(new_obj)
     return json.dumps(new_list)
 
+def fix_keys(json_data):
+    json_data = json.loads(json_data)
+    for json_obj in json_data:
+        if "end-of-line indicator" in json_obj:
+            json_obj.pop("end-of-line indicator")
+        if "first name" in json_obj:
+            json_obj["firstname"] = json_obj.pop("first name")
+        if "last name" in json_obj:
+            json_obj["lastname"] = json_obj.pop("last name")
+    
+    return json.dumps(json_data)
+    
+
 '''
     clean up json data from the "#" and "Á©" symboles
 '''
 def clean_up_json_data(json_data):
     json_data = handle_special_characters(json_data)
     json_data = remove_hashtag_starting_characters(json_data)
+    json_data = fix_keys(json_data)
     return json_data
