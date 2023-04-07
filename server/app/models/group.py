@@ -1,4 +1,5 @@
 from .__init__ import db
+from flask import redirect, url_for
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
 import app.models.student as student
@@ -41,12 +42,23 @@ def add_student_to_group(student_email, group_id):
     return False
 
 
-
+def remove_student_from_group(student_email, group_id):
+    student_obj = student.get_student_by_email(student_email)
+    group = groupCollection.find_one({"_id": ObjectId(group_id)})
+    if student_obj['firstname'] + ' ' + student_obj['lastname'] not in group['members']:
+        return False
+    
+    result = groupCollection.update_one(
+        {"_id": ObjectId(group_id)},
+        {"$pull": {"members": str(student_obj['firstname'] + ' ' + student_obj['lastname'])}}
+    )
+    if result.modified_count > 0:
+        return True
+    return False
  
 def get_user_group(user_name):
     group_collection = groupCollection.find_one({"members": user_name})
     if group_collection:
-        # Convert the ObjectId to a string
         group_collection["_id"] = str(group_collection["_id"])
         group_collection_json = json.dumps(group_collection)
         return group_collection_json

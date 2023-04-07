@@ -71,8 +71,21 @@ def add_student_to_group():
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
+@group_bp.route("/remove/group/member", methods=["DELETE"])
+def remove_student_from_group():
+    data = json.loads(request.data)
+    print(data)
+    group_obj = group.get_group(data['object_id'])
+    curr_user = session.get("user")["preferred_username"]
+    
+    if group_obj and group.remove_student_from_group(curr_user, group_obj['_id']):
+        return jsonify({"message": f"Added {curr_user} to group {group_obj['_id']}"})
+    else:
+        return jsonify({"error": "Failed to add student to group"}), 400
+    
 @group_bp.route("retrieve/curr/user/group", methods=["GET"])
 def get_curr_user_group():
+    print(session.get("user")["name"])
     user_group = group.get_user_group(session.get("user")["name"])
     return user_group
 

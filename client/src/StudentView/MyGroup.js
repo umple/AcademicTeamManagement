@@ -1,8 +1,14 @@
 // MyGroup.js
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, Grid } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link } from "react-router-dom";
+
+
+const linkStyle = {
+  textDecoration: "none",
+};
+
 const MyGroup = () => {
   const [group, setGroup] = useState({});
   const [loading, setLoading] = useState(true);
@@ -10,13 +16,33 @@ const MyGroup = () => {
   useEffect(() => {
     // Make API call to get group information
     fetch("api/retrieve/curr/user/group")
-      .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        setGroup(null);
+        setLoading(false);
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
       .then((data) => {
         setGroup(data);
         setLoading(false);
       })
       .catch((error) => console.error(error));
   }, []);
+
+  const handleLeaveGroup = async () => {
+    fetch("api/remove/group/member")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setGroup(data);
+        setLoading(false);
+      })
+      .catch((error) => console.error(error));
+  };
+
 
   return (
     <Box sx={{ mt: 3 }}>
@@ -32,13 +58,20 @@ const MyGroup = () => {
           {group.project ? (
             <Typography variant="h6">Project: {group.project}</Typography>
           ) : (
-            <Box sx={{ mt: 2 }}>
-              <Link to="/StudentProjects"  style={{ textDecoration: "none" }}>
-                <Button variant="contained" color="primary"  >
-                  Add Project
+            <Grid container spacing={2} alignItems="center" sx={{ mt: 2 }}>
+              <Grid item>
+                <Link to="/StudentProjects" style={{ textDecoration: 'none' }}>
+                  <Button variant="contained" color="primary">
+                    Add Project
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Button variant="contained" color="error" onClick={handleLeaveGroup}>
+                  Leave Group
                 </Button>
-              </Link>
-            </Box>
+              </Grid>
+            </Grid>
           )}
         </Box>
       ) : (
