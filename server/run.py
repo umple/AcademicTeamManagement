@@ -1,18 +1,18 @@
 import os
 from flask import Flask
-from flask_restful import Api
 from flask_cors import CORS
 from main import initialize_routes
-from uuid import uuid4
 from security.auth import authentication
+import app_config
 
 # initilase a Flask app
 app = Flask(__name__)
-app.config["SECRET_KEY"] = str(uuid4())
-api = Api(app)
+app.config.from_object(app_config)
+
+# Handle cors
 CORS(app, resources={r"*": {"origins": "*"}})
 
-initialize_routes(app, api) # initialise the routes to use
+initialize_routes(app) # initialise the routes to use
 authentication(app) # authenticate the user
 
 if __name__ == '__main__':
