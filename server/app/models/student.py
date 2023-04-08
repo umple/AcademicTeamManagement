@@ -27,6 +27,11 @@ def get_student_by_id(id):
     document["_id"] = str(document["_id"])
     return document
 
+def get_student_by_email(email):
+    document = studentsCollection.find_one({"email": email})
+    document["email"] = str(document["email"])
+    return document
+
 def get_student_by_username(username):
     document = studentsCollection.find_one({"username": str(username)})
     if document:
@@ -42,8 +47,6 @@ def update_student_by_id(id, student_obj):
 def delete_student_by_id(id):
     result = studentsCollection.delete_one({"_id": ObjectId(id)})
     return result
-
-
 
 def import_students(file, accessor_keys):
     if not file or not file.filename:
