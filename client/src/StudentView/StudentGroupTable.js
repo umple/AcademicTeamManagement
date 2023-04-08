@@ -11,18 +11,20 @@ import {
   TextField,
   Typography,
   Alert,
-  Snackbar
+  Snackbar,
+  Backdrop
 } from '@mui/material';
 
 const StudentGroupTable = () => {
 
   // For the create profile modal
-  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState({});
   const [group, setGroup] = useState({});
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
   const [showAlert, setShowAlert] = useState(false);
-  const [isRowDisabled, setisRowDisabled] = useState(false);
+  const [showJoinedTeam, setShowJoinedTeam] = useState(false);
+  const [isPageDisabled, setIsPageDisabled] = useState(false);
+
   const columns = useMemo(
     () => [
       {
@@ -64,10 +66,11 @@ const StudentGroupTable = () => {
   };
 
   const fetchCurrentUserGroup = () => {
-    fetch("/api/retrieve/curr/user/group  ")
+    fetch("/api/retrieve/curr/user/group")
       .then((response) => {
         if (!response.ok) {
           setisCurrentUserInGroup(false)
+          throw new Error("Response not OK");
         } else {
           return response.json()
         }
@@ -87,7 +90,11 @@ const StudentGroupTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Student Groups</Typography>
-
+      <Snackbar open={showJoinedTeam} onClose={() => setShowJoinedTeam(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert severity="success">
+          Group Member Added!
+        </Alert>
+      </Snackbar>
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -97,7 +104,7 @@ const StudentGroupTable = () => {
             size: 120,
           },
         }}
-         
+
         enablePagination={false}
         columns={columns}
         data={tableData}
@@ -113,6 +120,7 @@ const StudentGroupTable = () => {
         initialState={{ showColumnFilters: false, density: 'compact' }}
         renderRowActions={({ row, table }) => {
           const joinGroup = () => {
+
             fetch('api/add/group/member', {
               method: 'POST',
               headers: {
@@ -130,6 +138,7 @@ const StudentGroupTable = () => {
                 fetchGroups()
                 fetchCurrentUserGroup()
                 setShowAlert(false)
+                setShowJoinedTeam(true)
               })
               .catch((error) => {
                 console.error('Error:', error);
@@ -144,12 +153,13 @@ const StudentGroupTable = () => {
           };
 
           const handleJoinClick = async () => {
-              joinGroup()
+
+            joinGroup()
           };
 
           return (
             <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-              <Button onClick={() => handleJoinClick()} disabled={typeof group !== 'undefined' && row.original._id === group._id}>Join</Button>
+              <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original._id === group._id || row.original.members.length >= 5}>Join</Button>
               <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert
                   onClose={handleAlertClose}
@@ -175,6 +185,6 @@ const StudentGroupTable = () => {
     </Box>
   );
 };
- 
- 
+
+
 export default StudentGroupTable;

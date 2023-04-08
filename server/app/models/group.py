@@ -30,9 +30,7 @@ def get_group(id):
 def add_student_to_group(student_email, group):
     student_obj = student.get_student_by_email(student_email)
     student_name =  student_obj['firstname'] + ' ' + student_obj['lastname']
-
-    if (is_user_in_group(student_name)):
-         x = remove_student_from_group(student_name)
+     
     if student_name in group['members']:
         return False
     

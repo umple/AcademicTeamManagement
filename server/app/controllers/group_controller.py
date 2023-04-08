@@ -4,9 +4,7 @@ from bson import ObjectId
 import pandas as pd
 import json
 from . import group_bp
-
  
-
 @group_bp.route("/groups", methods=["GET"])
 def get_groups():
     try:
