@@ -42,15 +42,14 @@ def add_student_to_group(student_email, group_id):
     return False
 
 
-def remove_student_from_group(student_email, group_id):
-    student_obj = student.get_student_by_email(student_email)
-    group = groupCollection.find_one({"_id": ObjectId(group_id)})
-    if student_obj['firstname'] + ' ' + student_obj['lastname'] not in group['members']:
+def remove_student_from_group(student_name):
+    student_group = json.loads(get_user_group(student_name))
+    if student_name not in student_group['members']:
         return False
-    
+
     result = groupCollection.update_one(
-        {"_id": ObjectId(group_id)},
-        {"$pull": {"members": str(student_obj['firstname'] + ' ' + student_obj['lastname'])}}
+        {"_id": ObjectId(student_group['_id'])},
+        {"$pull": {"members": student_name}}
     )
     if result.modified_count > 0:
         return True
@@ -64,11 +63,13 @@ def get_user_group(user_name):
         return group_collection_json
     else:
         return None
-
-
-
-def add_import_student(student_obj):
-    studentsCollection.insert_one(student_obj)
+    
+def is_user_in_group(user_name):
+    group_collection = groupCollection.find_one({"members": user_name})
+    if group_collection:
+        return True
+    else:
+        return False
 
 def update_group_by_id(id, project_obj):
     result = groupCollection.replace_one({"_id": ObjectId(id)}, project_obj)

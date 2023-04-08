@@ -57,48 +57,32 @@ def delete_group_by_id(id):
         return {"message": "Internal server error."}, 503
  
 
-
 # GET Request to get a student by id
 @group_bp.route("/add/group/member", methods=["POST"])
 def add_student_to_group():
     data = json.loads(request.data)
     row_id = data["original"]["_id"]
     group_obj = group.get_group(row_id)
-    curr_user = session.get("user")["preferred_username"]
+    curr_user_email = session.get("user")["preferred_username"]
     
-    if group_obj and group.add_student_to_group(curr_user, group_obj['_id']):
-        return jsonify({"message": f"Added {curr_user} to group {group_obj['_id']}"})
+    if group.add_student_to_group(curr_user_email, group_obj['_id']):
+        return jsonify({"message": f"Added {curr_user_email} to group {group_obj['_id']}"})
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
 @group_bp.route("/remove/group/member", methods=["DELETE"])
 def remove_student_from_group():
-    data = json.loads(request.data)
-    print(data)
-    group_obj = group.get_group(data['object_id'])
-    curr_user = session.get("user")["preferred_username"]
-    
-    if group_obj and group.remove_student_from_group(curr_user, group_obj['_id']):
-        return jsonify({"message": f"Added {curr_user} to group {group_obj['_id']}"})
+    curr_user_name = session.get("user")["name"]
+    if group.remove_student_from_group(curr_user_name):
+        return jsonify({"message": f"Removed {curr_user_name} to group "})
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
 @group_bp.route("retrieve/curr/user/group", methods=["GET"])
 def get_curr_user_group():
-    print(session.get("user")["name"])
     user_group = group.get_user_group(session.get("user")["name"])
-    return user_group
-
-    # return group.get_user_group(session.get("user")["name"]), 200 
-# # PUT Request to update a student info
-# @student_bp.route("/student/update/<id>", methods=["PUT"])
-# def update_student_by_id(id):
-#     try:
-#         student_obj = request.json
-#         result = student.update_student_by_id(id, student_obj)
-#         if result:
-#             return jsonify(str(result.modified_count)), 200
-#         else:
-#             return {"message": "Could not edit student."}, 404
-#     except:
-#         return {"message": "Internal server error."}, 503
+    if user_group:
+        return user_group
+    else:
+        return jsonify({"error":"User is not in a group"}),400
+ 
