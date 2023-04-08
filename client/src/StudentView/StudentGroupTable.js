@@ -16,14 +16,14 @@ import {
 const data = [
   {
     group_id: 1,
-    members: ['Jack Smith','Ronny Welsh','Jenna Sunn','Mark Boudreau','Emilie Lachance'],
+    members: ['Jack Smith', 'Ronny Welsh', 'Jenna Sunn', 'Mark Boudreau', 'Emilie Lachance'],
     interest: 'Project D, E, and G',
     project: 'not assigned',
     notes: '',
   },
   {
     group_id: 2,
-    members: ['Bob Anderson','Julina Robs','Maria Inkepen'],
+    members: ['Bob Anderson', 'Julina Robs', 'Maria Inkepen'],
     interest: '',
     project: 'Project G',
     notes: 'Ideally four students',
@@ -36,30 +36,30 @@ const ProjectTable = () => {
   // Columns for table
   const columns = useMemo(
     () => [
-          {
-            accessorKey: 'group_id',
-            header: 'Group',
-          },
-          {
-            accessorKey: 'members',
-            header: 'Members',
-            Cell: ({ cell }) => (
-              cell.getValue().map((i) => <tr>{i}</tr>)
-            ),
-          },
-          {
-            accessorKey: 'project',
-            header: 'Current Project',
-          },
-          {
-            accessorKey: 'interest',
-            header: 'Interested projects',
-          },
-          {
-            accessorKey: 'notes',
-            header: 'Notes'
-          },
-        ],
+      {
+        accessorKey: 'group_id',
+        header: 'Group',
+      },
+      {
+        accessorKey: 'members',
+        header: 'Members',
+        Cell: ({ cell }) => (
+          cell.getValue().map((i) => <tr>{i}</tr>)
+        ),
+      },
+      {
+        accessorKey: 'project',
+        header: 'Current Project',
+      },
+      {
+        accessorKey: 'interest',
+        header: 'Interested projects',
+      },
+      {
+        accessorKey: 'notes',
+        header: 'Notes'
+      },
+    ],
     [],
   );
 
@@ -74,11 +74,11 @@ const ProjectTable = () => {
     console.log(tableData)
     console.log(columns)
   };
-   
-  return(
-  <Box sx={{ p: 2 }}>
-    <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{marginBottom:'0.5rem'}}>Student Groups</Typography>
-    <MaterialReactTable
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Student Groups</Typography>
+      <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
@@ -123,7 +123,7 @@ const ProjectTable = () => {
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
       />
-  </Box>
+    </Box>
   );
 };
 
@@ -145,8 +145,8 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Create New Group</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <DialogContent>
           <Stack
             sx={{
               width: '100%',
@@ -165,14 +165,14 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
               />
             ))}
           </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create
-        </Button>
-      </DialogActions>
+        </DialogContent>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button color="secondary" onClick={handleSubmit} variant="contained">
+            Create
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };
