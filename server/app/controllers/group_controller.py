@@ -5,6 +5,8 @@ import pandas as pd
 import json
 from . import group_bp
 
+ 
+
 @group_bp.route("/groups", methods=["GET"])
 def get_groups():
     try:
@@ -60,12 +62,12 @@ def delete_group_by_id(id):
 # GET Request to get a student by id
 @group_bp.route("/add/group/member", methods=["POST"])
 def add_student_to_group():
-    data = json.loads(request.data)
-    row_id = data["original"]["_id"]
-    group_obj = group.get_group(row_id)
+    row = json.loads(request.data)
+    group_id = row["original"]["_id"]
+    group_obj = group.get_group(group_id)
     curr_user_email = session.get("user")["preferred_username"]
-    
-    if group.add_student_to_group(curr_user_email, group_obj['_id']):
+ 
+    if group.add_student_to_group(curr_user_email, group_obj):
         return jsonify({"message": f"Added {curr_user_email} to group {group_obj['_id']}"})
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
@@ -73,6 +75,7 @@ def add_student_to_group():
 @group_bp.route("/remove/group/member", methods=["DELETE"])
 def remove_student_from_group():
     curr_user_name = session.get("user")["name"]
+
     if group.remove_student_from_group(curr_user_name):
         return jsonify({"message": f"Removed {curr_user_name} to group "})
     else:
@@ -85,4 +88,12 @@ def get_curr_user_group():
         return user_group
     else:
         return jsonify({"error":"User is not in a group"}),400
+    
+@group_bp.route("curr/user/in/group", methods=["GET"])
+def is_curr_user_in_group():
+    user_group = group.is_user_in_group(session.get("user")["name"])
+    if user_group:
+        return jsonify({"message": "User is in a Group"})
+    else:
+        return jsonify({"error":"User is not in a group"}), 400
  

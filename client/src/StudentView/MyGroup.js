@@ -17,7 +17,7 @@ const MyGroup = () => {
     fetch("api/retrieve/curr/user/group")
       .then((response) => {
         if (!response.ok){
-          throw new Error(response.text);
+          throw new Error("dsaafsd");
         } else {
           return response.json()
         }

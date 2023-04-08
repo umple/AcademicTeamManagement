@@ -22,6 +22,7 @@ const StudentGroupTable = () => {
   const [group, setGroup] = useState({});
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
   const [showAlert, setShowAlert] = useState(false);
+  const [isRowDisabled, setisRowDisabled] = useState(false);
   const columns = useMemo(
     () => [
       {
@@ -62,32 +63,26 @@ const StudentGroupTable = () => {
       });
   };
 
-  useEffect(() => {
-    fetchGroups();
-    fetch("api/retrieve/curr/user/group")
+  const fetchCurrentUserGroup = () => {
+    fetch("/api/retrieve/curr/user/group  ")
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          setisCurrentUserInGroup(false)
         } else {
           return response.json()
         }
-        
       })
       .then((data) => {
-        setGroup(data);
         setisCurrentUserInGroup(true)
+        setGroup(data)
       })
       .catch((error) => console.error(error));
+  }
+
+  useEffect(() => {
+    fetchGroups();
+    fetchCurrentUserGroup();
   }, []);
-
-
-  const handleCreateNewRow = (values) => {
-    tableData.push(values);
-    setTableData([...tableData]);
-    console.log(tableData)
-    console.log(columns)
-  };
-
 
   return (
     <Box sx={{ p: 2 }}>
@@ -102,6 +97,7 @@ const StudentGroupTable = () => {
             size: 120,
           },
         }}
+         
         enablePagination={false}
         columns={columns}
         data={tableData}
@@ -117,20 +113,6 @@ const StudentGroupTable = () => {
         initialState={{ showColumnFilters: false, density: 'compact' }}
         renderRowActions={({ row, table }) => {
           const joinGroup = () => {
-            if (isCurrentUserInGroup) {
-              fetch("api/remove/group/member", {
-                method: "DELETE",
-                headers: {
-                  "Content-Type": "application/json"
-                }
-              })
-              .then((response) => response.json())
-              .then((data) => {
-                setisCurrentUserInGroup(false)
-              })
-              .catch((error) => console.error(error));
-            }
-
             fetch('api/add/group/member', {
               method: 'POST',
               headers: {
@@ -140,18 +122,20 @@ const StudentGroupTable = () => {
             })
               .then((response) => {
                 if (!response.ok) {
-                  throw new Error('Network response was not ok');
+                  throw new Error('Something happened');
                 }
                 return response.json();
               })
               .then((data) => {
                 fetchGroups()
+                fetchCurrentUserGroup()
                 setShowAlert(false)
               })
               .catch((error) => {
                 console.error('Error:', error);
               });
           };
+
           const handleAlertClose = (event, reason) => {
             if (reason === 'clickaway') {
               return;
@@ -160,16 +144,12 @@ const StudentGroupTable = () => {
           };
 
           const handleJoinClick = async () => {
-            if (isCurrentUserInGroup) {
-              setShowAlert(true);
-            } else {
               joinGroup()
-            }
           };
 
           return (
             <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-              <Button onClick={() => handleJoinClick()} disabled={row.original._id === group._id}>Join</Button>
+              <Button onClick={() => handleJoinClick()} disabled={typeof group !== 'undefined' && row.original._id === group._id}>Join</Button>
               <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert
                   onClose={handleAlertClose}
@@ -192,64 +172,9 @@ const StudentGroupTable = () => {
           );
         }}
       />
-      <CreateNewGroupModal
-        columns={columns}
-        open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
-        onSubmit={handleCreateNewRow}
-      />
     </Box>
   );
 };
-
-//Modal to create new Group
-export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit }) => {
-  const [values, setValues] = useState(() =>
-    columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
-      return acc;
-    }, {}),
-  );
-
-  const handleSubmit = () => {
-    //put your validation logic here
-    onSubmit(values);
-    onClose();
-  };
-
-  return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Group</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <Stack
-            sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
-            }}
-          >
-            {columns.map((column) => (
-              <TextField
-                key={column.accessorKey}
-                label={column.header}
-                name={column.accessorKey}
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.name]: e.target.value })
-                }
-              />
-            ))}
-          </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
+ 
+ 
 export default StudentGroupTable;

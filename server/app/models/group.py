@@ -27,15 +27,18 @@ def get_group(id):
         return None
  
     
-def add_student_to_group(student_email, group_id):
+def add_student_to_group(student_email, group):
     student_obj = student.get_student_by_email(student_email)
-    group = groupCollection.find_one({"_id": ObjectId(group_id)})
-    if student_obj['firstname'] + ' ' + student_obj['lastname'] in group['members']:
+    student_name =  student_obj['firstname'] + ' ' + student_obj['lastname']
+
+    if (is_user_in_group(student_name)):
+         x = remove_student_from_group(student_name)
+    if student_name in group['members']:
         return False
     
     result = groupCollection.update_one(
-        {"_id": ObjectId(group_id)},
-        {"$push": {"members": str(student_obj['firstname'] + ' ' + student_obj['lastname'])}}
+        {"_id": ObjectId(group["_id"])},
+        {"$push": {"members": str(student_name)}}
     )
     if result.modified_count > 0:
         return True
