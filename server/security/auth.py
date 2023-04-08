@@ -21,7 +21,7 @@ def authentication(app):
         user_role = session.get("user")["roles"][0] # get the user role, by default we use the first role
         return redirect(get_redirection_url_for_user(user_role))
 
-    @app.route("/login")
+    @app.route("/api/login")
     def login():
         session["flow"] = _build_auth_code_flow(scopes=app_config.SCOPE)
         return redirect(session["flow"]["auth_uri"])
@@ -40,7 +40,7 @@ def authentication(app):
             pass  # Simply ignore them
         return redirect(url_for("index"))
 
-    @app.route("/logout")
+    @app.route("/api/logout")
     def logout():
         session.clear()  # Wipe out user and its token cache from session
         return redirect(  # Also logout from your tenant's web session
