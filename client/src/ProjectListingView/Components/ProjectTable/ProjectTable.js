@@ -274,8 +274,6 @@ const ProjectTable = () => {
 
     csvExporter.generateCsv(updatedJsonList);
   };
-
-
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Projects</Typography>
@@ -316,31 +314,40 @@ const ProjectTable = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {applications[row.index].members.map((item) => (
-                        <TableRow
-                          key={row.name}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                          <TableCell>
-                            {item}
-                          </TableCell>
-                          <TableCell align="right">
-                            <Button
-                              variant="outlined"
-                              color="warning"
-                              onClick={() => {
-                                console.info('View Profile', row);
-                              }}
-                            >
-                              View Profile
-                            </Button>
+                      {typeof applications[row.index] !== 'undefined'  ? (
+                        applications[row.index].members.map((item) => (
+                          <TableRow
+                            key={row.name}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell>
+                              {item}
+                            </TableCell>
+                            <TableCell align="right">
+                              <Button
+                                variant="outlined"
+                                color="warning"
+                                onClick={() => {
+                                  console.info('View Profile', row);
+                                }}
+                              >
+                                View Profile
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={2}>
+                            No Members
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>
               </Grid>
+
               <Grid item>
                 <TableContainer component={Paper}>
                   <Table sx={{}} size="small" aria-label="a dense table">
@@ -483,6 +490,9 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
             }}
           >
             {columns.map((column) => {
+              if (column.accessorKey === 'interested groups' || column.accessorKey === 'group'  ){
+                return null
+              }
               if (column.accessorKey === 'status') {
                 return (
                   <Select

@@ -14,6 +14,8 @@ import {
   DialogActions,
   Stack,
   Container,
+  Alert,
+  Snackbar
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -110,6 +112,9 @@ function StudentProjects() {
   const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showErrorAlert, setErrorShowAlert] = useState(false);
+
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -150,20 +155,53 @@ function StudentProjects() {
       },
       body: JSON.stringify(project),
     })
-      .then((response) => response.json())
+      .then((response) =>  {
+        return response.json()
+      })
       .then((data) => {
-        console.log(data);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 4000);
       })
       .catch((error) => {
+        setErrorShowAlert(true);
+        setTimeout(() => setErrorShowAlert(false), 4000);
         console.error(error);
       });
   };
 
+  const handleSubmittedProject = async (project) => {
+    return new Promise((resolve, reject) => {
+      fetch(`api/has/project/application/${project._id}`, {
+        method: "GET",
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data)
+          if (data){
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+    });
+  };
+
   return (
     <Container>
+       <Snackbar open={showErrorAlert} onClose={() => setErrorShowAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert severity="error">
+          Project Application Already Sent
+        </Alert>
+      </Snackbar>
       <Snackbar open={showAlert} onClose={() => setShowAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="success">
-          User has left the team successfully!
+          Project Request Sent
         </Alert>
       </Snackbar>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold">
@@ -262,10 +300,12 @@ function StudentProjects() {
                       disabled={
                         project.status === "pending approval" ||
                         project.status === "assigned" ||
-                        project.status === "proposed"
+                        project.status === "proposed" ||
+                        handleSubmittedProject(project)
                       }
                       className={classes.button}
                       style={{ marginTop: "1rem" }}
+                      
                     >
                       REQUEST
                     </Button>

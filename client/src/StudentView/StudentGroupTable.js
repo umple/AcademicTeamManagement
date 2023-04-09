@@ -24,6 +24,7 @@ const StudentGroupTable = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showJoinedTeam, setShowJoinedTeam] = useState(false);
   const [isPageDisabled, setIsPageDisabled] = useState(false);
+   
 
   const columns = useMemo(
     () => [
@@ -153,7 +154,6 @@ const StudentGroupTable = () => {
           };
 
           const handleJoinClick = async () => {
-
             joinGroup()
           };
 

@@ -71,7 +71,7 @@ def retrieve_interested_groups():
         interestedGroups = project.get_interested_groups()
 
         if interestedGroups:
-            return jsonify(interestedGroups) , 200
+            return jsonify(interestedGroups), 200
         elif len(interestedGroups) == 0:
             return {"message": "Project list is empty."}, 200
         else:
@@ -80,16 +80,19 @@ def retrieve_interested_groups():
         print(f"An error occurred while updating project: {e}")
         return None
 
+
 @project_bp.route("/request/join/project", methods=["POST"])
-def request_to_join_project():
+def request_project_application():
     try:
         project_json = json.loads(request.data)
-        student_name = session.get("user")["name"] 
-        result = project.request_to_join_project(project_json['_id'],student_name)
+        student_name = session.get("user")["name"]
+        result = project.request_project_application(
+            project_json['_id'], student_name)
         if result:
-                return jsonify(str(result)), 200
+            return jsonify(str(result)), 200
         else:
-                return {"message": "Could not delete student."}, 404
+            return {"message": "Could not delete student."}, 404
     except:
-        return {"message": "Internal server error."}, 503
+        return {"message": result}, 503
     
+ 

@@ -25,7 +25,7 @@ def get_group(id):
         return result
     else:
         return None
-def get_group_by_name(name):
+def get_group_by_group_name(name):
     result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
     if result:
         return result
