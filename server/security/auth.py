@@ -75,6 +75,15 @@ def authentication(app):
 
         response = {"username": session["user"]["name"]}
         return jsonify(response), 200, {'Access-Control-Allow-Credentials': 'true'}
+    
+    @cross_origin(supports_credentials=True)
+    @app.route("/checksession")
+    def checksession():
+        if not session.get("user"):
+            return jsonify({"error": "not logged in"}), 401, {'Access-Control-Allow-Credentials': 'true'}
+
+        response = {"message": "user is logged in successfully"}
+        return jsonify(response), 200, {'Access-Control-Allow-Credentials': 'true'}
 
 
     def _load_cache():
