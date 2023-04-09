@@ -12,6 +12,7 @@ import StudentProjects from './StudentView/StudentProjects';
 import StudentGroups from './StudentView/StudentGroupTable';
 import MyGroup from './StudentView/MyGroup';
 import PrivateRoutes from './Authentication/PrivateRoutes';
+import PageNotFound from './StaticComponents/PageNotFound/PageNotFound';
 
 
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
               <Route path='/MyGroup' element={<MyGroup/>}></Route>
             </Route>
             <Route path='/login' element={<LoginPage/>}></Route>
+            <Route path="*" element={<PageNotFound />} />
           </Routes >
         </div>
       </div>
