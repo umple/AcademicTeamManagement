@@ -3,7 +3,7 @@ import { Outlet, Navigate } from 'react-router-dom'
 
 const RoleBasedRoutes = ({ allowedRole }) => {
 
-  // Set the authentication variable based on the returned value of /checksession
+  // Set the role variable based on the returned value of /getusertype
   const [role, setRole] = useState(true);
 
   // Check if user exists in the session
