@@ -2,7 +2,7 @@
 
 # make sure the private key exists in that path (THIS IS NOT THE SAME AS THE ONE YOU ADD in .env)
 export PRIVATE_KEY_PATH=../privateKey/AcademicTeamManagement.pem
-export REACT=3001
+export REACT=3000
 export MONGO=27017
 export FLASK=5001
 
