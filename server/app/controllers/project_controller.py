@@ -1,6 +1,7 @@
-from flask import jsonify, request
-from app.models import project
+from flask import jsonify, request, session
+from app.models import project, group
 from bson import ObjectId
+import json
 from . import project_bp
 
 
@@ -19,6 +20,8 @@ def get_projects():
         return {"message": "Internal server error."}, 503
 
 # POST Request to add a new student to the list
+
+
 @project_bp.route("/project", methods=["POST"])
 def add_Project():
     try:
@@ -48,6 +51,8 @@ def update_project_by_id(id):
         return {"message": "Internal server error."}, 503
 
 # DELETE Request to remove a student from the collection
+
+
 @project_bp.route("/project/delete/<id>", methods=["DELETE"])
 def delete_project_by_id(id):
     try:
@@ -58,3 +63,33 @@ def delete_project_by_id(id):
             return {"message": "Could not delete student."}, 404
     except:
         return {"message": "Internal server error."}, 503
+
+
+@project_bp.route("/retrieve/interested/groups", methods=["GET"])
+def retrieve_interested_groups():
+    try:
+        interestedGroups = project.get_interested_groups()
+
+        if interestedGroups:
+            return jsonify(interestedGroups) , 200
+        elif len(interestedGroups) == 0:
+            return {"message": "Project list is empty."}, 200
+        else:
+            return {"message": "Project list not found."}, 404
+    except Exception as e:
+        print(f"An error occurred while updating project: {e}")
+        return None
+
+@project_bp.route("/request/join/project", methods=["POST"])
+def request_to_join_project():
+    try:
+        project_json = json.loads(request.data)
+        student_name = session.get("user")["name"] 
+        result = project.request_to_join_project(project_json['_id'],student_name)
+        if result:
+                return jsonify(str(result)), 200
+        else:
+                return {"message": "Could not delete student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
+    

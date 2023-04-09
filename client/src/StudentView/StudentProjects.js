@@ -143,7 +143,7 @@ function StudentProjects() {
 
   const handleProjectApplication = (event, project) => {
     event.preventDefault();
-    fetch("api/add/project/application", {
+    fetch("api/request/join/project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -263,7 +263,7 @@ function StudentProjects() {
                       className={classes.button}
                       style={{ marginTop: "1rem" }}
                     >
-                      Join
+                      REQUEST
                     </Button>
                   </CardContent>
                 </Card>

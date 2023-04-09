@@ -25,7 +25,12 @@ def get_group(id):
         return result
     else:
         return None
- 
+def get_group_by_name(name):
+    result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
+    if result:
+        return result
+    else:
+        return None
     
 def add_student_to_group(student_email, group):
     student_obj = student.get_student_by_email(student_email)

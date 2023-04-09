@@ -83,8 +83,8 @@ const ProjectTable = () => {
         ),
       },
       {
-        accessorKey: 'interest',
-        header: 'Interest',
+        accessorKey: 'interested groups',
+        header: 'Interested Groups',
       },
       {
         accessorKey: 'group',
@@ -113,10 +113,8 @@ const ProjectTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [applications, setApplications] = useState(defaultApp);
+  const [applications, setApplications] = useState({});
 
-  const fetchProjectApplication = () => {
-  }
 
   const fetchProjects = () => {
     fetch("/api/projects")
@@ -130,17 +128,24 @@ const ProjectTable = () => {
       });
   };
 
-
+  const fetchInterestedGroup = () => {
+    fetch("api/retrieve/interested/groups").then(response => response.json())
+      .then(data => {
+        setApplications(data);
+      })
+      .catch(error => {
+        console.error(error);
+      }); 
+  }
 
   useEffect(() => {
     fetchProjects();
+    fetchInterestedGroup();
   }, []);
 
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleCreateNewRow = (values) => { };
-
-
 
   const handleAddRow = useCallback(
     (newRowData) => {
@@ -285,7 +290,6 @@ const ProjectTable = () => {
   ];
 
   return (
-
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Projects</Typography>
       <MaterialReactTable
@@ -312,7 +316,8 @@ const ProjectTable = () => {
         initialState={{ showColumnFilters: false, density: 'compact' }}
         onEditingRowSave={handleSaveRowEdits}
         onEditingRowCancel={handleCancelRowEdits}
-        renderDetailPanel={({ row }) => (
+        renderDetailPanel={({ row, index }) => {
+          return (
           <Grid container spacing={2}>
             <Grid item>
               <TableContainer component={Paper}>
@@ -324,13 +329,13 @@ const ProjectTable = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {interestedStudents.map((row) => (
+                    {applications[row.index].members.map((item) => (
                       <TableRow
                         key={row.name}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        <TableCell >
-                          {row.name}
+                        <TableCell>
+                          {item}
                         </TableCell>
                         <TableCell align="right">
                           <Button
@@ -359,13 +364,14 @@ const ProjectTable = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {applications.map((row) => (
+                    {applications[row.index] && (
                       <TableRow
-                        key={row.group}
+                        key={row.group_id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        <TableCell >
-                          {"Group:".concat(" ", row.group)}
+                        <TableCell>
+                          {applications[row.index].group_id}
+                          {/* {"Group:".concat(" ",  applications[row.index])} */}
                         </TableCell>
                         <TableCell align="right">
                           <Button
@@ -376,20 +382,21 @@ const ProjectTable = () => {
                             View Application
                           </Button>
                           <ViewApplicationModal
-                            data={row}
+                            data={applications[row.index]}
                             open={open}
                             onClose={handleClose}
                             onSubmit={() => setOpen(false)}
                           />
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
             </Grid>
-          </Grid>
-        )}
+          </Grid> 
+          );
+        }}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip arrow placement="left" title="Edit">
@@ -555,7 +562,7 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
                 <Typography variant="body1" gutterBottom>
                   <Box fontWeight='fontWeightMedium' display='inline'>Group: </Box>
                 </Typography>
-                {data.group}
+                {data.group_id}
               </FormLabel>
             </Grid>
           </Grid>
@@ -565,7 +572,7 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
                 <Typography variant="body1" gutterBottom>
                   <Box fontWeight='fontWeightMedium' display='inline'>Description: </Box>
                 </Typography>
-                {data.description}
+                {data.notes}
               </FormLabel>
             </Grid>
           </Grid>
