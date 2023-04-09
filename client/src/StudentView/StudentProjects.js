@@ -170,7 +170,7 @@ function StudentProjects() {
           spacing={1}
           justifyContent="center"
           alignItems="center"
-          style={{display: "block"}}
+          style={{ display: "block" }}
         >
           <Grid container md={9} sm={12} xs={12}>
             <TextField
@@ -196,10 +196,10 @@ function StudentProjects() {
               onSubmit={handleSubmit}
             />
           </Grid>
-        
+
           {projects.map((project) => (
             <form className={classes.formContainer} onSubmit={(event) => handleProjectApplication(event, project)}>
-              <Grid  key={project.id}>
+              <Grid key={project.id}>
                 <Card className={classes.root} style={{ padding: "1rem" }}>
                   <CardContent>
                     <Typography
@@ -228,21 +228,20 @@ function StudentProjects() {
                       <span className={classes.bold}>Status:</span>{" "}
                       <Box
                         component="span"
-                        className={`${classes.status} ${
-                          project.status === "new"
-                            ? classes.new
-                            : project.status === "interested students"
+                        className={`${classes.status} ${project.status === "new"
+                          ? classes.new
+                          : project.status === "interested students"
                             ? classes.interested
                             : project.status === "students needed"
-                            ? classes.needed
-                            : project.status === "pending approval"
-                            ? classes.approval
-                            : project.status === "assigned"
-                            ? classes.assigned
-                            : project.status === "proposed"
-                            ? classes.proposed
-                            : classes.info
-                        }`}
+                              ? classes.needed
+                              : project.status === "pending approval"
+                                ? classes.approval
+                                : project.status === "assigned"
+                                  ? classes.assigned
+                                  : project.status === "proposed"
+                                    ? classes.proposed
+                                    : classes.info
+                          }`}
                       >
                         {project.status}
                       </Box>

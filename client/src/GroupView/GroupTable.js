@@ -19,27 +19,27 @@ import { ExportToCsv } from 'export-to-csv'; //or use your library of choice her
 import { Delete, Edit } from '@mui/icons-material';
 
 const GroupTable = () => {
-  
+
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
-  
+
   const fetchGroups = () => {
     fetch("/api/groups")
-    .then(response => response.json())
-    .then(data => {
-      setTableData(data);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(response => response.json())
+      .then(data => {
+        setTableData(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
-  
+
   useEffect(() => {
     fetchGroups();
   }, []);
-  
+
   const columns = useMemo(() => [
     {
       accessorKey: 'group_id',
@@ -50,7 +50,7 @@ const GroupTable = () => {
       header: 'Members',
       Cell: ({ cell }) => {
         if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
-          return  cell.getValue("members").map((item,index) => <tr>{item}</tr>);
+          return cell.getValue("members").map((item, index) => <tr>{item}</tr>);
         }
       }
     },
@@ -67,7 +67,7 @@ const GroupTable = () => {
       header: 'Notes'
     },
   ], []);
-  
+
   const handleCreateNewRow = (values) => { };
 
   const handleAddRow = useCallback(
@@ -213,7 +213,7 @@ const GroupTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Groups</Typography>
-       
+
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -271,7 +271,7 @@ const GroupTable = () => {
             </Button>
           </Box>
         )}
-      />  
+      />
       <CreateNewGroupModal
         columns={columns}
         open={createModalOpen}
@@ -339,8 +339,8 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Create New Group</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <DialogContent>
           <Stack
             sx={{
               width: '100%',
@@ -352,13 +352,13 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
               if (column.accessorKey === 'members') {
                 const inputFields = inputs.map((input, i) => (
                   <div key={`student-${i}`} style={{ display: 'block', marginTop: "0.5rem" }}>
-                  <TextField
-                    label={`Student ${i + 1}`}
-                    value={input}
-                    onChange={(e) => handleInputChange(i, e.target.value)}
-                  />
-                  <Button onClick={() => handleRemoveInput(i)}>Remove</Button>
-                </div>
+                    <TextField
+                      label={`Student ${i + 1}`}
+                      value={input}
+                      onChange={(e) => handleInputChange(i, e.target.value)}
+                    />
+                    <Button onClick={() => handleRemoveInput(i)}>Remove</Button>
+                  </div>
                 ))
 
                 return (
@@ -387,14 +387,14 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
             })}
 
           </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create
-        </Button>
-      </DialogActions>
+        </DialogContent>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button color="secondary" onClick={handleSubmit} variant="contained">
+            Create
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };
