@@ -102,13 +102,6 @@ const ProjectTable = () => {
     [],
   );
 
-  // Mock data to show project applications
-  const defaultApp = [
-    { group: '21', date: 'January 1, 2023', description: 'After interviewing with the client we received confirmation by email that the client picked our team for the project.' },
-    { group: '27', date: 'January 10, 2023', description: 'After talking to the customer, they said that they are interested in having us develop their application.' }
-  ];
-
-
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -135,7 +128,7 @@ const ProjectTable = () => {
       })
       .catch(error => {
         console.error(error);
-      }); 
+      });
   }
 
   useEffect(() => {
@@ -282,12 +275,6 @@ const ProjectTable = () => {
     csvExporter.generateCsv(updatedJsonList);
   };
 
-  // Mock data to show interested students
-  const interestedStudents = [
-    { name: 'Jane Doe' },
-    { name: 'Calvin Klein' },
-    { name: 'Richard Brown' }
-  ];
 
   return (
     <Box sx={{ p: 2 }}>
@@ -318,83 +305,83 @@ const ProjectTable = () => {
         onEditingRowCancel={handleCancelRowEdits}
         renderDetailPanel={({ row, index }) => {
           return (
-          <Grid container spacing={2}>
-            <Grid item>
-              <TableContainer component={Paper}>
-                <Table size="small" aria-label="a dense table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Interested Students</TableCell>
-                      <TableCell></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {applications[row.index].members.map((item) => (
-                      <TableRow
-                        key={row.name}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell>
-                          {item}
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            variant="outlined"
-                            color="warning"
-                            onClick={() => {
-                              console.info('View Profile', row);
-                            }}
-                          >
-                            View Profile
-                          </Button>
-                        </TableCell>
+            <Grid container spacing={2}>
+              <Grid item>
+                <TableContainer component={Paper}>
+                  <Table size="small" aria-label="a dense table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Interested Students</TableCell>
+                        <TableCell></TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-            <Grid item>
-              <TableContainer component={Paper}>
-                <Table sx={{}} size="small" aria-label="a dense table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Project Applications</TableCell>
-                      <TableCell></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {applications[row.index] && (
-                      <TableRow
-                        key={row.group_id}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell>
-                          {applications[row.index].group_id}
-                          {/* {"Group:".concat(" ",  applications[row.index])} */}
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            variant="outlined"
-                            color="secondary"
-                            onClick={handleOpen}
-                          >
-                            View Application
-                          </Button>
-                          <ViewApplicationModal
-                            data={applications[row.index]}
-                            open={open}
-                            onClose={handleClose}
-                            onSubmit={() => setOpen(false)}
-                          />
-                        </TableCell>
+                    </TableHead>
+                    <TableBody>
+                      {applications[row.index].members.map((item) => (
+                        <TableRow
+                          key={row.name}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          <TableCell>
+                            {item}
+                          </TableCell>
+                          <TableCell align="right">
+                            <Button
+                              variant="outlined"
+                              color="warning"
+                              onClick={() => {
+                                console.info('View Profile', row);
+                              }}
+                            >
+                              View Profile
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+              <Grid item>
+                <TableContainer component={Paper}>
+                  <Table sx={{}} size="small" aria-label="a dense table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Project Applications</TableCell>
+                        <TableCell></TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                      {applications[row.index] && (
+                        <TableRow
+                          key={row.group_id}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          <TableCell>
+                            {applications[row.index].group_id}
+                            {/* {"Group:".concat(" ",  applications[row.index])} */}
+                          </TableCell>
+                          <TableCell align="right">
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              onClick={handleOpen}
+                            >
+                              View Application
+                            </Button>
+                            <ViewApplicationModal
+                              data={applications[row.index]}
+                              open={open}
+                              onClose={handleClose}
+                              onSubmit={() => setOpen(false)}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
             </Grid>
-          </Grid> 
           );
         }}
         renderRowActions={({ row, table }) => (

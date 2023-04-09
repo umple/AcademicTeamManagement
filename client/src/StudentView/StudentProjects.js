@@ -161,6 +161,11 @@ function StudentProjects() {
 
   return (
     <Container>
+      <Snackbar open={showAlert} onClose={() => setShowAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert severity="success">
+          User has left the team successfully!
+        </Alert>
+      </Snackbar>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold">
         Student Projects
       </Typography>
