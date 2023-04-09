@@ -18,6 +18,7 @@ def get_projects():
             return {"message": "Project list not found."}, 404
     except:
         return {"message": "Internal server error."}, 503
+    
 
 # POST Request to add a new student to the list
 

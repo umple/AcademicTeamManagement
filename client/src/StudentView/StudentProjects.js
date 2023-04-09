@@ -168,30 +168,7 @@ function StudentProjects() {
         console.error(error);
       });
   };
-
-  const handleSubmittedProject = async (project) => {
-    return new Promise((resolve, reject) => {
-      fetch(`api/has/project/application/${project._id}`, {
-        method: "GET",
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data)
-          if (data){
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          reject(error);
-        });
-    });
-  };
-
+ 
   return (
     <Container>
        <Snackbar open={showErrorAlert} onClose={() => setErrorShowAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
@@ -300,8 +277,7 @@ function StudentProjects() {
                       disabled={
                         project.status === "pending approval" ||
                         project.status === "assigned" ||
-                        project.status === "proposed" ||
-                        handleSubmittedProject(project)
+                        project.status === "proposed" 
                       }
                       className={classes.button}
                       style={{ marginTop: "1rem" }}

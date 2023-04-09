@@ -110,7 +110,7 @@ const ProjectTable = () => {
 
 
   const fetchProjects = () => {
-    fetch("/api/projects")
+    fetch("/api/project/not/applied/to")
       .then(response => response.json())
       .then(data => {
 
