@@ -410,8 +410,8 @@ export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit, fetchS
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Create New Student</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <DialogContent>
           <Stack
             sx={{
               width: '100%',
@@ -430,14 +430,14 @@ export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit, fetchS
               />
             ))}
           </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Create New Student
-        </Button>
-      </DialogActions>
+        </DialogContent>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button color="secondary" onClick={handleSubmit} variant="contained">
+            Create New Student
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };

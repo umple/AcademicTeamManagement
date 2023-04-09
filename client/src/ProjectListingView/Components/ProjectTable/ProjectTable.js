@@ -471,9 +471,9 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <Dialog open={open}>
-        <DialogTitle textAlign="center">Create New Project</DialogTitle>
+    <Dialog open={open}>
+      <DialogTitle textAlign="center">Create New Project</DialogTitle>
+      <form onSubmit={(e) => e.preventDefault()}>
         <DialogContent>
           <Stack
             sx={{
@@ -523,8 +523,8 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
             Create New Project
           </Button>
         </DialogActions>
-      </Dialog>
-    </form>
+      </form>
+    </Dialog>
   );
 };
 
@@ -541,8 +541,8 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Project Application</DialogTitle>
-      <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <DialogContent>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
               <FormLabel component="legend">
@@ -591,15 +591,15 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
               hiddenLabel
             />
           </FormGroup>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button color="secondary" onClick={onClose} variant="contained">Send Feedback</Button>
-        <Button color="success" onClick={handleSubmit} variant="contained">
-          Assign
-        </Button>
-      </DialogActions>
+        </DialogContent>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button color="secondary" onClick={onClose} variant="contained">Send Feedback</Button>
+          <Button color="success" onClick={handleSubmit} variant="contained">
+            Assign
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };
