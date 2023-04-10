@@ -27,12 +27,9 @@ def get_projects():
 def add_Project():
     try:
         project_obj = json.loads(request.data)
-        
-        print(project_obj)
-
         result = project.add_project(project_obj)
         if result:
-            return jsonify(str(result.inserted_id)), 201
+            return jsonify(str(result.inserted_id)), 200
         else:
             return {"message": "Could not add student."}, 404
     except:
@@ -72,11 +69,10 @@ def delete_project_by_id(id):
 def retrieve_interested_groups():
     try:
         interestedGroups = project.get_interested_groups()
-
-        if interestedGroups:
+        if  interestedGroups:
             return jsonify(interestedGroups), 200
-        elif len(interestedGroups) == 0:
-            return {"message": "Project list is empty."}, 200
+        if len(interestedGroups) == 0:
+            return jsonify(interestedGroups), 404
         else:
             return {"message": "Project list not found."}, 404
     except Exception as e:
@@ -89,13 +85,14 @@ def request_project_application():
     try:
         project_json = json.loads(request.data)
         student_name = session.get("user")["name"]
-        result = project.request_project_application(
+        result, status = project.request_project_application(
             project_json['_id'], student_name)
+        
+        if status == 400:
+            return  {"message": "Application Sent."}, 404
         if result:
             return jsonify(str(result)), 200
         else:
             return {"message": "Could not delete student."}, 404
     except:
         return {"message": result}, 503
-    
- 

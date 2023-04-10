@@ -1,7 +1,7 @@
 from .__init__ import db
 from bson import ObjectId
 from flask import session
-from app.models import group, project_application
+from app.models import group, project_application 
 import json
 
 projectCollection = db["projects"]
@@ -34,7 +34,7 @@ def get_project(id):
 def get_interested_groups():
     interested_groups_for_project = []
     project_groups = {}
-    index = 0
+    
     for document in projectCollection.find():
         interested_groups_for_project = []
         document['_id'] = str(document['_id'])
@@ -42,18 +42,15 @@ def get_interested_groups():
             interested_groups_for_project.append(
                 group.get_group_by_group_name(g))
         project_groups[document['project']] = interested_groups_for_project
-        index += 1
-
-    print(project_groups)
     return project_groups
-
+     
 
 def add_project(project_obj):
     application = {
         'project': project_obj.get('project', ''),
         'description': project_obj.get('description', ''),
         'client': project_obj.get('client', ''),
-        'status': project_obj.get('status', ''),
+        'status': project_obj.get('status', 'new'),
         'interested groups': [],
         'group': project_obj.get('group', ''),
         'visibility': project_obj.get('visibility', ''),
@@ -77,7 +74,9 @@ def request_project_application(project_id, student_name):
     try:
         student_group = json.loads(group.get_user_group(student_name))
         project = get_project(project_id)
-
+        if (project_application.has_project_application(project_id, student_name)):
+            return Exception(f"Application already Submitted {project_id}.") , 400
+         
         result = projectCollection.update_one(
             {"_id": ObjectId(project_id)},
             {"$push": {"interested groups": student_group['group_id']}}
@@ -88,6 +87,6 @@ def request_project_application(project_id, student_name):
                 project['project'], student_group['group_id'])
         else:
             raise Exception(f"Could not update project {project_id}.")
-        return result
+        return result, 200
     except Exception as e:
-        return e, 408
+        return e, 400

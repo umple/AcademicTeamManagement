@@ -161,15 +161,19 @@ function StudentProjects() {
       body: JSON.stringify(project),
     })
       .then((response) =>  {
-        return response.json()
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('There is no Students');
+        }
       })
       .then((data) => {
         setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 4000);
+        setTimeout(() => setShowAlert(false),3000);
       })
       .catch((error) => {
         setErrorShowAlert(true);
-        setTimeout(() => setErrorShowAlert(false), 4000);
+        setTimeout(() => setErrorShowAlert(false), 3000);
         console.error(error);
       });
   };

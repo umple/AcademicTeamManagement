@@ -27,7 +27,10 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  CircularProgress
+  CircularProgress,
+  TextareaAutosize,
+  Alert,
+  Snackbar
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
@@ -86,6 +89,11 @@ const ProjectTable = () => {
       {
         accessorKey: 'interested groups',
         header: 'Interested Groups',
+        Cell: ({ cell }) => {
+          if (Array.isArray(cell.getValue("interested groups")) && cell.getValue("interested groups").length > 0) {
+            return cell.getValue("interested groups").map((item, index) => <tr>{item}</tr>);
+          }
+        }
       },
       {
         accessorKey: 'group',
@@ -107,7 +115,8 @@ const ProjectTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [applications, setApplications] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [applications, setApplications] = useState({});
 
 
   const fetchProjects = () => {
@@ -126,17 +135,18 @@ const ProjectTable = () => {
     fetch("api/retrieve/interested/groups").then(response => response.json())
       .then(data => {
         setApplications(data);
+        setIsLoading(false)
       })
       .catch(error => {
         console.error(error);
       });
   }
 
+
   useEffect(() => {
     setIsLoading(true)
     fetchProjects();
     fetchInterestedGroup();
-    setIsLoading(false)
   }, []);
 
   const [validationErrors, setValidationErrors] = useState({});
@@ -280,8 +290,17 @@ const ProjectTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Projects</Typography>
+      <Snackbar
+        open={showAlert}
+        onClose={() => setShowAlert(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="success">Feedback Sent!</Alert>
+      </Snackbar>
       {isLoading ? (
-        <CircularProgress />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5rem' }}>
+          <CircularProgress />
+        </div>
       ) : (
         <>
           <MaterialReactTable
@@ -321,30 +340,30 @@ const ProjectTable = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {Object.entries(applications).map(([project, groups], outerIndex) => (
-                            outerIndex === row.index  ? (
+                          {Object.keys(applications).length !== 0 && Object.entries(applications).map(([project, groups], outerIndex) => (
+                            outerIndex === row.index && groups ? (
                               Object.entries(groups).map(([group_id, groupApplication]) => (
                                 <>
-                                  {groupApplication.members.map((member, innerIndex) => (
+                                  {groupApplication && groupApplication.members.map((member, innerIndex) => (
                                     <TableRow
-                                    key={row.name}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                  >
-                                    <TableCell>
-                                      {member}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      <Button
-                                        variant="outlined"
-                                        color="warning"
-                                        onClick={() => {
-                                          console.info('View Profile', row);
-                                        }}
-                                      >
-                                        View Profile
-                                      </Button>
-                                    </TableCell>
-                                  </TableRow>
+                                      key={row.name}
+                                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                      <TableCell>
+                                        {member}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        <Button
+                                          variant="outlined"
+                                          color="warning"
+                                          onClick={() => {
+                                            console.info('View Profile', row);
+                                          }}
+                                        >
+                                          View Profile
+                                        </Button>
+                                      </TableCell>
+                                    </TableRow>
                                   ))}
                                 </>
                               ))
@@ -368,7 +387,7 @@ const ProjectTable = () => {
                         </TableHead>
                         <TableBody>
                           {Object.entries(applications).map(([project, groups], outerIndex) => (
-                            outerIndex === row.index ? (
+                            outerIndex === row.index && groups ? (
                               groups.map((groupApplication, innerIndex) => (
                                 <TableRow key={`${project}-${innerIndex}`} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                   <TableCell>
@@ -383,6 +402,7 @@ const ProjectTable = () => {
                                       View Application
                                     </Button>
                                     <ViewApplicationModal
+                                      setShowAlert={setShowAlert}
                                       data={groupApplication}
                                       open={open}
                                       onClose={handleClose}
@@ -393,7 +413,6 @@ const ProjectTable = () => {
                               ))
                             ) : null
                           ))}
-
                         </TableBody>
                       </Table>
                     </TableContainer>
@@ -552,18 +571,45 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
 
 
 //Modal to view application
-export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
+export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAlert}) => {
+  const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState('');
+  const [studentsNeeded, setStudentsNeeded] = useState(false);
+   
 
   const handleSubmit = () => {
-    //put your validation logic here
     onSubmit();
     onClose();
   };
 
+  const handleSendFeedback = (event) => {
+    event.preventDefault()
+
+    const myObject = {
+      'feedback': textFieldFeedback,
+      'group_id': data.group_id,
+      'students_needed': studentsNeeded
+    }
+    fetch("api/send/feedback/to/group", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(myObject),
+    })
+      .then((response) => { return response.json() })
+      .then((data) => {
+        setTextFieldtextFieldFeedback('')
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 5000);
+      })
+    onClose();
+  }
+
+
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Project Application</DialogTitle>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSendFeedback}>
         <DialogContent>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
@@ -595,8 +641,12 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
               </FormLabel>
               <FormGroup row>
                 <FormControlLabel
-                  value="start"
+
                   control={<Checkbox />}
+                  value={studentsNeeded}
+                  onChange={(e) => {
+                    setStudentsNeeded(e.target.value);
+                  }}
                 />
               </FormGroup>
             </Grid>
@@ -605,18 +655,19 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
             <Box fontWeight='fontWeightMedium' display='inline'>Feedback: </Box>
           </FormLabel>
           <FormGroup row>
-            <TextField
-              sx={{ mt: 1 }}
-              fullWidth
-              multiline
-              maxRows={5}
-              hiddenLabel
+            <TextareaAutosize
+              style={{ height: 'calc(1.5em + 10px)' }}
+              name="feedback"
+              value={textFieldFeedback}
+              onChange={(e) => {
+                setTextFieldtextFieldFeedback(e.target.value);
+              }}
             />
           </FormGroup>
         </DialogContent>
         <DialogActions sx={{ p: '1.25rem' }}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" onClick={onClose} variant="contained">Send Feedback</Button>
+          <Button color="secondary" type="submit" onClick={handleSendFeedback} variant="contained">Send Feedback</Button>
           <Button color="success" onClick={handleSubmit} variant="contained">
             Assign
           </Button>

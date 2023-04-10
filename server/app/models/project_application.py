@@ -24,6 +24,15 @@ def has_project_application(project_id,student_name):
         return True
     else:
         return False
+    
+def send_feedback_to_group(feedback_obj):
+    project_application = projectApplicationCollection.find_one({"group_id": feedback_obj['group_id']})
+    if project_application:
+        result = projectApplicationCollection.update_one(
+        {"group_id": feedback_obj['group_id']},
+        {"$set": {"feedback": feedback_obj['feedback'], "students_needed": bool(feedback_obj['students_needed'])}}
+        )
+        return result
 
 
 def get_project_applications(student_name):
@@ -44,7 +53,7 @@ def create_application(project_name, group_name):
         "project":  project_name,
         "group_id": group_name,
         "feedback": "",
-        "students_needed": True
+        "students_needed": False
     }
     result = projectApplicationCollection.insert_one(application)
     return result

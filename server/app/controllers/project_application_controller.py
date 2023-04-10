@@ -47,8 +47,13 @@ def has_project_application(id):
             return jsonify(False), 200
     except:
         return {"message": "Internal server error."}, 503
+    
 
-
-
-
-        
+@project_application_bp.route("/send/feedback/to/group", methods=["POST"])
+def send_feedback_application():
+    try:
+        project_json = json.loads(request.data)
+        result = projectApplication.send_feedback_to_group(project_json)
+        return jsonify(result.modified_count), 200
+    except:
+        return {"message": "Internal server error."}, 500
