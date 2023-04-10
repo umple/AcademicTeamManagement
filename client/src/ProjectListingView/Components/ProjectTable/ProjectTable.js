@@ -321,35 +321,37 @@ const ProjectTable = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {typeof applications[row.index] !== 'undefined' ? (
-                            applications[row.index].members.map((item) => (
-                              <TableRow
-                                key={row.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                              >
-                                <TableCell>
-                                  {item}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    variant="outlined"
-                                    color="warning"
-                                    onClick={() => {
-                                      console.info('View Profile', row);
-                                    }}
+                          {Object.entries(applications).map(([project, groups], outerIndex) => (
+                            outerIndex === row.index  ? (
+                              Object.entries(groups).map(([group_id, groupApplication]) => (
+                                <>
+                                  {groupApplication.members.map((member, innerIndex) => (
+                                    <TableRow
+                                    key={row.name}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                   >
-                                    View Profile
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            ))
-                          ) : (
-                            <TableRow>
-                              <TableCell colSpan={2}>
-                                No Members
-                              </TableCell>
-                            </TableRow>
-                          )}
+                                    <TableCell>
+                                      {member}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      <Button
+                                        variant="outlined"
+                                        color="warning"
+                                        onClick={() => {
+                                          console.info('View Profile', row);
+                                        }}
+                                      >
+                                        View Profile
+                                      </Button>
+                                    </TableCell>
+                                  </TableRow>
+                                  ))}
+                                </>
+                              ))
+                            ) : (
+                              null
+                            )
+                          ))}
                         </TableBody>
                       </Table>
                     </TableContainer>

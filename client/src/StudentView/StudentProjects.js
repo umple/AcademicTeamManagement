@@ -18,6 +18,7 @@ import {
   Snackbar
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -114,6 +115,8 @@ function StudentProjects() {
   const [open, setOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
+  const [loading, setIsLoading] = useState(false);
+
 
 
   const handleSearch = (event) => {
@@ -136,9 +139,11 @@ function StudentProjects() {
       .catch((error) => {
         console.error(error);
       });
+      setIsLoading(false)
   };
 
   useEffect(() => {
+    setIsLoading(true)
     fetchProjects();
   }, []);
 
@@ -184,6 +189,9 @@ function StudentProjects() {
       <Typography variant="h2" align="center" fontWeight="fontWeightBold">
         Student Projects
       </Typography>
+      {loading ? (
+        <CircularProgress />
+      ) : (
       <Box>
         <Grid
           container
@@ -216,8 +224,7 @@ function StudentProjects() {
               onSubmit={handleSubmit}
             />
           </Grid>
-
-          {projects.map((project) => (
+          {Array.isArray(projects) && projects.length !== 0 ? projects.map((project) => (
             <form className={classes.formContainer} onSubmit={(event) => handleProjectApplication(event, project)}>
               <Grid key={project.id}>
                 <Card className={classes.root} style={{ padding: "1rem" }}>
@@ -289,9 +296,10 @@ function StudentProjects() {
                 </Card>
               </Grid>
             </form>
-          ))}
+          )) : null}
         </Grid>
       </Box>
+      )}
     </Container>
   );
 }

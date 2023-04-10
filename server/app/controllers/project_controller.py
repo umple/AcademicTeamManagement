@@ -26,9 +26,11 @@ def get_projects():
 @project_bp.route("/project", methods=["POST"])
 def add_Project():
     try:
-        project_obj = request.json
+        project_obj = json.loads(request.data)
+        
+        print(project_obj)
+
         result = project.add_project(project_obj)
-        print("Hello")
         if result:
             return jsonify(str(result.inserted_id)), 201
         else:
