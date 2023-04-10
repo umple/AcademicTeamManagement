@@ -14,6 +14,7 @@ import {
   Snackbar,
   Backdrop
 } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const StudentGroupTable = () => {
 
@@ -24,6 +25,7 @@ const StudentGroupTable = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showJoinedTeam, setShowJoinedTeam] = useState(false);
   const [isPageDisabled, setIsPageDisabled] = useState(false);
+  const [loading, setIsLoading] = useState(false);
    
 
   const columns = useMemo(
@@ -56,10 +58,13 @@ const StudentGroupTable = () => {
   );
 
   const fetchGroups = () => {
+    setIsLoading(true)
     fetch("/api/groups")
       .then(response => response.json())
       .then(data => {
         setTableData(data)
+        setIsLoading(false)
+
       })
       .catch(error => {
         console.error(error);
@@ -96,6 +101,9 @@ const StudentGroupTable = () => {
           Group Member Added!
         </Alert>
       </Snackbar>
+      {loading ? (
+        <CircularProgress />
+      ) : (
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -181,7 +189,7 @@ const StudentGroupTable = () => {
             </Box>
           );
         }}
-      />
+      /> )}
     </Box>
   );
 };

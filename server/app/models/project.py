@@ -30,13 +30,19 @@ def get_project(id):
         return None
 
 def get_interested_groups():
-    interested_groups = []
+    interested_groups_for_project = []
+    project_groups = {}
+    index = 0
     for document in projectCollection.find():
+        interested_groups_for_project = []
         document['_id'] = str(document['_id'])
         for g in document["interested groups"]:
-            interested_groups.append(group.get_group_by_name(g))
-    print(interested_groups)
-    return interested_groups
+            interested_groups_for_project.append(group.get_group_by_group_name(g))
+        project_groups[document['project']] = interested_groups_for_project
+        index +=1
+
+    print(project_groups)
+    return project_groups
 
 
 def add_project(project_obj):

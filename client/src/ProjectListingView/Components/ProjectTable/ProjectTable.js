@@ -26,7 +26,8 @@ import {
   FormGroup,
   Select,
   MenuItem,
-  InputLabel
+  InputLabel,
+  CircularProgress
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
@@ -106,11 +107,11 @@ const ProjectTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [applications, setApplications] = useState({});
+  const [applications, setApplications] = useState(null);
 
 
   const fetchProjects = () => {
-    fetch("/api/project/not/applied/to")
+    fetch("/api/projects")
       .then(response => response.json())
       .then(data => {
 
@@ -132,8 +133,10 @@ const ProjectTable = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true)
     fetchProjects();
     fetchInterestedGroup();
+    setIsLoading(false)
   }, []);
 
   const [validationErrors, setValidationErrors] = useState({});
@@ -277,163 +280,170 @@ const ProjectTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Projects</Typography>
-      <MaterialReactTable
-        displayColumnDefOptions={{
-          'mrt-row-actions': {
-            muiTableHeadCellProps: {
-              align: 'center',
-            },
-            size: 120,
-          },
-        }}
-        enablePagination={false}
-        columns={columns}
-        data={tableData}
-        editingMode="modal"
-        enableColumnOrdering
-        enableColumnResizing
-        columnResizeMode="onChange" //default is "onEnd"
-        defaultColumn={{
-          minSize: 100,
-          size: 150, //default size is usually 180
-        }}
-        enableEditing
-        initialState={{ showColumnFilters: false, density: 'compact' }}
-        onEditingRowSave={handleSaveRowEdits}
-        onEditingRowCancel={handleCancelRowEdits}
-        renderDetailPanel={({ row, index }) => {
-          return (
-            <Grid container spacing={2}>
-              <Grid item>
-                <TableContainer component={Paper}>
-                  <Table size="small" aria-label="a dense table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Interested Students</TableCell>
-                        <TableCell></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {typeof applications[row.index] !== 'undefined'  ? (
-                        applications[row.index].members.map((item) => (
-                          <TableRow
-                            key={row.name}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                          >
-                            <TableCell>
-                              {item}
-                            </TableCell>
-                            <TableCell align="right">
-                              <Button
-                                variant="outlined"
-                                color="warning"
-                                onClick={() => {
-                                  console.info('View Profile', row);
-                                }}
-                              >
-                                View Profile
-                              </Button>
-                            </TableCell>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <MaterialReactTable
+            displayColumnDefOptions={{
+              'mrt-row-actions': {
+                muiTableHeadCellProps: {
+                  align: 'center',
+                },
+                size: 120,
+              },
+            }}
+            enablePagination={false}
+            columns={columns}
+            data={tableData}
+            editingMode="modal"
+            enableColumnOrdering
+            enableColumnResizing
+            columnResizeMode="onChange" //default is "onEnd"
+            defaultColumn={{
+              minSize: 100,
+              size: 150, //default size is usually 180
+            }}
+            enableEditing
+            initialState={{ showColumnFilters: false, density: 'compact' }}
+            onEditingRowSave={handleSaveRowEdits}
+            onEditingRowCancel={handleCancelRowEdits}
+            renderDetailPanel={({ row, index }) => {
+              return (
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <TableContainer component={Paper}>
+                      <Table size="small" aria-label="a dense table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Interested Students</TableCell>
+                            <TableCell></TableCell>
                           </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={2}>
-                            No Members
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
+                        </TableHead>
+                        <TableBody>
+                          {typeof applications[row.index] !== 'undefined' ? (
+                            applications[row.index].members.map((item) => (
+                              <TableRow
+                                key={row.name}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                              >
+                                <TableCell>
+                                  {item}
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Button
+                                    variant="outlined"
+                                    color="warning"
+                                    onClick={() => {
+                                      console.info('View Profile', row);
+                                    }}
+                                  >
+                                    View Profile
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <TableRow>
+                              <TableCell colSpan={2}>
+                                No Members
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
 
-              <Grid item>
-                <TableContainer component={Paper}>
-                  <Table sx={{}} size="small" aria-label="a dense table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Project Applications</TableCell>
-                        <TableCell></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {applications[row.index] && (
-                        <TableRow
-                          key={row.group_id}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                          <TableCell>
-                            {applications[row.index].group_id}
-                            {/* {"Group:".concat(" ",  applications[row.index])} */}
-                          </TableCell>
-                          <TableCell align="right">
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={handleOpen}
-                            >
-                              View Application
-                            </Button>
-                            <ViewApplicationModal
-                              data={applications[row.index]}
-                              open={open}
-                              onClose={handleClose}
-                              onSubmit={() => setOpen(false)}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
-            </Grid>
-          );
-        }}
-        renderRowActions={({ row, table }) => (
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Tooltip arrow placement="left" title="Edit">
-              <IconButton onClick={() => table.setEditingRow(row)}>
-                <Edit />
-              </IconButton>
-            </Tooltip>
-            <Tooltip arrow placement="right" title="Delete">
-              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
-                <Delete />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )}
-        renderTopToolbarCustomActions={() => (
-          <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
-            <Button
-              color="success"
-              onClick={() => setCreateModalOpen(true)}
-              variant="contained"
-            >
-              Create New Project
-            </Button>
-            <Button
-              color="primary"
-              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-              onClick={handleExportData}
-              startIcon={<FileDownloadIcon />}
-              variant="contained"
-            >
-              Export All Data
-            </Button>
-          </Box>
-        )}
-      />
-      <CreateNewProjectModal
-        columns={columns}
-        open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
-        onSubmit={handleCreateNewRow}
-        onAddRow={handleAddRow}
-        fetchProjects={fetchProjects}
-      />
+                  <Grid item>
+                    <TableContainer component={Paper}>
+                      <Table sx={{}} size="small" aria-label="a dense table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Project Applications</TableCell>
+                            <TableCell></TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {Object.entries(applications).map(([project, groups], outerIndex) => (
+                            outerIndex === row.index ? (
+                              groups.map((groupApplication, innerIndex) => (
+                                <TableRow key={`${project}-${innerIndex}`} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                  <TableCell>
+                                    {groupApplication.group_id}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="outlined"
+                                      color="secondary"
+                                      onClick={handleOpen}
+                                    >
+                                      View Application
+                                    </Button>
+                                    <ViewApplicationModal
+                                      data={groupApplication}
+                                      open={open}
+                                      onClose={handleClose}
+                                      onSubmit={() => setOpen(false)}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ) : null
+                          ))}
+
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+                </Grid>
+              );
+            }}
+            renderRowActions={({ row, table }) => (
+              <Box sx={{ display: 'flex', gap: '1rem' }}>
+                <Tooltip arrow placement="left" title="Edit">
+                  <IconButton onClick={() => table.setEditingRow(row)}>
+                    <Edit />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow placement="right" title="Delete">
+                  <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+            renderTopToolbarCustomActions={() => (
+              <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
+                <Button
+                  color="success"
+                  onClick={() => setCreateModalOpen(true)}
+                  variant="contained"
+                >
+                  Create New Project
+                </Button>
+                <Button
+                  color="primary"
+                  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                  onClick={handleExportData}
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >
+                  Export All Data
+                </Button>
+              </Box>
+            )}
+          />
+          <CreateNewProjectModal
+            columns={columns}
+            open={createModalOpen}
+            onClose={() => setCreateModalOpen(false)}
+            onSubmit={handleCreateNewRow}
+            onAddRow={handleAddRow}
+            fetchProjects={fetchProjects}
+          />
+        </>
+      )}
     </Box>
   );
 };
@@ -490,7 +500,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
             }}
           >
             {columns.map((column) => {
-              if (column.accessorKey === 'interested groups' || column.accessorKey === 'group'  ){
+              if (column.accessorKey === 'interested groups' || column.accessorKey === 'group') {
                 return null
               }
               if (column.accessorKey === 'status') {
