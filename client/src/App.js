@@ -13,6 +13,8 @@ import StudentGroups from './StudentView/StudentGroupTable';
 import MyGroup from './StudentView/MyGroup';
 import PrivateRoutes from './Authentication/PrivateRoutes';
 import PageNotFound from './StaticComponents/PageNotFound/PageNotFound';
+import RoleBasedRoutes from './Authentication/RoleBasedRoutes';
+import ROLES from './Utils/Roles';
 
 
 const App = () => {
@@ -26,15 +28,22 @@ const App = () => {
           </div>
           <Routes>
             <Route element={<PrivateRoutes />}>
-              <Route path='/' element={<HomePage/>}></Route>
-              <Route exact path='/Projects' element={<ProjectTable/>}></Route>
-              <Route path='/ImportStudents' element={<ImportStudents/>}></Route>
-              <Route path='/Students' element={<StudentTable/>}></Route>
-              <Route path='/GroupView' element={<Groups/>}></Route>
-              <Route path='/StudentHome' element={<StudentHomePage/>}></Route>
-              <Route path='/StudentProjects' element={<StudentProjects/>}></Route>
-              <Route path='/StudentGroups' element={<StudentGroups/>}></Route>
-              <Route path='/MyGroup' element={<MyGroup/>}></Route>
+
+              <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR}/>}>
+                <Route path='/' element={<HomePage/>}></Route>
+                <Route path='/Students' element={<StudentTable/>}></Route>
+                <Route exact path='/Projects' element={<ProjectTable/>}></Route>
+                <Route path='/ImportStudents' element={<ImportStudents/>}></Route>
+                <Route path='/GroupView' element={<Groups/>}></Route>
+              </Route>
+
+              <Route element={<RoleBasedRoutes allowedRole={ROLES.STUDENT}/>}>
+                <Route path='/StudentHome' element={<StudentHomePage/>}></Route>
+                <Route path='/StudentProjects' element={<StudentProjects/>}></Route>
+                <Route path='/StudentGroups' element={<StudentGroups/>}></Route>
+                <Route path='/MyGroup' element={<MyGroup/>}></Route>
+              </Route>
+
             </Route>
             <Route path='/login' element={<LoginPage/>}></Route>
             <Route path="*" element={<PageNotFound />} />
