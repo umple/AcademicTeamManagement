@@ -27,6 +27,7 @@ def get_projects():
 def add_Project():
     try:
         project_obj = json.loads(request.data)
+        print(project_obj)
         result = project.add_project(project_obj)
         if result:
             return jsonify(str(result.inserted_id)), 200

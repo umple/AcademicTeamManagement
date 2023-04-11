@@ -1,7 +1,7 @@
 from .__init__ import db
 from bson import ObjectId
 from flask import session
-from app.models import group, project_application 
+from app.models import group, project_application
 import json
 
 projectCollection = db["projects"]
@@ -34,7 +34,7 @@ def get_project(id):
 def get_interested_groups():
     interested_groups_for_project = []
     project_groups = {}
-    
+
     for document in projectCollection.find():
         interested_groups_for_project = []
         document['_id'] = str(document['_id'])
@@ -43,9 +43,12 @@ def get_interested_groups():
                 group.get_group_by_group_name(g))
         project_groups[document['project']] = interested_groups_for_project
     return project_groups
-     
+
 
 def add_project(project_obj):
+   if project_obj.get('status') == '':
+    project_obj['status'] = 'new'
+
     application = {
         'project': project_obj.get('project', ''),
         'description': project_obj.get('description', ''),
