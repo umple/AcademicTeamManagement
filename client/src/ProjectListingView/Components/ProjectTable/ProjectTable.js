@@ -34,7 +34,7 @@ import {
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
-import { Delete, Edit, Help } from '@mui/icons-material';
+import { Delete, Edit, Help, RepeatOneSharp } from '@mui/icons-material';
 import { createTheme } from '@mui/material/styles';
 
 
@@ -131,16 +131,23 @@ const ProjectTable = () => {
   };
 
   const fetchInterestedGroup = () => {
-    fetch("api/retrieve/interested/groups").then(response => response.json())
+    fetch("api/retrieve/interested/groups").then(response => {
+      if (!response.ok){
+        throw new Error("sadf")
+      } else{
+        return response.json()
+      }
+    })
       .then(data => {
         setApplications(data);
         setIsLoading(false)
       })
       .catch(error => {
-        console.error(error);
+        setApplications({})
+        setTimeout(() => setIsLoading(false), 2000);
       });
   }
-
+  console.log(Object.entries(applications))
 
   useEffect(() => {
     setIsLoading(true)
@@ -198,31 +205,31 @@ const ProjectTable = () => {
     setValidationErrors({});
   };
 
-  const handleDeleteRow = useCallback( (row) => {
+  const handleDeleteRow = useCallback((row) => {
     if (!window.confirm(`Are you sure you want to delete ${row.getValue('project')}?`)) {
       return;
     }
-  
+
     fetch(`api/project/delete/${row.original._id}`, {
       method: 'DELETE'
     })
-    .then(response => {
-      if (response.ok) {
-        fetchProjects();
-      } else {
-        console.error('Error deleting row');
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(response => {
+        if (response.ok) {
+          fetchProjects();
+        } else {
+          console.error('Error deleting row');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }, []);
 
   // For the model to view project applications
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
- 
+
   function getDate() {
     const today = new Date();
     const year = today.getFullYear();
@@ -330,37 +337,42 @@ const ProjectTable = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {Object.keys(applications).length !== 0 && Object.entries(applications).map(([project, groups], outerIndex) => (
-                            outerIndex === row.index && groups ? (
-                              Object.entries(groups).map(([group_id, groupApplication]) => (
-                                <>
-                                  {groupApplication && groupApplication.members.map((member, innerIndex) => (
-                                    <TableRow
-                                      key={row.name}
-                                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                      <TableCell>
-                                        {member}
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        <Button
-                                          variant="outlined"
-                                          color="warning"
-                                          onClick={() => {
-                                            console.info('View Profile', row);
-                                          }}
-                                        >
-                                          View Profile
-                                        </Button>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </>
+                          {applications && Object.keys(applications).length !== 0 ? (
+                            Object.entries(applications).map(([project, groups], outerIndex) => (
+                              outerIndex === row.index && typeof groups !== 'undefined' ? (
+                                Object.entries(groups).map(([group_id, groupApplication]) => (
+                                  <>
+                                    {groupApplication && groupApplication.members && groupApplication.members.map((member, innerIndex) => (
+                                      <TableRow
+                                        key={innerIndex}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                      >
+                                        <TableCell>
+                                          {member}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                          <Button
+                                            variant="outlined"
+                                            color="warning"
+                                            onClick={() => {
+                                              console.info('View Profile', member);
+                                            }}
+                                          >
+                                            View Profile
+                                          </Button>
+                                        </TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </>
+                                ))
+                              ) : (
+                                null
                               ))
-                            ) : (
-                              null
-                            )
-                          ))}
+                            )) : null
+                          }
+
+
+
                         </TableBody>
                       </Table>
                     </TableContainer>
@@ -481,7 +493,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
   const handleSubmit = (e) => {
     e.preventDefault()
     handleAddRow(values);
-    Object.entries(values).map(([key,value]) =>{
+    Object.entries(values).map(([key, value]) => {
       values[key] = ''
     })
     onClose();
@@ -550,10 +562,10 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
 
 
 //Modal to view application
-export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAlert, project, fetchProjects}) => {
+export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAlert, project, fetchProjects }) => {
   const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState('');
   const [studentsNeeded, setStudentsNeeded] = useState(false);
-   
+
 
   const handleSubmit = () => {
     const myObject = {

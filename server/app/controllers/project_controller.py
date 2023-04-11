@@ -67,12 +67,13 @@ def delete_project_by_id(id):
 def retrieve_interested_groups():
     try:
         interestedGroups = project.get_interested_groups()
-        if  interestedGroups:
+        if interestedGroups:
             return jsonify(interestedGroups), 200
-        if len(interestedGroups) == 0:
+        if len(interestedGroups) == 0 or interestedGroups is None:
             return jsonify(interestedGroups), 404
         else:
             return {"message": "Project list not found."}, 404
     except Exception as e:
         print(f"An error occurred while updating project: {e}")
-        return None
+        return {"message": "Error occurred while retrieving interested groups."}, 500
+
