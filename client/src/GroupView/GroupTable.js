@@ -324,7 +324,13 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchGro
       .then(response => {
         if (response.ok) {
           fetchGroups();
-          setValues({});
+          Object.entries(values).map(([key,value]) =>{
+            if (key == 'members'){
+              values[key] = []
+            } else {
+              values[key] = ''
+            }
+          }) 
           setInputs([])
         }
       })

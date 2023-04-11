@@ -41,7 +41,7 @@ def get_interested_groups():
         for g in document["interested groups"]:
             interested_groups_for_project.append(
                 group.get_group_by_group_name(g))
-        project_groups[document['project']] = interested_groups_for_project
+        project_groups[document['_id']] = interested_groups_for_project
     return project_groups
 
 
@@ -72,24 +72,16 @@ def delete_project_by_id(id):
     result = projectCollection.delete_one({"_id": ObjectId(id)})
     return result
 
-
-def request_project_application(project_id, student_name):
-    try:
-        student_group = json.loads(group.get_user_group(student_name))
-        project = get_project(project_id)
-        if (project_application.has_project_application(project_id, student_name)):
-            return Exception(f"Application already Submitted {project_id}.") , 400
-         
-        result = projectCollection.update_one(
+def add_group_to_project(group_obj):
+    result1 = projectCollection.update_one(
+            {"_id": ObjectId(group_obj["project_id"])},
+            {"$set": {"group": ObjectId(group_obj["group_id"])}}
+        )
+    return result1
+ 
+def add_interested_group_to_project(project_id,student_group):
+    result = projectCollection.update_one(
             {"_id": ObjectId(project_id)},
             {"$push": {"interested groups": student_group['group_id']}}
-        )   
-
-        if result.modified_count > 0 or result.matched_count > 0:
-            applications = project_application.create_application(
-                project['project'], student_group['group_id'])
-        else:
-            raise Exception(f"Could not update project {project_id}.")
-        return result, 200
-    except Exception as e:
-        return e, 400
+        ) 
+    return result

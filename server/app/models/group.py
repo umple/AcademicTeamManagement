@@ -32,24 +32,28 @@ def get_group_by_group_name(name):
     else:
         return None
     
-def add_student_to_group(student_email, group):
+def add_student_to_group(student_email, group_id):
     student_obj = student.get_student_by_email(student_email)
+    group_obj = get_group(group_id)
     student_name =  student_obj['firstname'] + ' ' + student_obj['lastname']
      
-    if student_name in group['members']:
+    if student_name in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
-        {"_id": ObjectId(group["_id"])},
-        {"$push": {"members": str(student_name)}}
-    )
+        {"_id": ObjectId(group_obj["_id"])},
+        {"$push": {"members": str(student_name)}})
+      
+   
     if result.modified_count > 0:
         return True
     return False
 
 
-def remove_student_from_group(student_name):
-    student_group = json.loads(get_user_group(student_name))
+def remove_student_from_group(student_email):
+    student_group = json.loads(get_user_group(student_email))
+    student_name = student.get_student_name_from_email(student_email)
+    print(student_name)
     if student_name not in student_group['members']:
         return False
 
@@ -61,8 +65,9 @@ def remove_student_from_group(student_name):
         return True
     return False
  
-def get_user_group(user_name):
-    group_collection = groupCollection.find_one({"members": user_name})
+def get_user_group(user_email):
+    student_name = student.get_student_name_from_email(user_email)
+    group_collection = groupCollection.find_one({"members": student_name})
     if group_collection:
         group_collection["_id"] = str(group_collection["_id"])
         group_collection_json = json.dumps(group_collection)
@@ -83,4 +88,11 @@ def update_group_by_id(id, project_obj):
 
 def delete_group_by_id(id):
     result = groupCollection.delete_one({"_id": ObjectId(id)})
+    return result
+
+def add_project_to_group(group_obj,proj_obj):
+    result = groupCollection.update_one(
+            {"group_id": group_obj["group_id"]},
+            {"$set": {"project": proj_obj["project"]}}
+        )
     return result

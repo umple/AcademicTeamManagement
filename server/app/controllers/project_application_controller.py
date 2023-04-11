@@ -23,9 +23,8 @@ def get_project_application():
 @project_application_bp.route("/retrieve/project/application", methods=["GET"])
 def retrieve_project_application():
     try:
-        student_name = session.get("user")["name"]
-        print(student_name)
-        result = projectApplication.get_project_applications(student_name)
+        student_email = session.get("user")["preferred_username"]
+        result = projectApplication.get_project_applications(student_email)
         if result:
                 return jsonify(result), 200
         else:
@@ -34,19 +33,19 @@ def retrieve_project_application():
         return {"message": "Internal server error."}, 503
 
 
-@project_application_bp.route("/has/project/application/<id>", methods=["GET"])
-def has_project_application(id):
-    try:
-        student_name = session.get("user")["name"]
-        result = projectApplication.has_project_application(
-            str(id), student_name)
+# @project_application_bp.route("/has/project/application/<id>", methods=["GET"])
+# def has_project_application(id):
+#     try:
+#         student_name = session.get("user")["name"]
+#         result = projectApplication.has_project_application(
+#             str(id), student_name)
         
-        if result:
-            return  jsonify(True), 200
-        else:
-            return jsonify(False), 200
-    except:
-        return {"message": "Internal server error."}, 503
+#         if result:
+#             return  jsonify(True), 200
+#         else:
+#             return jsonify(False), 200
+#     except:
+#         return {"message": "Internal server error."}, 503
     
 
 @project_application_bp.route("/send/feedback/to/group", methods=["POST"])
@@ -57,3 +56,33 @@ def send_feedback_application():
         return jsonify(result.modified_count), 200
     except:
         return {"message": "Internal server error."}, 500
+    
+
+@project_application_bp.route("/assign/project/to/group", methods=["POST"])
+def assign_project_to_group():
+    try:
+        project_json = json.loads(request.data)
+        project, group = projectApplication.assign_project_to_group(project_json)
+        if project and group:
+            return jsonify(project.modified_count), 200
+    except:
+        return {"message": "Internal server error."}, 503
+ 
+
+@project_application_bp.route("/request/join/project", methods=["POST"])
+def request_project_application():
+    try:
+        project_json = json.loads(request.data)
+        student_email = session.get("user")["preferred_username"]
+        result, status = projectApplication.request_project_application(
+            project_json['_id'], student_email)
+        
+        if status == 400:
+            return  {"message": "Application Sent."}, 404
+        if result:
+            return jsonify(str(result)), 200
+        else:
+            return {"message": "Could not delete student."}, 404
+    except Exception as e :
+        print(e)
+        return {"message": e}, 503
