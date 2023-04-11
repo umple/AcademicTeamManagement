@@ -26,7 +26,11 @@ import {
   FormGroup,
   Select,
   MenuItem,
-  InputLabel
+  InputLabel,
+  CircularProgress,
+  TextareaAutosize,
+  Alert,
+  Snackbar
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
@@ -83,8 +87,13 @@ const ProjectTable = () => {
         ),
       },
       {
-        accessorKey: 'interest',
-        header: 'Interest',
+        accessorKey: 'interested groups',
+        header: 'Interested Groups',
+        Cell: ({ cell }) => {
+          if (Array.isArray(cell.getValue("interested groups")) && cell.getValue("interested groups").length > 0) {
+            return cell.getValue("interested groups").map((item, index) => <tr>{item}</tr>);
+          }
+        }
       },
       {
         accessorKey: 'group',
@@ -102,21 +111,13 @@ const ProjectTable = () => {
     [],
   );
 
-  // Mock data to show project applications
-  const defaultApp = [
-    { group: '21', date: 'January 1, 2023', description: 'After interviewing with the client we received confirmation by email that the client picked our team for the project.' },
-    { group: '27', date: 'January 10, 2023', description: 'After talking to the customer, they said that they are interested in having us develop their application.' }
-  ];
-
-
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [applications, setApplications] = useState(defaultApp);
+  const [showAlert, setShowAlert] = useState(false);
+  const [applications, setApplications] = useState({});
 
-  const fetchProjectApplication = () => {
-  }
 
   const fetchProjects = () => {
     fetch("/api/projects")
@@ -130,17 +131,27 @@ const ProjectTable = () => {
       });
   };
 
+  const fetchInterestedGroup = () => {
+    fetch("api/retrieve/interested/groups").then(response => response.json())
+      .then(data => {
+        setApplications(data);
+        setIsLoading(false)
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 
 
   useEffect(() => {
+    setIsLoading(true)
     fetchProjects();
+    fetchInterestedGroup();
   }, []);
 
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleCreateNewRow = (values) => { };
-
-
 
   const handleAddRow = useCallback(
     (newRowData) => {
@@ -276,163 +287,184 @@ const ProjectTable = () => {
 
     csvExporter.generateCsv(updatedJsonList);
   };
-
-  // Mock data to show interested students
-  const interestedStudents = [
-    { name: 'Jane Doe' },
-    { name: 'Calvin Klein' },
-    { name: 'Richard Brown' }
-  ];
-
   return (
-
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Projects</Typography>
-      <MaterialReactTable
-        displayColumnDefOptions={{
-          'mrt-row-actions': {
-            muiTableHeadCellProps: {
-              align: 'center',
-            },
-            size: 120,
-          },
-        }}
-        enablePagination={false}
-        columns={columns}
-        data={tableData}
-        editingMode="modal"
-        enableColumnOrdering
-        enableColumnResizing
-        columnResizeMode="onChange" //default is "onEnd"
-        defaultColumn={{
-          minSize: 100,
-          size: 150, //default size is usually 180
-        }}
-        enableEditing
-        initialState={{ showColumnFilters: false, density: 'compact' }}
-        onEditingRowSave={handleSaveRowEdits}
-        onEditingRowCancel={handleCancelRowEdits}
-        renderDetailPanel={({ row }) => (
-          <Grid container spacing={2}>
-            <Grid item>
-              <TableContainer component={Paper}>
-                <Table size="small" aria-label="a dense table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Interested Students</TableCell>
-                      <TableCell></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {interestedStudents.map((row) => (
-                      <TableRow
-                        key={row.name}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell >
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            variant="outlined"
-                            color="warning"
-                            onClick={() => {
-                              console.info('View Profile', row);
-                            }}
-                          >
-                            View Profile
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-            <Grid item>
-              <TableContainer component={Paper}>
-                <Table sx={{}} size="small" aria-label="a dense table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Project Applications</TableCell>
-                      <TableCell></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {applications.map((row) => (
-                      <TableRow
-                        key={row.group}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell >
-                          {"Group:".concat(" ", row.group)}
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            variant="outlined"
-                            color="secondary"
-                            onClick={handleOpen}
-                          >
-                            View Application
-                          </Button>
-                          <ViewApplicationModal
-                            data={row}
-                            open={open}
-                            onClose={handleClose}
-                            onSubmit={() => setOpen(false)}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          </Grid>
-        )}
-        renderRowActions={({ row, table }) => (
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Tooltip arrow placement="left" title="Edit">
-              <IconButton onClick={() => table.setEditingRow(row)}>
-                <Edit />
-              </IconButton>
-            </Tooltip>
-            <Tooltip arrow placement="right" title="Delete">
-              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
-                <Delete />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )}
-        renderTopToolbarCustomActions={() => (
-          <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
-            <Button
-              color="success"
-              onClick={() => setCreateModalOpen(true)}
-              variant="contained"
-            >
-              Create New Project
-            </Button>
-            <Button
-              color="primary"
-              //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-              onClick={handleExportData}
-              startIcon={<FileDownloadIcon />}
-              variant="contained"
-            >
-              Export All Data
-            </Button>
-          </Box>
-        )}
-      />
-      <CreateNewProjectModal
-        columns={columns}
-        open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
-        onSubmit={handleCreateNewRow}
-        onAddRow={handleAddRow}
-        fetchProjects={fetchProjects}
-      />
+      <Snackbar
+        open={showAlert}
+        onClose={() => setShowAlert(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="success">Feedback Sent!</Alert>
+      </Snackbar>
+      {isLoading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5rem' }}>
+          <CircularProgress />
+        </div>
+      ) : (
+        <>
+          <MaterialReactTable
+            displayColumnDefOptions={{
+              'mrt-row-actions': {
+                muiTableHeadCellProps: {
+                  align: 'center',
+                },
+                size: 120,
+              },
+            }}
+            enablePagination={false}
+            columns={columns}
+            data={tableData}
+            editingMode="modal"
+            enableColumnOrdering
+            enableColumnResizing
+            columnResizeMode="onChange" //default is "onEnd"
+            defaultColumn={{
+              minSize: 100,
+              size: 150, //default size is usually 180
+            }}
+            enableEditing
+            initialState={{ showColumnFilters: false, density: 'compact' }}
+            onEditingRowSave={handleSaveRowEdits}
+            onEditingRowCancel={handleCancelRowEdits}
+            renderDetailPanel={({ row, index }) => {
+              return (
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <TableContainer component={Paper}>
+                      <Table size="small" aria-label="a dense table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Interested Students</TableCell>
+                            <TableCell></TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {Object.keys(applications).length !== 0 && Object.entries(applications).map(([project, groups], outerIndex) => (
+                            outerIndex === row.index && groups ? (
+                              Object.entries(groups).map(([group_id, groupApplication]) => (
+                                <>
+                                  {groupApplication && groupApplication.members.map((member, innerIndex) => (
+                                    <TableRow
+                                      key={row.name}
+                                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                      <TableCell>
+                                        {member}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        <Button
+                                          variant="outlined"
+                                          color="warning"
+                                          onClick={() => {
+                                            console.info('View Profile', row);
+                                          }}
+                                        >
+                                          View Profile
+                                        </Button>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </>
+                              ))
+                            ) : (
+                              null
+                            )
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+
+                  <Grid item>
+                    <TableContainer component={Paper}>
+                      <Table sx={{}} size="small" aria-label="a dense table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Project Applications</TableCell>
+                            <TableCell></TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {Object.entries(applications).map(([project, groups], outerIndex) => (
+                            outerIndex === row.index && groups ? (
+                              groups.map((groupApplication, innerIndex) => (
+                                <TableRow key={`${project}-${innerIndex}`} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                  <TableCell>
+                                    {groupApplication.group_id}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="outlined"
+                                      color="secondary"
+                                      onClick={handleOpen}
+                                    >
+                                      View Application
+                                    </Button>
+                                    <ViewApplicationModal
+                                      setShowAlert={setShowAlert}
+                                      data={groupApplication}
+                                      open={open}
+                                      onClose={handleClose}
+                                      onSubmit={() => setOpen(false)}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ) : null
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+                </Grid>
+              );
+            }}
+            renderRowActions={({ row, table }) => (
+              <Box sx={{ display: 'flex', gap: '1rem' }}>
+                <Tooltip arrow placement="left" title="Edit">
+                  <IconButton onClick={() => table.setEditingRow(row)}>
+                    <Edit />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow placement="right" title="Delete">
+                  <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+            renderTopToolbarCustomActions={() => (
+              <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
+                <Button
+                  color="success"
+                  onClick={() => setCreateModalOpen(true)}
+                  variant="contained"
+                >
+                  Create New Project
+                </Button>
+                <Button
+                  color="primary"
+                  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                  onClick={handleExportData}
+                  startIcon={<FileDownloadIcon />}
+                  variant="contained"
+                >
+                  Export All Data
+                </Button>
+              </Box>
+            )}
+          />
+          <CreateNewProjectModal
+            columns={columns}
+            open={createModalOpen}
+            onClose={() => setCreateModalOpen(false)}
+            onSubmit={handleCreateNewRow}
+            onAddRow={handleAddRow}
+            fetchProjects={fetchProjects}
+          />
+        </>
+      )}
     </Box>
   );
 };
@@ -489,6 +521,9 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
             }}
           >
             {columns.map((column) => {
+              if (column.accessorKey === 'interested groups' || column.accessorKey === 'group') {
+                return null
+              }
               if (column.accessorKey === 'status') {
                 return (
                   <Select
@@ -536,18 +571,45 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
 
 
 //Modal to view application
-export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
+export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAlert}) => {
+  const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState('');
+  const [studentsNeeded, setStudentsNeeded] = useState(false);
+   
 
   const handleSubmit = () => {
-    //put your validation logic here
     onSubmit();
     onClose();
   };
 
+  const handleSendFeedback = (event) => {
+    event.preventDefault()
+
+    const myObject = {
+      'feedback': textFieldFeedback,
+      'group_id': data.group_id,
+      'students_needed': studentsNeeded
+    }
+    fetch("api/send/feedback/to/group", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(myObject),
+    })
+      .then((response) => { return response.json() })
+      .then((data) => {
+        setTextFieldtextFieldFeedback('')
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 5000);
+      })
+    onClose();
+  }
+
+
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Project Application</DialogTitle>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSendFeedback}>
         <DialogContent>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
@@ -555,7 +617,7 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
                 <Typography variant="body1" gutterBottom>
                   <Box fontWeight='fontWeightMedium' display='inline'>Group: </Box>
                 </Typography>
-                {data.group}
+                {data.group_id}
               </FormLabel>
             </Grid>
           </Grid>
@@ -565,7 +627,7 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
                 <Typography variant="body1" gutterBottom>
                   <Box fontWeight='fontWeightMedium' display='inline'>Description: </Box>
                 </Typography>
-                {data.description}
+                {data.notes}
               </FormLabel>
             </Grid>
           </Grid>
@@ -579,8 +641,12 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
               </FormLabel>
               <FormGroup row>
                 <FormControlLabel
-                  value="start"
+
                   control={<Checkbox />}
+                  value={studentsNeeded}
+                  onChange={(e) => {
+                    setStudentsNeeded(e.target.value);
+                  }}
                 />
               </FormGroup>
             </Grid>
@@ -589,18 +655,19 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit }) => {
             <Box fontWeight='fontWeightMedium' display='inline'>Feedback: </Box>
           </FormLabel>
           <FormGroup row>
-            <TextField
-              sx={{ mt: 1 }}
-              fullWidth
-              multiline
-              maxRows={5}
-              hiddenLabel
+            <TextareaAutosize
+              style={{ height: 'calc(1.5em + 10px)' }}
+              name="feedback"
+              value={textFieldFeedback}
+              onChange={(e) => {
+                setTextFieldtextFieldFeedback(e.target.value);
+              }}
             />
           </FormGroup>
         </DialogContent>
         <DialogActions sx={{ p: '1.25rem' }}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" onClick={onClose} variant="contained">Send Feedback</Button>
+          <Button color="secondary" type="submit" onClick={handleSendFeedback} variant="contained">Send Feedback</Button>
           <Button color="success" onClick={handleSubmit} variant="contained">
             Assign
           </Button>

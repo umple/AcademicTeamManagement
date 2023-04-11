@@ -14,8 +14,11 @@ import {
   DialogActions,
   Stack,
   Container,
+  Alert,
+  Snackbar
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -110,6 +113,11 @@ function StudentProjects() {
   const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showErrorAlert, setErrorShowAlert] = useState(false);
+  const [loading, setIsLoading] = useState(false);
+
+
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -131,9 +139,11 @@ function StudentProjects() {
       .catch((error) => {
         console.error(error);
       });
+      setIsLoading(false)
   };
 
   useEffect(() => {
+    setIsLoading(true)
     fetchProjects();
   }, []);
 
@@ -143,27 +153,49 @@ function StudentProjects() {
 
   const handleProjectApplication = (event, project) => {
     event.preventDefault();
-    fetch("api/add/project/application", {
+    fetch("api/request/join/project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(project),
     })
-      .then((response) => response.json())
+      .then((response) =>  {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('There is no Students');
+        }
+      })
       .then((data) => {
-        console.log(data);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false),3000);
       })
       .catch((error) => {
+        setErrorShowAlert(true);
+        setTimeout(() => setErrorShowAlert(false), 3000);
         console.error(error);
       });
   };
-
+ 
   return (
     <Container>
+       <Snackbar open={showErrorAlert} onClose={() => setErrorShowAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert severity="error">
+          Project Application Already Sent
+        </Alert>
+      </Snackbar>
+      <Snackbar open={showAlert} onClose={() => setShowAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert severity="success">
+          Project Request Sent
+        </Alert>
+      </Snackbar>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold">
         Student Projects
       </Typography>
+      {loading ? (
+        <CircularProgress />
+      ) : (
       <Box>
         <Grid
           container
@@ -196,8 +228,7 @@ function StudentProjects() {
               onSubmit={handleSubmit}
             />
           </Grid>
-
-          {projects.map((project) => (
+          {Array.isArray(projects) && projects.length !== 0 ? projects.map((project) => (
             <form className={classes.formContainer} onSubmit={(event) => handleProjectApplication(event, project)}>
               <Grid key={project.id}>
                 <Card className={classes.root} style={{ padding: "1rem" }}>
@@ -257,20 +288,22 @@ function StudentProjects() {
                       disabled={
                         project.status === "pending approval" ||
                         project.status === "assigned" ||
-                        project.status === "proposed"
+                        project.status === "proposed" 
                       }
                       className={classes.button}
                       style={{ marginTop: "1rem" }}
+                      
                     >
-                      Join
+                      REQUEST
                     </Button>
                   </CardContent>
                 </Card>
               </Grid>
             </form>
-          ))}
+          )) : null}
         </Grid>
       </Box>
+      )}
     </Container>
   );
 }

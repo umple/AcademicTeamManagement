@@ -1,7 +1,8 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
 from app.models import project_application as projectApplication
 from bson import ObjectId
 from . import project_application_bp
+import json
 
 
 # GET Request to retreive all students from the collection
@@ -18,19 +19,41 @@ def get_project_application():
     except:
         return {"message": "Internal server error."}, 503
  
-@project_application_bp.route("/add/project/application", methods=["POST"])
-def add_project_application():
-    print(request.json)
-    # try:
-    #     project_obj = request.json
-    #     print(project_obj)
-    #     result = projectApplication.add_project_application(project_obj)
-    #     if result:
-    #         return jsonify(str(result.inserted_id)), 201
-    #     else:
-    #         return {"message": "Could not add student."}, 404
-    # except:
-    #     return {"message": "Internal server error."}, 503
+
+@project_application_bp.route("/retrieve/project/application", methods=["GET"])
+def retrieve_project_application():
+    try:
+        student_name = session.get("user")["name"]
+        print(student_name)
+        result = projectApplication.get_project_applications(student_name)
+        if result:
+                return jsonify(result), 200
+        else:
+                return {"message": "Could not delete student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
 
 
+@project_application_bp.route("/has/project/application/<id>", methods=["GET"])
+def has_project_application(id):
+    try:
+        student_name = session.get("user")["name"]
+        result = projectApplication.has_project_application(
+            str(id), student_name)
+        
+        if result:
+            return  jsonify(True), 200
+        else:
+            return jsonify(False), 200
+    except:
+        return {"message": "Internal server error."}, 503
+    
 
+@project_application_bp.route("/send/feedback/to/group", methods=["POST"])
+def send_feedback_application():
+    try:
+        project_json = json.loads(request.data)
+        result = projectApplication.send_feedback_to_group(project_json)
+        return jsonify(result.modified_count), 200
+    except:
+        return {"message": "Internal server error."}, 500
