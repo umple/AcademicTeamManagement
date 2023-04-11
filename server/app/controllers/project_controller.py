@@ -27,7 +27,6 @@ def get_projects():
 def add_Project():
     try:
         project_obj = json.loads(request.data)
-        print(project_obj)
         result = project.add_project(project_obj)
         if result:
             return jsonify(str(result.inserted_id)), 200
@@ -52,8 +51,6 @@ def update_project_by_id(id):
         return {"message": "Internal server error."}, 503
 
 # DELETE Request to remove a student from the collection
-
-
 @project_bp.route("/project/delete/<id>", methods=["DELETE"])
 def delete_project_by_id(id):
     try:
@@ -79,21 +76,3 @@ def retrieve_interested_groups():
     except Exception as e:
         print(f"An error occurred while updating project: {e}")
         return None
-
-
-@project_bp.route("/request/join/project", methods=["POST"])
-def request_project_application():
-    try:
-        project_json = json.loads(request.data)
-        student_name = session.get("user")["name"]
-        result, status = project.request_project_application(
-            project_json['_id'], student_name)
-        
-        if status == 400:
-            return  {"message": "Application Sent."}, 404
-        if result:
-            return jsonify(str(result)), 200
-        else:
-            return {"message": "Could not delete student."}, 404
-    except:
-        return {"message": result}, 503

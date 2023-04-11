@@ -14,6 +14,7 @@ def get_all_student():
     return student_list
 
 def add_student(student_obj):
+    # CHECKS FOR EXISTING USER
     if (get_student_by_username(student_obj["username"] ) == None):
         result = studentsCollection.insert_one(student_obj)
         return result
@@ -31,6 +32,12 @@ def get_student_by_email(email):
     document = studentsCollection.find_one({"email": email})
     document["email"] = str(document["email"])
     return document
+
+def get_student_name_from_email(email):
+    fullName = ""
+    document = studentsCollection.find_one({"email": email})
+    fullName = str(document["firstname"]) + ' ' + str(document["lastname"])
+    return fullName
 
 def get_student_by_username(username):
     document = studentsCollection.find_one({"username": str(username)})

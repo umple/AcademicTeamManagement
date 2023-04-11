@@ -62,26 +62,25 @@ def delete_group_by_id(id):
 def add_student_to_group():
     row = json.loads(request.data)
     group_id = row["original"]["_id"]
-    group_obj = group.get_group(group_id)
     curr_user_email = session.get("user")["preferred_username"]
- 
-    if group.add_student_to_group(curr_user_email, group_obj):
-        return jsonify({"message": f"Added {curr_user_email} to group {group_obj['_id']}"})
+
+    if group.add_student_to_group(curr_user_email, group_id):
+        return jsonify({"message": f"Added {curr_user_email} to group {group_id}"})
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
 @group_bp.route("/remove/group/member", methods=["DELETE"])
 def remove_student_from_group():
-    curr_user_name = session.get("user")["name"]
+    curr_user_email = session.get("user")["preferred_username"]
 
-    if group.remove_student_from_group(curr_user_name):
-        return jsonify({"message": f"Removed {curr_user_name} to group "})
+    if group.remove_student_from_group(curr_user_email):
+        return jsonify({"message": f"Removed {curr_user_email} to group "})
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
 @group_bp.route("retrieve/curr/user/group", methods=["GET"])
 def get_curr_user_group():
-    user_group = group.get_user_group(session.get("user")["name"])
+    user_group = group.get_user_group(session.get("user")["preferred_username"])
     if user_group:
         return user_group
     else:

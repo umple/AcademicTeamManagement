@@ -123,7 +123,6 @@ const ProjectTable = () => {
     fetch("/api/projects")
       .then(response => response.json())
       .then(data => {
-
         setTableData(data);
       })
       .catch(error => {
@@ -151,12 +150,10 @@ const ProjectTable = () => {
 
   const [validationErrors, setValidationErrors] = useState({});
 
-  const handleCreateNewRow = (values) => { };
 
   const handleAddRow = useCallback(
     (newRowData) => {
-      setIsLoading(true);
-      fetch('api/project', {
+      fetch('/api/project', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -201,38 +198,31 @@ const ProjectTable = () => {
     setValidationErrors({});
   };
 
+  const handleDeleteRow = useCallback( (row) => {
+    if (!window.confirm(`Are you sure you want to delete ${row.getValue('project')}?`)) {
+      return;
+    }
+  
+    fetch(`api/project/delete/${row.original._id}`, {
+      method: 'DELETE'
+    })
+    .then(response => {
+      if (response.ok) {
+        fetchProjects();
+      } else {
+        console.error('Error deleting row');
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }, []);
 
   // For the model to view project applications
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-
-
-  // To delete the row
-  const handleDeleteRow = useCallback(
-    (row) => {
-      if (!window.confirm(`Are you sure you want to delete ${row.getValue('Project')}`)) {
-        return;
-      }
-
-      fetch(`api/project/delete/${row.original._id}`, {
-        method: "DELETE"
-      })
-        .then(response => {
-          if (response.ok) {
-            fetchProjects();
-          } else {
-            console.error("Error deleting row");
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    },
-    [],
-  );
-
+ 
   function getDate() {
     const today = new Date();
     const year = today.getFullYear();
@@ -402,8 +392,10 @@ const ProjectTable = () => {
                                       View Application
                                     </Button>
                                     <ViewApplicationModal
+                                      fetchProjects={fetchProjects}
                                       setShowAlert={setShowAlert}
                                       data={groupApplication}
+                                      project={project}
                                       open={open}
                                       onClose={handleClose}
                                       onSubmit={() => setOpen(false)}
@@ -456,11 +448,10 @@ const ProjectTable = () => {
             )}
           />
           <CreateNewProjectModal
+            handleAddRow={handleAddRow}
             columns={columns}
             open={createModalOpen}
             onClose={() => setCreateModalOpen(false)}
-            onSubmit={handleCreateNewRow}
-            onAddRow={handleAddRow}
             fetchProjects={fetchProjects}
           />
         </>
@@ -470,7 +461,7 @@ const ProjectTable = () => {
 };
 
 //Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchProjects }) => {
+export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, handleAddRow }) => {
 
   const cellValueMap = [
     { value: 'new', label: 'success' },
@@ -487,31 +478,19 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
     }, {}),
   );
 
-  const handleSubmit = () => {
-    fetch("api/project", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(values)
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    handleAddRow(values);
+    Object.entries(values).map(([key,value]) =>{
+      values[key] = ''
     })
-      .then(response => {
-        if (response.ok) {
-          fetchProjects();
-          setValues({});
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    onSubmit(values);
     onClose();
   };
 
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Create New Project</DialogTitle>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{
@@ -560,7 +539,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
         </DialogContent>
         <DialogActions sx={{ p: '1.25rem' }}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" onClick={handleSubmit} variant="contained" type="submit">
+          <Button color="secondary" type="submit" variant="contained">
             Create New Project
           </Button>
         </DialogActions>
@@ -571,12 +550,29 @@ export const CreateNewProjectModal = ({ open, columns, onClose, onSubmit, fetchP
 
 
 //Modal to view application
-export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAlert}) => {
+export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAlert, project, fetchProjects}) => {
   const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState('');
   const [studentsNeeded, setStudentsNeeded] = useState(false);
    
 
   const handleSubmit = () => {
+    const myObject = {
+      'group_id': data.group_id,
+      'project_id': project
+    }
+    fetch("api/assign/project/to/group", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(myObject),
+    })
+      .then((response) => { return response.json() })
+      .then((data) => {
+        fetchProjects()
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 5000);
+      })
     onSubmit();
     onClose();
   };

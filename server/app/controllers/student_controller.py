@@ -27,7 +27,6 @@ def get_students():
 def add_student():
     try:
         student_obj = request.json
-        print(student_obj)
         result = student.add_student(student_obj)
         if result:
             return jsonify(str(result.inserted_id)), 201
