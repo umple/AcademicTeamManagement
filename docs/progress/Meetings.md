@@ -122,3 +122,12 @@
     - Finish UI components for student view
     - Finish connecting UI with database
     - Prepare for final presentation
+
+## 04/10/2023
+- Team
+- **Next meeting:** TBD
+    -  Preparation for presentation on April 11
+- **To do:** 
+    - Clean up UI
+    - Add validation to forms
+    - Ensure that all API calls work properly with extensive testing
