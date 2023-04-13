@@ -28,7 +28,7 @@ const ResponsiveAppBar = () => {
 
   const location = useLocation();
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const [isStudent, setIsStudent] = useState(true); // By default, we set the user to Student
+  const [userType, setUserType] = useState(null);
 
   useEffect(() => {
     // Get user type information from the /getusertype endpoint
@@ -38,12 +38,26 @@ const ResponsiveAppBar = () => {
     })
       .then(response => response.json())
       .then(data => {
-        if (data.userType) setIsStudent(data.userType === 'student');
+        if (data.userType) setUserType(data.userType);
       });
-  }, [setIsStudent])
+  }, [userType])
 
   // set the nav elements according to the user type
-  const pages = isStudent ? studentPages : professorPages;
+  let pages = {};
+
+  // Check user type to assign navbar elements
+  switch (userType) {
+    case 'student':
+      pages = studentPages;
+      break;
+
+    case 'professor':
+      pages = professorPages;
+      break;
+
+    default:
+      break;
+  }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
