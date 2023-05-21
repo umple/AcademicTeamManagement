@@ -131,3 +131,14 @@
     - Clean up UI
     - Add validation to forms
     - Ensure that all API calls work properly with extensive testing
+
+## 05/21/2023
+- Team
+- **Next meeting:** 2-3 weeks
+- **Summary:**
+    -  Chatted about our goals for the summer
+    -  Added issues to fix over the summer
+    -  Assigned issues to team members
+- **To do:** 
+    - Start working on issues
+    - Meet up with Prof. Lethbridge to fix his setup
