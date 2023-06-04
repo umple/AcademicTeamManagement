@@ -6,6 +6,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { getUserType, clearCachedUserType } from '../../Utils/UserType';
 
 // Nav elements to display for the students
 const studentPages = {
@@ -31,16 +32,14 @@ const ResponsiveAppBar = () => {
   const [userType, setUserType] = useState(null);
 
   useEffect(() => {
-    // Get user type information from the /getusertype endpoint
-    fetch(`http://localhost:${process.env.REACT_APP_FLASK}/getusertype`, {
-      method: 'GET',
-      credentials: 'include' // include cookies in the request
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.userType) setUserType(data.userType);
+    getUserType()
+      .then((type) => {
+        setUserType(type)
+      })
+      .catch((error) => {
+        console.error(error);
       });
-  }, [userType])
+  }, [userType]);
 
   // set the nav elements according to the user type
   let pages = {};
@@ -67,6 +66,11 @@ const ResponsiveAppBar = () => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  const handleLogout = () => {
+    clearCachedUserType();
+    setAnchorElNav(null);
+  }
 
   // don't show navbar on the login page
   if (location.pathname === "/login") {
@@ -169,7 +173,7 @@ const ResponsiveAppBar = () => {
             </Box>
             <Button
               href={`http://localhost:${process.env.REACT_APP_FLASK}/api/logout`}
-              onClick={handleCloseNavMenu}
+              onClick={handleLogout}
               variant="outlined"
               endIcon={<LogoutIcon/>}
               sx={{ my: 2, color: 'white', borderColor: 'white' }}
