@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { getUserType, clearCachedUserType } from '../../Utils/UserType';
+import { clearCachedUserName } from '../../Utils/UserName';
 
 // Nav elements to display for the students
 const studentPages = {
@@ -69,6 +70,7 @@ const ResponsiveAppBar = () => {
 
   const handleLogout = () => {
     clearCachedUserType();
+    clearCachedUserName();
     setAnchorElNav(null);
   }
 
