@@ -1,11 +1,12 @@
 // Imports
 import React, { useState, useEffect } from 'react';
+import { getUserName } from '../Utils/UserName';
 import {
     makeStyles,
     Grid,
     Typography,
   } from "@material-ui/core";
-  
+
   // Styles
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,19 +31,18 @@ import {
   // StudentHomePage Component
   function StudentHomePage() {
     const classes = useStyles();
-    const [userName, setUserName] = useState("student");
+    const [userName, setUserName] = useState("");
 
+    // Retrieve the username
     useEffect(() => {
-      // Get user name information from the /getusername endpoint
-      fetch(`http://localhost:${process.env.REACT_APP_FLASK}/getusername`, {
-        method: 'GET',
-        credentials: 'include' // include cookies in the request
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.username) setUserName(data.username);
+      getUserName()
+        .then((name) => {
+          setUserName(name)
+        })
+        .catch((error) => {
+          console.error(error);
         });
-    }, [setUserName])
+    }, [setUserName]);
   
     return (
       <div className={classes.root}>
