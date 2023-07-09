@@ -46,8 +46,8 @@ def get_interested_groups():
 
 
 def add_project(project_obj):
-   if project_obj.get('status') == '':
-    project_obj['status'] = 'new'
+    if project_obj.get('status') == '':
+        project_obj['status'] = 'new'
 
     application = {
         'project': project_obj.get('project', ''),
