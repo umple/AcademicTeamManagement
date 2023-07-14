@@ -19,6 +19,7 @@ services:
       context: ./client
       args:
         - BACKEND_URL=http://flask-server:${FLASK}
+        - BACKEND_HOST=${BACKEND_HOST}
         - APP=${FLASK}
     env_file:
       - .env

@@ -2,6 +2,7 @@ FROM node:latest
 
 # Dynamically set the API endpoint, defaults to 5001
 ARG BACKEND_URL
+ARG BACKEND_HOST
 ARG APP
 
 ENV REACT_APP_FLASK $APP
