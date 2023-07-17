@@ -52,7 +52,7 @@ export default function LoginPage() {
               <Logo src="https://www.uottawa.ca/brand/sites/www.uottawa.ca.brand/files/4_2_0_horizontal_logo.png" alt="Company Logo" />
               <Box component="form" noValidate sx={{ mt: 1, width: '100%' }}>
                 <Link
-                  href={`${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_FLASK}/api/login`}
+                  href={`${process.env.REACT_APP_BACKEND_HOST}/api/login`}
                   type="submit"
                   fullWidth
                   variant="contained"
