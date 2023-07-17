@@ -13,7 +13,7 @@ export const getUserType = async () => {
   }
 
   try {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_FLASK}/getusertype`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/getusertype`, {
       method: 'GET',
       credentials: 'include' // include cookies in the request
     })

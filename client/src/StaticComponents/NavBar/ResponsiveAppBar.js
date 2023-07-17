@@ -174,7 +174,7 @@ const ResponsiveAppBar = () => {
                 ))}
             </Box>
             <Button
-              href={`${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_FLASK}/api/logout`}
+              href={`${process.env.REACT_APP_BACKEND_HOST}/api/logout`}
               onClick={handleLogout}
               variant="outlined"
               endIcon={<LogoutIcon/>}
