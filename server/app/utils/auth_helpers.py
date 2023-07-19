@@ -1,6 +1,10 @@
 import os
 
 def get_redirection_url_for_user(user_role: str):
+    
+    url = "http://localhost:" + os.getenv("REACT")
+    if os.getenv("BACKEND_HOST").find("localhost") == -1:
+        url = os.getenv("BACKEND_HOST")
 
     url = "http://localhost:" + os.getenv("REACT")
     if os.getenv("BACKEND_HOST").find("localhost") == -1:
