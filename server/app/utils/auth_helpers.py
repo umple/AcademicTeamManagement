@@ -11,5 +11,5 @@ def get_redirection_url_for_user(user_role: str):
     elif user_role == "professor":
         redirect_url = "%s/"%(url)
     else:
-        redirect_url = "%s/NotFound"%(url) # not implemented yet
+        redirect_url = "%s/login"%(url) # not implemented yet
     return redirect_url
