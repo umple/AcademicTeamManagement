@@ -47,7 +47,7 @@ def authentication(app):
             app_config.AUTHORITY + "/oauth2/v2.0/logout" +
             "?post_logout_redirect_uri=" + url_for("index", _external=True))
 
-    @app.route("/graphcall")
+    @app.route("/api/graphcall")
     def graphcall():
         token = _get_token_from_cache(app_config.SCOPE)
         if not token:
@@ -59,7 +59,7 @@ def authentication(app):
         return render_template('display.html', result=graph_data) # we should change this to point to the front-end
     
     @cross_origin(supports_credentials=True)
-    @app.route("/getusertype")
+    @app.route("/api/getusertype")
     def getusertype():
         if not session.get("user"):
             return jsonify({"error": "not logged in"}), 401, {'Access-Control-Allow-Credentials': 'true'}
@@ -68,7 +68,7 @@ def authentication(app):
         return jsonify(response), 200, {'Access-Control-Allow-Credentials': 'true'}
     
     @cross_origin(supports_credentials=True)
-    @app.route("/getusername")
+    @app.route("/api/getusername")
     def getusername():
         if not session.get("user"):
             return jsonify({"error": "not logged in"}), 401, {'Access-Control-Allow-Credentials': 'true'}
@@ -77,7 +77,7 @@ def authentication(app):
         return jsonify(response), 200, {'Access-Control-Allow-Credentials': 'true'}
     
     @cross_origin(supports_credentials=True)
-    @app.route("/checksession")
+    @app.route("/api/checksession")
     def checksession():
         if not session.get("user"):
             return jsonify({"error": "not logged in"}), 401, {'Access-Control-Allow-Credentials': 'true'}
