@@ -7,7 +7,7 @@ const PrivateRoutes = () => {
   const [auth, setAuth] = useState(true);
 
   // Check if user exists in the session
-  fetch(`${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_FLASK}/checksession`, {
+  fetch(`${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_FLASK}/api/checksession`, {
     method: 'GET',
     credentials: 'include' // include cookies in the request
   })

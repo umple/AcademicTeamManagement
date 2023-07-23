@@ -13,7 +13,7 @@ export const getUserName = async () => {
   }
 
   try {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/getusername`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/getusername`, {
       method: 'GET',
       credentials: 'include' // include cookies in the request
     })
