@@ -9,7 +9,7 @@ def get_redirection_url_for_user(user_role: str):
     if user_role == "student":
         redirect_url = "%s/StudentHome"%(url)
     elif user_role == "professor":
-        redirect_url = "%s/"%(url)
+        redirect_url = "%s/ProfessorHome"%(url)
     else:
-        redirect_url = "%s/login"%(url) # not implemented yet
+        redirect_url = "%s/"%(url) # not implemented yet
     return redirect_url

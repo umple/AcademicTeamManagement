@@ -30,7 +30,7 @@ const App = () => {
             <Route element={<PrivateRoutes />}>
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR}/>}>
-                <Route path='/' element={<HomePage/>}></Route>
+                <Route path='/ProfessorHome' element={<HomePage/>}></Route>
                 <Route path='/Students' element={<StudentTable/>}></Route>
                 <Route exact path='/Projects' element={<ProjectTable/>}></Route>
                 <Route path='/ImportStudents' element={<ImportStudents/>}></Route>
@@ -45,6 +45,7 @@ const App = () => {
               </Route>
 
             </Route>
+            <Route path='/' element={<LoginPage/>}></Route>
             <Route path='/login' element={<LoginPage/>}></Route>
             <Route path="*" element={<PageNotFound />} />
           </Routes >
