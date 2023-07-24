@@ -14,7 +14,7 @@ def authentication(app):
     from werkzeug.middleware.proxy_fix import ProxyFix
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-    @app.route("/api")
+    @app.route("/api/")
     def index():
         if not session.get("user"):
             return redirect(url_for("login"))
