@@ -19,7 +19,7 @@ const studentPages = {
 
 // Nav elements to display for the professor
 const professorPages = {
-  page1: {key: 'Home', value:'/'},
+  page1: {key: 'Home', value:'/ProfessorHome'},
   page2: {key: 'Projects', value:'/Projects'},
   page3: {key:'Groups', value:'/GroupView'},
   page4: {key: 'Students', value:'/Students'},
@@ -75,10 +75,9 @@ const ResponsiveAppBar = () => {
   }
 
   // don't show navbar on the login page
-  if (location.pathname === "/login") {
+  if (location.pathname === "/login" || location.pathname === "/") {
     return null;
   }
- 
 
   return (
    
