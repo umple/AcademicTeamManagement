@@ -36,7 +36,7 @@ import {
         <Grid container spacing={4} justifyContent="center" alignItems="center">
           <Grid item sm={6} className={classes.column1}>
             <Typography variant="h3" className={classes.title} gutterBottom>
-              Page Not Found - this is a new release
+              Page Not Found - this is a new release as of 23/07/2023
             </Typography>
             <Typography variant="h1" className={classes.ErrorDescription} gutterBottom>
                 Make sure that you are in the correct path

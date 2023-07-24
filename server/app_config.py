@@ -7,7 +7,7 @@ CLIENT_SECRET = getDecryptedSecret("CLIENT_SECRET") # Placeholder - for use ONLY
 
 AUTHORITY = getDecryptedSecret("AUTHORITY")  # For multi-tenant app
 
-REDIRECT_PATH = "/getAToken"  # Used for forming an absolute URL to the redirect URI.
+REDIRECT_PATH = "/api/getAToken"  # Used for forming an absolute URL to the redirect URI.
 
 ENDPOINT = 'https://graph.microsoft.com/v1.0/users'  # This resource requires no admin consent
 
