@@ -49,17 +49,18 @@ def add_project(project_obj):
     if project_obj.get('status') == '':
         project_obj['status'] = 'new'
 
-    application = {
+    project = {
         'project': project_obj.get('project', ''),
         'description': project_obj.get('description', ''),
-        'client': project_obj.get('client', ''),
+        'clientName': project_obj.get('clientName', ''),
+        'clientEmail': project_obj.get('clientEmail', ''),
         'status': project_obj.get('status', 'new'),
         'interested groups': [],
         'group': project_obj.get('group', ''),
         'visibility': project_obj.get('visibility', ''),
         'notes': project_obj.get('notes', '')
     }
-    result = projectCollection.insert_one(application)
+    result = projectCollection.insert_one(project)
     return result
 
 
