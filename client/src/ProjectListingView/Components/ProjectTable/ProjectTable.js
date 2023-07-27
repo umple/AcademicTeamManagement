@@ -522,7 +522,10 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
               }
               if (column.accessorKey === 'status') {
                 return (
+                  <FormGroup>
+                  <InputLabel id = "status-label">Status</InputLabel>
                   <Select
+                    labelId='status-label'
                     key={column.accessorKey}
                     label={column.header}
                     name={column.accessorKey}
@@ -537,6 +540,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
                       </MenuItem>
                     ))}
                   </Select>
+                  </FormGroup>
                 )
               }
               return (
