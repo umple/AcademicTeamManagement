@@ -5,9 +5,9 @@ export PRIVATE_KEY_PATH=../privateKey/AcademicTeamManagement.pem
 export REACT=3000
 export MONGO=27017
 export FLASK=5001
-export MONGODB_INITDB_ROOT_USERNAME=
-export MONGODB_INITDB_ROOT_PASSWORD=
-export MONGODB_HOST=mongodb_host
+export MONGODB_INITDB_ROOT_USERNAME=root
+export MONGODB_INITDB_ROOT_PASSWORD=pass
+export MONGODB_HOST=localhost
 export BACKEND_HOST=http://localhost:5001
 cd server
 

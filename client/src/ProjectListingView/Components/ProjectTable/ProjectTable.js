@@ -51,8 +51,13 @@ const ProjectTable = () => {
         header: 'Description',
       },
       {
-        accessorKey: 'client',
-        header: 'Client',
+        accessorKey: 'clientName',
+        header: "Client's Full Name",
+      },
+
+      {
+        accessorKey: 'clientEmail',
+        header: "Client's Email Address",
       },
       {
         accessorKey: 'status',
@@ -543,6 +548,8 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
                   onChange={(e) => {
                     setValues({ ...values, [e.target.name]: e.target.value })
                   }}
+                  multiline={column.accessorKey === "description"}
+                  rows={column.accessorKey === "description" ? 5 : 1}
                 />
               )
             })}
