@@ -5,8 +5,8 @@ import {
   Button,
   Typography,
   FormHelperText,
+  Paper
 } from "@material-ui/core";
-import PublishIcon from '@mui/icons-material/Publish';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,12 +37,46 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: "flex-end",
     fontSize: "1.2rem",
   },
+    // Add specific style for the drop area
+    dropArea: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      border: "2px dashed #ccc",
+      borderRadius: "4px",
+      padding: "2rem",
+      width: "80%",
+      cursor: "pointer",
+      backgroundColor: "#f9f9f9",
+    },
+  
+    // Add style for highlighting the drop area when a file is dragged over it
+    dropAreaActive: {
+      backgroundColor: "#e0e0e0",
+    },
 }));
 
 const ImportStudents = (props) => {
   const classes = useStyles();
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
+  const [isDragActive, setIsDragActive] = useState(false); // State to track if a file is being dragged over the drop area
+
+  const handleDragEnter = (event) => {
+    event.preventDefault();
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = (event) => {
+    event.preventDefault();
+    setIsDragActive(false);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setIsDragActive(false);
+    setFile(event.dataTransfer.files[0]);
+  };
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
@@ -70,7 +104,7 @@ const ImportStudents = (props) => {
       })
       .then((data) => {
         const excelData = data; // assuming the response is an array of objects
-       
+
         props.fetchStudents();
         props.handleImportSuccess(true);
         props.closeModal();
@@ -80,12 +114,11 @@ const ImportStudents = (props) => {
       });
   };
 
-
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '30px' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
       <form onSubmit={handleSubmit} className={classes.container}>
         {file ? (
-          <Box className={classes.fileBox}>
+          <Box className={classes.fileBox} >
             <CloudUploadIcon sx={{ fontSize: '4rem', color: '#999' }} />
             <Box sx={{ mt: '1rem' }}>
               <strong>{file.name}</strong>
@@ -95,18 +128,39 @@ const ImportStudents = (props) => {
             </Button>
           </Box>
         ) : (
-          <Box className={classes.fileBox}>
-            <Box sx={{ mb: '1rem' }}>Drag and drop your file here or</Box>
+          <Box
+            className={`${classes.fileBox} ${isDragActive ? classes.dropAreaActive : ""}`}
+            sx={{ width: 600 }}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <p style={{ color: "#3c90f0", fontWeight: "bold" }}>Expected Template:</p>
+            <iframe style={{ height: 100, width: '100%' }} src="assets/student_import_template.html"></iframe>
+            <p sx={{ mb: '1rem' }}>Drag and drop your file here</p>
+            <br></br>
             <input
               accept="*"
+              htmlFor="input-file-upload"
               className={classes.input}
               id="contained-button-file"
               type="file"
               onChange={handleChange}
             />
-            <label htmlFor="contained-button-file" className={classes.buttonLabel}>
-              <Button variant="contained" color="success" component="span" >
+            <br></br>
+            <br></br>
+            <label sx={{ m: '10rem' }} htmlFor="contained-button-file" className={classes.buttonLabel}>
+              <Button variant="contained" color="warning" component="span" >
                 Browse Files
+              </Button>
+            </label>
+            <label>
+              <Button color="primary" variant="contained">
+                <a style={{ all: "unset" }} href="assets/student_import_template.xlsx">
+                  Download Template
+                </a>
+
               </Button>
             </label>
 
