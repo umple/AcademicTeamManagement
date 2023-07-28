@@ -80,7 +80,7 @@ const StudentTable = () => {
         header: 'Section',
       },
       {
-        accessorKey: 'calculated final grade numerator',
+        accessorKey: 'final grade',
         header: 'Final Grade',
       },
     ],
