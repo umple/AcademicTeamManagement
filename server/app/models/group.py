@@ -3,6 +3,7 @@ from flask import redirect, url_for
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
 import app.models.student as student
+import app.models.project as project
 import pandas as pd
 import json
 
@@ -17,6 +18,11 @@ def get_all_groups():
 
 def add_group(group_obj):
     result = groupCollection.insert_one(group_obj)
+    for id in group_obj["members"]:
+        student.assign_group_to_student(id, groupName= group_obj["group_id"])
+
+    project.change_status(group_obj["project"], "assigned")
+
     return result
 
 def get_group(id):
@@ -36,15 +42,14 @@ def add_student_to_group(student_email, group_id):
     student_obj = student.get_student_by_email(student_email)
     group_obj = get_group(group_id)
     student_name =  student_obj['firstname'] + ' ' + student_obj['lastname']
-     
+
     if student_name in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"_id": ObjectId(group_obj["_id"])},
         {"$push": {"members": str(student_name)}})
-      
-   
+    
     if result.modified_count > 0:
         return True
     return False
@@ -82,12 +87,30 @@ def is_user_in_group(user_name):
     else:
         return False
 
-def update_group_by_id(id, project_obj):
-    result = groupCollection.replace_one({"_id": ObjectId(id)}, project_obj)
-    return json.dumps(result)
+def update_group_by_id(id, group_obj):
+
+    originalGroup  = get_group(id)
+    if group_obj["members"] != "":
+        group_obj["members"] =  group_obj["members"].split(",")
+    else:
+        group_obj["members"] = []
+
+    if originalGroup["group_id"] != group_obj["group_id"]:
+        for orgdefinedId in group_obj["members"]:
+                result = student.assign_group_to_student(orgdefinedId, groupName= group_obj["group_id"])
+    
+    project.change_status(group_obj["project"], "assigned")       
+    
+    result = groupCollection.update_one({"_id": ObjectId(id)},  {"$set" : group_obj})
+    
+    return result
 
 def delete_group_by_id(id):
+    originalGroup  = get_group(id)
+    for orgdefinedId in originalGroup["members"]:
+            result = student.assign_group_to_student(orgdefinedId, groupName=None)
     result = groupCollection.delete_one({"_id": ObjectId(id)})
+    project.change_status(originalGroup["project"], "students needed")
     return result
 
 def add_project_to_group(group_obj,proj_obj):

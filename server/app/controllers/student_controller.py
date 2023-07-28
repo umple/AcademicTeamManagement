@@ -79,14 +79,14 @@ def import_students():
         file = request.files["file"]
         columns = json.loads(request.form["column"])
         accessor_keys = [column['accessorKey'] for column in columns]
-
+        
         result = student.import_students(file, accessor_keys)
         json_dict = json.loads(result)
 
         for res in json_dict:
             if (student.get_student_by_username(res["username"]) == None):
                 student.add_import_student(res)
-        
+
         return result, 201
     except :
         return {"message": "Internal server error."}, 500
