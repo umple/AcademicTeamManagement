@@ -34,7 +34,8 @@ const GroupTable = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [projects, setProjects] = useState([])
   const [students, setStudents] = useState([])
-  let fetchComplete = false
+  const [message, setMessage] =  useState("")
+
   const fetchData = () => {
     Promise.all(
       [
@@ -61,7 +62,6 @@ const GroupTable = () => {
 
   useEffect(() => {
     fetchData();
-    fetchComplete = true
   }, []);
 
   const columns = useMemo(() => [
@@ -125,8 +125,11 @@ const GroupTable = () => {
         body: JSON.stringify(newRowData)
       })
         .then(response => {
+          console.log(response.ok)
           if (response.ok) {
             fetchData();
+          }else if(response.status === 409){
+            setMessage("The group already exists") // 5 seconds delay
           }
         }).catch(error => {
           console.error(error);
@@ -246,7 +249,7 @@ const GroupTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Groups</Typography>
-
+      {message === "" ? "" : <Alert severity="warning">{message}</Alert>}
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {

@@ -24,7 +24,9 @@ def add_group():
     try:
         group_obj = request.json
         result = group.add_group(group_obj)
-        if result:
+        if result == 409:
+            return {"message" : "Group Names need to be unique"}, 409
+        elif result:
             return jsonify(str(result.inserted_id)), 201
         else:
             return {"message": "Could not add student."}, 404
