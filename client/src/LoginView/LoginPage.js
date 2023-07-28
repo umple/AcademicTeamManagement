@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Avatar, Button, Link, Box, Typography, Container, CssBaseline } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Button, Link, Box, Container, CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import styled from 'styled-components';
 

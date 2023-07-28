@@ -3,16 +3,9 @@ import MaterialReactTable from 'material-react-table';
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  TextField,
   Typography,
   Alert,
   Snackbar,
-  Backdrop
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -24,7 +17,6 @@ const StudentGroupTable = () => {
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
   const [showAlert, setShowAlert] = useState(false);
   const [showJoinedTeam, setShowJoinedTeam] = useState(false);
-  const [isPageDisabled, setIsPageDisabled] = useState(false);
   const [loading, setIsLoading] = useState(false);
    
 

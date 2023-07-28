@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   IconButton,
   Stack,
   TextField,
@@ -15,7 +14,6 @@ import {
   Typography,
   Select,
   MenuItem,
-  cellValueMap,
   InputLabel
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -41,7 +39,7 @@ const GroupTable = () => {
       Promise.all([resGroups.json(), resProjects.json()])
       ).then(([groups, projects]) => {
         setTableData(groups)
-        projects = projects.filter(project => project.status != "assigned")
+        projects = projects.filter(project => project.status !== "assigned")
         setProjects(projects)
       });
 
@@ -132,17 +130,6 @@ const GroupTable = () => {
     setValidationErrors({});
   };
 
-  const style = {
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
@@ -194,7 +181,6 @@ const GroupTable = () => {
 
       // sort the keys as they appear in the columns
       const orderedKeys = columns.map(key => key.accessorKey)
-      console.log(orderedKeys)
       updatedJsonObject = Object.keys(updatedJsonObject)
         .sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b)) // sort keys in the order of the updated keys
         .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}) // create a new object with sorted keys
@@ -339,7 +325,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
         if (response.ok) {
           fetchData();
           Object.entries(values).map(([key,value]) =>{
-            if (key == 'members'){
+            if (key === 'members'){
               values[key] = []
             } else {
               values[key] = ''

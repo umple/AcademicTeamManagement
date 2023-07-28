@@ -88,7 +88,7 @@ const StudentTable = () => {
   );
 
   // For the create profile modal
-  const [columns, setColumns] = useState(defaultColumns);
+  const [columns] = useState(defaultColumns);
   const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -172,11 +172,6 @@ const StudentTable = () => {
     setValidationErrors({});
   };
 
-  // For the model to view student applications
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   // To delete the row
   const handleDeleteRow = useCallback(
     (row) => {
@@ -237,7 +232,6 @@ const StudentTable = () => {
 
       // sort the keys as they appear in the columns
       const orderedKeys = columns.map(key => key.accessorKey)
-      console.log(orderedKeys)
       updatedJsonObject = Object.keys(updatedJsonObject)
         .sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b)) // sort keys in the order of the updated keys
         .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}) // create a new object with sorted keys
