@@ -16,12 +16,16 @@ import {
   Select,
   MenuItem,
   cellValueMap,
-  InputLabel
+  InputLabel,
+  OutlinedInput,
+  Alert
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
 import { Delete, Edit } from '@mui/icons-material';
 import { FormControl } from '@material-ui/core';
+import Chip from '@mui/material/Chip';
+import { Theme, useTheme } from '@mui/material/styles';
 
 const GroupTable = () => {
 
@@ -30,27 +34,36 @@ const GroupTable = () => {
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
   const [projects, setProjects] = useState([])
+  const [students, setStudents] = useState([])
+  let fetchComplete = false
   const fetchData = () => {
-
     Promise.all(
       [
         fetch("/api/groups"),
-        fetch("/api/projects")
+        fetch("/api/projects"),
+        fetch("/api/students")
       ])
-      .then(([resGroups, resProjects]) => 
-      Promise.all([resGroups.json(), resProjects.json()])
-      ).then(([groups, projects]) => {
+      .then(([resGroups, resProjects, resStudents]) =>
+        Promise.all([resGroups.json(), resProjects.json(), resStudents.json()])
+      ).then(([groups, projects, students]) => {
+        
         setTableData(groups)
-        projects = projects.filter(project => project.status != "assigned")
-        setProjects(projects)
+        
+        // Filter projects
+        if (projects.message !== "Project list is empty."){
+          projects = projects.filter(project => project.status != "assigned")
+          setProjects(projects)
+        }
+
+        if (students.message !== "Student list is empty."){
+          setStudents(students)
+        }
       });
-
   };
-
-
 
   useEffect(() => {
     fetchData();
+    fetchComplete = true
   }, []);
 
   const columns = useMemo(() => [
@@ -62,8 +75,28 @@ const GroupTable = () => {
       accessorKey: 'members',
       header: 'Members',
       Cell: ({ cell }) => {
+
         if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
-          return cell.getValue("members").map((item, index) => <tr>{item}</tr>);
+          if (students.length !== 0){
+            return cell.getValue("members").map((value, index) => {
+              let student = students.find((student) => {
+                return student.orgdefinedid === value
+              });
+              
+              if (typeof student !== "undefined"){
+                let display = student.firstname + " " + student.lastname;
+                return (
+                <div>
+                  <Chip sx = {{ marginBottom: "5px",}} color="success" label={display} />
+                </div>
+                )
+              }
+            });
+          }else{
+            
+          }
+        }else{
+          return <Chip sx = {{ marginBottom: "5px",}} color="error" label={"Empty Group"} />
         }
       }
     },
@@ -79,7 +112,7 @@ const GroupTable = () => {
       accessorKey: 'notes',
       header: 'Notes'
     },
-  ], []);
+  ], [students]);
 
   const handleCreateNewRow = (values) => { };
 
@@ -126,6 +159,7 @@ const GroupTable = () => {
         });
       exitEditingMode();
     }
+    fetchData()
   };
 
   const handleCancelRowEdits = () => {
@@ -194,7 +228,6 @@ const GroupTable = () => {
 
       // sort the keys as they appear in the columns
       const orderedKeys = columns.map(key => key.accessorKey)
-      console.log(orderedKeys)
       updatedJsonObject = Object.keys(updatedJsonObject)
         .sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b)) // sort keys in the order of the updated keys
         .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}) // create a new object with sorted keys
@@ -292,14 +325,49 @@ const GroupTable = () => {
         onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
         fetchData={fetchData}
-        projects = {projects}
+        projects={projects}
+        students={students}
       />
     </Box>
   );
 };
 
 //Modal to create new Group
-export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchData, projects }) => {
+export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchData, projects, students }) => {
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  function getStyles(name, members, theme) {
+    return {
+      fontWeight:
+        members.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+  const theme = useTheme();
+  const [members, setMembers] = useState([])
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setMembers(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -307,27 +375,18 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
     }, {}),
   );
 
-  const [inputs, setInputs] = useState(['']);
+  // log error 
+  const [err, setError] = useState("")
 
-  const addInput = () => {
-    if (inputs.length < 5) {
-      setInputs([...inputs, ''])
+  values["members"] = members
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (values["group_id"] === "") {
+      setError("Please Enter a Group Name")
+      return
     }
-  }
+    setError("")
 
-  const handleInputChange = (index, value) => {
-    const newInputs = [...inputs]
-    newInputs[index] = value
-    setInputs(newInputs)
-  }
-
-  const handleRemoveInput = (index) => {
-    const newInputs = [...inputs]
-    newInputs.splice(index, 1)
-    setInputs(newInputs)
-  }
-  values["members"] = inputs
-  const handleSubmit = () => {
     fetch("api/group", {
       method: "POST",
       headers: {
@@ -338,14 +397,14 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
       .then(response => {
         if (response.ok) {
           fetchData();
-          Object.entries(values).map(([key,value]) =>{
-            if (key == 'members'){
+          Object.entries(values).map(([key, value]) => {
+            if (key == 'members') {
               values[key] = []
             } else {
               values[key] = ''
             }
-          }) 
-          setInputs([])
+          })
+          setMembers([])
         }
       })
       .catch(error => {
@@ -356,8 +415,11 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
     onClose();
   };
 
+
   return (
     <Dialog open={open}>
+      {err === "" ? "" : <Alert severity="error">{err}</Alert>}
+
       <DialogTitle textAlign="center">Create New Group</DialogTitle>
       <form onSubmit={(e) => e.preventDefault()}>
         <DialogContent>
@@ -368,52 +430,66 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
               gap: '1.5rem',
             }}
           >
-            
+
             {columns.map((column) => {
 
               if (column.accessorKey === 'members') {
-                const inputFields = inputs.map((input, i) => (
-                  <div key={`student-${i}`} style={{ display: 'block', marginTop: "0.5rem" }}>
-                    <TextField
-                      label={`Student ${i + 1}`}
-                      value={input}
-                      onChange={(e) => handleInputChange(i, e.target.value)}
-                    />
-                    <Button onClick={() => handleRemoveInput(i)}>Remove</Button>
-                  </div>
-                ))
-
                 return (
-                  <div>
-                    {inputFields}
-                    {inputs.length < 5 && (
-                      <div style={{ display: 'block' }}>
-                        <Button onClick={addInput}>Add Student</Button>
-                      </div>
-                    )}
-                  </div>
+                  <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="demo-multiple-chip-label">Members</InputLabel>
+                    <Select
+                      labelId="demo-multiple-chip-label"
+                      id="demo-multiple-chip"
+                      multiple
+                      value={members}
+                      onChange={handleChange}
+                      input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                      renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          {selected.map((value) => {
+                            let student = students.find((student) => student.orgdefinedid === value);
+                            let display = student.orgdefinedid + " - " + student.firstname + " " + student.lastname;
+                            return <Chip color="primary" key={value} label={display}/>
+                      })}
+                        </Box>
+                      )}
+                      MenuProps={MenuProps}
+                    >
+
+                      {  students.length > 0 && students.map((student) => {
+                        if (student.group === null){ 
+                        return <MenuItem
+                          key={student.orgdefinedid }
+                          value={student.orgdefinedid}
+                          style={getStyles(student.firstname, members, theme)}
+                        >
+                          {student.orgdefinedid + " - " + student.firstname + " " + student.lastname}
+                        </MenuItem> }
+              })}
+                    </Select>
+                  </FormControl>
                 )
-              } 
+              }
 
               if (column.accessorKey === 'project') {
                 return (
                   <FormControl>
-                  <InputLabel id = "project-label">Project</InputLabel>
-                  <Select
-                    labelId = "project-label"
-                    key={column.accessorKey}
-                    name={column.accessorKey}
-                    value={values[column.accessorKey]}
-                    onChange={(e) => {
-                      setValues({ ...values, [e.target.name]: e.target.value })
-                    }}
-                  >
-                    {projects.map((option) => (
-                      <MenuItem key={option.project} value={option.project} >
-                        {option.project}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    <InputLabel id="project-label">Project</InputLabel>
+                    <Select
+                      labelId="project-label"
+                      key={column.accessorKey}
+                      name={column.accessorKey}
+                      value={values[column.accessorKey]}
+                      onChange={(e) => {
+                        setValues({ ...values, [e.target.name]: e.target.value })
+                      }}
+                    >
+                      {projects.map((option) => (
+                        <MenuItem key={option.project} value={option.project} >
+                          {option.project}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 )
               }

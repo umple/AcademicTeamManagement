@@ -15,12 +15,14 @@ def get_all_student():
 
 def add_student(student_obj):
     # CHECKS FOR EXISTING USER
-    if (get_student_by_username(student_obj["username"] ) == None):
+    if (get_student_by_username(student_obj["orgdefinedid"] ) == None):
+        student_obj["group"] = None
         result = studentsCollection.insert_one(student_obj)
         return result
     return None
 
 def add_import_student(student_obj):
+    student_obj["group"] = None
     studentsCollection.insert_one(student_obj)
    
 def get_student_by_id(id):
@@ -48,7 +50,19 @@ def get_student_by_username(username):
     return document
 
 def update_student_by_id(id, student_obj):
-    result = studentsCollection.replace_one({"_id": ObjectId(id)}, student_obj)
+    result = studentsCollection.update_one({"_id": ObjectId(id)}, {
+        "$set":student_obj
+    })
+    return result
+
+def assign_group_to_student(orgdefinedid, groupName):
+    result = studentsCollection.update_one(
+        {"orgdefinedid" : orgdefinedid}, 
+        {"$set" : {
+            "group": groupName
+        }
+        }
+    )
     return result
 
 def delete_student_by_id(id):

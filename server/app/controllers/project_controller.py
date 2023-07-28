@@ -21,8 +21,6 @@ def get_projects():
     
 
 # POST Request to add a new student to the list
-
-
 @project_bp.route("/project", methods=["POST"])
 def add_Project():
     try:

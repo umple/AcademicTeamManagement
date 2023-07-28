@@ -79,7 +79,14 @@ def add_group_to_project(group_obj):
             {"$set": {"group": ObjectId(group_obj["group_id"])}}
         )
     return result1
- 
+
+def change_status(projectName, status):
+    result = projectCollection.update_one(
+            {"project": projectName},
+            {"$set": {"status": status}}
+        )
+    return result
+
 def add_interested_group_to_project(project_id,student_group):
     result = projectCollection.update_one(
             {"_id": ObjectId(project_id)},
