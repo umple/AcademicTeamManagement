@@ -34,8 +34,7 @@ import {
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
-import { Delete, Edit, Help, RepeatOneSharp } from '@mui/icons-material';
-import { createTheme } from '@mui/material/styles';
+import { Delete, Edit, Help } from '@mui/icons-material';
 
 
 const ProjectTable = () => {

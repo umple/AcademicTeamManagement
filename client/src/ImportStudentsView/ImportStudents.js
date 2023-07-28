@@ -1,12 +1,7 @@
 import { React, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@mui/material";
-import {
-  Button,
-  Typography,
-  FormHelperText,
-  Paper
-} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const useStyles = makeStyles((theme) => ({
@@ -103,8 +98,6 @@ const ImportStudents = (props) => {
         return response.json();
       })
       .then((data) => {
-        const excelData = data; // assuming the response is an array of objects
-
         props.fetchStudents();
         props.handleImportSuccess(true);
         props.closeModal();
@@ -137,7 +130,7 @@ const ImportStudents = (props) => {
             onDrop={handleDrop}
           >
             <p style={{ color: "#3c90f0", fontWeight: "bold" }}>Expected Template:</p>
-            <iframe style={{ height: 100, width: '100%' }} src="assets/student_import_template.html"></iframe>
+            <iframe title="student import" style={{ height: 100, width: '100%' }} src="assets/student_import_template.html"></iframe>
             <p sx={{ mb: '1rem' }}>Drag and drop your file here</p>
             <br></br>
             <input

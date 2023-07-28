@@ -1,14 +1,10 @@
 // MyGroup.js
 import React, { useState, useEffect, useMemo } from "react";
-import { Box, Button, Typography, Grid, Alert, Snackbar, TableRow, TableCell, Card, CardContent } from "@mui/material";
+import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link } from "react-router-dom";
 import MaterialReactTable from 'material-react-table';
 
-
-const linkStyle = {
-  textDecoration: "none",
-};
 
 const MyGroup = () => {
   

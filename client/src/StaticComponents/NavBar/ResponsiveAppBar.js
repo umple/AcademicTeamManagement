@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ResponsiveAppBar.css';
-import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, MenuItem} from '@mui/material';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, MenuItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useLocation } from 'react-router-dom';
@@ -163,7 +163,8 @@ const ResponsiveAppBar = () => {
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {Object.entries(pages).map(([key,value]) => (
-                <Button  
+                <Button
+                  key={key}  
                   href={value.value}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}

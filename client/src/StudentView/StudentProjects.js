@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
   TextField,
-  Modal,
   Dialog,
   DialogTitle,
   DialogContent,
