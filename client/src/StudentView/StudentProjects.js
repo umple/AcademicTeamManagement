@@ -134,7 +134,8 @@ function StudentProjects() {
     fetch("/api/projects")
       .then((response) => response.json())
       .then((data) => {
-        setProjects(data);
+        // check if we recieve a list of project or not
+        setProjects(data)? Array.isArray(data) : setProjects([])
       })
       .catch((error) => {
         console.error(error);
