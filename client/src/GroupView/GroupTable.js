@@ -47,13 +47,12 @@ const GroupTable = () => {
       ).then(([groups, projects, students]) => {
         
         setTableData(groups)
-        
+      
         // Filter projects
         if (projects.message !== "Project list is empty."){
           projects = projects.filter(project => project.status != "assigned")
           setProjects(projects)
         }
-
         if (students.message !== "Student list is empty."){
           setStudents(students)
         }
@@ -385,8 +384,8 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
       .then(response => {
         if (response.ok) {
           fetchData();
-          Object.entries(values).map(([key, value]) => {
-            if (key == 'members') {
+          Object.entries(values).map(([key,value]) =>{
+            if (key === 'members'){
               values[key] = []
             } else {
               values[key] = ''
