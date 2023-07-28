@@ -81,19 +81,7 @@ const StudentTable = () => {
       },
       {
         accessorKey: 'calculated final grade numerator',
-        header: 'Calculated Final Grade Numerator',
-      },
-      {
-        accessorKey: 'calculated final grade denominator',
-        header: 'Calculated Final Grade Denominator',
-      },
-      {
-        accessorKey: 'adjusted final grade numerator',
-        header: 'Adjusted Final Grade Numerator',
-      },
-      {
-        accessorKey: 'adjusted final grade denominator',
-        header: 'Adjusted Final Grade Denominator',
+        header: 'Final Grade',
       },
     ],
     [],
