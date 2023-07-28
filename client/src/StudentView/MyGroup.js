@@ -59,7 +59,6 @@ const MyGroup = () => {
       })
       .then((data) => {
 
-        console.log(applications)
         setProjectApplications(data);
         setIsLoading(false)
       })

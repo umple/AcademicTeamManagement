@@ -237,7 +237,6 @@ const StudentTable = () => {
 
       // sort the keys as they appear in the columns
       const orderedKeys = columns.map(key => key.accessorKey)
-      console.log(orderedKeys)
       updatedJsonObject = Object.keys(updatedJsonObject)
         .sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b)) // sort keys in the order of the updated keys
         .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}) // create a new object with sorted keys
