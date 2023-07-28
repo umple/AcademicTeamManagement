@@ -34,8 +34,7 @@ import {
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
-import { Delete, Edit, Help, RepeatOneSharp } from '@mui/icons-material';
-import { createTheme } from '@mui/material/styles';
+import { Delete, Edit, Help } from '@mui/icons-material';
 
 
 const ProjectTable = () => {
@@ -152,7 +151,6 @@ const ProjectTable = () => {
         setTimeout(() => setIsLoading(false), 2000);
       });
   }
-  console.log(Object.entries(applications))
 
   useEffect(() => {
     setIsLoading(true)
@@ -270,7 +268,6 @@ const ProjectTable = () => {
 
       // sort the keys as they appear in the columns
       const orderedKeys = columns.map(key => key.accessorKey)
-      console.log(orderedKeys)
       updatedJsonObject = Object.keys(updatedJsonObject)
         .sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b)) // sort keys in the order of the updated keys
         .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}) // create a new object with sorted keys

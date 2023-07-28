@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ResponsiveAppBar.css';
-import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, MenuItem} from '@mui/material';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, MenuItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
 import { getUserType, clearCachedUserType } from '../../Utils/UserType';
 import { clearCachedUserName } from '../../Utils/UserName';
 
@@ -28,14 +30,19 @@ const professorPages = {
 
 const ResponsiveAppBar = () => {
 
+  const navigate = useNavigate();
   const location = useLocation();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [userType, setUserType] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     getUserType()
       .then((type) => {
         setUserType(type)
+        if (type) {
+          setIsAuthenticated(true)
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -72,6 +79,10 @@ const ResponsiveAppBar = () => {
     clearCachedUserType();
     clearCachedUserName();
     setAnchorElNav(null);
+  }
+
+  const handleLogIn = () => {
+    navigate('/');
   }
 
   // don't show navbar on the login page
@@ -163,7 +174,8 @@ const ResponsiveAppBar = () => {
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {Object.entries(pages).map(([key,value]) => (
-                <Button  
+                <Button
+                  key={key}  
                   href={value.value}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
@@ -172,14 +184,25 @@ const ResponsiveAppBar = () => {
                 </Button >
                 ))}
             </Box>
-            <Button
-              href={`${process.env.REACT_APP_BACKEND_HOST}/api/logout`}
-              onClick={handleLogout}
-              variant="outlined"
-              endIcon={<LogoutIcon/>}
-              sx={{ my: 2, color: 'white', borderColor: 'white' }}
-            >Log out</Button>
-            
+            {
+              isAuthenticated ? 
+                <Button
+                  href={`${process.env.REACT_APP_BACKEND_HOST}/api/logout`}
+                  onClick={handleLogout}
+                  variant="outlined"
+                  endIcon={<LogoutIcon/>}
+                  sx={{ my: 2, color: 'white', borderColor: 'white' }}
+                  >Log out
+                </Button> 
+                : 
+                <Button
+                  onClick={handleLogIn}
+                  variant="outlined"
+                  endIcon={<LoginIcon/>}
+                  sx={{ my: 2, color: 'white', borderColor: 'white' }}
+                  >Log In
+                </Button> 
+            }
           </Toolbar>
       </AppBar>
 
