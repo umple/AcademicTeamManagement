@@ -20,9 +20,8 @@ def add_group(group_obj):
     result = groupCollection.insert_one(group_obj)
     for id in group_obj["members"]:
         student.assign_group_to_student(id, groupName= group_obj["group_id"])
-
+    
     project.change_status(group_obj["project"], "assigned")
-
     return result
 
 def get_group(id):
@@ -31,6 +30,7 @@ def get_group(id):
         return result
     else:
         return None
+
 def get_group_by_group_name(name):
     result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
     if result:
@@ -61,7 +61,7 @@ def remove_student_from_group(student_email):
     print(student_name)
     if student_name not in student_group['members']:
         return False
-
+        
     result = groupCollection.update_one(
         {"_id": ObjectId(student_group['_id'])},
         {"$pull": {"members": student_name}}
@@ -69,7 +69,7 @@ def remove_student_from_group(student_email):
     if result.modified_count > 0:
         return True
     return False
- 
+
 def get_user_group(user_email):
     student_name = student.get_student_name_from_email(user_email)
     group_collection = groupCollection.find_one({"members": student_name})
@@ -88,6 +88,9 @@ def is_user_in_group(user_name):
         return False
 
 def update_group_by_id(id, group_obj):
+    # Validate group name does not exist
+    # if get_group_by_group_name(group_obj["group_id"]) != None:
+    #     return
 
     originalGroup  = get_group(id)
     if group_obj["members"] != "":

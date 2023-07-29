@@ -34,7 +34,8 @@ const GroupTable = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [projects, setProjects] = useState([])
   const [students, setStudents] = useState([])
-  let fetchComplete = false
+  const [message, setMessage] =  useState("")
+
   const fetchData = () => {
     Promise.all(
       [
@@ -61,7 +62,6 @@ const GroupTable = () => {
 
   useEffect(() => {
     fetchData();
-    fetchComplete = true
   }, []);
 
   const columns = useMemo(() => [
@@ -125,8 +125,11 @@ const GroupTable = () => {
         body: JSON.stringify(newRowData)
       })
         .then(response => {
+          console.log(response.ok)
           if (response.ok) {
             fetchData();
+          }else if(response.status === 409){
+            setMessage("The group already exists") // 5 seconds delay
           }
         }).catch(error => {
           console.error(error);
@@ -246,7 +249,7 @@ const GroupTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Groups</Typography>
-
+      {message === "" ? "" : <Alert severity="warning">{message}</Alert>}
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -314,13 +317,14 @@ const GroupTable = () => {
         fetchData={fetchData}
         projects={projects}
         students={students}
+        groups ={tableData}
       />
     </Box>
   );
 };
 
 //Modal to create new Group
-export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchData, projects, students }) => {
+export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchData, projects, students, groups}) => {
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -332,6 +336,23 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
       },
     },
   };
+
+  function validateFields(){
+    if (values["group_id"] === "") {
+      setError("Please Enter a Group Name")
+      setTimeout(() => setError(""), 4000);
+      return false
+    }
+
+    let group = groups.find((group) => group.group_id.toLowerCase() === values["group_id"].toLowerCase()) ;
+    if (typeof group !== "undefined"){
+      setError("The name already exists")
+      setTimeout(() => setError(""), 4000);
+      return false
+    }
+    
+    return true
+  }
 
   function getStyles(name, members, theme) {
     return {
@@ -368,11 +389,10 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
   values["members"] = members
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (values["group_id"] === "") {
-      setError("Please Enter a Group Name")
+
+    if ( validateFields() == false){
       return
     }
-    setError("")
 
     fetch("api/group", {
       method: "POST",
