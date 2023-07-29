@@ -129,5 +129,5 @@ set +a
 
 2) Start the backup restoration
 ```
-mongorestore --host=localhost:$MONGO -u=$MONGODB_INITDB_ROOT_USERNAME -p=$MONGODB_INITDB_ROOT_PASSWORD -d=$MONGODB_INITDB_DATABASE -o="<Backup location>"
+mongorestore --host=localhost:$MONGO -u=$MONGODB_INITDB_ROOT_USERNAME -p=$MONGODB_INITDB_ROOT_PASSWORD
 ```
