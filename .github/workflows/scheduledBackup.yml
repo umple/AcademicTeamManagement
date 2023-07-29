@@ -1,10 +1,10 @@
 name: "Mongo Scheduled Backup"
 on:
   schedule:
-    - cron: "27 */1 * * *"
+    - cron: "0 */5 * * *"
 jobs:
   Trigger-backup:
     runs-on: ubuntu-latest
     steps:
       - name: DisplayTestBackup
-        run: "Echo Hello I work on a schedule"
+        run: echo "Hello I work on a schedule"
