@@ -1,6 +1,7 @@
 from .__init__ import db
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
+import app.models.group as group
 import pandas as pd
 from flask import jsonify
 
@@ -66,6 +67,11 @@ def assign_group_to_student(orgdefinedid, groupName):
     return result
 
 def delete_student_by_id(id):
+    student_to_delete = get_student_by_id(id)
+    if (student_to_delete["group"] != None):
+        result = group.remove_student_from_group(group_id=student_to_delete["group"], orgdefinedid=student_to_delete["orgdefinedid"])
+    if not result:
+        return result
     result = studentsCollection.delete_one({"_id": ObjectId(id)})
     return result
 

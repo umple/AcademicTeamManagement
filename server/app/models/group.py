@@ -55,20 +55,11 @@ def add_student_to_group(student_email, group_id):
     return False
 
 
-def remove_student_from_group(student_email):
-    student_group = json.loads(get_user_group(student_email))
-    student_name = student.get_student_name_from_email(student_email)
-    print(student_name)
-    if student_name not in student_group['members']:
-        return False
-        
-    result = groupCollection.update_one(
-        {"_id": ObjectId(student_group['_id'])},
-        {"$pull": {"members": student_name}}
-    )
-    if result.modified_count > 0:
-        return True
-    return False
+def remove_student_from_group(group_id , orgdefinedid):
+    group = get_group_by_group_name(group_id)
+    group["members"].remove(orgdefinedid)
+    result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
+    return result
 
 def get_user_group(user_email):
     student_name = student.get_student_name_from_email(user_email)
