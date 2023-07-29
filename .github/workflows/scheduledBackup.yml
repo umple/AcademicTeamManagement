@@ -1,7 +1,7 @@
 name: "Mongo Scheduled Backup"
 on:
   schedule:
-    - cron: "23 */1 * * *"
+    - cron: "27 */1 * * *"
 jobs:
   Trigger-backup:
     runs-on: ubuntu-latest
