@@ -47,8 +47,10 @@ const GroupTable = () => {
         Promise.all([resGroups.json(), resProjects.json(), resStudents.json()])
       ).then(([groups, projects, students]) => {
         
-        setTableData(groups)
-      
+        if (groups.message !== "Group list is empty."){
+          setTableData(groups)
+        }
+
         // Filter projects
         if (projects.message !== "Project list is empty."){
           projects = projects.filter(project => project.status != "assigned")
@@ -343,7 +345,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
       setTimeout(() => setError(""), 4000);
       return false
     }
-
+    
     let group = groups.find((group) => group.group_id.toLowerCase() === values["group_id"].toLowerCase()) ;
     if (typeof group !== "undefined"){
       setError("The name already exists")
@@ -390,7 +392,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if ( validateFields() == false){
+    if ( validateFields() === false){
       return
     }
 

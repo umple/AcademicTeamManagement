@@ -68,6 +68,7 @@ def assign_group_to_student(orgdefinedid, groupName):
 
 def delete_student_by_id(id):
     student_to_delete = get_student_by_id(id)
+    result = True
     if (student_to_delete["group"] != None):
         result = group.remove_student_from_group(group_id=student_to_delete["group"], orgdefinedid=student_to_delete["orgdefinedid"])
     if not result:

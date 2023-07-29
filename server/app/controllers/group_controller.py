@@ -12,9 +12,9 @@ def get_groups():
         if group_list:
             return jsonify(group_list), 200
         elif len(group_list) == 0:
-            return {"message": "Students list is empty."}, 200
+            return {"message": "Group list is empty."}, 200
         else:
-            return {"message": "Students list not found."}, 404
+            return {"message": "Group list not found."}, 404
     except:
         return {"message": "Internal server error."}, 503
 
@@ -42,7 +42,7 @@ def update_group_by_id(id):
         if result:
             return jsonify(str(result.modified_count)), 200
         else:
-            return {"message": "Could not edit student."}, 404
+            return {"message": "Could not edit Group."}, 404
     except:
         return {"message": "Internal server error."}, 503
 
@@ -54,7 +54,7 @@ def delete_group_by_id(id):
         if result:
             return jsonify(str(result.deleted_count)), 200
         else:
-            return {"message": "Could not delete student."}, 404
+            return {"message": "Could not delete Group."}, 404
     except:
         return {"message": "Internal server error."}, 503
  

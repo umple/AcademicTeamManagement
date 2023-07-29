@@ -99,4 +99,35 @@ The PRIVATE_KEY in the .env file needs to be base64 encoded
 $(cat <<location of the pem file>> | base64)
 ```
 
+### Backup a Mongo Container
 
+#### The following section describes how to backup the mongodb container 
+
+1) Export the variable in the .env to the terminal
+
+```
+set -a
+source .env
+set +a
+```
+
+2) Start the backup
+```
+mongodump --host=localhost:$MONGO -u=$MONGODB_INITDB_ROOT_USERNAME -p=$MONGODB_INITDB_ROOT_PASSWORD -d=$MONGODB_INITDB_DATABASE -o="<Backup location>"
+```
+
+
+#### The following commands descibe how to restore the backup
+
+1) Export the variable in the .env to the terminal
+
+```
+set -a
+source .env
+set +a
+```
+
+2) Start the backup restoration
+```
+mongorestore --host=localhost:$MONGO -u=$MONGODB_INITDB_ROOT_USERNAME -p=$MONGODB_INITDB_ROOT_PASSWORD -d=$MONGODB_INITDB_DATABASE -o="<Backup location>"
+```
