@@ -17,11 +17,6 @@ def get_all_groups():
     return group_Collection
 
 def add_group(group_obj):
-
-    # Validate group name does not exist
-    if get_group_by_group_name(group_obj["group_id"]) != None:
-        return 409
-    
     result = groupCollection.insert_one(group_obj)
     for id in group_obj["members"]:
         student.assign_group_to_student(id, groupName= group_obj["group_id"])
@@ -94,8 +89,8 @@ def is_user_in_group(user_name):
 
 def update_group_by_id(id, group_obj):
     # Validate group name does not exist
-    if get_group_by_group_name(group_obj["group_id"]) != None:
-        return
+    # if get_group_by_group_name(group_obj["group_id"]) != None:
+    #     return
 
     originalGroup  = get_group(id)
     if group_obj["members"] != "":

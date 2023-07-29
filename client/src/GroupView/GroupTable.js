@@ -317,13 +317,14 @@ const GroupTable = () => {
         fetchData={fetchData}
         projects={projects}
         students={students}
+        groups ={tableData}
       />
     </Box>
   );
 };
 
 //Modal to create new Group
-export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchData, projects, students }) => {
+export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchData, projects, students, groups}) => {
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -335,6 +336,23 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
       },
     },
   };
+
+  function validateFields(){
+    if (values["group_id"] === "") {
+      setError("Please Enter a Group Name")
+      setTimeout(() => setError(""), 4000);
+      return false
+    }
+
+    let group = groups.find((group) => group.group_id.toLowerCase() === values["group_id"].toLowerCase()) ;
+    if (typeof group !== "undefined"){
+      setError("The name already exists")
+      setTimeout(() => setError(""), 4000);
+      return false
+    }
+    
+    return true
+  }
 
   function getStyles(name, members, theme) {
     return {
@@ -371,11 +389,10 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
   values["members"] = members
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (values["group_id"] === "") {
-      setError("Please Enter a Group Name")
+
+    if ( validateFields() == false){
       return
     }
-    setError("")
 
     fetch("api/group", {
       method: "POST",
