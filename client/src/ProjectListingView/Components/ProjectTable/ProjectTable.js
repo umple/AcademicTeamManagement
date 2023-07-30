@@ -467,6 +467,7 @@ const ProjectTable = () => {
             open={createModalOpen}
             onClose={() => setCreateModalOpen(false)}
             fetchProjects={fetchProjects}
+            projects={tableData}
           />
         </>
       )}
@@ -475,7 +476,7 @@ const ProjectTable = () => {
 };
 
 //Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, handleAddRow }) => {
+export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, handleAddRow, projects }) => {
 
   const cellValueMap = [
     { value: 'new', label: 'success' },
@@ -492,8 +493,32 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
     }, {}),
   );
 
+  const [error, setError] = useState("")
+
+  function validateFields(){
+    if (values["project"] === "") {
+      setError("Please Enter a project Name")
+      setTimeout(() => setError(""), 4000);
+      return false
+    }
+    
+    let project = projects.find((project) => project.project.toLowerCase() === values["project"].toLowerCase()) ;
+    if (typeof project !== "undefined"){
+      setError("The project name already exists")
+      setTimeout(() => setError(""), 4000);
+      return false
+    }
+    
+    return true
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    if ( validateFields() === false){
+      return
+    }
+
     handleAddRow(values);
     Object.entries(values).map(([key, value]) => {
       values[key] = ''
@@ -503,6 +528,7 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
 
   return (
     <Dialog open={open}>
+      {error === "" ? "" : <Alert severity="error">{error}</Alert>}
       <DialogTitle textAlign="center">Create New Project</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>

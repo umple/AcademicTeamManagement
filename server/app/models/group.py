@@ -113,3 +113,13 @@ def add_project_to_group(group_obj,proj_obj):
             {"$set": {"project": proj_obj["project"]}}
         )
     return result
+
+def remove_project_from_group(projectName):
+    for group in groupCollection.find({"project": projectName}):
+        result = groupCollection.update_one(
+            {"group_id": group["group_id"]},
+            {"$set" : {"project": ""}}
+        )
+        if not result:
+            return result
+    return True
