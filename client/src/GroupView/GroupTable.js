@@ -105,10 +105,6 @@ const GroupTable = () => {
       header: 'Project',
     },
     {
-      accessorKey: 'interest',
-      header: 'Interested projects',
-    },
-    {
       accessorKey: 'notes',
       header: 'Notes'
     },

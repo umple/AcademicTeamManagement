@@ -1,6 +1,7 @@
 **/__pycache__
 privateKey
 .env
+/dump
 
 # Ignore Gradle project-specific cache directory
 .gradle
