@@ -1,13 +1,77 @@
 // MyGroup.js
 import React, { useState, useEffect, useMemo } from "react";
-import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent } from "@mui/material";
+import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent} from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link } from "react-router-dom";
+import Chip from '@mui/material/Chip';
 import MaterialReactTable from 'material-react-table';
 
 
 const MyGroup = () => {
-  
+  const [group, setGroup] = useState({});
+  const [students, setStudents] = useState()
+  const [loading, setIsLoading] = useState(true);
+  const [applications, setProjectApplications] = useState({});
+  const [showAlert, setShowAlert] = useState(false);
+
+  useEffect(() => {
+    fetch("api/students")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("No students in the database");
+        } else {
+          return response.json()
+        }
+      })
+      .then((data) => {
+        setStudents(data);
+      })
+      .catch((error) => console.error(error));
+    fetch("api/retrieve/curr/user/group")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("dsaafsd");
+        } else {
+          return response.json()
+        }
+      })
+      .then((data) => {
+        setGroup(data);
+      })
+      .catch((error) => console.error(error));
+
+    fetch("api/retrieve/project/application")
+      .then((response) => {
+        if (!response.ok) {
+        } else {
+          return response.json()
+        }
+      })
+      .then((data) => {
+        setProjectApplications(data);
+        setIsLoading(false)
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const handleLeaveGroup = async () => {
+    fetch(`api/remove/group/member/${group.group_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 4000);
+        setGroup({})
+      })
+      .catch((error) => console.error(error));
+  };
+
   const columns = useMemo(() => [
     {
       accessorKey: 'group_id',
@@ -26,59 +90,12 @@ const MyGroup = () => {
       header: 'Students Needed',
     }
   ], []);
-  const [group, setGroup] = useState({});
-  const [loading, setIsLoading] = useState(true);
-  const [applications, setProjectApplications] = useState({});
-  const [showAlert, setShowAlert] = useState(false);
 
-  useEffect(() => {
-    fetch("api/retrieve/curr/user/group")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("dsaafsd");
-        } else {
-          return response.json()
-        }
-      })
-      .then((data) => {
-        setGroup(data);
-      })
-      .catch((error) => console.error(error));
+  const findNameByStudentID= (orgdefinedid) =>{
+    let student = students.find((student)=> {return student.orgdefinedid === orgdefinedid})
+    return student.firstname + " " + student.lastname
+  }
 
-
-    fetch("api/retrieve/project/application")
-      .then((response) => {
-        if (!response.ok) {
-        } else {
-          return response.json()
-        }
-      })
-      .then((data) => {
-
-        setProjectApplications(data);
-        setIsLoading(false)
-      })
-      .catch((error) => console.error(error));
-  }, []);
-
-  const handleLeaveGroup = async () => {
-    fetch("api/remove/group/member", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 4000);
-        setGroup({})
-      })
-      .catch((error) => console.error(error));
-
-  };
 
 
   return (
@@ -106,9 +123,14 @@ const MyGroup = () => {
                   <Typography sx={{ fontSize: "18px" }}>
                     <strong>Group ID:</strong> {group.group_id} </Typography>
                   <Typography sx={{ fontSize: "18px" }}>
-                    <strong>Members:</strong>{" "}
-                    {group.members && group.members.filter(member => member).join(", ")}
+                    <strong>Members:</strong>
                   </Typography>
+
+                  {
+                  group.members.map((element, index) => (
+                    <Chip sx = {{"m": "2px"}} key={index} label={findNameByStudentID(element)} color="secondary"></Chip>
+                  ))}
+
                   {group.project ? (
                     <Typography sx={{ fontSize: "18px" }}>
                       <strong>Project:</strong> {group.project}
@@ -150,7 +172,7 @@ const MyGroup = () => {
             </CardContent>
           </Card>
           {typeof applications !== "undefined" || applications ? (
-            <Box sx={{ mt: 2, ml: 4, mr:4 }}>
+            <Box sx={{ mt: 2, ml: 4, mr: 4 }}>
               <MaterialReactTable
                 columns={columns}
                 data={applications}
@@ -158,7 +180,7 @@ const MyGroup = () => {
                 highlightOnHover={true}
                 enableColumnFilters={false}
                 enableHiding={false}
-                enablePagination={false} 
+                enablePagination={false}
                 enableGlobalFilter={false}
                 enableFullScreenToggle={false}
                 enableDensityToggle={false}

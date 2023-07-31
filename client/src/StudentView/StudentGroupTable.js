@@ -7,18 +7,19 @@ import {
   Alert,
   Snackbar,
 } from '@mui/material';
+import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const StudentGroupTable = () => {
 
   // For the create profile modal
   const [tableData, setTableData] = useState({});
-  const [group, setGroup] = useState({});
+  const [students, setStudents] = useState([]);
+  const [group, setGroup] = useState();
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
   const [showAlert, setShowAlert] = useState(false);
   const [showJoinedTeam, setShowJoinedTeam] = useState(false);
   const [loading, setIsLoading] = useState(false);
-   
 
   const columns = useMemo(
     () => [
@@ -29,9 +30,29 @@ const StudentGroupTable = () => {
       {
         accessorKey: 'members',
         header: 'Members',
-        Cell: ({ cell }) => (
-          cell.getValue().map((i) => <tr>{i}</tr>)
-        ),
+        Cell: ({ cell }) => {
+
+          if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
+            if (students.length !== 0){
+              return cell.getValue("members").map((value, index) => {
+                let student = students.find((student) => {
+                  return student.orgdefinedid === value
+                });
+                
+                if (typeof student !== "undefined"){
+                  let display = student.firstname + " " + student.lastname;
+                  return (
+                  <div>
+                    <Chip sx = {{ marginBottom: "5px",}} color="success" label={display} />
+                  </div>
+                  )
+                }
+              });
+            }
+          }else{
+            return <Chip sx = {{ marginBottom: "5px",}} color="error" label={"Empty Group"} />
+          }
+        },
       },
       {
         accessorKey: 'project',
@@ -46,43 +67,40 @@ const StudentGroupTable = () => {
         header: 'Notes'
       },
     ],
-    [],
+    [students],
   );
 
-  const fetchGroups = () => {
-    setIsLoading(true)
-    fetch("/api/groups")
-      .then(response => response.json())
-      .then(data => {
-        setTableData(data)
-        setIsLoading(false)
-
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  const fetchCurrentUserGroup = () => {
-    fetch("/api/retrieve/curr/user/group")
-      .then((response) => {
-        if (!response.ok) {
-          setisCurrentUserInGroup(false)
-          throw new Error("Response not OK");
-        } else {
-          return response.json()
+  const fetchData = () => {
+    Promise.all(
+      [
+        fetch("/api/groups"),
+        fetch("/api/retrieve/curr/user/group"),
+        fetch("/api/students")
+      ])
+      .then(([resGroups, currentUserGroup, resStudents]) =>
+        Promise.all([resGroups.json(), currentUserGroup.json(), resStudents.json()])
+      
+        
+      ).then(([groups, currentUserGroup, students]) => {
+        
+        if (groups.message !== "Group list is empty."){
+          setTableData(groups)
         }
-      })
-      .then((data) => {
-        setisCurrentUserInGroup(true)
-        setGroup(data)
-      })
-      .catch((error) => console.error(error));
+
+        if (typeof currentUserGroup.error === "undefined"){
+          setGroup(currentUserGroup.group_id)
+          setisCurrentUserInGroup(true)
+        }
+
+        if (students.message !== "Student list is empty."){
+          setStudents(students)
+        }
+        setIsLoading(false)
+      });
   }
 
   useEffect(() => {
-    fetchGroups();
-    fetchCurrentUserGroup();
+    fetchData();
   }, []);
 
   return (
@@ -121,7 +139,6 @@ const StudentGroupTable = () => {
         initialState={{ showColumnFilters: false, density: 'compact' }}
         renderRowActions={({ row, table }) => {
           const joinGroup = () => {
-
             fetch('api/add/group/member', {
               method: 'POST',
               headers: {
@@ -136,8 +153,7 @@ const StudentGroupTable = () => {
                 return response.json();
               })
               .then((data) => {
-                fetchGroups()
-                fetchCurrentUserGroup()
+                fetchData()
                 setShowAlert(false)
                 setShowJoinedTeam(true)
               })
@@ -145,6 +161,24 @@ const StudentGroupTable = () => {
                 console.error('Error:', error);
               });
           };
+
+        const handleLeaveGroup = () =>{
+          fetch(`api/remove/group/member/${group}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              fetchData()
+              setGroup({})
+              setisCurrentUserInGroup(false)
+            })
+            .catch((error) => console.error(error));
+        }
 
           const handleAlertClose = (event, reason) => {
             if (reason === 'clickaway') {
@@ -160,6 +194,7 @@ const StudentGroupTable = () => {
           return (
             <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
               <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original._id === group._id || row.original.members.length >= 5}>Join</Button>
+              {row.original.group_id === group && <Button color= "error" onClick={() => handleLeaveGroup()}> Leave </Button>}
               <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert
                   onClose={handleAlertClose}
