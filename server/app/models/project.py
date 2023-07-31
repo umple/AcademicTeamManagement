@@ -6,7 +6,6 @@ import json
 
 projectCollection = db["projects"]
 
-
 def get_all_projects():
     project_list = []
     for document in projectCollection.find():
@@ -24,7 +23,7 @@ def get_project_not_applied_to():
 
 
 def get_project(id):
-    result = projectCollection.find_one({"_id": ObjectId(id)}, {"_id": 0})
+    result = projectCollection.find_one({"_id": ObjectId(id)})
     if result:
         return result
     else:
@@ -70,6 +69,8 @@ def update_project_by_id(id, project_obj):
 
 
 def delete_project_by_id(id):
+    project_to_delete = get_project(id)
+    group.remove_project_from_group(project_to_delete["project"])
     result = projectCollection.delete_one({"_id": ObjectId(id)})
     return result
 
