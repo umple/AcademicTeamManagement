@@ -92,8 +92,6 @@ const GroupTable = () => {
                 )
               }
             });
-          }else{
-            
           }
         }else{
           return <Chip sx = {{ marginBottom: "5px",}} color="error" label={"Empty Group"} />

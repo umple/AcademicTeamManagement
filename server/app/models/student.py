@@ -39,8 +39,10 @@ def get_student_by_email(email):
 def get_student_name_from_email(email):
     fullName = ""
     document = studentsCollection.find_one({"email": email})
-    fullName = str(document["firstname"]) + ' ' + str(document["lastname"])
-    return fullName
+    if (document != None):
+        fullName = str(document["firstname"]) + ' ' + str(document["lastname"])
+        return fullName
+    return "Invalid Email"
 
 def get_student_by_username(username):
     document = studentsCollection.find_one({"username": str(username)})
