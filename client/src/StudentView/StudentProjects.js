@@ -107,16 +107,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function StudentProjects() {
-  const classes = useStyles();
 
+  const classes = useStyles();
   const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
   const [loading, setIsLoading] = useState(false);
-
-
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -134,7 +132,7 @@ function StudentProjects() {
       .then((response) => response.json())
       .then((data) => {
         // check if we recieve a list of project or not
-        setProjects(data)? Array.isArray(data) : setProjects([])
+        setProjects(data)
       })
       .catch((error) => {
         console.error(error);
@@ -225,7 +223,7 @@ function StudentProjects() {
             <AddProjectModal
               open={open}
               onClose={handleClose}
-              onSubmit={handleSubmit}
+              fetchProjects={fetchProjects}
             />
           </Grid>
           {Array.isArray(projects) && projects.length !== 0 ? projects.map((project) => (
@@ -252,8 +250,8 @@ function StudentProjects() {
                       component="p"
                       style={{ marginTop: "1rem" }}
                     >
-                      <span className={classes.bold}>Client:</span>{" "}
-                      {project.client}
+                      <span className={classes.bold}>Client Name:</span>{" "}
+                      {project.clientName}
                     </Typography>
                     <Typography variant="body2" component="p">
                       <span className={classes.bold}>Status:</span>{" "}
@@ -309,22 +307,38 @@ function StudentProjects() {
 }
 
 // Modal to add a project
-function AddProjectModal({ open, onClose, onSubmit }) {
+function AddProjectModal({ open, onClose, fetchProjects }) {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [client, setClient] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
   const [group, setGroup] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newProject = { name, description, client, group };
-    onSubmit(newProject);
-    setName("");
-    setDescription("");
-    setClient("");
-    setGroup("");
-    onClose();
+    let project = {
+      project : name,
+      description: description,
+      clientName: client,
+      clientEmail: clientEmail,
+      status: "proposed",
+    }
+
+    fetch('/api/project', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(project)
+    })
+      .then(response => {
+        if (response.ok) {
+          fetchProjects();
+        }
+      }).catch(error => {
+        console.error(error);
+    });
   };
 
   return (
@@ -346,7 +360,7 @@ function AddProjectModal({ open, onClose, onSubmit }) {
             <TextField
               fullWidth
               required
-              label="Name"
+              label="Project Title"
               value={name}
               onChange={(event) => setName(event.target.value)}
               variant="outlined"
@@ -366,9 +380,18 @@ function AddProjectModal({ open, onClose, onSubmit }) {
             <TextField
               fullWidth
               required
-              label="Client"
+              label="Client Full Name"
               value={client}
               onChange={(event) => setClient(event.target.value)}
+              variant="outlined"
+              className={classes.textField}
+            />
+            <TextField
+              fullWidth
+              required
+              label="Client Email"
+              value={clientEmail}
+              onChange={(event) => setClientEmail(event.target.value)}
               variant="outlined"
               className={classes.textField}
             />
