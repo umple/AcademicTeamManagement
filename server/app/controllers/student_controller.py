@@ -34,6 +34,17 @@ def add_student():
             return {"message": "Could not add student."}, 404
     except:
         return {"message": "Internal server error."}, 503
+    
+@student_bp.route("/student/<email>", methods=["GET"])
+def get_student_by_email(email):
+    try:
+        document = student.get_student_by_email(email)
+        if document:
+            return jsonify(document), 200
+        else:
+            return {"message": "Students list not found."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
 
 # GET Request to get a student by id
 @student_bp.route("/student/<id>", methods=["GET"])
