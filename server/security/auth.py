@@ -68,6 +68,15 @@ def authentication(app):
         return jsonify(response), 200, {'Access-Control-Allow-Credentials': 'true'}
     
     @cross_origin(supports_credentials=True)
+    @app.route("/api/getuseremail")
+    def getuseremail():
+        if not session.get("user"):
+            return jsonify({"error": "not logged in"}), 401, {'Access-Control-Allow-Credentials': 'true'}
+        print(session["user"]["preferred_username"])
+        response = {"userEmail": session["user"]["preferred_username"]}
+        return jsonify(response), 200, {'Access-Control-Allow-Credentials': 'true'}
+    
+    @cross_origin(supports_credentials=True)
     @app.route("/api/getusername")
     def getusername():
         if not session.get("user"):

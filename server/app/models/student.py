@@ -68,6 +68,16 @@ def assign_group_to_student(orgdefinedid, groupName):
     )
     return result
 
+def remove_student_from_group(orgdefinedid):
+    result = studentsCollection.update_one(
+        {"orgdefinedid" : orgdefinedid}, 
+        {"$set" : {
+            "group": None
+        }
+        }
+    )
+    return result
+
 def delete_student_by_id(id):
     student_to_delete = get_student_by_id(id)
     result = True

@@ -48,7 +48,7 @@ def add_student_to_group(student_email, group_id):
     result = groupCollection.update_one(
         {"_id": ObjectId(group_obj["_id"])},
         {"$push": {"members": str(student_obj["orgdefinedid"])}})
-    
+    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"])
     if result.modified_count > 0:
         return True
     
@@ -58,6 +58,7 @@ def remove_student_from_group_by_email(group_id, email):
     group = get_group_by_group_name(group_id)
     student_obj = student.get_student_by_email(email)
     group["members"].remove(student_obj["orgdefinedid"])
+    student.remove_student_from_group(student_obj["orgdefinedid"])
     result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
     return result
 
