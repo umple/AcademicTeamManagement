@@ -132,7 +132,6 @@ function StudentProjects() {
 
 
   const fetchData = () => {
-    console.log("HERE")
     Promise.all(
       [
         getUserEmail(),
@@ -145,7 +144,7 @@ function StudentProjects() {
         
         // Filter projects
         if (projects.message !== "Project list is empty."){
-          projects = projects.filter(project => project.status != "assigned")
+          projects = projects.filter(project => project.status !== "assigned")
           setProjects(projects)
         }
         if (students.message !== "Student list is empty."){
@@ -153,7 +152,6 @@ function StudentProjects() {
           let currStudent = students.filter(student => student.email === Email)
           setCurrGroup(currStudent[0].group)
         }
-
         setIsLoading(false)
       });
   };
@@ -221,9 +219,6 @@ function StudentProjects() {
       <Typography variant="h2" align="center" fontWeight="fontWeightBold">
         Student Projects
       </Typography>
-      {loading ? (
-        <CircularProgress />
-      ) : (
         <Box>
           <Grid
             container
@@ -338,7 +333,7 @@ function StudentProjects() {
             )) : null}
           </Grid>
         </Box>
-      )}
+      {/* )} */}
     </Container>
   );
 }
@@ -349,10 +344,18 @@ function AddProjectModal({ open, onClose, fetchProjects, currentGroup }) {
   const [description, setDescription] = useState("");
   const [client, setClient] = useState("");
   const [clientEmail, setClientEmail] = useState("");
-  const [confirmationMessage, setConfirmationMessage] = useState(false); // State for the confirmation message
+  const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (currentGroup === null){
+      setConfirmationMessage("You Need to be in a group to propose a project!"); // Set confirmation message
+      setTimeout(() => {
+        setConfirmationMessage(""); // Clear the confirmation message after a few seconds
+        onClose(); // Close the dialog
+      }, 1500); // Adjust the time as needed
+      return
+    }
     let project = {
       project: name,
       description: description,
@@ -374,7 +377,7 @@ function AddProjectModal({ open, onClose, fetchProjects, currentGroup }) {
           fetchProjects();
           setConfirmationMessage("Project added successfully!"); // Set confirmation message
           setTimeout(() => {
-            setConfirmationMessage(false); // Clear the confirmation message after a few seconds
+            setConfirmationMessage(""); // Clear the confirmation message after a few seconds
             onClose(); // Close the dialog
           }, 1500); // Adjust the time as needed
         }
@@ -386,7 +389,8 @@ function AddProjectModal({ open, onClose, fetchProjects, currentGroup }) {
 
   return (
     <Dialog open={open}>
-      {confirmationMessage && <Alert>{confirmationMessage}</Alert>} 
+      {confirmationMessage === "You Need to be in a group to propose a project!" &&  <Alert severity = "error" >{confirmationMessage}</Alert>} 
+      {confirmationMessage === "Project added successfully!" &&  <Alert> {confirmationMessage}</Alert>} 
       <DialogTitle
         sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center" }}
       >
