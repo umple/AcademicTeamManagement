@@ -88,9 +88,9 @@ def change_status(projectName, status):
         )
     return result
 
-def add_interested_group_to_project(project_id,student_group):
+def add_interested_group_to_project(project_name, group_id):
     result = projectCollection.update_one(
-            {"_id": ObjectId(project_id)},
-            {"$push": {"interested groups": student_group['group_id']}}
+            {"project": project_name},
+            {"$push": {"interested groups": group_id}}
         ) 
     return result

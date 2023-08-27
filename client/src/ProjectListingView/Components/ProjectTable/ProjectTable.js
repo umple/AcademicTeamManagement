@@ -30,7 +30,8 @@ import {
   CircularProgress,
   TextareaAutosize,
   Alert,
-  Snackbar
+  Snackbar,
+  Tab
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
@@ -120,7 +121,7 @@ const ProjectTable = () => {
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [applications, setApplications] = useState({});
+  const [applications, setApplications] = useState([]);
 
 
   const fetchProjects = () => {
@@ -134,16 +135,11 @@ const ProjectTable = () => {
       });
   };
 
-  const fetchInterestedGroup = () => {
-    fetch("api/retrieve/interested/groups").then(response => {
-      if (!response.ok){
-        throw new Error("sadf")
-      } else{
-        return response.json()
-      }
-    })
+  const fetchApplications = () => {
+    fetch("api/project/applications").then(response => response.json())
       .then(data => {
         setApplications(data);
+        console.log(applications)
         setIsLoading(false)
       })
       .catch(error => {
@@ -155,11 +151,10 @@ const ProjectTable = () => {
   useEffect(() => {
     setIsLoading(true)
     fetchProjects();
-    fetchInterestedGroup();
+    fetchApplications();
   }, []);
 
   const [validationErrors, setValidationErrors] = useState({});
-
 
   const handleAddRow = useCallback(
     (newRowData) => {
@@ -329,7 +324,7 @@ const ProjectTable = () => {
             renderDetailPanel={({ row, index }) => {
               return (
                 <Grid container spacing={2}>
-                  <Grid item>
+                  {/* <Grid item>
                     <TableContainer component={Paper}>
                       <Table size="small" aria-label="a dense table">
                         <TableHead>
@@ -372,13 +367,10 @@ const ProjectTable = () => {
                               ))
                             )) : null
                           }
-
-
-
                         </TableBody>
                       </Table>
                     </TableContainer>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item>
                     <TableContainer component={Paper}>
@@ -390,35 +382,34 @@ const ProjectTable = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {Object.entries(applications).map(([project, groups], outerIndex) => (
-                            outerIndex === row.index && groups ? (
-                              groups.map((groupApplication, innerIndex) => (
-                                <TableRow key={`${project}-${innerIndex}`} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                  <TableCell>
-                                    {groupApplication.group_id}
-                                  </TableCell>
-                                  <TableCell align="right">
-                                    <Button
-                                      variant="outlined"
-                                      color="secondary"
-                                      onClick={handleOpen}
-                                    >
-                                      View Application
-                                    </Button>
-                                    <ViewApplicationModal
-                                      fetchProjects={fetchProjects}
-                                      setShowAlert={setShowAlert}
-                                      data={groupApplication}
-                                      project={project}
-                                      open={open}
-                                      onClose={handleClose}
-                                      onSubmit={() => setOpen(false)}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                              ))
-                            ) : null
-                          ))}
+                          { applications.map((application) => {
+                            if (row.original.project !== application.project){return}
+                            return (
+                              <TableRow key={row.id}>
+                                <TableCell>
+                                  {application.group_id}
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    onClick={handleOpen}
+                                  >
+                                    View Application
+                                  </Button>
+                                  <ViewApplicationModal
+                                    fetchApplications={fetchApplications}
+                                    setShowAlert={setShowAlert}
+                                    data={application}
+                                    project={row.id}
+                                    open={open}
+                                    onClose={handleClose}
+                                    onSubmit={() => setOpen(false)}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            )
+                          })}
                         </TableBody>
                       </Table>
                     </TableContainer>
@@ -466,7 +457,7 @@ const ProjectTable = () => {
             columns={columns}
             open={createModalOpen}
             onClose={() => setCreateModalOpen(false)}
-            fetchProjects={fetchProjects}
+            fetchApplications={fetchApplications}
             projects={tableData}
           />
         </>
@@ -476,7 +467,7 @@ const ProjectTable = () => {
 };
 
 //Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, handleAddRow, projects }) => {
+export const CreateNewProjectModal = ({ open, columns, onClose, fetchApplications, handleAddRow, projects }) => {
 
   const cellValueMap = [
     { value: 'new', label: 'success' },
@@ -495,27 +486,27 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
 
   const [error, setError] = useState("")
 
-  function validateFields(){
+  function validateFields() {
     if (values["project"] === "") {
       setError("Please Enter a project Name")
       setTimeout(() => setError(""), 4000);
       return false
     }
-    
-    let project = projects.find((project) => project.project.toLowerCase() === values["project"].toLowerCase()) ;
-    if (typeof project !== "undefined"){
+
+    let project = projects.find((project) => project.project.toLowerCase() === values["project"].toLowerCase());
+    if (typeof project !== "undefined") {
       setError("The project name already exists")
       setTimeout(() => setError(""), 4000);
       return false
     }
-    
+
     return true
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if ( validateFields() === false){
+    if (validateFields() === false) {
       return
     }
 
@@ -546,23 +537,23 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
               if (column.accessorKey === 'status') {
                 return (
                   <FormGroup>
-                  <InputLabel id = "status-label">Status</InputLabel>
-                  <Select
-                    labelId='status-label'
-                    key={column.accessorKey}
-                    label={column.header}
-                    name={column.accessorKey}
-                    value={values[column.accessorKey]}
-                    onChange={(e) => {
-                      setValues({ ...values, [e.target.name]: e.target.value })
-                    }}
-                  >
-                    {cellValueMap.map((option) => (
-                      <MenuItem key={option.value} value={option.value} >
-                        {option.value}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    <InputLabel id="status-label">Status</InputLabel>
+                    <Select
+                      labelId='status-label'
+                      key={column.accessorKey}
+                      label={column.header}
+                      name={column.accessorKey}
+                      value={values[column.accessorKey]}
+                      onChange={(e) => {
+                        setValues({ ...values, [e.target.name]: e.target.value })
+                      }}
+                    >
+                      {cellValueMap.map((option) => (
+                        <MenuItem key={option.value} value={option.value} >
+                          {option.value}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormGroup>
                 )
               }
@@ -650,7 +641,7 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Project Application</DialogTitle>
+      <DialogTitle  >Project Application</DialogTitle>
       <form onSubmit={handleSendFeedback}>
         <DialogContent>
           <Grid container alignItems="center" spacing={2}>
@@ -659,7 +650,22 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
                 <Typography variant="body1" gutterBottom>
                   <Box fontWeight='fontWeightMedium' display='inline'>Group: </Box>
                 </Typography>
-                {data.group_id}
+                <Typography variant="body1" gutterBottom >
+                  <Box display='center'>{data.group_id}</Box>
+                </Typography >
+                
+              </FormLabel>
+            </Grid>
+          </Grid>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item>
+              <FormLabel component="legend">
+                <Typography variant="body1" gutterBottom >
+                  <Box fontWeight='fontWeightMedium' display='inline'>submitted_by: </Box>
+                </Typography >
+                <Typography variant="body1" gutterBottom >
+                  <Box display='center'>{data.submitted_by} </Box>
+                </Typography >
               </FormLabel>
             </Grid>
           </Grid>
@@ -683,7 +689,6 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
               </FormLabel>
               <FormGroup row>
                 <FormControlLabel
-
                   control={<Checkbox />}
                   value={studentsNeeded}
                   onChange={(e) => {
@@ -698,8 +703,9 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
           </FormLabel>
           <FormGroup row>
             <TextareaAutosize
-              style={{ height: 'calc(1.5em + 10px)' }}
+              style={{ height: 'calc(1.5em + 100px)', width: 'calc(1.5em + 250px)'  }}
               name="feedback"
+              multiline = {4}
               value={textFieldFeedback}
               onChange={(e) => {
                 setTextFieldtextFieldFeedback(e.target.value);
