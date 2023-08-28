@@ -25,7 +25,7 @@ def add_student(student_obj):
 def add_import_student(student_obj):
     student_obj["group"] = None
     studentsCollection.insert_one(student_obj)
-   
+
 def get_student_by_id(id):
     document = studentsCollection.find_one({"_id": ObjectId(id)})
     document["_id"] = str(document["_id"])

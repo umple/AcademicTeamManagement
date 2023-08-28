@@ -40,7 +40,7 @@ const MyGroup = () => {
       })
       .catch((error) => console.error(error));
 
-    fetch("api/retrieve/project/application")
+    fetch("api/project/applications")
       .then((response) => {
         if (!response.ok) {
         } else {
@@ -82,21 +82,23 @@ const MyGroup = () => {
       header: 'Project',
     },
     {
+      status: "status",
+      header: "Status"
+    },
+    {
       accessorKey: 'feedback',
       header: 'Feedback',
     },
-    {
-      accessorKey: 'students_needed',
-      header: 'Students Needed',
-    }
+    // {
+    //   accessorKey: 'students_needed',
+    //   header: 'Students Needed',
+    // }
   ], []);
 
   const findNameByStudentID= (orgdefinedid) =>{
     let student = students.find((student)=> {return student.orgdefinedid === orgdefinedid})
     return student.firstname + " " + student.lastname
   }
-
-
 
   return (
     <Box sx={{ mt: 3 }}>
@@ -130,7 +132,6 @@ const MyGroup = () => {
                   group.members.map((element, index) => (
                     <Chip sx = {{"m": "2px"}} key={index} label={findNameByStudentID(element)} color="secondary"></Chip>
                   ))}
-
                   {group.project ? (
                     <Typography sx={{ fontSize: "18px" }}>
                       <strong>Project:</strong> {group.project}
@@ -175,7 +176,7 @@ const MyGroup = () => {
             <Box sx={{ mt: 2, ml: 4, mr: 4 }}>
               <MaterialReactTable
                 columns={columns}
-                data={applications}
+                data={applications.filter((app) => app.group_id === group.group_id)}
                 noHeader={true}
                 highlightOnHover={true}
                 enableColumnFilters={false}

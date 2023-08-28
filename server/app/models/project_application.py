@@ -2,6 +2,7 @@ from .__init__ import db
 from bson import ObjectId
 from app.models import group, project
 import json
+from flask import jsonify
 
 projectApplicationCollection = db["projectApplications"]
 
@@ -17,13 +18,13 @@ def get_all_project_application():
 def has_project_application(project_name,student_group):
     try:
         result = projectApplicationCollection.count_documents(
-            {"project": project_name, "group_id": student_group})
+            {"project": project_name, "group_id": student_group, "status": {"$in": ["Pending", "Rejected", "Accepted"]}}
+        )
         print(result)
         if result != 0:
             return True
         else:
             return False
-        
     except Exception as e:
         print(e)
         return False
@@ -63,7 +64,6 @@ def request_project_application(project_name, student_email, group_id):
             # applications = create_application(project_name, group_id)
         # else:
             # raise Exception(f"Could not update project {project_name}.")
-        
     except Exception as e:
         print(e)
         return e, 500
@@ -76,7 +76,7 @@ def create_application(project_name, student_email, group_name):
         "group_id": group_name,
         "submitted_by": student_email,
         "feedback": "",
-        "students_needed": False
+        "status": "Pending",
     }
     result = projectApplicationCollection.insert_one(application)
     return result
@@ -89,6 +89,7 @@ def assign_project_to_group(group_obj):
         result = project.add_group_to_project(group_obj)
         result2 = group.add_project_to_group(group_obj,proj_obj)
 
+
         # Laith we also need to add that every student is assigned a project
 
         if result.modified_count > 0 and result2.modified_count > 0:
@@ -99,3 +100,17 @@ def assign_project_to_group(group_obj):
 def update_application(group_name, feedback, students_needed):
     application = projectApplicationCollection.find({"group_id": group_name})
     return application
+
+def reviewApplication(applicationObject):
+    result = True
+    if applicationObject["status"] == "Accepted":
+        result = project.add_group_to_project(applicationObject["project"], applicationObject["group_id"])
+        if not result:
+            return False, 400
+        group.add_project_to_group(applicationObject["group_id"], applicationObject["project"])
+        project.change_status(applicationObject["project"], "assigned")
+    # x = applicationObject.pop(applicationObject["_id"], None)
+    id = ObjectId(applicationObject["_id"])
+    applicationObject.pop("_id", None)
+    result = projectApplicationCollection.update_one({"_id": id}, {"$set" : applicationObject})
+    return result, 200
