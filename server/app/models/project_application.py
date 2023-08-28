@@ -14,7 +14,6 @@ def get_all_project_application():
     # print(project_application_list)
     return project_application_list
 
-
 def has_project_application(project_name,student_group):
     try:
         result = projectApplicationCollection.count_documents(

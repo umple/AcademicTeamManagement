@@ -72,6 +72,22 @@ const MyGroup = () => {
       .catch((error) => console.error(error));
   };
 
+  function colorStatus(status){
+      if (status === "Accepted"){
+        return "success"
+      }
+      
+      if (status === "Rejected"){
+        return "error"
+      }
+
+      if (status === "Feedback Provided"){
+        return "warning"
+      }
+
+      return "secondary"
+  }
+
   const columns = useMemo(() => [
     {
       accessorKey: 'group_id',
@@ -82,8 +98,20 @@ const MyGroup = () => {
       header: 'Project',
     },
     {
-      status: "status",
-      header: "Status"
+      accessorKey: "status",
+      header: "Status",
+      Cell: ({ cell }) => (
+        <Chip 
+          label = {cell.getValue()}
+          color = {colorStatus(cell.getValue())}
+          />
+      )
+       
+
+
+      
+        
+      
     },
     {
       accessorKey: 'feedback',

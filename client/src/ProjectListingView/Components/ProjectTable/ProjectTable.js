@@ -36,7 +36,7 @@ import {
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
-
+import Chip from '@mui/material/Chip';
 
 const ProjectTable = () => {
   // Columns for table
@@ -202,6 +202,22 @@ const ProjectTable = () => {
   const handleCancelRowEdits = () => {
     setValidationErrors({});
   };
+
+  function colorStatus(status){
+    if (status === "Accepted"){
+      return "success"
+    }
+    
+    if (status === "Rejected"){
+      return "error"
+    }
+
+    if (status === "Feedback Provided"){
+      return "warning"
+    }
+
+    return "secondary"
+}
 
   const handleDeleteRow = useCallback((row) => {
     if (!window.confirm(`Are you sure you want to delete ${row.getValue('project')}?`)) {
@@ -398,7 +414,11 @@ const ProjectTable = () => {
                                   {application.group_id}
                                 </TableCell>
                                 <TableCell align="right">
-                                  {application.status}
+                                    <Chip 
+              label = {application.status}
+              color = {colorStatus(application.status)}
+              />
+                                  
                                 </TableCell>
                                 <TableCell align="right">
                                   <Button
