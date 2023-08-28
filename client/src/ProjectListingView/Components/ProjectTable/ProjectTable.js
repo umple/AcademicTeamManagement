@@ -30,12 +30,13 @@ import {
   CircularProgress,
   TextareaAutosize,
   Alert,
-  Snackbar
+  Snackbar,
+  Tab
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
-
+import Chip from '@mui/material/Chip';
 
 const ProjectTable = () => {
   // Columns for table
@@ -90,23 +91,23 @@ const ProjectTable = () => {
           </Box>
         ),
       },
-      {
-        accessorKey: 'interested groups',
-        header: 'Interested Groups',
-        Cell: ({ cell }) => {
-          if (Array.isArray(cell.getValue("interested groups")) && cell.getValue("interested groups").length > 0) {
-            return cell.getValue("interested groups").map((item, index) => <tr>{item}</tr>);
-          }
-        }
-      },
+      // {
+      //   accessorKey: 'interested groups',
+      //   header: 'Interested Groups',
+      //   Cell: ({ cell }) => {
+      //     if (Array.isArray(cell.getValue("interested groups")) && cell.getValue("interested groups").length > 0) {
+      //       return cell.getValue("interested groups").map((item, index) => <tr>{item}</tr>);
+      //     }
+      //   }
+      // },
       {
         accessorKey: 'group',
         header: 'Group',
       },
-      {
-        accessorKey: 'visibility',
-        header: 'Visibility',
-      },
+      // {
+      //   accessorKey: 'visibility',
+      //   header: 'Visibility',
+      // },
       {
         accessorKey: 'notes',
         header: 'Notes'
@@ -120,7 +121,7 @@ const ProjectTable = () => {
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [applications, setApplications] = useState({});
+  const [applications, setApplications] = useState([]);
 
 
   const fetchProjects = () => {
@@ -134,16 +135,11 @@ const ProjectTable = () => {
       });
   };
 
-  const fetchInterestedGroup = () => {
-    fetch("api/retrieve/interested/groups").then(response => {
-      if (!response.ok){
-        throw new Error("sadf")
-      } else{
-        return response.json()
-      }
-    })
+  const fetchApplications = () => {
+    fetch("api/project/applications").then(response => response.json())
       .then(data => {
         setApplications(data);
+        console.log(applications)
         setIsLoading(false)
       })
       .catch(error => {
@@ -155,11 +151,10 @@ const ProjectTable = () => {
   useEffect(() => {
     setIsLoading(true)
     fetchProjects();
-    fetchInterestedGroup();
+    fetchApplications();
   }, []);
 
   const [validationErrors, setValidationErrors] = useState({});
-
 
   const handleAddRow = useCallback(
     (newRowData) => {
@@ -207,6 +202,22 @@ const ProjectTable = () => {
   const handleCancelRowEdits = () => {
     setValidationErrors({});
   };
+
+  function colorStatus(status){
+    if (status === "Accepted"){
+      return "success"
+    }
+    
+    if (status === "Rejected"){
+      return "error"
+    }
+
+    if (status === "Feedback Provided"){
+      return "warning"
+    }
+
+    return "secondary"
+}
 
   const handleDeleteRow = useCallback((row) => {
     if (!window.confirm(`Are you sure you want to delete ${row.getValue('project')}?`)) {
@@ -329,7 +340,7 @@ const ProjectTable = () => {
             renderDetailPanel={({ row, index }) => {
               return (
                 <Grid container spacing={2}>
-                  <Grid item>
+                  {/* <Grid item>
                     <TableContainer component={Paper}>
                       <Table size="small" aria-label="a dense table">
                         <TableHead>
@@ -372,13 +383,10 @@ const ProjectTable = () => {
                               ))
                             )) : null
                           }
-
-
-
                         </TableBody>
                       </Table>
                     </TableContainer>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item>
                     <TableContainer component={Paper}>
@@ -389,36 +397,50 @@ const ProjectTable = () => {
                             <TableCell></TableCell>
                           </TableRow>
                         </TableHead>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Group</TableCell>
+                            <TableCell>Status</TableCell>
+                          </TableRow>
+                        </TableHead>
                         <TableBody>
-                          {Object.entries(applications).map(([project, groups], outerIndex) => (
-                            outerIndex === row.index && groups ? (
-                              groups.map((groupApplication, innerIndex) => (
-                                <TableRow key={`${project}-${innerIndex}`} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                  <TableCell>
-                                    {groupApplication.group_id}
-                                  </TableCell>
-                                  <TableCell align="right">
-                                    <Button
-                                      variant="outlined"
-                                      color="secondary"
-                                      onClick={handleOpen}
-                                    >
-                                      View Application
-                                    </Button>
-                                    <ViewApplicationModal
-                                      fetchProjects={fetchProjects}
-                                      setShowAlert={setShowAlert}
-                                      data={groupApplication}
-                                      project={project}
-                                      open={open}
-                                      onClose={handleClose}
-                                      onSubmit={() => setOpen(false)}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                              ))
-                            ) : null
-                          ))}
+                          
+                          
+                          { applications.map((application) => {
+                            if (row.original.project !== application.project){return}
+                            return (
+                              <TableRow key={row.id}>
+                                <TableCell>
+                                  {application.group_id}
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Chip 
+              label = {application.status}
+              color = {colorStatus(application.status)}
+              />
+                                  
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    onClick={handleOpen}
+                                  >
+                                    View Application
+                                  </Button>
+                                  <ViewApplicationModal
+                                    fetchApplications={fetchApplications}
+                                    setShowAlert={setShowAlert}
+                                    data={application}
+                                    project={row.id}
+                                    open={open}
+                                    onClose={handleClose}
+                                    onSubmit={() => setOpen(false)}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            )
+                          })}
                         </TableBody>
                       </Table>
                     </TableContainer>
@@ -466,7 +488,7 @@ const ProjectTable = () => {
             columns={columns}
             open={createModalOpen}
             onClose={() => setCreateModalOpen(false)}
-            fetchProjects={fetchProjects}
+            fetchApplications={fetchApplications}
             projects={tableData}
           />
         </>
@@ -476,7 +498,7 @@ const ProjectTable = () => {
 };
 
 //Modal to create new project
-export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, handleAddRow, projects }) => {
+export const CreateNewProjectModal = ({ open, columns, onClose, fetchApplications, handleAddRow, projects }) => {
 
   const cellValueMap = [
     { value: 'new', label: 'success' },
@@ -495,27 +517,27 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
 
   const [error, setError] = useState("")
 
-  function validateFields(){
+  function validateFields() {
     if (values["project"] === "") {
       setError("Please Enter a project Name")
       setTimeout(() => setError(""), 4000);
       return false
     }
-    
-    let project = projects.find((project) => project.project.toLowerCase() === values["project"].toLowerCase()) ;
-    if (typeof project !== "undefined"){
+
+    let project = projects.find((project) => project.project.toLowerCase() === values["project"].toLowerCase());
+    if (typeof project !== "undefined") {
       setError("The project name already exists")
       setTimeout(() => setError(""), 4000);
       return false
     }
-    
+
     return true
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if ( validateFields() === false){
+    if (validateFields() === false) {
       return
     }
 
@@ -546,23 +568,23 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
               if (column.accessorKey === 'status') {
                 return (
                   <FormGroup>
-                  <InputLabel id = "status-label">Status</InputLabel>
-                  <Select
-                    labelId='status-label'
-                    key={column.accessorKey}
-                    label={column.header}
-                    name={column.accessorKey}
-                    value={values[column.accessorKey]}
-                    onChange={(e) => {
-                      setValues({ ...values, [e.target.name]: e.target.value })
-                    }}
-                  >
-                    {cellValueMap.map((option) => (
-                      <MenuItem key={option.value} value={option.value} >
-                        {option.value}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    <InputLabel id="status-label">Status</InputLabel>
+                    <Select
+                      labelId='status-label'
+                      key={column.accessorKey}
+                      label={column.header}
+                      name={column.accessorKey}
+                      value={values[column.accessorKey]}
+                      onChange={(e) => {
+                        setValues({ ...values, [e.target.name]: e.target.value })
+                      }}
+                    >
+                      {cellValueMap.map((option) => (
+                        <MenuItem key={option.value} value={option.value} >
+                          {option.value}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormGroup>
                 )
               }
@@ -597,21 +619,24 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchProjects, h
 
 //Modal to view application
 export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAlert, project, fetchProjects }) => {
-  const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState('');
-  const [studentsNeeded, setStudentsNeeded] = useState(false);
+  const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState("");
+  const [status, setStatus] = useState("");
 
+  let states = ["Accepted", "Rejected", "Feedback Provided"]
 
-  const handleSubmit = () => {
-    const myObject = {
-      'group_id': data.group_id,
-      'project_id': project
-    }
-    fetch("api/assign/project/to/group", {
-      method: "POST",
+  const handleStatusChange = (e) => {
+    setStatus(e.target.value)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    data.status = status
+    fetch("api/application/review", {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(myObject),
+      body: JSON.stringify(data),
     })
       .then((response) => { return response.json() })
       .then((data) => {
@@ -623,35 +648,34 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
     onClose();
   };
 
-  const handleSendFeedback = (event) => {
-    event.preventDefault()
+  // const handleSendFeedback = (event) => {
+  //   event.preventDefault()
 
-    const myObject = {
-      'feedback': textFieldFeedback,
-      'group_id': data.group_id,
-      'students_needed': studentsNeeded
-    }
-    fetch("api/send/feedback/to/group", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(myObject),
-    })
-      .then((response) => { return response.json() })
-      .then((data) => {
-        setTextFieldtextFieldFeedback('')
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 5000);
-      })
-    onClose();
-  }
+  //   const myObject = {
+  //     'feedback': textFieldFeedback,
+  //     'group_id': data.group_id,
+  //   }
+  //   fetch("api/send/feedback/to/group", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify(myObject),
+  //   })
+  //     .then((response) => { return response.json() })
+  //     .then((data) => {
+  //       setTextFieldtextFieldFeedback('')
+  //       setShowAlert(true);
+  //       setTimeout(() => setShowAlert(false), 5000);
+  //     })
+  //   onClose();
+  // }
 
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Project Application</DialogTitle>
-      <form onSubmit={handleSendFeedback}>
+      <DialogTitle  >Project Application: </DialogTitle>
+      <form onSubmit={handleSubmit}>
         <DialogContent>
           <Grid container alignItems="center" spacing={2}>
             <Grid item>
@@ -659,11 +683,42 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
                 <Typography variant="body1" gutterBottom>
                   <Box fontWeight='fontWeightMedium' display='inline'>Group: </Box>
                 </Typography>
-                {data.group_id}
+                <Typography variant="body1" gutterBottom >
+                  <Box display='center'>{data.group_id}</Box>
+                </Typography >
+                
               </FormLabel>
             </Grid>
           </Grid>
           <Grid container alignItems="center" spacing={2}>
+            <Grid item>
+              <FormLabel component="legend">
+                <Typography variant="body1" gutterBottom >
+                  <Box fontWeight='fontWeightMedium' display='inline'>submitted_by: </Box>
+                </Typography >
+                <Typography variant="body1" gutterBottom >
+                  <Box display='center'>{data.submitted_by} </Box>
+                </Typography >
+              </FormLabel>
+            </Grid>
+          </Grid>
+          <Grid>
+          <FormGroup>
+                    <InputLabel id="status-label">Status</InputLabel>
+                    <Select
+                      labelId='status-label'
+                      onChange={handleStatusChange}
+                    >
+                      {states.map((state) => (
+                        <MenuItem key={state} value={state} >
+                          {state}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormGroup>
+          </Grid>
+          
+          {/* <Grid container alignItems="center" spacing={2}>
             <Grid item>
               <FormLabel component="legend">
                 <Typography variant="body1" gutterBottom>
@@ -672,8 +727,8 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
                 {data.notes}
               </FormLabel>
             </Grid>
-          </Grid>
-          <Grid container alignItems="center" spacing={2} sx={{ mt: 1 }}>
+          </Grid> */}
+          {/* <Grid container alignItems="center" spacing={2} sx={{ mt: 1 }}>
             <Grid item>
               <FormLabel component="legend">
                 <Box fontWeight='fontWeightMedium' display='inline'>More students needed </Box>
@@ -683,7 +738,6 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
               </FormLabel>
               <FormGroup row>
                 <FormControlLabel
-
                   control={<Checkbox />}
                   value={studentsNeeded}
                   onChange={(e) => {
@@ -692,14 +746,15 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
                 />
               </FormGroup>
             </Grid>
-          </Grid>
+          </Grid> */}
           <FormLabel component="legend" sx={{ mt: 1 }}>
             <Box fontWeight='fontWeightMedium' display='inline'>Feedback: </Box>
           </FormLabel>
           <FormGroup row>
             <TextareaAutosize
-              style={{ height: 'calc(1.5em + 10px)' }}
+              style={{ height: 'calc(1.5em + 100px)', width: 'calc(1.5em + 250px)'  }}
               name="feedback"
+              multiline = {4}
               value={textFieldFeedback}
               onChange={(e) => {
                 setTextFieldtextFieldFeedback(e.target.value);
@@ -709,10 +764,7 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
         </DialogContent>
         <DialogActions sx={{ p: '1.25rem' }}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" type="submit" onClick={handleSendFeedback} variant="contained">Send Feedback</Button>
-          <Button color="success" onClick={handleSubmit} variant="contained">
-            Assign
-          </Button>
+          <Button color="secondary" type="submit" onClick={handleSubmit} variant="contained">Review Application</Button>
         </DialogActions>
       </form>
     </Dialog>

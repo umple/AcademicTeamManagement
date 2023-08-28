@@ -179,12 +179,19 @@ function StudentProjects() {
 
   const handleProjectApplication = (event, project) => {
     event.preventDefault();
+
+    let body = {
+      "project_name": project.project,
+      "project_id": project._id,
+      "group_id": currentGroup
+    }
+
     fetch("api/request/join/project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(project),
+      body: JSON.stringify(body),
     })
       .then((response) => {
         if (response.ok) {
@@ -319,7 +326,8 @@ function StudentProjects() {
                         disabled={
                           project.status === "pending approval" ||
                           project.status === "assigned" ||
-                          project.status === "proposed"
+                          project.status === "proposed" ||
+                          currentGroup === null
                         }
                         className={classes.button}
                         style={{ marginTop: "1rem" }}

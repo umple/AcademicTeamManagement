@@ -100,7 +100,6 @@ def update_group_by_id(id, group_obj):
     if originalGroup["group_id"] != group_obj["group_id"]:
         for orgdefinedId in group_obj["members"]:
                 result = student.assign_group_to_student(orgdefinedId, groupName= group_obj["group_id"])
-    
     project.change_status(group_obj["project"], "assigned")       
     
     result = groupCollection.update_one({"_id": ObjectId(id)},  {"$set" : group_obj})
@@ -115,10 +114,13 @@ def delete_group_by_id(id):
     project.change_status(originalGroup["project"], "students needed")
     return result
 
-def add_project_to_group(group_obj,proj_obj):
+def add_project_to_group(groupName,projectName):
+    # group = get_group_by_group_name(groupName)
+    # if group.project == "" or group.project == None:
+    #     return False, "Project Already has been assigned"
     result = groupCollection.update_one(
-            {"group_id": group_obj["group_id"]},
-            {"$set": {"project": proj_obj["project"]}}
+            {"group_id": groupName},
+            {"$set": {"project": projectName}}
         )
     return result
 
