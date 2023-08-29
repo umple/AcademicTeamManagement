@@ -524,6 +524,11 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchApplication
       return false
     }
 
+    console.log(projects.length)
+    if (projects.length === undefined){
+      return true
+    }
+
     let project = projects.find((project) => project.project.toLowerCase() === values["project"].toLowerCase());
     if (typeof project !== "undefined") {
       setError("The project name already exists")
