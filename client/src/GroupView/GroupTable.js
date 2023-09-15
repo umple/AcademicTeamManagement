@@ -29,114 +29,63 @@ import { CreateNewGroupModal } from './CreateNewGroupModal';
 import groupsService from '../services/groupsService';
 
 const GroupTable = () => {
-
-  // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
-  const [projects, setProjects] = useState([])
-  const [students, setStudents] = useState([])
-  const [message, setMessage] =  useState("")
-
-  const fetchGroups = async () => {
-    try { 
-      let response = await groupsService.get();
-      setTableData(response)
-    } catch (error) { 
-      setTableData([])
-    }
-  }
-  const fetchData = () => {
-
-    Promise.all(
-      [
-        fetch("/api/projects"),
-        fetch("/api/students")
-      ])
-      .then(([resProjects, resStudents]) =>
-        Promise.all([resProjects.json(), resStudents.json()])
-      ).then(([projects, students]) => {
-        
-        // Filter projects
-        if (projects.message !== "Project list is empty."){
-          projects = projects.filter(project => project.status != "assigned")
-          setProjects(projects)
-        }
-        if (students.message !== "Student list is empty."){
-          setStudents(students)
-        }
-      });
-  };
+  const [projects, setProjects] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     fetchGroups();
     fetchData();
   }, []);
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'group_id',
-      header: 'Group',
-    },
-    {
-      accessorKey: 'members',
-      header: 'Members',
-      Cell: ({ cell }) => {
+  const fetchGroups = async () => {
+    try {
+      const response = await groupsService.get();
+      setTableData(response);
+    } catch (error) {
+      setTableData([]);
+    }
+  };
 
-        if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
-          if (students.length !== 0){
-            return cell.getValue("members").map((value, index) => {
-              let student = students.find((student) => {
-                return student.orgdefinedid === value
-              });
-              
-              if (typeof student !== "undefined"){
-                let display = student.firstname + " " + student.lastname;
-                return (
-                <div>
-                  <Chip sx = {{ marginBottom: "5px",}} color="success" label={display} />
-                </div>
-                )
-              }
-            });
-          }
-        }else{
-          return <Chip sx = {{ marginBottom: "5px",}} color="error" label={"Empty Group"} />
-        }
+  const fetchData = async () => {
+    try {
+      const [resProjects, resStudents] = await Promise.all([
+        fetch('/api/projects'),
+        fetch('/api/students'),
+      ]);
+      const [projectsData, studentsData] = await Promise.all([
+        resProjects.json(),
+        resStudents.json(),
+      ]);
+
+      if (projectsData.message !== 'Project list is empty.') {
+        const filteredProjects = projectsData.filter(project => project.status !== 'assigned');
+        setProjects(filteredProjects);
       }
-    },
-    {
-      accessorKey: 'project',
-      header: 'Project',
-    },
-    {
-      accessorKey: 'notes',
-      header: 'Notes'
-    },
-  ], [students]);
 
-  const handleCreateNewRow = (values) => { };
+      if (studentsData.message !== 'Student list is empty.') {
+        setStudents(studentsData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleAddRow = useCallback(
-    (newRowData) => {
-
-      fetch('api/group', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newRowData)
-      })
-        .then(response => {
-          console.log(response.ok)
-          if (response.ok) {
-            fetchData();
-          }else if(response.status === 409){
-            setMessage("The group already exists") // 5 seconds delay
-          }
-        }).catch(error => {
-          console.error(error);
-        });
+    async newRowData => {
+      try {
+        let response = await groupsService.post(newRowData)
+        if (response == 200) {
+          fetchData();
+        } else if (response === 409) {
+          setMessage('The group already exists');
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
     []
   );
@@ -322,7 +271,7 @@ const GroupTable = () => {
         fetchData={fetchData}
         projects={projects}
         students={students}
-        groups ={tableData}
+        groups={tableData}
       />
     </Box>
   );
