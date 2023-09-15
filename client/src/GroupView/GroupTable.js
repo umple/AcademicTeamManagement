@@ -1,30 +1,13 @@
-import React, { useCallback, useState, useMemo, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import MaterialReactTable from "material-react-table";
 import {
   Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
-  Select,
-  MenuItem,
-  cellValueMap,
-  InputLabel,
-  OutlinedInput,
-  Alert,
+  Button, IconButton, Tooltip,
+  Typography, Alert
 } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { ExportToCsv } from "export-to-csv"; //or use your library of choice here
 import { Delete, Edit } from "@mui/icons-material";
-import { FormControl } from "@material-ui/core";
-import Chip from "@mui/material/Chip";
-import { Theme, useTheme } from "@mui/material/styles";
 import { CreateNewGroupModal } from "./CreateNewGroupModal";
 import groupsService from "../services/groupsService";
 
