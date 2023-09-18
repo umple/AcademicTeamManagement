@@ -25,7 +25,7 @@ def add_student(student_obj):
 def add_import_student(student_obj):
     student_obj["group"] = None
     studentsCollection.insert_one(student_obj)
-   
+
 def get_student_by_id(id):
     document = studentsCollection.find_one({"_id": ObjectId(id)})
     document["_id"] = str(document["_id"])
@@ -39,8 +39,10 @@ def get_student_by_email(email):
 def get_student_name_from_email(email):
     fullName = ""
     document = studentsCollection.find_one({"email": email})
-    fullName = str(document["firstname"]) + ' ' + str(document["lastname"])
-    return fullName
+    if (document != None):
+        fullName = str(document["firstname"]) + ' ' + str(document["lastname"])
+        return fullName
+    return "Invalid Email"
 
 def get_student_by_username(username):
     document = studentsCollection.find_one({"username": str(username)})
@@ -61,6 +63,16 @@ def assign_group_to_student(orgdefinedid, groupName):
         {"orgdefinedid" : orgdefinedid}, 
         {"$set" : {
             "group": groupName
+        }
+        }
+    )
+    return result
+
+def remove_student_from_group(orgdefinedid):
+    result = studentsCollection.update_one(
+        {"orgdefinedid" : orgdefinedid}, 
+        {"$set" : {
+            "group": None
         }
         }
     )

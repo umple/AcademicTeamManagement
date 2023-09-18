@@ -6,7 +6,6 @@ import json
 
 projectCollection = db["projects"]
 
-
 def get_all_projects():
     project_list = []
     for document in projectCollection.find():
@@ -24,7 +23,7 @@ def get_project_not_applied_to():
 
 
 def get_project(id):
-    result = projectCollection.find_one({"_id": ObjectId(id)}, {"_id": 0})
+    result = projectCollection.find_one({"_id": ObjectId(id)})
     if result:
         return result
     else:
@@ -70,13 +69,25 @@ def update_project_by_id(id, project_obj):
 
 
 def delete_project_by_id(id):
+    project_to_delete = get_project(id)
+    group.remove_project_from_group(project_to_delete["project"])
     result = projectCollection.delete_one({"_id": ObjectId(id)})
     return result
 
-def add_group_to_project(group_obj):
+def get_project_by_name(name):
+    result = projectCollection.find_one({"project": name})
+    if result:
+        return result
+    else:
+        return None
+
+def add_group_to_project(projectName, group_id):
+    project = get_project_by_name(projectName)
+    if project["status"] == "assigned":
+        return False
     result1 = projectCollection.update_one(
-            {"_id": ObjectId(group_obj["project_id"])},
-            {"$set": {"group": ObjectId(group_obj["group_id"])}}
+            {"project": projectName},
+            {"$set": {"group": group_id}}
         )
     return result1
 
@@ -87,9 +98,9 @@ def change_status(projectName, status):
         )
     return result
 
-def add_interested_group_to_project(project_id,student_group):
+def add_interested_group_to_project(project_name, group_id):
     result = projectCollection.update_one(
-            {"_id": ObjectId(project_id)},
-            {"$push": {"interested groups": student_group['group_id']}}
+            {"project": project_name},
+            {"$push": {"interested groups": group_id}}
         ) 
     return result

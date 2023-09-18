@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CircularProgress from '@mui/material/CircularProgress';
+import { getUserEmail } from "../Utils/UserEmail";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -107,16 +108,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function StudentProjects() {
-  const classes = useStyles();
 
+  const classes = useStyles();
   const [projects, setProjects] = useState([]);
+  const [students, setStudents] = useState([])
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
   const [loading, setIsLoading] = useState(false);
-
-
+  const [currentGroup, setCurrGroup] = useState(null)
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -129,22 +130,47 @@ function StudentProjects() {
     setOpen(false);
   };
 
+
+  const fetchData = () => {
+    Promise.all(
+      [
+        getUserEmail(),
+        fetch("/api/projects"),
+        fetch("/api/students")
+      ])
+      .then(([resEmail, resProjects, resStudents]) =>
+        Promise.all([resEmail, resProjects.json(), resStudents.json()])
+      ).then(([Email, projects, students]) => {
+        
+        // Filter projects
+        if (projects.message !== "Project list is empty."){
+          projects = projects.filter(project => project.status !== "assigned")
+          setProjects(projects)
+        }
+        if (students.message !== "Student list is empty."){
+          setStudents(students)
+          let currStudent = students.filter(student => student.email === Email)
+          setCurrGroup(currStudent[0].group)
+        }
+        setIsLoading(false)
+      });
+  };
+
   const fetchProjects = () => {
     fetch("/api/projects")
       .then((response) => response.json())
       .then((data) => {
         // check if we recieve a list of project or not
-        setProjects(data)? Array.isArray(data) : setProjects([])
+        setProjects(data)
       })
       .catch((error) => {
         console.error(error);
       });
-      setIsLoading(false)
   };
 
   useEffect(() => {
     setIsLoading(true)
-    fetchProjects();
+    fetchData()
   }, []);
 
   const handleSubmit = (newProject) => {
@@ -153,14 +179,21 @@ function StudentProjects() {
 
   const handleProjectApplication = (event, project) => {
     event.preventDefault();
+
+    let body = {
+      "project_name": project.project,
+      "project_id": project._id,
+      "group_id": currentGroup
+    }
+
     fetch("api/request/join/project", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(project),
+      body: JSON.stringify(body),
     })
-      .then((response) =>  {
+      .then((response) => {
         if (response.ok) {
           return response.json();
         } else {
@@ -169,7 +202,7 @@ function StudentProjects() {
       })
       .then((data) => {
         setShowAlert(true);
-        setTimeout(() => setShowAlert(false),3000);
+        setTimeout(() => setShowAlert(false), 3000);
       })
       .catch((error) => {
         setErrorShowAlert(true);
@@ -177,10 +210,10 @@ function StudentProjects() {
         console.error(error);
       });
   };
- 
+
   return (
     <Container>
-       <Snackbar open={showErrorAlert} onClose={() => setErrorShowAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+      <Snackbar open={showErrorAlert} onClose={() => setErrorShowAlert(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="error">
           Project Application Already Sent
         </Alert>
@@ -193,142 +226,179 @@ function StudentProjects() {
       <Typography variant="h2" align="center" fontWeight="fontWeightBold">
         Student Projects
       </Typography>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-      <Box>
-        <Grid
-          container
-          spacing={1}
-          justifyContent="center"
-          alignItems="center"
-          style={{ display: "block" }}
-        >
-          <Grid container md={9} sm={12} xs={12}>
-            <TextField
-              id="search"
-              label="Search by project name"
-              variant="outlined"
-              size="small"
-              value={searchTerm}
-              onChange={handleSearch}
-              style={{ marginTop: "3rem", width: "30%" }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpen}
-              style={{ marginTop: "3rem", width: "30%", marginLeft: "1rem" }}
-            >
-              Add Project
-            </Button>
-            <AddProjectModal
-              open={open}
-              onClose={handleClose}
-              onSubmit={handleSubmit}
-            />
-          </Grid>
-          {Array.isArray(projects) && projects.length !== 0 ? projects.map((project) => (
-            <form className={classes.formContainer} onSubmit={(event) => handleProjectApplication(event, project)}>
-              <Grid key={project.id}>
-                <Card className={classes.root} style={{ padding: "1rem" }}>
-                  <CardContent>
-                    <Typography
-                      variant="h5"
-                      component="h2"
-                      className={classes.bold}
-                    >
-                      {project.project}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      component="p"
-                      style={{ marginTop: "1rem" }}
-                    >
-                      {project.description}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      component="p"
-                      style={{ marginTop: "1rem" }}
-                    >
-                      <span className={classes.bold}>Client:</span>{" "}
-                      {project.client}
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                      <span className={classes.bold}>Status:</span>{" "}
-                      <Box
-                        component="span"
-                        className={`${classes.status} ${project.status === "new"
-                          ? classes.new
-                          : project.status === "interested students"
-                            ? classes.interested
-                            : project.status === "students needed"
-                              ? classes.needed
-                              : project.status === "pending approval"
-                                ? classes.approval
-                                : project.status === "assigned"
-                                  ? classes.assigned
-                                  : project.status === "proposed"
-                                    ? classes.proposed
-                                    : classes.info
-                          }`}
+        <Box>
+          <Grid
+            container
+            spacing={1}
+            justifyContent="center"
+            alignItems="center"
+            style={{ display: "block" }}
+          >
+            <Grid container md={9} sm={12} xs={12}>
+              <TextField
+                id="search"
+                label="Search by project name"
+                variant="outlined"
+                size="small"
+                value={searchTerm}
+                onChange={handleSearch}
+                style={{ marginTop: "3rem", width: "30%" }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOpen}
+                style={{ marginTop: "3rem", width: "30%", marginLeft: "1rem" }}
+              >
+                Add Project
+              </Button>
+              <AddProjectModal
+                open={open}
+                onClose={handleClose}
+                fetchProjects={fetchProjects}
+                currentGroup={currentGroup}
+              />
+            </Grid>
+            {Array.isArray(projects) && projects.length !== 0 ? projects.map((project) => (
+              <form className={classes.formContainer} onSubmit={(event) => handleProjectApplication(event, project)}>
+                <Grid key={project.id}>
+                  <Card className={classes.root} style={{ padding: "1rem" }}>
+                    <CardContent>
+                      <Typography
+                        variant="h5"
+                        component="h2"
+                        className={classes.bold}
                       >
-                        {project.status}
-                      </Box>
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                      <span className={classes.bold}>Group:</span>{" "}
-                      {project.group}
-                    </Typography>
-                    <Button
-                      variant="text"
-                      color="primary"
-                      type="sumbit"
-                      disabled={
-                        project.status === "pending approval" ||
-                        project.status === "assigned" ||
-                        project.status === "proposed" 
-                      }
-                      className={classes.button}
-                      style={{ marginTop: "1rem" }}
-                      
-                    >
-                      REQUEST
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </form>
-          )) : null}
-        </Grid>
-      </Box>
-      )}
+                        {project.project}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        component="p"
+                        style={{ marginTop: "1rem" }}
+                      >
+                        {project.description}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        component="p"
+                        style={{ marginTop: "1rem" }}
+                      >
+                        <span className={classes.bold}>Client Name:</span>{" "}
+                        {project.clientName}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        component="p"
+                      >
+                        <span className={classes.bold}>Client Email:</span>{" "}
+                        {project.clientEmail}
+                      </Typography>
+                      <Typography variant="body2" component="p">
+                        <span className={classes.bold}>Status:</span>{" "}
+                        <Box
+                          component="span"
+                          className={`${classes.status} ${project.status === "new"
+                            ? classes.new
+                            : project.status === "interested students"
+                              ? classes.interested
+                              : project.status === "students needed"
+                                ? classes.needed
+                                : project.status === "pending approval"
+                                  ? classes.approval
+                                  : project.status === "assigned"
+                                    ? classes.assigned
+                                    : project.status === "proposed"
+                                      ? classes.proposed
+                                      : classes.info
+                            }`}
+                        >
+                          {project.status}
+                        </Box>
+                      </Typography>
+                      <Typography variant="body2" component="p">
+                        <span className={classes.bold}>Group:</span>{" "}
+                        {project.group}
+                      </Typography>
+                      <Button
+                        variant="text"
+                        color="primary"
+                        type="sumbit"
+                        disabled={
+                          project.status === "pending approval" ||
+                          project.status === "assigned" ||
+                          project.status === "proposed" ||
+                          currentGroup === null
+                        }
+                        className={classes.button}
+                        style={{ marginTop: "1rem" }}
+                      >
+                        REQUEST
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </form>
+            )) : null}
+          </Grid>
+        </Box>
+      {/* )} */}
     </Container>
   );
 }
 
-// Modal to add a project
-function AddProjectModal({ open, onClose, onSubmit }) {
+function AddProjectModal({ open, onClose, fetchProjects, currentGroup }) {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [client, setClient] = useState("");
-  const [group, setGroup] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newProject = { name, description, client, group };
-    onSubmit(newProject);
-    setName("");
-    setDescription("");
-    setClient("");
-    setGroup("");
-    onClose();
+    if (currentGroup === null){
+      setConfirmationMessage("You Need to be in a group to propose a project!"); // Set confirmation message
+      setTimeout(() => {
+        setConfirmationMessage(""); // Clear the confirmation message after a few seconds
+        onClose(); // Close the dialog
+      }, 1500); // Adjust the time as needed
+      return
+    }
+    let project = {
+      project: name,
+      description: description,
+      clientName: client,
+      clientEmail: clientEmail,
+      status: "proposed",
+      group: currentGroup,
+    };
+
+    fetch("/api/project", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(project),
+    })
+      .then((response) => {
+        if (response.ok) {
+          fetchProjects();
+          setConfirmationMessage("Project added successfully!"); // Set confirmation message
+          setTimeout(() => {
+            setConfirmationMessage(""); // Clear the confirmation message after a few seconds
+            onClose(); // Close the dialog
+          }, 1500); // Adjust the time as needed
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
     <Dialog open={open}>
+      {confirmationMessage === "You Need to be in a group to propose a project!" &&  <Alert severity = "error" >{confirmationMessage}</Alert>} 
+      {confirmationMessage === "Project added successfully!" &&  <Alert> {confirmationMessage}</Alert>} 
       <DialogTitle
         sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center" }}
       >
@@ -346,7 +416,7 @@ function AddProjectModal({ open, onClose, onSubmit }) {
             <TextField
               fullWidth
               required
-              label="Name"
+              label="Project Title"
               value={name}
               onChange={(event) => setName(event.target.value)}
               variant="outlined"
@@ -366,7 +436,7 @@ function AddProjectModal({ open, onClose, onSubmit }) {
             <TextField
               fullWidth
               required
-              label="Client"
+              label="Client Full Name"
               value={client}
               onChange={(event) => setClient(event.target.value)}
               variant="outlined"
@@ -375,9 +445,9 @@ function AddProjectModal({ open, onClose, onSubmit }) {
             <TextField
               fullWidth
               required
-              label="Group"
-              value={group}
-              onChange={(event) => setGroup(event.target.value)}
+              label="Client Email"
+              value={clientEmail}
+              onChange={(event) => setClientEmail(event.target.value)}
               variant="outlined"
               className={classes.textField}
             />
@@ -385,7 +455,11 @@ function AddProjectModal({ open, onClose, onSubmit }) {
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" onClick={handleSubmit} variant="contained">
+          <Button
+            color="secondary"
+            type="submit" // Use type="submit" to trigger the form submission
+            variant="contained"
+          >
             Add Project
           </Button>
         </DialogActions>

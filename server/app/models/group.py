@@ -41,19 +41,26 @@ def get_group_by_group_name(name):
 def add_student_to_group(student_email, group_id):
     student_obj = student.get_student_by_email(student_email)
     group_obj = get_group(group_id)
-    student_name =  student_obj['firstname'] + ' ' + student_obj['lastname']
 
-    if student_name in group_obj['members']:
+    if student_obj["orgdefinedid"] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"_id": ObjectId(group_obj["_id"])},
-        {"$push": {"members": str(student_name)}})
-    
+        {"$push": {"members": str(student_obj["orgdefinedid"])}})
+    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"])
     if result.modified_count > 0:
         return True
+    
     return False
 
+def remove_student_from_group_by_email(group_id, email):
+    group = get_group_by_group_name(group_id)
+    student_obj = student.get_student_by_email(email)
+    group["members"].remove(student_obj["orgdefinedid"])
+    student.remove_student_from_group(student_obj["orgdefinedid"])
+    result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
+    return result
 
 def remove_student_from_group(group_id , orgdefinedid):
     group = get_group_by_group_name(group_id)
@@ -62,14 +69,15 @@ def remove_student_from_group(group_id , orgdefinedid):
     return result
 
 def get_user_group(user_email):
-    student_name = student.get_student_name_from_email(user_email)
-    group_collection = groupCollection.find_one({"members": student_name})
-    if group_collection:
-        group_collection["_id"] = str(group_collection["_id"])
-        group_collection_json = json.dumps(group_collection)
-        return group_collection_json
+    student_obj = student.get_student_by_email(user_email)
+    group = groupCollection.find_one(
+        {"members": {"$in" : [student_obj["orgdefinedid"]]}})
+    
+    if group != None:
+        return group
     else:
-        return None
+        return False
+
     
 def is_user_in_group(user_name):
     group_collection = groupCollection.find_one({"members": user_name})
@@ -92,7 +100,6 @@ def update_group_by_id(id, group_obj):
     if originalGroup["group_id"] != group_obj["group_id"]:
         for orgdefinedId in group_obj["members"]:
                 result = student.assign_group_to_student(orgdefinedId, groupName= group_obj["group_id"])
-    
     project.change_status(group_obj["project"], "assigned")       
     
     result = groupCollection.update_one({"_id": ObjectId(id)},  {"$set" : group_obj})
@@ -107,9 +114,22 @@ def delete_group_by_id(id):
     project.change_status(originalGroup["project"], "students needed")
     return result
 
-def add_project_to_group(group_obj,proj_obj):
+def add_project_to_group(groupName,projectName):
+    # group = get_group_by_group_name(groupName)
+    # if group.project == "" or group.project == None:
+    #     return False, "Project Already has been assigned"
     result = groupCollection.update_one(
-            {"group_id": group_obj["group_id"]},
-            {"$set": {"project": proj_obj["project"]}}
+            {"group_id": groupName},
+            {"$set": {"project": projectName}}
         )
     return result
+
+def remove_project_from_group(projectName):
+    for group in groupCollection.find({"project": projectName}):
+        result = groupCollection.update_one(
+            {"group_id": group["group_id"]},
+            {"$set" : {"project": ""}}
+        )
+        if not result:
+            return result
+    return True

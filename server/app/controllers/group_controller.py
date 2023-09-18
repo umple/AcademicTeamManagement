@@ -1,6 +1,6 @@
 from flask import jsonify, request, session, make_response
 from app.models import group
-from bson import ObjectId
+from bson import json_util
 import pandas as pd
 import json
 from . import group_bp
@@ -71,22 +71,22 @@ def add_student_to_group():
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
-@group_bp.route("/remove/group/member", methods=["DELETE"])
-def remove_student_from_group():
+@group_bp.route("/remove/group/member/<id>", methods=["DELETE"])
+def remove_student_from_group(id):
     curr_user_email = session.get("user")["preferred_username"]
-
-    if group.remove_student_from_group(curr_user_email):
+    print(curr_user_email)
+    if group.remove_student_from_group_by_email(id ,curr_user_email):
         return jsonify({"message": f"Removed {curr_user_email} to group "})
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
 @group_bp.route("retrieve/curr/user/group", methods=["GET"])
 def get_curr_user_group():
+    print("here")
     user_group = group.get_user_group(session.get("user")["preferred_username"])
-    if user_group:
-        return user_group
-    else:
+    if user_group == False:
         return jsonify({"error":"User is not in a group"}),400
+    return jsonify(json.loads(json_util.dumps(user_group))), 200
     
 @group_bp.route("curr/user/in/group", methods=["GET"])
 def is_curr_user_in_group():

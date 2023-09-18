@@ -49,6 +49,8 @@ const GroupTable = () => {
         
         if (groups.message !== "Group list is empty."){
           setTableData(groups)
+        }else{
+          setTableData([])
         }
 
         // Filter projects
@@ -92,8 +94,6 @@ const GroupTable = () => {
                 )
               }
             });
-          }else{
-            
           }
         }else{
           return <Chip sx = {{ marginBottom: "5px",}} color="error" label={"Empty Group"} />
@@ -178,7 +178,9 @@ const GroupTable = () => {
       })
         .then(response => {
           if (response.ok) {
+            console.log("HERE")
             fetchData();
+            console.log(tableData)
           } else {
             console.error("Error deleting row");
           }
@@ -341,6 +343,12 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
       setTimeout(() => setError(""), 4000);
       return false
     }
+
+    if (groups.length === 0){
+      return true
+    }
+
+    console.log(groups)
     
     let group = groups.find((group) => group.group_id.toLowerCase() === values["group_id"].toLowerCase()) ;
     if (typeof group !== "undefined"){
