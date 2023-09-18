@@ -1,4 +1,25 @@
 import groupsService from "../services/groupsService";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Stack,
+    TextField,
+    Tooltip,
+    Typography,
+    Select,
+    MenuItem,
+    cellValueMap,
+    InputLabel,
+    OutlinedInput,
+    Alert
+  } from '@mui/material';
+import Chip from '@mui/material/Chip';
+
 
 export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchData, projects, students, groups }) => {
 
@@ -78,7 +99,6 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
             let status = await groupsService.post(values);
             
             if (status === 200) {
-                fetchData();
                 Object.entries(values).forEach(([key, value]) => {
                     if (key === 'members') {
                         values[key] = []
@@ -94,6 +114,7 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
         
 
         onSubmit(values);
+        fetchData();
         onClose();
     };
 
