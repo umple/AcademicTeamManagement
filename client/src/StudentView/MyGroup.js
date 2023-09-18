@@ -5,6 +5,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Link } from "react-router-dom";
 import Chip from '@mui/material/Chip';
 import MaterialReactTable from 'material-react-table';
+import { fetchData } from "../services/api";
+import { colorStatus } from "../Utils/statusColors";
 
 
 const MyGroup = () => {
@@ -15,78 +17,47 @@ const MyGroup = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
-    fetch("api/students")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("No students in the database");
-        } else {
-          return response.json()
-        }
-      })
-      .then((data) => {
-        setStudents(data);
-      })
-      .catch((error) => console.error(error));
-    fetch("api/retrieve/curr/user/group")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("dsaafsd");
-        } else {
-          return response.json()
-        }
-      })
-      .then((data) => {
-        setGroup(data);
-      })
-      .catch((error) => console.error(error));
+    const fetchDataAndSetState = async () => {
+      try {
+        const studentsData = await fetchData("api/students");
+        setStudents(studentsData);
 
-    fetch("api/project/applications")
-      .then((response) => {
-        if (!response.ok) {
-        } else {
-          return response.json()
-        }
-      })
-      .then((data) => {
-        setProjectApplications(data);
-        setIsLoading(false)
-      })
-      .catch((error) => console.error(error));
+        const groupData = await fetchData("api/retrieve/curr/user/group");
+        setGroup(groupData);
+
+        const projectApplicationsData = await fetchData("api/project/applications");
+        setProjectApplications(projectApplicationsData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchDataAndSetState();
   }, []);
 
   const handleLeaveGroup = async () => {
-    fetch(`api/remove/group/member/${group.group_id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json"
+    try {
+      const response = await fetch(`api/remove/group/member/${group.group_id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Request failed");
       }
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 4000);
-        setGroup({})
-      })
-      .catch((error) => console.error(error));
+
+      const data = await response.json();
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 4000);
+      setGroup({});
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  function colorStatus(status){
-      if (status === "Accepted"){
-        return "success"
-      }
-      
-      if (status === "Rejected"){
-        return "error"
-      }
-
-      if (status === "Feedback Provided"){
-        return "warning"
-      }
-
-      return "secondary"
-  }
 
   const columns = useMemo(() => [
     {
@@ -106,21 +77,12 @@ const MyGroup = () => {
           color = {colorStatus(cell.getValue())}
           />
       )
-       
-
-
-      
-        
-      
     },
     {
       accessorKey: 'feedback',
       header: 'Feedback',
     },
-    // {
-    //   accessorKey: 'students_needed',
-    //   header: 'Students Needed',
-    // }
+
   ], []);
 
   const findNameByStudentID= (orgdefinedid) =>{
