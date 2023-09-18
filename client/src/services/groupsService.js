@@ -1,14 +1,13 @@
 import axios from "axios";
 const groupsService = {
   get: async () => {
-    return await axios
-      .get("/api/groups")
+    return await fetch("/api/groups", { method: "GET" })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
         return data;
-      })
+      }) 
       .catch((error) => {
         return error;
       });

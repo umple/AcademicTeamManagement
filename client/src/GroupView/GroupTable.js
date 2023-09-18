@@ -1,17 +1,6 @@
-import React, { useCallback, useState, useEffect } from "react";
-// import MaterialReactTable from "material-react-table";
-// import {
-//   Box,
-//   Button, IconButton, Tooltip,
-//   Typography, Alert
-// } from "@mui/material";
-// import FileDownloadIcon from "@mui/icons-material/FileDownload";
-// import { ExportToCsv } from "export-to-csv"; //or use your library of choice here
-// import { Delete, Edit } from "@mui/icons-material";
-// import { CreateNewGroupModal } from "./CreateNewGroupModal";
-// import groupsService from "../services/groupsService";
-// import React, { useCallback, useState, useMemo, useEffect } from 'react';
-// import MaterialReactTable from 'material-react-table';
+import React, { useCallback, useState, useEffect, useMemo } from "react";
+import { CreateNewGroupModal } from "./CreateNewGroupModal";
+import MaterialReactTable from "material-react-table";
 import {
   Box,
   Button,
@@ -29,14 +18,15 @@ import {
   cellValueMap,
   InputLabel,
   OutlinedInput,
-  Alert
-} from '@mui/material';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
-import { Delete, Edit } from '@mui/icons-material';
-import { FormControl } from '@material-ui/core';
-import Chip from '@mui/material/Chip';
-import { Theme, useTheme } from '@mui/material/styles';
+  Alert,
+} from "@mui/material";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { ExportToCsv } from "export-to-csv"; //or use your library of choice here
+import { Delete, Edit } from "@mui/icons-material";
+import { FormControl } from "@material-ui/core";
+import Chip from "@mui/material/Chip";
+import { Theme, useTheme } from "@mui/material/styles";
+import groupsService from "../services/groupsService";
 
 const GroupTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -50,48 +40,63 @@ const GroupTable = () => {
     fetchGroups();
     fetchData();
   }, []);
-  
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'group_id',
-      header: 'Group',
-    },
-    {
-      accessorKey: 'members',
-      header: 'Members',
-      Cell: ({ cell }) => {
 
-        if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
-          if (students.length !== 0){
-            return cell.getValue("members").map((value, index) => {
-              let student = students.find((student) => {
-                return student.orgdefinedid === value
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "group_id",
+        header: "Group",
+      },
+      {
+        accessorKey: "members",
+        header: "Members",
+        Cell: ({ cell }) => {
+          if (
+            Array.isArray(cell.getValue("members")) &&
+            cell.getValue("members").length > 0
+          ) {
+            if (students.length !== 0) {
+              return cell.getValue("members").map((value, index) => {
+                let student = students.find((student) => {
+                  return student.orgdefinedid === value;
+                });
+
+                if (typeof student !== "undefined") {
+                  let display = student.firstname + " " + student.lastname;
+                  return (
+                    <div>
+                      <Chip
+                        sx={{ marginBottom: "5px" }}
+                        color="success"
+                        label={display}
+                      />
+                    </div>
+                  );
+                }
               });
-              
-              if (typeof student !== "undefined"){
-                let display = student.firstname + " " + student.lastname;
-                return (
-                <div>
-                  <Chip sx = {{ marginBottom: "5px",}} color="success" label={display} />
-                </div>
-                )
-              }
-            });
+            }
+          } else {
+            return (
+              <Chip
+                sx={{ marginBottom: "5px" }}
+                color="error"
+                label={"Empty Group"}
+              />
+            );
           }
-        }else{
-          return <Chip sx = {{ marginBottom: "5px",}} color="error" label={"Empty Group"} />
-        }
-      }
-    },
-    {
-      accessorKey: 'project',
-      header: 'Project',
-    },
-    {
-      accessorKey: 'notes',
-      header: 'Notes'
-    },
-  ], [students]);
+        },
+      },
+      {
+        accessorKey: "project",
+        header: "Project",
+      },
+      {
+        accessorKey: "notes",
+        header: "Notes",
+      },
+    ],
+    [students]
+  );
 
   const fetchGroups = async () => {
     try {
@@ -320,7 +325,6 @@ const GroupTable = () => {
         columns={columns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        onSubmit={handleCreateNewRow}
         onAddRow={handleAddRow}
         fetchData={fetchData}
         projects={projects}
