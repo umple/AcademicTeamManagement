@@ -142,3 +142,12 @@
 - **To do:** 
     - Start working on issues
     - Meet up with Prof. Lethbridge to fix his setup
+  
+## 09/15/2023
+- Team
+- **Next meeting:** 1 weeks
+- **Summary:**
+    -  Discussed main things to fix
+    -  Assigned most important tasks
+- **To do:** 
+    - Meet up with Prof. Lethbridge to test the app
