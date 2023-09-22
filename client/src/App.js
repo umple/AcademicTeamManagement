@@ -1,20 +1,20 @@
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-import ResponsiveAppBar from './StaticComponents/NavBar/ResponsiveAppBar';
-import ProjectTable from './ProjectListingView/Components/ProjectTable/ProjectTable';
-import StudentTable from './StudentListingView/StudentTable';
-import ImportStudents from './ImportStudentsView/ImportStudents';
-import Groups from './GroupView/GroupTable'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LoginPage from './LoginView/LoginPage';
-import HomePage from './HomePageView/HomePage';
-import StudentHomePage from './HomePageView/StudentHomePage';
-import StudentProjects from './StudentView/StudentProjects';
-import StudentGroups from './StudentView/StudentGroupTable';
-import MyGroup from './StudentView/MyGroup';
 import PrivateRoutes from './Authentication/PrivateRoutes';
-import PageNotFound from './StaticComponents/PageNotFound/PageNotFound';
 import RoleBasedRoutes from './Authentication/RoleBasedRoutes';
-import ROLES from './Utils/Roles';
+import Groups from './components/GroupView/GroupTable';
+import ImportStudents from './components/ImportStudentsView/ImportStudents';
+import ProjectTable from './components/ProjectTable/ProjectTable';
+import ResponsiveAppBar from './components/StaticComponents/NavBar/ResponsiveAppBar';
+import PageNotFound from './components/StaticComponents/PageNotFound/PageNotFound';
+import StudentTable from './components/StudentListingView/StudentTable';
+import MyGroup from './components/StudentView/MyGroup';
+import StudentGroups from './components/StudentView/StudentGroupTable';
+import StudentProjects from './components/StudentView/StudentProjects';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import StudentHomePage from './pages/StudentHomePage';
+import ROLES from './utils/Roles';
 
 
 const App = () => {

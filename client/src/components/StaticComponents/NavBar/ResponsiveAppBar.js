@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './ResponsiveAppBar.css';
-import { AppBar, Box, Toolbar, IconButton, Typography, Menu, MenuItem} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useLocation } from 'react-router-dom';
-import { Button } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
-import { getUserType, clearCachedUserType } from '../../Utils/UserType';
-import { clearCachedUserName } from '../../Utils/UserName';
-import { clearCachedUserEmail } from '../../Utils/UserEmail';
+import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { clearCachedUserEmail } from "../../../utils/UserEmail";
+import { clearCachedUserType, getUserType } from '../../../utils/UserType';
+import { clearCachedUserName } from '../../../utils/UserName';
+import './ResponsiveAppBar.css';
 
 // Nav elements to display for the students
 const studentPages = {

@@ -23,7 +23,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { FileUpload as FileUploadIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Paper } from '@material-ui/core';
-import { FilterDataByProfessor } from '../Utils/FilterDataByValue';
+import { FilterDataByProfessor } from '../../utils/FilterDataByValue';
 
 
 
