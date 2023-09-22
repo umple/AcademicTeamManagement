@@ -35,8 +35,8 @@ const HomePage = () => {
     // Cache the value of the professor's email
     useEffect(() => {
         getUserEmail()
-        .then((type) => {
-            setProfessorEmail(type)
+        .then((email) => {
+            setProfessorEmail(email)
         })
         .catch((error) => {
             console.error(error);
