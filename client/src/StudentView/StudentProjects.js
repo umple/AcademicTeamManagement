@@ -1,24 +1,9 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Stack,
-  Container,
-  Alert,
-  Snackbar
+import { Box, Grid, Card, CardContent, Typography, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Container, Alert, Snackbar
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import CircularProgress from '@mui/material/CircularProgress';
 import { getUserEmail } from "../Utils/UserEmail";
+import AddProjectModal from "./AddProjectModal";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -38,10 +23,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "3rem",
   },
   container: {
-    // display: 'flex',
     flexDirection: "column",
     alignItems: "center",
-    // margin: '2rem',
   },
   title: {
     fontWeight: "bold",
@@ -107,11 +90,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
 function StudentProjects() {
 
   const classes = useStyles();
   const [projects, setProjects] = useState([]);
-  const [students, setStudents] = useState([])
+  const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -122,6 +106,7 @@ function StudentProjects() {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -129,7 +114,6 @@ function StudentProjects() {
   const handleClose = () => {
     setOpen(false);
   };
-
 
   const fetchData = () => {
     Promise.all(
@@ -143,11 +127,11 @@ function StudentProjects() {
       ).then(([Email, projects, students]) => {
         
         // Filter projects
-        if (projects.message !== "Project list is empty."){
+        if (projects.length > 0 && projects.message !== "Project list is empty."){
           projects = projects.filter(project => project.status !== "assigned")
           setProjects(projects)
         }
-        if (students.message !== "Student list is empty."){
+        if(students.length > 0 && students.message !== "Student list is empty."){
           setStudents(students)
           let currStudent = students.filter(student => student.email === Email)
           setCurrGroup(currStudent[0].group)
@@ -172,10 +156,6 @@ function StudentProjects() {
     setIsLoading(true)
     fetchData()
   }, []);
-
-  const handleSubmit = (newProject) => {
-    setProjects([...projects, { ...newProject, id: projects.length + 1 }]);
-  };
 
   const handleProjectApplication = (event, project) => {
     event.preventDefault();
@@ -343,128 +323,6 @@ function StudentProjects() {
         </Box>
       {/* )} */}
     </Container>
-  );
-}
-
-function AddProjectModal({ open, onClose, fetchProjects, currentGroup }) {
-  const classes = useStyles();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [client, setClient] = useState("");
-  const [clientEmail, setClientEmail] = useState("");
-  const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (currentGroup === null){
-      setConfirmationMessage("You Need to be in a group to propose a project!"); // Set confirmation message
-      setTimeout(() => {
-        setConfirmationMessage(""); // Clear the confirmation message after a few seconds
-        onClose(); // Close the dialog
-      }, 1500); // Adjust the time as needed
-      return
-    }
-    let project = {
-      project: name,
-      description: description,
-      clientName: client,
-      clientEmail: clientEmail,
-      status: "proposed",
-      group: currentGroup,
-    };
-
-    fetch("/api/project", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(project),
-    })
-      .then((response) => {
-        if (response.ok) {
-          fetchProjects();
-          setConfirmationMessage("Project added successfully!"); // Set confirmation message
-          setTimeout(() => {
-            setConfirmationMessage(""); // Clear the confirmation message after a few seconds
-            onClose(); // Close the dialog
-          }, 1500); // Adjust the time as needed
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  return (
-    <Dialog open={open}>
-      {confirmationMessage === "You Need to be in a group to propose a project!" &&  <Alert severity = "error" >{confirmationMessage}</Alert>} 
-      {confirmationMessage === "Project added successfully!" &&  <Alert> {confirmationMessage}</Alert>} 
-      <DialogTitle
-        sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center" }}
-      >
-        Add Project
-      </DialogTitle>
-      <form onSubmit={handleSubmit}>
-        <DialogContent>
-          <Stack
-            sx={{
-              width: "100%",
-              minWidth: { xs: "300px", sm: "360px", md: "400px" },
-              gap: "1.5rem",
-            }}
-          >
-            <TextField
-              fullWidth
-              required
-              label="Project Title"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              variant="outlined"
-              className={classes.textField}
-            />
-            <TextField
-              fullWidth
-              required
-              label="Description"
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              variant="outlined"
-              className={classes.textField}
-              multiline
-              rows={4}
-            />
-            <TextField
-              fullWidth
-              required
-              label="Client Full Name"
-              value={client}
-              onChange={(event) => setClient(event.target.value)}
-              variant="outlined"
-              className={classes.textField}
-            />
-            <TextField
-              fullWidth
-              required
-              label="Client Email"
-              value={clientEmail}
-              onChange={(event) => setClientEmail(event.target.value)}
-              variant="outlined"
-              className={classes.textField}
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button
-            color="secondary"
-            type="submit" // Use type="submit" to trigger the form submission
-            variant="contained"
-          >
-            Add Project
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
   );
 }
 
