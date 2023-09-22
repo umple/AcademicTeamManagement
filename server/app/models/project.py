@@ -56,6 +56,7 @@ def add_project(project_obj):
         'status': project_obj.get('status', 'new'),
         'interested groups': [],
         'group': project_obj.get('group', ''),
+        'professorEmail': project_obj.get('professorEmail', ''),
         'visibility': project_obj.get('visibility', ''),
         'notes': project_obj.get('notes', '')
     }

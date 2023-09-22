@@ -20,8 +20,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  FormControlLabel,
-  Checkbox,
   FormLabel,
   FormGroup,
   Select,
@@ -31,13 +29,13 @@ import {
   TextareaAutosize,
   Alert,
   Snackbar,
-  Tab
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
 import Chip from '@mui/material/Chip';
 import { colorStatus } from '../../../Utils/statusColors';
+import { FilterDataByProfessor } from '../../../Utils/FilterDataByValue';
 
 const ProjectTable = () => {
   // Columns for table
@@ -92,23 +90,10 @@ const ProjectTable = () => {
           </Box>
         ),
       },
-      // {
-      //   accessorKey: 'interested groups',
-      //   header: 'Interested Groups',
-      //   Cell: ({ cell }) => {
-      //     if (Array.isArray(cell.getValue("interested groups")) && cell.getValue("interested groups").length > 0) {
-      //       return cell.getValue("interested groups").map((item, index) => <tr>{item}</tr>);
-      //     }
-      //   }
-      // },
       {
         accessorKey: 'group',
         header: 'Group',
       },
-      // {
-      //   accessorKey: 'visibility',
-      //   header: 'Visibility',
-      // },
       {
         accessorKey: 'notes',
         header: 'Notes'
@@ -129,7 +114,9 @@ const ProjectTable = () => {
     fetch("/api/projects")
       .then(response => response.json())
       .then(data => {
-        setTableData(data);
+        const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+        const filteredProjectsTableData = FilterDataByProfessor(data, professorEmail) // keep only the data that contains the professor's email
+        setTableData(filteredProjectsTableData);
       })
       .catch(error => {
         console.error(error);
@@ -159,12 +146,16 @@ const ProjectTable = () => {
 
   const handleAddRow = useCallback(
     (newRowData) => {
+
+      const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+      const newProjectInfo = { ...newRowData, professorEmail: professorEmail } // add the professor's email as a new pair
+
       fetch('/api/project', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newRowData)
+        body: JSON.stringify(newProjectInfo)
       })
         .then(response => {
           if (response.ok) {
@@ -325,54 +316,6 @@ const ProjectTable = () => {
             renderDetailPanel={({ row, index }) => {
               return (
                 <Grid container spacing={2}>
-                  {/* <Grid item>
-                    <TableContainer component={Paper}>
-                      <Table size="small" aria-label="a dense table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Interested Students</TableCell>
-                            <TableCell></TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {applications && Object.keys(applications).length !== 0 ? (
-                            Object.entries(applications).map(([project, groups], outerIndex) => (
-                              outerIndex === row.index && typeof groups !== 'undefined' ? (
-                                Object.entries(groups).map(([group_id, groupApplication]) => (
-                                  <>
-                                    {groupApplication && groupApplication.members && groupApplication.members.map((member, innerIndex) => (
-                                      <TableRow
-                                        key={innerIndex}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                      >
-                                        <TableCell>
-                                          {member}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                          <Button
-                                            variant="outlined"
-                                            color="warning"
-                                            onClick={() => {
-                                              console.info('View Profile', member);
-                                            }}
-                                          >
-                                            View Profile
-                                          </Button>
-                                        </TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </>
-                                ))
-                              ) : (
-                                null
-                              ))
-                            )) : null
-                          }
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Grid> */}
-
                   <Grid item>
                     <TableContainer component={Paper}>
                       <Table sx={{}} size="small" aria-label="a dense table">
@@ -509,7 +452,6 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchApplication
       return false
     }
 
-    console.log(projects.length)
     if (projects.length === undefined){
       return true
     }
@@ -638,30 +580,6 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
     onClose();
   };
 
-  // const handleSendFeedback = (event) => {
-  //   event.preventDefault()
-
-  //   const myObject = {
-  //     'feedback': textFieldFeedback,
-  //     'group_id': data.group_id,
-  //   }
-  //   fetch("api/send/feedback/to/group", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify(myObject),
-  //   })
-  //     .then((response) => { return response.json() })
-  //     .then((data) => {
-  //       setTextFieldtextFieldFeedback('')
-  //       setShowAlert(true);
-  //       setTimeout(() => setShowAlert(false), 5000);
-  //     })
-  //   onClose();
-  // }
-
-
   return (
     <Dialog open={open}>
       <DialogTitle  >Project Application: </DialogTitle>
@@ -707,36 +625,6 @@ export const ViewApplicationModal = ({ open, data, onClose, onSubmit, setShowAle
                     </Select>
                   </FormGroup>
           </Grid>
-          
-          {/* <Grid container alignItems="center" spacing={2}>
-            <Grid item>
-              <FormLabel component="legend">
-                <Typography variant="body1" gutterBottom>
-                  <Box fontWeight='fontWeightMedium' display='inline'>Description: </Box>
-                </Typography>
-                {data.notes}
-              </FormLabel>
-            </Grid>
-          </Grid> */}
-          {/* <Grid container alignItems="center" spacing={2} sx={{ mt: 1 }}>
-            <Grid item>
-              <FormLabel component="legend">
-                <Box fontWeight='fontWeightMedium' display='inline'>More students needed </Box>
-                <Tooltip title="Changes status to 'students needed' if ASSIGN button pressed" placement='right'>
-                  <Help />
-                </Tooltip>
-              </FormLabel>
-              <FormGroup row>
-                <FormControlLabel
-                  control={<Checkbox />}
-                  value={studentsNeeded}
-                  onChange={(e) => {
-                    setStudentsNeeded(e.target.value);
-                  }}
-                />
-              </FormGroup>
-            </Grid>
-          </Grid> */}
           <FormLabel component="legend" sx={{ mt: 1 }}>
             <Box fontWeight='fontWeightMedium' display='inline'>Feedback: </Box>
           </FormLabel>
