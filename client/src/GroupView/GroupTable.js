@@ -27,6 +27,7 @@ import { FormControl } from "@material-ui/core";
 import Chip from "@mui/material/Chip";
 import { Theme, useTheme } from "@mui/material/styles";
 import groupsService from "../services/groupsService";
+import { FilterDataByProfessor } from "../Utils/FilterDataByValue";
 
 const GroupTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -101,7 +102,9 @@ const GroupTable = () => {
   const fetchGroups = async () => {
     try {
       const response = await groupsService.get();
-      setTableData(response);
+      const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+      const filteredGroupTableData = FilterDataByProfessor(response, professorEmail) // keep only the data that contains the professor's email
+      setTableData(filteredGroupTableData);
     } catch (error) {
       setTableData([]);
     }

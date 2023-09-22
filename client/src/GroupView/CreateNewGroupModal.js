@@ -104,8 +104,8 @@ export const CreateNewGroupModal = ({
     }
 
     try {
-      
-      const professorEmail = localStorage.getItem('userEmail') // get the cached value of the professor's email
+
+      const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
       const newGroupInfo = { ...values, professorEmail: professorEmail } // add the professor's email as a new pair
 
       let status = await groupsService.post(newGroupInfo);
