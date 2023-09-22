@@ -1,7 +1,7 @@
 const CACHE_KEY = 'userType';
 let cachedUserType = null;
 
-const UserType = async () => {
+export const getUserType = async () => {
   if (cachedUserType) {
     return cachedUserType; // Return the cached value if available
   }
@@ -13,7 +13,7 @@ const UserType = async () => {
   }
 
   try {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/getusertype`, {
+    const response = await fetch(`http://localhost:5001/api/getusertype`, {
       method: 'GET',
       credentials: 'include' // include cookies in the request
     })
@@ -28,8 +28,6 @@ const UserType = async () => {
     throw error;
   }
 };
-
-export default UserType;
 
 export const clearCachedUserType = () => {
   cachedUserType = null; // Clear the cached value from memory

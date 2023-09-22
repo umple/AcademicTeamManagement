@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { clearCachedUserEmail } from "../../../utils/UserEmail";
 import { clearCachedUserType } from '../../../utils/UserType';
-import UserType from '../../../utils/UserType';
+import {getUserType} from '../../../utils/UserType';
 import { clearCachedUserName } from '../../../utils/UserName';
 import './ResponsiveAppBar.css';
 
@@ -37,7 +37,7 @@ const ResponsiveAppBar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    UserType()
+    getUserType()
       .then((type) => {
         setUserType(type)
         if (type) {

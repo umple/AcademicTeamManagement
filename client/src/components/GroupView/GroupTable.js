@@ -1,7 +1,8 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import { handleExportData } from '../../utils/exportData';
-import MaterialReactTable from 'material-react-table';
+import { FormControl } from '@material-ui/core';
+import { Delete, Edit } from '@mui/icons-material';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import {
+  Alert,
   Box,
   Button,
   Dialog,
@@ -9,20 +10,20 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
   Stack,
   TextField,
   Tooltip,
-  Typography,
-  Select,
-  MenuItem, InputLabel,
-  OutlinedInput,
-  Alert
+  Typography
 } from '@mui/material';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { Delete, Edit } from '@mui/icons-material';
-import { FormControl } from '@material-ui/core';
 import Chip from '@mui/material/Chip';
 import { useTheme } from '@mui/material/styles';
+import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
+import MaterialReactTable from 'material-react-table';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FilterDataByProfessor } from '../../utils/FilterDataByValue';
 
 const GroupTable = () => {
@@ -192,7 +193,61 @@ const GroupTable = () => {
     },
     [tableData],
   );
- 
+
+  // For exporting the table data
+  const csvOptions = {
+    filename: 'GroupsFromAcTeams-' + getDate(),
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: true,
+  };
+
+  const csvExporter = new ExportToCsv(csvOptions);
+
+  const handleExportData = () => {
+    // clean up and organize data to be exported
+    const keyToRemove = "_id"
+    const updatedJsonList = tableData.map(jsonObj => {
+      let updatedJsonObject = jsonObj
+      // remove the _id as that should not be in the json
+      if (keyToRemove in jsonObj) {
+        const { [keyToRemove]: deletedKey, ...rest } = jsonObj // use destructuring to remove the key
+        updatedJsonObject = rest // return the updated JSON object without the deleted key
+      }
+
+      // sort the keys as they appear in the columns
+      const orderedKeys = columns.map(key => key.accessorKey)
+      updatedJsonObject = Object.keys(updatedJsonObject)
+        .sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b)) // sort keys in the order of the updated keys
+        .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}) // create a new object with sorted keys
+
+      // replace the accessor key by the header
+      for (let i = 0; i < columns.length; i++) {
+        const { accessorKey, header } = columns[i]
+        if (accessorKey in updatedJsonObject) {
+          const { [accessorKey]: renamedKey, ...rest } = updatedJsonObject // use destructuring to rename the key
+          updatedJsonObject = { ...rest, [header]: renamedKey } // update the JSON object with the renamed key
+        }
+      }
+
+      return updatedJsonObject // return the original JSON object if the key is not found
+    })
+
+    csvExporter.generateCsv(updatedJsonList);
+  };
+
+  function getDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate
+  }
+
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Groups</Typography>
@@ -246,7 +301,7 @@ const GroupTable = () => {
             </Button>
             <Button
               color="primary"
-              onClick={handleExportData(tableData,columns)}
+              onClick={handleExportData}
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
