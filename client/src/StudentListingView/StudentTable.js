@@ -23,6 +23,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { FileUpload as FileUploadIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Paper } from '@material-ui/core';
+import { FilterDataByProfessor } from '../Utils/FilterDataByValue';
 
 
 
@@ -112,7 +113,9 @@ const StudentTable = () => {
         }
       })
       .then(data => {
-        setTableData(data);
+        const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+        const filteredStudentsTableData = FilterDataByProfessor(data, professorEmail) // keep only the data that contains the professor's email
+        setTableData(filteredStudentsTableData);
       })
       .catch(error => {
         console.error('There was a problem with the network request:', error);
@@ -370,12 +373,17 @@ export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit, fetchS
   );
 
   const handleSubmit = () => {
+
+    // add the professor's email to the newely created student
+    const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+    const newStudentInfo = { ...values, professorEmail: professorEmail } // add the professor's email as a new pair
+
     fetch("api/student", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(values)
+      body: JSON.stringify(newStudentInfo)
     })
       .then(response => {
         if (response.ok) {
@@ -385,7 +393,7 @@ export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit, fetchS
       .catch(error => {
         console.error(error);
       });
-    onSubmit(values);
+    onSubmit(newStudentInfo);
     onClose();
   };
 
