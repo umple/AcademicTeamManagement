@@ -1,68 +1,77 @@
-from flask import jsonify, request, Blueprint
-from app.models import project
+from flask import jsonify, request, session
+from app.models import project, group
 from bson import ObjectId
 import json
+from . import project_bp
 
-project_bp = Blueprint("project_bp", __name__)
 
-# GET Request to retrieve all projects from the collection
+# GET Request to retreive all students from the collection
 @project_bp.route("/projects", methods=["GET"])
 def get_projects():
     try:
         project_list = project.get_all_projects()
-        if not project_list:
-            return jsonify({"message": "Project list is empty."}), 200
-        return jsonify(project_list), 200
-    except Exception as e:
-        print(f"An error occurred while getting projects: {e}")
-        return {"message": "Internal server error."}, 500
+        if project_list:
+            return jsonify(project_list), 200
+        elif len(project_list) == 0:
+            return {"message": "Project list is empty."}, 200
+        else:
+            return {"message": "Project list not found."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
+    
 
-# POST Request to add a new project to the list
-@project_bp.route("/projects", methods=["POST"])
-def add_project():
+# POST Request to add a new student to the list
+@project_bp.route("/project", methods=["POST"])
+def add_Project():
     try:
         project_obj = json.loads(request.data)
         result = project.add_project(project_obj)
         if result:
-            return jsonify({"message": "Project added successfully", "id": str(result.inserted_id)}), 200
-        return {"message": "Could not add project."}, 404
-    except Exception as e:
-        print(f"An error occurred while adding project: {e}")
-        return {"message": "Internal server error."}, 500
+            return jsonify(str(result.inserted_id)), 200
+        else:
+            return {"message": "Could not add student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
 
-# PUT Request to update a project's information by ID
-@project_bp.route("/projects/<id>", methods=["PUT"])
+
+# PUT Request to update a student info
+@project_bp.route("/project/update/<id>", methods=["PUT"])
 def update_project_by_id(id):
     try:
         project_obj = request.json
+        print(project_obj)
         result = project.update_project_by_id(id, project_obj)
-        if result.modified_count > 0:
-            return jsonify({"message": "Project updated successfully"}), 200
-        return {"message": "Could not update project."}, 404
-    except Exception as e:
-        print(f"An error occurred while updating project: {e}")
-        return {"message": "Internal server error."}, 500
+        if result:
+            return jsonify(str(result.modified_count)), 200
+        else:
+            return {"message": "Could not edit student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
 
-# DELETE Request to remove a project from the collection by ID
-@project_bp.route("/projects/<id>", methods=["DELETE"])
+# DELETE Request to remove a student from the collection
+@project_bp.route("/project/delete/<id>", methods=["DELETE"])
 def delete_project_by_id(id):
     try:
         result = project.delete_project_by_id(id)
-        if result.deleted_count > 0:
-            return jsonify({"message": "Project deleted successfully"}), 200
-        return {"message": "Could not delete project."}, 404
-    except Exception as e:
-        print(f"An error occurred while deleting project: {e}")
-        return {"message": "Internal server error."}, 500
+        if result:
+            return jsonify(str(result.deleted_count)), 200
+        else:
+            return {"message": "Could not delete student."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
 
-# GET Request to retrieve interested groups
+
 @project_bp.route("/retrieve/interested/groups", methods=["GET"])
 def retrieve_interested_groups():
     try:
-        interested_groups = project.get_interested_groups()
-        if not interested_groups:
-            return jsonify({"message": "Interested groups list is empty."}), 404
-        return jsonify(interested_groups), 200
+        interestedGroups = project.get_interested_groups()
+        if interestedGroups:
+            return jsonify(interestedGroups), 200
+        if len(interestedGroups) == 0 or interestedGroups is None:
+            return jsonify(interestedGroups), 404
+        else:
+            return {"message": "Project list not found."}, 404
     except Exception as e:
-        print(f"An error occurred while retrieving interested groups: {e}")
-        return {"message": "Internal server error."}, 500
+        print(f"An error occurred while updating project: {e}")
+        return {"message": "Error occurred while retrieving interested groups."}, 500
+
