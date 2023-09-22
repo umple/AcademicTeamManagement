@@ -34,8 +34,8 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
 import Chip from '@mui/material/Chip';
-import { colorStatus } from '../../utils/statusColors';
-import { FilterDataByProfessor } from '../../utils/FilterDataByValue';
+import { colorStatus } from '../../helpers/statusColors';
+import { FilterDataByProfessor } from '../../helpers/FilterDataByValue';
 
 const ProjectTable = () => {
   // Columns for table

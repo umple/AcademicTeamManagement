@@ -24,7 +24,7 @@ import { useTheme } from '@mui/material/styles';
 import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
 import MaterialReactTable from 'material-react-table';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FilterDataByProfessor } from '../../utils/FilterDataByValue';
+import { FilterDataByProfessor } from '../../helpers/FilterDataByValue';
 
 const GroupTable = () => {
 

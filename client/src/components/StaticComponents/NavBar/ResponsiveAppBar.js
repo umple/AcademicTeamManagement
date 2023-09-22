@@ -5,10 +5,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { clearCachedUserEmail } from "../../../utils/UserEmail";
-import { clearCachedUserType } from '../../../utils/UserType';
-import {getUserType} from '../../../utils/UserType';
-import { clearCachedUserName } from '../../../utils/UserName';
+import { clearCachedUserEmail } from "../../../helpers/UserEmail";
+import { clearCachedUserType } from '../../../helpers/UserType';
+import {getUserType} from '../../../helpers/UserType';
+import { clearCachedUserName } from '../../../helpers/UserName';
 import './ResponsiveAppBar.css';
 
 // Nav elements to display for the students

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Navigate } from 'react-router-dom'
-import { getUserType } from '../utils/UserType.js';
+import { getUserType } from '../helpers/UserType.js';
 
 const RoleBasedRoutes = ({ allowedRole }) => {
 

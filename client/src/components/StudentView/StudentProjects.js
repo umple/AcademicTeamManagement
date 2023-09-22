@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Box, Grid, Card, CardContent, Typography, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Container, Alert, Snackbar
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { getUserEmail } from "../../utils/UserEmail";
+import { getUserEmail } from "../../helpers/UserEmail";
 import AddProjectModal from "./AddProjectModal";
 
 const useStyles = makeStyles((theme) => ({

@@ -2,21 +2,26 @@ const CACHE_KEY = 'userType';
 let cachedUserType = null;
 
 export const getUserType = async () => {
-  if (cachedUserType) {
+  if (cachedUserType !== null) {
     return cachedUserType; // Return the cached value if available
   }
 
   const cachedValue = localStorage.getItem(CACHE_KEY);
-  if (cachedValue !== "undefined" && cachedValue !== null) {
+  if (typeof cachedValue !== 'undefined' && cachedValue !== null) {
     cachedUserType = JSON.parse(cachedValue);
     return cachedUserType;
   }
 
   try {
-    const response = await fetch(`http://localhost:5001/api/getusertype`, {
+    const response = await fetch('http://localhost:5001/api/getusertype', {
       method: 'GET',
-      credentials: 'include' // include cookies in the request
-    })
+      credentials: 'include', // include cookies in the request
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user type');
+    }
+
     const data = await response.json();
 
     cachedUserType = data.userType; // Cache the user type
