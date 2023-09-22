@@ -6,7 +6,8 @@ import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } 
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { clearCachedUserEmail } from "../../../utils/UserEmail";
-import { clearCachedUserType, getUserType } from '../../../utils/UserType';
+import { clearCachedUserType } from '../../../utils/UserType';
+import UserType from '../../../utils/UserType';
 import { clearCachedUserName } from '../../../utils/UserName';
 import './ResponsiveAppBar.css';
 
@@ -36,7 +37,7 @@ const ResponsiveAppBar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    getUserType()
+    UserType()
       .then((type) => {
         setUserType(type)
         if (type) {

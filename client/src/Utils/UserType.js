@@ -1,7 +1,7 @@
 const CACHE_KEY = 'userType';
 let cachedUserType = null;
 
-export const getUserType = async () => {
+const UserType = async () => {
   if (cachedUserType) {
     return cachedUserType; // Return the cached value if available
   }
@@ -28,6 +28,8 @@ export const getUserType = async () => {
     throw error;
   }
 };
+
+export default UserType;
 
 export const clearCachedUserType = () => {
   cachedUserType = null; // Clear the cached value from memory

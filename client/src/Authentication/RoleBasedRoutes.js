@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Navigate } from 'react-router-dom'
-import { getUserType } from '../utils/UserType.js';
+// import { getUserType } from '../utils/UserType.js';
+import UserType from '../utils/UserType';
 
 const RoleBasedRoutes = ({ allowedRole }) => {
 
@@ -8,7 +9,7 @@ const RoleBasedRoutes = ({ allowedRole }) => {
   const [role, setRole] = useState(true);
 
   useEffect(() => {
-    getUserType()
+    UserType()
       .then((type) => {
         setRole(allowedRole === type)
       })
