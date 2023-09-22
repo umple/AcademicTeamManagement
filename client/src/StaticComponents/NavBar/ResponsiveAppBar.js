@@ -10,6 +10,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { getUserType, clearCachedUserType } from '../../Utils/UserType';
 import { clearCachedUserName } from '../../Utils/UserName';
+import { clearCachedUserEmail } from '../../Utils/UserEmail';
 
 // Nav elements to display for the students
 const studentPages = {
@@ -78,6 +79,7 @@ const ResponsiveAppBar = () => {
   const handleLogout = () => {
     clearCachedUserType();
     clearCachedUserName();
+    clearCachedUserEmail();
     setAnchorElNav(null);
   }
 
