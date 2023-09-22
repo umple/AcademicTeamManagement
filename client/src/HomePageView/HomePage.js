@@ -1,7 +1,9 @@
+import React, { useState, useEffect } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
+import { getUserEmail } from '../Utils/UserEmail';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,6 +30,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 const HomePage = () => {
     const classes = useStyles();
+    const [professorEmail, setProfessorEmail] = useState(null);
+
+    // Cache the value of the professor's email
+    useEffect(() => {
+        getUserEmail()
+        .then((email) => {
+            setProfessorEmail(email)
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }, [professorEmail]);
+
     return (
         <div className={classes.root}>
             <Grid container spacing={4} justifyContent="center" alignItems="center">

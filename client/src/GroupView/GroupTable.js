@@ -25,6 +25,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import { FormControl } from '@material-ui/core';
 import Chip from '@mui/material/Chip';
 import { Theme, useTheme } from '@mui/material/styles';
+import { FilterDataByProfessor } from '../Utils/FilterDataByValue';
 
 const GroupTable = () => {
 
@@ -48,7 +49,9 @@ const GroupTable = () => {
       ).then(([groups, projects, students]) => {
         
         if (groups.message !== "Group list is empty."){
-          setTableData(groups)
+          const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+          const filteredGroupTableData = FilterDataByProfessor(groups, professorEmail) // keep only the data that contains the professor's email
+          setTableData(filteredGroupTableData);
         }else{
           setTableData([])
         }
@@ -400,12 +403,15 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
       return
     }
 
+    const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+    const newGroupInfo = { ...values, professorEmail: professorEmail } // add the professor's email as a new pair
+
     fetch("api/group", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(values)
+      body: JSON.stringify(newGroupInfo)
     })
       .then(response => {
         if (response.ok) {
