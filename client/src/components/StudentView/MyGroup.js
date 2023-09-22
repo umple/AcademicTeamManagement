@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Chip from '@mui/material/Chip';
 import MaterialReactTable from 'material-react-table';
 import { fetchData } from "../../services/api";
-import { colorStatus } from "../../Utils/statusColors";
+import { colorStatus } from "../../utils/statusColors";
 
 
 const MyGroup = () => {
