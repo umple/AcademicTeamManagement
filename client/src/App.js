@@ -14,8 +14,7 @@ import StudentProjects from './components/StudentView/StudentProjects';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import StudentHomePage from './pages/StudentHomePage';
-import ROLES from './utils/Roles';
-
+import {ROLES} from "./Utils/Roles";
 
 const App = () => {
 

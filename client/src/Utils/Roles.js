@@ -3,11 +3,8 @@
     the current roles that exists in the application.
     Roles are set in Azure AD
 */
-
-const ROLES = {
+export const ROLES = {
     PROFESSOR: "professor",
     STUDENT: "student",
     NONE: ""
 }
-
-export default ROLES

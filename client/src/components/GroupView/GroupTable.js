@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import { handleExportData } from '../../utils/exportData';
+import { handleExportData } from '../../Utils/exportData';
 import MaterialReactTable from 'material-react-table';
 import {
   Box,
@@ -23,7 +23,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import { FormControl } from '@material-ui/core';
 import Chip from '@mui/material/Chip';
 import { useTheme } from '@mui/material/styles';
-import { FilterDataByProfessor } from '../../utils/FilterDataByValue';
+import { FilterDataByProfessor } from '../../Utils/FilterDataByValue';
 
 const GroupTable = () => {
 
