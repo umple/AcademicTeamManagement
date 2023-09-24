@@ -27,12 +27,9 @@ def add_Project():
         project_data = json.loads(request.data)
         project_entity = ProjectEntity(project_data)
         result = project.add_project(project_entity)
-        if result:
-            return jsonify(str(result.inserted_id)), 200
-        else:
-            return {"message": "Could not add student."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+        return jsonify(str(result.inserted_id)), 200
+    except Exception as e:
+        return {"message": e}, 503
 
 
 # PUT Request to update a student info
