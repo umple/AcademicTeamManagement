@@ -45,24 +45,14 @@ def get_interested_groups():
 
 
 def add_project(project_obj):
-    if project_obj.get('status') == '':
-        project_obj['status'] = 'new'
-
-    project = {
-        'project': project_obj.get('project', ''),
-        'description': project_obj.get('description', ''),
-        'clientName': project_obj.get('clientName', ''),
-        'clientEmail': project_obj.get('clientEmail', ''),
-        'status': project_obj.get('status', 'new'),
-        'interested groups': [],
-        'group': project_obj.get('group', ''),
-        'professorEmail': project_obj.get('professorEmail', ''),
-        'visibility': project_obj.get('visibility', ''),
-        'notes': project_obj.get('notes', '')
-    }
-    result = projectCollection.insert_one(project)
-    return result
-
+    try:
+        if not project_obj.status:
+            project_obj.status = 'new'
+        result = projectCollection.insert_one(project_obj)
+        return result
+    except Exception as e:
+        print(f"Error adding project: {e}")
+        return None
 
 def update_project_by_id(id, project_obj):
     result = projectCollection.replace_one({"_id": ObjectId(id)}, project_obj)
