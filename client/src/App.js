@@ -14,12 +14,7 @@ import StudentProjects from "./components/StudentView/StudentProjects";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import StudentHomePage from "./pages/StudentHomePage";
-
-const ROLES = {
-  PROFESSOR: "professor",
-  STUDENT: "student",
-  NONE: "",
-};
+import { ROLES } from "./helpers/Roles"
 
 const App = () => {
   return (
@@ -45,7 +40,7 @@ const App = () => {
                 <Route path="/StudentGroups"  element={<StudentGroups />}></Route>
                 <Route path="/MyGroup" element={<MyGroup />}></Route>
               </Route>
-              
+
             </Route>
             <Route path="/" element={<LoginPage />}></Route>
             <Route path="/login" element={<LoginPage />}></Route>
