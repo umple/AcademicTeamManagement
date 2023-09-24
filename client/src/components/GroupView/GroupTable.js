@@ -1,6 +1,8 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import MaterialReactTable from 'material-react-table';
+import { FormControl } from '@material-ui/core';
+import { Delete, Edit } from '@mui/icons-material';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import {
+  Alert,
   Box,
   Button,
   Dialog,
@@ -8,24 +10,22 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
   Stack,
   TextField,
   Tooltip,
-  Typography,
-  Select,
-  MenuItem,
-  cellValueMap,
-  InputLabel,
-  OutlinedInput,
-  Alert
+  Typography
 } from '@mui/material';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
-import { Delete, Edit } from '@mui/icons-material';
-import { FormControl } from '@material-ui/core';
 import Chip from '@mui/material/Chip';
-import { Theme, useTheme } from '@mui/material/styles';
-import { FilterDataByProfessor } from '../Utils/FilterDataByValue';
+import { useTheme } from '@mui/material/styles';
+import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
+import MaterialReactTable from 'material-react-table';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FilterDataByProfessor } from '../../helpers/FilterDataByValue';
+import { getDate } from '../../helpers/dateHelper';
 
 const GroupTable = () => {
 
@@ -239,15 +239,6 @@ const GroupTable = () => {
 
     csvExporter.generateCsv(updatedJsonList);
   };
-
-  function getDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate
-  }
 
   return (
     <Box sx={{ p: 2 }}>

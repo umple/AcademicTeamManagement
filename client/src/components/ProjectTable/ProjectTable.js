@@ -34,8 +34,9 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit, Help } from '@mui/icons-material';
 import Chip from '@mui/material/Chip';
-import { colorStatus } from '../../../Utils/statusColors';
-import { FilterDataByProfessor } from '../../../Utils/FilterDataByValue';
+import { colorStatus } from '../../helpers/statusColors';
+import { getDate } from '../../helpers/dateHelper';
+import { FilterDataByProfessor } from '../../helpers/FilterDataByValue';
 
 const ProjectTable = () => {
   // Columns for table
@@ -220,15 +221,7 @@ const ProjectTable = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  function getDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate
-  }
-
+  
   // For exporting the table data
   const csvOptions = {
     filename: 'ProjectsFromAcTeams-' + getDate(),
