@@ -126,7 +126,6 @@ const GroupTable = () => {
         body: JSON.stringify(newRowData)
       })
         .then(response => {
-          console.log(response.ok)
           if (response.ok) {
             fetchData();
           }else if(response.status === 409){
@@ -181,9 +180,7 @@ const GroupTable = () => {
       })
         .then(response => {
           if (response.ok) {
-            console.log("HERE")
             fetchData();
-            console.log(tableData)
           } else {
             console.error("Error deleting row");
           }
@@ -350,8 +347,6 @@ export const CreateNewGroupModal = ({ open, columns, onClose, onSubmit, fetchDat
     if (groups.length === 0){
       return true
     }
-
-    console.log(groups)
     
     let group = groups.find((group) => group.group_id.toLowerCase() === values["group_id"].toLowerCase()) ;
     if (typeof group !== "undefined"){
