@@ -128,7 +128,6 @@ const ProjectTable = () => {
     fetch("api/project/applications").then(response => response.json())
       .then(data => {
         setApplications(data);
-        console.log(applications)
         setIsLoading(false)
       })
       .catch(error => {

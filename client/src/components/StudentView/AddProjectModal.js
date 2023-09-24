@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function AddProjectModal({ open, onClose, fetchProjects, currentGroup }) {
+function AddProjectModal({ open, onClose, fetchProjects, professorEmail, currentGroup }) {
     const classes = useStyles();
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -100,18 +100,21 @@ function AddProjectModal({ open, onClose, fetchProjects, currentGroup }) {
       event.preventDefault();
       if (currentGroup === null){
         setConfirmationMessage("You Need to be in a group to propose a project!"); // Set confirmation message
+        alert("You Need to be in a group to propose a project!") // This alert needs to be updated
         setTimeout(() => {
           setConfirmationMessage(""); // Clear the confirmation message after a few seconds
           onClose(); // Close the dialog
         }, 1500); // Adjust the time as needed
         return
       }
+
       let project = {
         project: name,
         description: description,
         clientName: client,
         clientEmail: clientEmail,
         status: "proposed",
+        professorEmail: professorEmail,
         group: currentGroup,
       };
   
@@ -126,6 +129,7 @@ function AddProjectModal({ open, onClose, fetchProjects, currentGroup }) {
           if (response.ok) {
             fetchProjects();
             setConfirmationMessage("Project added successfully!"); // Set confirmation message
+            alert("Project added successfully!") // This alert needs to be updated
             setTimeout(() => {
               setConfirmationMessage(""); // Clear the confirmation message after a few seconds
               onClose(); // Close the dialog
