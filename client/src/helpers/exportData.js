@@ -1,13 +1,7 @@
 // For exporting the table data
 import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
-const  getDate = ()=> {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate
-  }
+import { getDate } from './dateHelper';
+
 const csvOptions = {
     filename: 'GroupsFromAcTeams-' + getDate(),
     fieldSeparator: ',',

@@ -23,6 +23,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { FileUpload as FileUploadIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Paper } from '@material-ui/core';
+import { getDate } from '../../helpers/dateHelper';
 import { FilterDataByProfessor } from '../../helpers/FilterDataByValue';
 
 
@@ -199,15 +200,6 @@ const StudentTable = () => {
     },
     [tableData],
   );
-
-  function getDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate
-  }
 
   const csvOptions = {
     filename: 'StudentsFromAcTeams-' + getDate(),
