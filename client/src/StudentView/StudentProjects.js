@@ -102,6 +102,7 @@ function StudentProjects() {
   const [showErrorAlert, setErrorShowAlert] = useState(false);
   const [loading, setIsLoading] = useState(false);
   const [currentGroup, setCurrGroup] = useState(null)
+  const [currentStudent, setCurrentStudent] = useState({})
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -134,6 +135,7 @@ function StudentProjects() {
         if(students.length > 0 && students.message !== "Student list is empty."){
           setStudents(students)
           let currStudent = students.filter(student => student.email === Email)
+          setCurrentStudent(currStudent[0])
           setCurrGroup(currStudent[0].group)
         }
         setIsLoading(false)
@@ -236,6 +238,7 @@ function StudentProjects() {
                 open={open}
                 onClose={handleClose}
                 fetchProjects={fetchProjects}
+                professorEmail={currentStudent.professorEmail}
                 currentGroup={currentGroup}
               />
             </Grid>
