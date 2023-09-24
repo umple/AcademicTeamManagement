@@ -18,12 +18,19 @@ const MyGroup = () => {
 
   useEffect(() => {
     const fetchDataAndSetState = async () => {
+
+      // Check if the user has a group or not
+      try {
+        const groupData = await fetchData("api/retrieve/curr/user/group");
+        setGroup(groupData);
+      } catch (error) {
+        setGroup({});
+      }
+      
+      // Get the student data
       try {
         const studentsData = await fetchData("api/students");
         setStudents(studentsData);
-
-        const groupData = await fetchData("api/retrieve/curr/user/group");
-        setGroup(groupData);
 
         const projectApplicationsData = await fetchData("api/project/applications");
         setProjectApplications(projectApplicationsData);
