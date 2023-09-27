@@ -46,6 +46,8 @@ jobs:
         run: coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
       - name: Create HTML Coverage Report
         run: coverage html -d coverage_report
+      - name: debug
+        run: ls -a
       - name: Upload coverage report as artifact
         uses: actions/upload-artifact@v2
         with:
