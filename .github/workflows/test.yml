@@ -44,16 +44,13 @@ jobs:
         run: pip3 install coverage
       - name: Run Unit Tests
         run: coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
-      - name: Create HTML Coverage Report
-        run: coverage html
-      - name: debug
-        run: ls -R
+      - name: Create Coverage Report
+        run: | 
+          coverage html
+          coverage report
       - name: Upload coverage report as artifact
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
           path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/server/htmlcov
-      - name: debug
-        run: | 
-          ls -R
-          pwd
+
