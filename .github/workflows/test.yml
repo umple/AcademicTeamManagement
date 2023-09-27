@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: pipenv install
       - name: Run Unit Tests
-        run: pipenv prod_unit_test #coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
+        run: pipenv run prod_unit_test #coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
       - name: Create Coverage Report
         run: | 
           coverage html
