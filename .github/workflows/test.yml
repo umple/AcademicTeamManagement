@@ -32,6 +32,8 @@ jobs:
         run: echo mock > .env
       - name: docker-compose build
         run: docker compose up -d
+      - name: Run a test curl command
+        run: curl localhost:$Flask/api/students
   unit-tests:
     runs-on: ubuntu-latest
     defaults:
