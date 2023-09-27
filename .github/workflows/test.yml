@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
-          path: htmlcov
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/server/htmlcov
       - name: debug
         run: | 
           ls -R
