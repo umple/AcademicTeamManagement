@@ -18,6 +18,7 @@ adal = "*"
 flask-session = "*"
 msal = "*"
 jwt = "*"
+mongomock = "*"
 
 [dev-packages]
 
