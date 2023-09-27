@@ -1,4 +1,4 @@
-name: "Build Check"
+name: "Source Code Tests"
 on: [push]
 env:
   COMPOSE_DOCKER_CLI_BUILD: 0
