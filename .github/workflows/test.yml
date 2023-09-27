@@ -54,4 +54,6 @@ jobs:
           name: coverage-report
           path: htmlcov
       - name: debug
-        run: ls -R
+        run: | 
+          ls -R
+          pwd
