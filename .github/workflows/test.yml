@@ -43,7 +43,7 @@ jobs:
       - name: Install Coverage Tool
         run: pip3 install coverage
       - name: Run Unit Tests
-        run: pipenv run prod_unit_test
+        run: coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
       - name: Create HTML Coverage Report
         run: coverage html -d coverage_report
       - name: Upload coverage report as artifact
