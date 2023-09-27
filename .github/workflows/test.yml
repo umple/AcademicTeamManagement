@@ -47,9 +47,9 @@ jobs:
       - name: Create HTML Coverage Report
         run: coverage html -d coverage_report
       - name: debug
-        run: ls -a
+        run: ls -R
       - name: Upload coverage report as artifact
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
-          path: coverage_report/index.html
+          path: coverage_report
