@@ -25,7 +25,6 @@ jobs:
     defaults:
       run:
         working-directory: .
-    needs: [react-build, flask-build]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
