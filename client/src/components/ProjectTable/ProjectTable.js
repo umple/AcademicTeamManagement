@@ -125,6 +125,7 @@ const ProjectTable = () => {
       .then(data => {
         const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
         const filteredProjectsTableData = FilterDataByProfessor(data, professorEmail) // keep only the data that contains the professor's email
+        console.log("data here")
         setTableData(filteredProjectsTableData);
       })
       .catch(error => {
@@ -177,7 +178,10 @@ const ProjectTable = () => {
   );
 
   const handleSaveRowEdits = async (row, values) => {
-    if (!Object.keys(validationErrors).length) {
+    //if (!Object.keys(validationErrors).length) {
+    const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
+    values["professorEmail"] = professorEmail
+    console.log("POG")
       fetch(`api/project/update/${row.original._id}`, {
         method: "PUT",
         headers: {
@@ -186,7 +190,9 @@ const ProjectTable = () => {
         body: JSON.stringify(values)
       })
         .then(response => {
+          console.log("GOT ")
           if (response.ok) {
+            console.log("fetching")
             fetchProjects();
           } else {
             console.error("Error editing row");
@@ -195,7 +201,7 @@ const ProjectTable = () => {
         .catch(error => {
           console.error(error);
         });
-    }
+    //}
   };
 
   const handleDeleteRow = useCallback((row) => {
