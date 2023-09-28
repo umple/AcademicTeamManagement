@@ -12,3 +12,6 @@ privateKey
 # Ignore Gradle build output directory
 build
 
+server/.coverage
+server/htmlcov
+server/coverage-report

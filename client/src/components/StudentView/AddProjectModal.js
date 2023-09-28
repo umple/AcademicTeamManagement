@@ -179,7 +179,7 @@ function AddProjectModal({
               name="description"
               label="Description"
               value={project.description}
-              onChange={(event) => setDescription(event.target.value)}
+              onChange={handleInputChange}
               variant="outlined"
               className={classes.textField}
               multiline

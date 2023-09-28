@@ -22,6 +22,7 @@ class TestStudentModel(unittest.TestCase):
     def test_add_student(self):
         # Create a test student object
         test_student = {
+            "orgdefinedid" : "3001",
             "name": "John Doe",
             "age": 21,
             "major": "Computer Science"
@@ -34,6 +35,7 @@ class TestStudentModel(unittest.TestCase):
     def test_get_student_by_id(self):
         # Create a test student object
         test_student = {
+            "orgdefinedid" : "3001",
             "name": "John Doe",
             "age": 21,
             "major": "Computer Science"
@@ -52,6 +54,7 @@ class TestStudentModel(unittest.TestCase):
     def test_update_student_by_id(self):
         # Create a test student object
         test_student = {
+            "orgdefinedid" : "3001",
             "name": "John Doe",
             "age": 21,
             "major": "Computer Science"
@@ -62,6 +65,7 @@ class TestStudentModel(unittest.TestCase):
         student_id = str(result.inserted_id)
         # Create a new student object to update the test student
         updated_student = {
+            "orgdefinedid" : "3001",
             "name": "Jane Doe",
             "age": 22,
             "major": "Mathematics"
@@ -80,6 +84,7 @@ class TestStudentModel(unittest.TestCase):
     def test_delete_student_by_id(self):
         # Create a test student object
         test_student = {
+            "orgdefinedid" : "3001",
             "name": "John Doe",
             "age": 21,
             "major": "Computer Science"
