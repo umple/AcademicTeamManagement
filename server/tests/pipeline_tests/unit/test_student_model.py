@@ -181,7 +181,7 @@ class TestStudentModification(unittest.TestCase):
 
         #validate group name is correct
         actualGroup = student.studentsCollection.find_one({"orgdefinedid": str(self.student["orgdefinedid"])})["group"]
-        self.assertEquals("Mock Group", actualGroup)
+        self.assertEqual("Mock Group", actualGroup)
 
     def test_remove_student_from_group(self):
         student.studentsCollection.update_one(

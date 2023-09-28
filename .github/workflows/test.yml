@@ -12,7 +12,6 @@ env:
   MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
   INIT_MOUNT: "./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro"
   PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
-  ENVIRONMENT: TESTING
   
 # cancel the in-progress job related to the current PR
 concurrency:
@@ -35,6 +34,8 @@ jobs:
         run: docker compose up -d
   unit-tests:
     runs-on: ubuntu-latest
+    env:
+        ENVIRONMENT: TESTING
     defaults:
       run:
         working-directory: ./server
