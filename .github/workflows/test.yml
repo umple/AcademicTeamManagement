@@ -41,7 +41,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-            - name: Set up Python and Pipenv
+      - name: Set up Python and Pipenv
         uses: actions/setup-python@v2
       - name: Install Pipenv
         run: |
