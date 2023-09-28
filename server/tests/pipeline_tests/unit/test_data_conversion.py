@@ -1,5 +1,4 @@
 import unittest
-import json
 from app.utils import data_conversion as dc
 
 class TestHandleSpecialCharacters(unittest.TestCase):
