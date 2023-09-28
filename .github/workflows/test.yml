@@ -41,12 +41,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Init Python3
-        uses: actions/setup-python@v1
-      - name: Install Coverage Tool
-        run: pip3 install coverage pymongo mongomock
+            - name: Set up Python and Pipenv
+        uses: actions/setup-python@v2
+      - name: Install Pipenv
+        run: |
+          pip install pipenv
+      - name: Install Dependencies with Pipenv
+        run: |
+          pipenv install --deploy --ignore-pipfile
       - name: Run Unit Tests
-        run: coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
+        run: pipenv run coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
       - name: Create Coverage Report
         run: | 
           coverage html
