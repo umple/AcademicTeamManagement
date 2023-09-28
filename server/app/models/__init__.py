@@ -10,8 +10,9 @@ client = None
 db = None
 
 # Check if a testing environment is running
-if os.environ.get('ENVIRONMENT') == 'TESTING':
+if os.getenv('ENVIRONMENT') == 'TESTING':
     # Create a testing database
+    print("In a Test Environment")
     client = mongomock.MongoClient()
     db = client.db
 else:
