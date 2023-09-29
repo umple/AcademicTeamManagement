@@ -267,7 +267,7 @@ const StudentTable = () => {
             <Button
               color="primary"
               //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-              onClick={handleExportData(tableData,columns, csvExporter)}
+                  onClick={ () => handleExportData(tableData,columns, csvExporter)}
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
