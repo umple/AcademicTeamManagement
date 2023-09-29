@@ -248,7 +248,7 @@ const GroupTable = () => {
             </Button>
             <Button
               color="primary"
-              onClick={handleExportData(tableData,columns, csvExporter)}
+                  onClick={ () => handleExportData(tableData,columns, csvExporter)}
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
