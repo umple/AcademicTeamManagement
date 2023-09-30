@@ -105,10 +105,18 @@ const ProjectTable = () => {
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingRow,setEditingRow] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
+  const [editingValues, setEditingValues] = useState(() =>
+    columns.reduce((acc, column) => {
+      acc[column.accessorKey ?? ''] = '';
+      return acc;
+    }, {}),
+  );
 
 
   const fetchProjects = () => {
@@ -117,6 +125,7 @@ const ProjectTable = () => {
       .then(data => {
         const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
         const filteredProjectsTableData = FilterDataByProfessor(data, professorEmail) // keep only the data that contains the professor's email
+        console.log("data here")
         setTableData(filteredProjectsTableData);
       })
       .catch(error => {
@@ -168,8 +177,11 @@ const ProjectTable = () => {
     []
   );
 
-  const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
+  const handleSaveRowEdits = async (row, values) => {
+    //if (!Object.keys(validationErrors).length) {
+    const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
+    values["professorEmail"] = professorEmail
+    console.log("POG")
       fetch(`api/project/update/${row.original._id}`, {
         method: "PUT",
         headers: {
@@ -178,21 +190,18 @@ const ProjectTable = () => {
         body: JSON.stringify(values)
       })
         .then(response => {
+          console.log("GOT ")
           if (response.ok) {
+            console.log("fetching")
             fetchProjects();
           } else {
-            console.error("Error deleting row");
+            console.error("Error editing row");
           }
         })
         .catch(error => {
           console.error(error);
         });
-      exitEditingMode();
-    }
-  };
-
-  const handleCancelRowEdits = () => {
-    setValidationErrors({});
+    //}
   };
 
   const handleDeleteRow = useCallback((row) => {
@@ -293,7 +302,6 @@ const ProjectTable = () => {
             enablePagination={false}
             columns={columns}
             data={tableData}
-            editingMode="modal"
             enableColumnOrdering
             enableColumnResizing
             columnResizeMode="onChange" //default is "onEnd"
@@ -303,8 +311,6 @@ const ProjectTable = () => {
             }}
             enableEditing
             initialState={{ showColumnFilters: false, density: 'compact' }}
-            onEditingRowSave={handleSaveRowEdits}
-            onEditingRowCancel={handleCancelRowEdits}
             renderDetailPanel={({ row, index }) => {
               return (
                 <Grid container spacing={2}>
@@ -371,7 +377,15 @@ const ProjectTable = () => {
             renderRowActions={({ row, table }) => (
               <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Tooltip arrow placement="left" title="Edit">
-                  <IconButton onClick={() => table.setEditingRow(row)}>
+                  <IconButton onClick={() => {
+                    setEditingRow(row)
+                    var temp = {}
+                    {columns.map((column) => {
+                      temp[column.accessorKey] = row.getValue(column.accessorKey)
+                    })}
+                    setEditingValues(temp)
+                    setEditModalOpen(true)}
+                  }>
                     <Edit />
                   </IconButton>
                 </Tooltip>
@@ -410,6 +424,17 @@ const ProjectTable = () => {
             onClose={() => setCreateModalOpen(false)}
             fetchApplications={fetchApplications}
             projects={tableData}
+          />
+          <EditProjectModal
+            handleSaveRowEdits={handleSaveRowEdits}
+            columns={columns}
+            open={editModalOpen}
+            onClose={() => setEditModalOpen(false)}
+            fetchApplications={fetchApplications}
+            projects={tableData}
+            editingRow={editingRow}
+            values={editingValues}
+            setValues={setEditingValues}
           />
         </>
       )}
@@ -533,6 +558,123 @@ export const CreateNewProjectModal = ({ open, columns, onClose, fetchApplication
           <Button onClick={onClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
             Create New Project
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
+};
+
+export const EditProjectModal = ({ open, columns, onClose, fetchApplications, handleSaveRowEdits, projects,editingRow, values ,setValues}) => {
+  const cellValueMap = [
+    { value: 'new', label: 'success' },
+    { value: 'interested students', label: 'warning' },
+    { value: 'students needed', label: 'primary' },
+    { value: 'pending approval', label: 'secondary' },
+    { value: 'assigned', label: 'error' },
+    { value: 'proposed', label: 'default' }
+  ];
+  
+
+  const [error, setError] = useState("")
+
+  function validateFields() {
+    if (values["project"] === "") {
+      setError("Please Enter a project Name")
+      setTimeout(() => setError(""), 4000);
+      return false
+    }
+
+    if (projects.length === undefined){
+      return true
+    }
+
+    let project = projects.find((project) => project.project.toLowerCase() === values["project"].toLowerCase());
+    if (project === undefined) {
+      return true
+    }
+    
+    if (project._id !== editingRow.original._id) {
+      setError("The project name already exists")
+      setTimeout(() => setError(""), 4000);
+      return false
+    }
+
+    return true
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if (validateFields() === false) {
+      return
+    }
+
+    handleSaveRowEdits(editingRow,values);
+    onClose();
+  };
+
+  return (
+    <Dialog open={open}>
+      {error === "" ? "" : <Alert severity="error">{error}</Alert>}
+      <DialogTitle textAlign="center">Edit Project</DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <Stack
+            sx={{
+              width: '100%',
+              minWidth: { xs: '300px', sm: '360px', md: '400px' },
+              gap: '1.5rem',
+            }}
+          >   
+            {columns.map((column) => {
+              if (column.accessorKey === 'interested groups' || column.accessorKey === 'group') {
+                return null
+              }
+              if (column.accessorKey === 'status') {
+                return (
+                  <FormGroup>
+                    <InputLabel id="status-label">Status</InputLabel>
+                    <Select
+                      labelId='status-label'
+                      key={column.accessorKey}
+                      label={column.header}
+                      name={column.accessorKey}
+                      value={values[column.accessorKey]}
+                      onChange={(e) => {
+                        setValues({ ...values, [e.target.name]: e.target.value })
+                      }}
+                    >
+                      {cellValueMap.map((option) => (
+                        <MenuItem key={option.value} value={option.value} >
+                          {option.value}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormGroup>
+                )
+              }
+              return (
+                <TextField
+                  key={column.accessorKey}
+                  label={column.header}
+                  name={column.accessorKey}
+                  value={values[column.accessorKey]}
+                  onChange={(e) => {
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }}
+                  multiline={column.accessorKey === "description"}
+                  rows={column.accessorKey === "description" ? 5 : 1}
+                />
+              )
+            })}
+
+          </Stack>
+        </DialogContent>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button color="secondary" type="submit" variant="contained">
+            Edit Project
           </Button>
         </DialogActions>
       </form>

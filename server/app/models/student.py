@@ -3,7 +3,7 @@ from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
 import app.models.group as group
 import pandas as pd
-from flask import jsonify
+from flask import session
 
 studentsCollection = db["students"]
 
@@ -24,6 +24,7 @@ def add_student(student_obj):
 
 def add_import_student(student_obj):
     student_obj["group"] = None
+    student_obj["professorEmail"] = session.get("user")["preferred_username"]
     studentsCollection.insert_one(student_obj)
 
 def get_student_by_id(id):
