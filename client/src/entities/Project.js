@@ -1,12 +1,13 @@
 class Project {
-  constructor(projectObj = {}) {
-    this._name = projectObj.name || "";
-    this._description = projectObj.description || "";
-    this._client = projectObj.client || "";
-    this._clientEmail = projectObj.clientEmail || "";
-    this._status = projectObj.status || "proposed";
-    this._professorEmail = projectObj.professorEmail || "";
-    this._currentGroup = projectObj.group || "";
+  constructor(projectObj) {
+    console.log("projectObj", projectObj)
+    this.name = projectObj.name || "";
+    this.description = projectObj.description || "";
+    this.client = projectObj.client || "";
+    this.clientEmail = projectObj.clientEmail || "";
+    this.status = projectObj.status || "proposed";
+    this.professorEmail = projectObj.professorEmail || "";
+    this.currentGroup = projectObj.currentGroup || "";
   }
 
   // Getter and setter for 'name'
@@ -70,6 +71,18 @@ class Project {
 
   set currentGroup(currentGroup) {
     this._currentGroup = currentGroup;
+  }
+
+  toRequestBody() {
+    return {
+      name: this._name,
+      description: this._description,
+      client: this._client,
+      clientEmail: this._clientEmail,
+      status: this._status,
+      professorEmail: this._professorEmail,
+      currentGroup: this._currentGroup,
+    };
   }
 }
 

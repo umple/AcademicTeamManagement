@@ -12,26 +12,28 @@ import React, { useState } from "react";
 import Project from "../../entities/Project";
 import projectService from "../../services/projectService";
 import { useStyles } from "./styles/AddProjectModalStyles";
+import { useFormik } from "formik";
+import projectSchema from "../../schemas/projectSchema";
 
 function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const classes = useStyles();
   const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
   const [error, setError] = useState(""); // State for the confirmation message
-
-  const [project, setProject] = useState(
+  const [project] = useState(
     new Project({ professorEmail: professorEmail, currentGroup: currentGroup })
   );
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (currentGroup === null) {
+  console.log("project", project)
+
+  const onSubmit = async (values, actions) => {
+    if (values.currentGroup === null) {
       setError("You Need to be in a group to propose a project!"); // Set confirmation message
       return;
     }
     try {
-      let response = await projectService.add(project);
+      let response = await projectService.add(values);
       setConfirmationMessage(response.message);
-      onClose()
+      onClose();
     } catch (error) {
       setError(error.message);
     } finally {
@@ -40,15 +42,24 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
         setError("");
       }, 5000);
     }
+    actions.resetForm();
   };
 
-  const handleInputChange = (event) => {
-    const fieldName = event.target.name;
-    setProject({
-      ...project,
-      [fieldName]: event.target.value,
-    });
-  };
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+    setFieldTouched,
+  } = useFormik({
+    initialValues: project.toRequestBody(),
+    validationSchema: projectSchema,
+    onSubmit,
+  });
+  
 
   return (
     <Dialog open={open}>
@@ -70,21 +81,25 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
           >
             <TextField
               fullWidth
-              required
               label="Project Title"
-              value={project.name}
               name="name"
-              onChange={handleInputChange}
+              onBlur={handleBlur}
+              value={values.name}
+              onChange={handleChange}
               variant="outlined"
+              error={Boolean(touched.name && errors.name)}
+              helperText={touched.name && errors.name}
               className={classes.textField}
             />
             <TextField
               fullWidth
-              required
               name="description"
               label="Description"
-              value={project.description}
-              onChange={handleInputChange}
+              value={values.description}
+              error={Boolean(touched.description && errors.description)}
+              helperText={touched.description && errors.description}
+              onBlur={handleBlur}
+              onChange={handleChange}
               variant="outlined"
               className={classes.textField}
               multiline
@@ -92,21 +107,26 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
             />
             <TextField
               fullWidth
-              required
               name="client"
               label="Client Full Name"
-              value={project.client}
-              onChange={handleInputChange}
+              value={values.client}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              error={Boolean(touched.client && errors.client)}
+              helperText={touched.client && errors.client}
               variant="outlined"
               className={classes.textField}
             />
+
             <TextField
               fullWidth
-              required
               name="clientEmail"
               label="Client Email"
-              value={project.clientEmail}
-              onChange={handleInputChange}
+              value={values.clientEmail}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              error={Boolean(touched.clientEmail && errors.clientEmail)}
+              helperText={touched.clientEmail && errors.clientEmail}
               variant="outlined"
               className={classes.textField}
             />
