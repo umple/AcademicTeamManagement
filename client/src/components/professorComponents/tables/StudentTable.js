@@ -1,13 +1,19 @@
 import { Paper } from "@material-ui/core";
-import { Delete, Edit, FileUpload as FileUploadIcon } from "@mui/icons-material";
+import {
+  Delete,
+  Edit,
+  FileUpload as FileUploadIcon,
+} from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import {
   Box,
   Button,
-  Dialog, DialogTitle,
-  IconButton, Tooltip,
-  Typography
+  Dialog,
+  DialogTitle,
+  IconButton,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -19,6 +25,7 @@ import { getDate } from "../../../helpers/dateHelper";
 import ImportStudents from "../ImportStudents";
 import { CreateNewStudentModal } from "../forms/CreateNewStudentModal";
 import { useStyles } from "./styles/StudentTableStyles";
+import studentService from "../../../services/studentService";
 
 const StudentTable = () => {
   const defaultColumns = useMemo(
@@ -70,25 +77,17 @@ const StudentTable = () => {
   }
 
   const fetchStudents = async () => {
-    fetch("/api/students")
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("There is no Students");
-        }
-      })
-      .then((data) => {
-        const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
-        const filteredStudentsTableData = FilterDataByProfessor(
-          data,
-          professorEmail
-        ); // keep only the data that contains the professor's email
-        setTableData(filteredStudentsTableData);
-      })
-      .catch((error) => {
-        console.error("There was a problem with the network request:", error);
-      });
+    try {
+      let students = await studentService.get();
+      const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
+      const filteredStudentsTableData = FilterDataByProfessor(
+        students,
+        professorEmail
+      ); // keep only the data that contains the professor's email
+      setTableData(filteredStudentsTableData);
+    } catch (error) {
+      console.error("There was a problem with the network request:", error);
+    }
   };
 
   useEffect(() => {
@@ -344,6 +343,5 @@ const StudentTable = () => {
     </Box>
   );
 };
- 
 
 export default StudentTable;
