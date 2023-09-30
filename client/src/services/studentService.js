@@ -20,6 +20,26 @@ const studentService = {
         return { success: false, message: error.message };
       });
   },
+  add: async (student) => {
+    return fetch("/api/student", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(student),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorMessage) => {
+            throw new Error(`Failed to add student: ${errorMessage}`);
+          });
+        }
+        return { success: true, message: "Student added successfully" };
+      })
+      .catch((error) => {
+        return { success: false, message: error.message };
+      });
+  }
 };
 
 export default studentService;

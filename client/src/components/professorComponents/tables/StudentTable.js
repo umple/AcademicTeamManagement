@@ -1,94 +1,59 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import { makeStyles } from "@material-ui/core/styles";
-import MaterialReactTable from 'material-react-table';
+import { Paper } from "@material-ui/core";
+import { Delete, Edit, FileUpload as FileUploadIcon } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Stack,
-  TextField,
-  Tooltip,
+  Dialog, DialogTitle,
+  IconButton, Tooltip,
   Typography
-} from '@mui/material';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { ExportToCsv } from 'export-to-csv';
-import { Delete, Edit } from '@mui/icons-material';
-import ImportStudents from '../ImportStudents';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import { FileUpload as FileUploadIcon } from '@mui/icons-material';
-import CloseIcon from '@mui/icons-material/Close';
-import { Paper } from '@material-ui/core';
-import { getDate } from '../../../helpers/dateHelper';
-import { FilterDataByProfessor } from '../../../helpers/FilterDataByValue';
-
-
-
-const useStyles = makeStyles((theme) => ({
-  input: {
-    display: "none",
-  },
-  dialogTitle: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    '& h2': {
-      fontWeight: 'bold',
-    },
-  },
-  closeButton: {
-    color: theme.palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-  },
-  modalContent: {
-    padding: theme.spacing(2),
-  },
-}));
+} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import { ExportToCsv } from "export-to-csv";
+import MaterialReactTable from "material-react-table";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { FilterDataByProfessor } from "../../../helpers/FilterDataByValue";
+import { getDate } from "../../../helpers/dateHelper";
+import ImportStudents from "../ImportStudents";
+import { CreateNewStudentModal } from "../forms/CreateNewStudentModal";
+import { useStyles } from "./styles/StudentTableStyles";
 
 const StudentTable = () => {
-
   const defaultColumns = useMemo(
     () => [
       {
-        accessorKey: 'orgdefinedid',
-        header: 'orgDefinedId',
+        accessorKey: "orgdefinedid",
+        header: "orgDefinedId",
       },
       {
-        accessorKey: 'username',
-        header: 'Username',
+        accessorKey: "username",
+        header: "Username",
       },
       {
-        accessorKey: 'lastname',
-        header: 'Last Name',
+        accessorKey: "lastname",
+        header: "Last Name",
       },
       {
-        accessorKey: 'firstname',
-        header: 'First Name',
+        accessorKey: "firstname",
+        header: "First Name",
       },
       {
-        accessorKey: 'email',
-        header: 'Email',
+        accessorKey: "email",
+        header: "Email",
       },
       {
-        accessorKey: 'sections',
-        header: 'Section',
+        accessorKey: "sections",
+        header: "Section",
       },
       {
-        accessorKey: 'final grade',
-        header: 'Final Grade',
+        accessorKey: "final grade",
+        header: "Final Grade",
       },
     ],
-    [],
+    []
   );
-
   // For the create profile modal
   const [columns] = useState(defaultColumns);
   const classes = useStyles();
@@ -105,21 +70,24 @@ const StudentTable = () => {
   }
 
   const fetchStudents = async () => {
-    fetch('/api/students')
-      .then(response => {
+    fetch("/api/students")
+      .then((response) => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error('There is no Students');
+          throw new Error("There is no Students");
         }
       })
-      .then(data => {
-        const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
-        const filteredStudentsTableData = FilterDataByProfessor(data, professorEmail) // keep only the data that contains the professor's email
+      .then((data) => {
+        const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
+        const filteredStudentsTableData = FilterDataByProfessor(
+          data,
+          professorEmail
+        ); // keep only the data that contains the professor's email
         setTableData(filteredStudentsTableData);
       })
-      .catch(error => {
-        console.error('There was a problem with the network request:', error);
+      .catch((error) => {
+        console.error("There was a problem with the network request:", error);
       });
   };
 
@@ -127,45 +95,42 @@ const StudentTable = () => {
     fetchStudents();
   }, []);
 
-  const handleAddRow = useCallback(
-    (newRowData) => {
-      fetch('api/student', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newRowData)
+  const handleAddRow = useCallback((newRowData) => {
+    fetch("api/student", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newRowData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        fetchStudents();
       })
-        .then(response => response.json())
-        .then(data => {
-          fetchStudents();
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    },
-    []
-  );
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
-  const handleCreateNewRow = (values) => { };
+  const handleCreateNewRow = (values) => {};
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
       fetch(`api/student/update/${row.original._id}`, {
         method: "PUT",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(values)
+        body: JSON.stringify(values),
       })
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             fetchStudents();
           } else {
             console.error("Error deleting row");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
       exitEditingMode();
@@ -180,32 +145,34 @@ const StudentTable = () => {
   const handleDeleteRow = useCallback(
     (row) => {
       if (
-        !window.confirm(`Are you sure you want to delete ${row.getValue('username')}`)
+        !window.confirm(
+          `Are you sure you want to delete ${row.getValue("username")}`
+        )
       ) {
         return;
       }
       fetch(`api/student/delete/${row.original._id}`, {
-        method: "DELETE"
+        method: "DELETE",
       })
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             fetchStudents();
           } else {
             console.error("Error deleting row");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
     },
-    [tableData],
+    [tableData]
   );
 
   const csvOptions = {
-    filename: 'StudentsFromAcTeams-' + getDate(),
-    fieldSeparator: ',',
+    filename: "StudentsFromAcTeams-" + getDate(),
+    fieldSeparator: ",",
     quoteStrings: '"',
-    decimalSeparator: '.',
+    decimalSeparator: ".",
     showLabels: true,
     useBom: true,
     useKeysAsHeaders: true,
@@ -214,58 +181,64 @@ const StudentTable = () => {
   const csvExporter = new ExportToCsv(csvOptions);
 
   const handleExportData = () => {
-
     // clean up and organize data to be exported
-    const keyToRemove = "_id"
-    const updatedJsonList = tableData.map(jsonObj => {
-      let updatedJsonObject = jsonObj
+    const keyToRemove = "_id";
+    const updatedJsonList = tableData.map((jsonObj) => {
+      let updatedJsonObject = jsonObj;
       // remove the _id as that should not be in the json
       if (keyToRemove in jsonObj) {
-        const { [keyToRemove]: deletedKey, ...rest } = jsonObj // use destructuring to remove the key
-        updatedJsonObject = rest // return the updated JSON object without the deleted key
+        const { [keyToRemove]: deletedKey, ...rest } = jsonObj; // use destructuring to remove the key
+        updatedJsonObject = rest; // return the updated JSON object without the deleted key
       }
 
       // sort the keys as they appear in the columns
-      const orderedKeys = columns.map(key => key.accessorKey)
+      const orderedKeys = columns.map((key) => key.accessorKey);
       updatedJsonObject = Object.keys(updatedJsonObject)
         .sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b)) // sort keys in the order of the updated keys
-        .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}) // create a new object with sorted keys
+        .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}); // create a new object with sorted keys
 
       // replace the accessor key by the header
       for (let i = 0; i < columns.length; i++) {
-        const { accessorKey, header } = columns[i]
+        const { accessorKey, header } = columns[i];
         if (accessorKey in updatedJsonObject) {
-          const { [accessorKey]: renamedKey, ...rest } = updatedJsonObject // use destructuring to rename the key
-          updatedJsonObject = { ...rest, [header]: renamedKey } // update the JSON object with the renamed key
+          const { [accessorKey]: renamedKey, ...rest } = updatedJsonObject; // use destructuring to rename the key
+          updatedJsonObject = { ...rest, [header]: renamedKey }; // update the JSON object with the renamed key
         }
       }
 
-      return updatedJsonObject // return the original JSON object if the key is not found
-    })
+      return updatedJsonObject; // return the original JSON object if the key is not found
+    });
 
     csvExporter.generateCsv(updatedJsonList);
   };
-
 
   const [isImportModalOpen, setImportModalOpen] = useState(false);
 
   const closeModal = () => {
     setImportModalOpen(false);
-  }
-
+  };
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Students</Typography>
-      {importSuccess && <Alert severity="success">
-        <AlertTitle>Success</AlertTitle>
-        success alert — <strong>successfully imported students!</strong>
-      </Alert>}
+      <Typography
+        variant="h2"
+        align="center"
+        fontWeight="fontWeightBold"
+        sx={{ marginBottom: "0.5rem" }}
+      >
+        Students
+      </Typography>
+      {importSuccess && (
+        <Alert severity="success">
+          <AlertTitle>Success</AlertTitle>
+          success alert — <strong>successfully imported students!</strong>
+        </Alert>
+      )}
       <MaterialReactTable
         displayColumnDefOptions={{
-          'mrt-row-actions': {
+          "mrt-row-actions": {
             muiTableHeadCellProps: {
-              align: 'center',
+              align: "center",
             },
             size: 120,
           },
@@ -282,11 +255,11 @@ const StudentTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: 'compact' }}
+        initialState={{ showColumnFilters: false, density: "compact" }}
         onEditingRowSave={handleSaveRowEdits}
         onEditingRowCancel={handleCancelRowEdits}
         renderRowActions={({ row, table }) => (
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
+          <Box sx={{ display: "flex", gap: "1rem" }}>
             <Tooltip arrow placement="left" title="Edit">
               <IconButton onClick={() => table.setEditingRow(row)}>
                 <Edit />
@@ -300,7 +273,14 @@ const StudentTable = () => {
           </Box>
         )}
         renderTopToolbarCustomActions={() => (
-          <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexDirection: 'row' }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "1rem",
+              p: "0.5rem",
+              flexDirection: "row",
+            }}
+          >
             <Button
               color="success"
               onClick={() => setCreateModalOpen(true)}
@@ -326,11 +306,22 @@ const StudentTable = () => {
               Import Students
             </Button>
 
-            <Dialog PaperComponent={Paper} PaperProps={{ className: classes.dialogPaper }} scroll='paper' open={isImportModalOpen} onClose={() => setImportModalOpen(false)}>
-              <DialogTitle className={classes.dialogTitle}>Import Students  <IconButton className={classes.closeButton} onClick={() => setImportModalOpen(false)}>
-                <CloseIcon />
-              </IconButton></DialogTitle>
-
+            <Dialog
+              PaperComponent={Paper}
+              PaperProps={{ className: classes.dialogPaper }}
+              scroll="paper"
+              open={isImportModalOpen}
+              onClose={() => setImportModalOpen(false)}
+            >
+              <DialogTitle className={classes.dialogTitle}>
+                Import Students{" "}
+                <IconButton
+                  className={classes.closeButton}
+                  onClick={() => setImportModalOpen(false)}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </DialogTitle>
 
               <ImportStudents
                 fetchStudents={fetchStudents}
@@ -338,7 +329,6 @@ const StudentTable = () => {
                 handleImportSuccess={handleImportSuccess}
                 closeModal={closeModal}
               />
-
             </Dialog>
           </Box>
         )}
@@ -354,74 +344,6 @@ const StudentTable = () => {
     </Box>
   );
 };
-
-//Modal to create new student
-export const CreateNewStudentModal = ({ open, columns, onClose, onSubmit, fetchStudents }) => {
-  const [values, setValues] = useState(() =>
-    columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
-      return acc;
-    }, {}),
-  );
-
-  const handleSubmit = () => {
-
-    // add the professor's email to the newely created student
-    const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
-    const newStudentInfo = { ...values, professorEmail: professorEmail } // add the professor's email as a new pair
-
-    fetch("api/student", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(newStudentInfo)
-    })
-      .then(response => {
-        if (response.ok) {
-          fetchStudents();
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    onSubmit(newStudentInfo);
-    onClose();
-  };
-
-  return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Student</DialogTitle>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <DialogContent>
-          <Stack
-            sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
-            }}
-          >
-            {columns.map((column) => (
-              <TextField
-                key={column.accessorKey}
-                label={column.header}
-                name={column.accessorKey}
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.name]: e.target.value })
-                }
-              />
-            ))}
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ p: '1.25rem' }}>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" onClick={handleSubmit} variant="contained">
-            Create New Student
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
-  );
-};
+ 
 
 export default StudentTable;

@@ -24,15 +24,11 @@ import studentService from "../../services/studentService";
 import ProjectCard from "./ProjectCard";
 
 function StudentProjects() {
-  const classes = useStyles();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
-  const [students, setStudents] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
-  const [loading, setIsLoading] = useState(false);
   const [currentGroup, setCurrGroup] = useState(null);
   const [currentStudent, setCurrentStudent] = useState({});
 
@@ -64,7 +60,7 @@ function StudentProjects() {
         projects.message !== "Project list is empty."
       ) {
         projects = projects.filter((project) => project.status !== "assigned");
-        setProjects(projects)
+        setProjects(projects);
         setFilteredProjects(projects);
       }
     } catch (error) {
@@ -80,7 +76,6 @@ function StudentProjects() {
         students.length > 0 &&
         students.message !== "Student list is empty."
       ) {
-        setStudents(students);
         let currStudent = students.filter((student) => student.email === Email);
         setCurrentStudent(currStudent[0]);
         setCurrGroup(currStudent[0].group);
