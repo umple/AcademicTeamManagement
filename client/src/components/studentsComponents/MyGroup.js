@@ -12,7 +12,7 @@ import { colorStatus } from "../../helpers/statusColors";
 const MyGroup = () => {
   const [group, setGroup] = useState({});
   const [students, setStudents] = useState()
-  const [loading, setIsLoading] = useState(true);
+  const [loading, setIsLoading] = useState(false);
   const [applications, setProjectApplications] = useState({});
   const [showAlert, setShowAlert] = useState(false);
 
@@ -24,19 +24,23 @@ const MyGroup = () => {
         const groupData = await fetchData("api/retrieve/curr/user/group");
         setGroup(groupData);
       } catch (error) {
+        console.error(error)
         setGroup({});
       }
       
       // Get the student data
       try {
+        setIsLoading(true)
         const studentsData = await fetchData("api/students");
         setStudents(studentsData);
 
-        const projectApplicationsData = await fetchData("api/project/applications");
+        const projectApplicationsData = fetch("api/retrieve/project/application");
         setProjectApplications(projectApplicationsData);
-        setIsLoading(false);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
+
       }
     };
 
@@ -173,7 +177,7 @@ const MyGroup = () => {
             <Box sx={{ mt: 2, ml: 4, mr: 4 }}>
               <MaterialReactTable
                 columns={columns}
-                data={applications.filter((app) => app.group_id === group.group_id)}
+                data={applications ?? applications.filter((app) => app.group_id === group.group_id)}
                 noHeader={true}
                 highlightOnHover={true}
                 enableColumnFilters={false}

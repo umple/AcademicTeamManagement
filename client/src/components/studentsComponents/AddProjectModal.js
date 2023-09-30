@@ -1,116 +1,20 @@
-import React, { useState } from "react";
 import {
+  Alert,
+  Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  DialogTitle,
   Stack,
   TextField,
-  Button,
-  Alert,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import React, { useState } from "react";
 import Project from "../../entities/Project";
 import projectService from "../../services/projectService";
+import { useStyles } from "./styles/AddProjectModalStyles";
 
-const useStyles = makeStyles((theme) => ({
-  formContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "32px",
-    marginBottom: "32px",
-  },
-  root: {
-    margin: "1rem",
-    minWidth: 350,
-  },
-  button: {
-    marginTop: "1rem",
-  },
-  addButton: {
-    marginTop: "3rem",
-  },
-  container: {
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: "2rem",
-    marginBottom: "1rem",
-  },
-  bold: {
-    fontWeight: "bold",
-  },
-  status: {
-    borderRadius: "0.25rem",
-    color: "#fff",
-    maxWidth: "9ch",
-    padding: "0.25rem",
-  },
-  new: {
-    backgroundColor: "#4caf50",
-  },
-  interested: {
-    backgroundColor: "#ff9800",
-  },
-  needed: {
-    backgroundColor: "#2196f3",
-  },
-  approval: {
-    backgroundColor: "#3f51b5",
-  },
-  assigned: {
-    backgroundColor: "#f44336",
-  },
-  proposed: {
-    backgroundColor: "#ef6694",
-  },
-  info: {
-    backgroundColor: "#2196f3",
-  },
-  modal: {
-    position: "absolute",
-    width: "600px",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "#fff",
-    borderRadius: "0.5rem",
-    boxShadow: 24,
-    p: 4,
-  },
-  textField: {
-    "& .MuiInputLabel-root": {
-      color: "#6b6b6b",
-      fontWeight: "bold",
-    },
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": {
-        borderColor: "#c8c8c8",
-      },
-      "&:hover fieldset": {
-        borderColor: "#afafaf",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#2196f3",
-      },
-    },
-  },
-}));
-
-function AddProjectModal({
-  open,
-  onClose,
-  fetchProjects,
-  professorEmail,
-  currentGroup,
-}) {
+function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const classes = useStyles();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [client, setClient] = useState("");
-  const [clientEmail, setClientEmail] = useState("");
   const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
   const [error, setError] = useState(""); // State for the confirmation message
 
@@ -127,6 +31,7 @@ function AddProjectModal({
     try {
       let response = await projectService.add(project);
       setConfirmationMessage(response.message);
+      onClose()
     } catch (error) {
       setError(error.message);
     } finally {
@@ -209,11 +114,7 @@ function AddProjectModal({
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button
-            color="secondary"
-            type="submit" // Use type="submit" to trigger the form submission
-            variant="contained"
-          >
+          <Button color="secondary" type="submit" variant="contained">
             Add Project
           </Button>
         </DialogActions>

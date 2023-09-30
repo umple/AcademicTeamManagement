@@ -24,8 +24,7 @@ import { FileUpload as FileUploadIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Paper } from '@material-ui/core';
 import { csvOptions, handleExportData } from '../../helpers/exportData';
-import { FilterDataByProfessor } from '../../helpers/FilterDataByValue';
-
+import { FilterDataByProfessor } from '../../helpers/FilterDataByProfessor';
 
 
 const useStyles = makeStyles((theme) => ({

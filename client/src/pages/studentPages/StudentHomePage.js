@@ -1,6 +1,6 @@
 // Imports
 import React, { useState, useEffect } from 'react';
-import { getUserName } from '../helpers/UserName';
+import { getUserName } from '../../helpers/UserName';
 import {
     makeStyles,
     Grid,

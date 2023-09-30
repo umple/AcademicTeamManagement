@@ -1,6 +1,6 @@
-const projectService = {
+const studentService = {
   get: async () => {
-    return fetch("/api/projects", {
+    return fetch("/api/students", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -20,45 +20,26 @@ const projectService = {
         return { success: false, message: error.message };
       });
   },
-
-  add: async (project) => {
-    return fetch("/api/project", {
+  add: async (student) => {
+    return fetch("/api/student", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(project),
+      body: JSON.stringify(student),
     })
       .then((response) => {
         if (!response.ok) {
           return response.text().then((errorMessage) => {
-            throw new Error(`Failed to add project: ${errorMessage}`);
+            throw new Error(`Failed to add student: ${errorMessage}`);
           });
         }
-        return { success: true, message: "Project added successfully" };
+        return { success: true, message: "Student added successfully" };
       })
       .catch((error) => {
         return { success: false, message: error.message };
       });
-  },
-  requestToJoinProject: async (body) => {
-    return fetch("api/request/join/project", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();  
-      })
-      .catch((error) => {
-        throw error;
-      });
-  },
+  }
 };
 
-export default projectService;
+export default studentService;
