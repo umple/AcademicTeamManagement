@@ -1,9 +1,12 @@
 import unittest
-from app.models import student, group
+from unittest.mock import patch
+from flask import session, Flask
+from app.models import student
 from werkzeug.datastructures import FileStorage
 from bson import ObjectId
 import json
 import copy
+import os
 
 class StudentDataManager:
     def getStudent():
@@ -79,7 +82,22 @@ class TestStudentRetrival(unittest.TestCase):
         # Assertion condition
         self.assertEqual(actual, excepted)
 
+
+# Generate a random secret key
+secret_key = os.urandom(24)
+
+# Create a Flask app for testing
+app = Flask(__name__)
+app.secret_key = secret_key
+
 class TestStudentAddition(unittest.TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+
+        with self.app as client:
+            with client.session_transaction() as sess:
+                sess.clear()
+
     def tearDown(self):
         student.studentsCollection.delete_many({})
 
@@ -135,7 +153,7 @@ class TestStudentAddition(unittest.TestCase):
             accessor_keys = ["bad key"]
             _ , status = student.import_students(test_file, accessor_keys)
         self.assertEqual(400, status)
-
+    
     def test_import_invalid_file_format(self):
         test_file = None
         with open('tests/resources/Files/import_student.pdf', 'rb') as fp:
@@ -144,7 +162,7 @@ class TestStudentAddition(unittest.TestCase):
             message, status = student.import_students(test_file, accessor_keys)
         self.assertEqual(message, "Invalid file format")
         self.assertEqual(status, 400)
-
+    
     def test_import_nullt(self):
         test_file = None
         message, status = student.import_students(test_file, [])
