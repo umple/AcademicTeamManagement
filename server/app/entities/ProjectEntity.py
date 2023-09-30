@@ -2,16 +2,16 @@ class ProjectEntity:
     def __init__(self, project_data=None):
         if project_data is None:
             project_data = {}
-        self.project = project_data.get('project', '')
-        self.description = project_data.get('description', '')
-        self.clientName = project_data.get('clientName', '')
-        self.clientEmail = project_data.get('clientEmail', '')
-        self.status = project_data.get('status', 'new')
-        self.interested_groups = project_data.get('interested_groups', [])
-        self.group = project_data.get('group', '')
-        self.professorEmail = project_data.get('professorEmail', '')
-        self.visibility = project_data.get('visibility', '')
-        self.notes = project_data.get('notes', '')
+        self._project = project_data.get('project', '')
+        self._description = project_data.get('description', '')
+        self._clientName = project_data.get('clientName', '')
+        self._clientEmail = project_data.get('clientEmail', '')
+        self._status = project_data.get('status', 'new')
+        self._interested_groups = project_data.get('interested_groups', [])
+        self._group = project_data.get('group', '')
+        self._professorEmail = project_data.get('professorEmail', '')
+        self._visibility = project_data.get('visibility', '')
+        self._notes = project_data.get('notes', '')
 
     @property
     def project(self):
