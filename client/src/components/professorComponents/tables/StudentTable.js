@@ -20,7 +20,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import { ExportToCsv } from "export-to-csv";
 import MaterialReactTable from "material-react-table";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FilterDataByProfessor } from "../../../helpers/FilterDataByValue";
+import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
 import { getDate } from "../../../helpers/dateHelper";
 import ImportStudents from "../ImportStudents";
 import { CreateNewStudentModal } from "../forms/CreateNewStudentModal";
