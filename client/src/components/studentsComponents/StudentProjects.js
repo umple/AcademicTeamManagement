@@ -1,22 +1,12 @@
 import { useState, useEffect } from "react";
 import {
   Box,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
+  Grid, Typography,
   Button,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Stack,
-  Container,
+  TextField, Container,
   Alert,
-  Snackbar,
+  Snackbar
 } from "@mui/material";
-import { useStyles } from "./styles/StudentProjectStyles";
 import { getUserEmail } from "../../helpers/UserEmail";
 import AddProjectModal from "./AddProjectModal";
 import projectService from "../../services/projectService";

@@ -9,6 +9,7 @@ import {
   Typography,
   Button,
 } from "@mui/material";
+import projectService from "../../services/projectService";
 const ProjectCard = ({
   project,
   setShowAlert,
@@ -16,7 +17,7 @@ const ProjectCard = ({
   setErrorShowAlert,
 }) => {
   const classes = useStyles();
-  const handleProjectApplication = (event) => {
+  const handleProjectApplication = async (event) => {
     event.preventDefault();
 
     let body = {
@@ -25,28 +26,16 @@ const ProjectCard = ({
       group_id: currentGroup,
     };
 
-    fetch("api/request/join/project", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("There is no Students");
-        }
-      })
-      .then((data) => {
+    try {
+      let response = await projectService.requestToJoinProject(body);
+      if (response.success) {
         setShowAlert(true);
-      })
-      .catch((error) => {
-        setErrorShowAlert(true);
-      }).finally(()=>{
-        setTimeout(() => setErrorShowAlert(false), 3000);
-      });
+      }
+    } catch (error) {
+      setErrorShowAlert(true);
+    } finally {
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
   return (
     <form
