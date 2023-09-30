@@ -48,7 +48,7 @@ def add_project(project_obj):
     try:
         if not project_obj.status:
             project_obj.status = 'new'
-        result = projectCollection.insert_one(project_obj)
+        result = projectCollection.insert_one(project_ob.to_json()j)
         return result
     except Exception as e:
         print(f"Error adding project: {e}")
