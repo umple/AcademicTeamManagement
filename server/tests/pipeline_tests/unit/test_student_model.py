@@ -1,5 +1,6 @@
 import unittest
-from app.models import student, group
+from flask import session
+from app.models import student
 from werkzeug.datastructures import FileStorage
 from bson import ObjectId
 import json
@@ -80,7 +81,11 @@ class TestStudentRetrival(unittest.TestCase):
         self.assertEqual(actual, excepted)
 
 class TestStudentAddition(unittest.TestCase):
+    def setUp(self):
+        session["user"]["preferred_username"]
+
     def tearDown(self):
+        session["user"]["preferred_username"]
         student.studentsCollection.delete_many({})
 
     def test_add_student(self):
