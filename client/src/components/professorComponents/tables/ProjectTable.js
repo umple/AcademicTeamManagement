@@ -40,6 +40,7 @@ import { FilterDataByProfessor } from '../../../helpers/FilterDataByValue';
 
 const ProjectTable = () => {
   // Columns for table
+  
   const columns = useMemo(
     () => [
       {
