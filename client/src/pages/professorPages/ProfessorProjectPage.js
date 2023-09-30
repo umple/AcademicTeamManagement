@@ -1,4 +1,4 @@
-import ProjectTable from "../../components/ProjectTable/ProjectTable";
+import ProjectTable from "../../components/professorComponents/tables/ProjectTable";
 const ProfessorProjectPage = () => {
   return (
     <>

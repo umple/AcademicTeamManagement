@@ -1,4 +1,4 @@
-import MyGroup from "../../components/StudentView/MyGroup"
+import MyGroup from "../../components/studentsComponents/MyGroup"
 
 
 const StudentMyGroupPage = () => {

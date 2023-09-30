@@ -1,4 +1,4 @@
-import StudentGroupTable from '../../components/StudentView/StudentGroupTable'
+import StudentGroupTable from '../../components/studentsComponents/tables/StudentGroupTable'
 
 const StudentGroupsPage = () => {
 

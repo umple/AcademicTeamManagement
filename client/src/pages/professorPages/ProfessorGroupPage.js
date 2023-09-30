@@ -1,4 +1,4 @@
-import GroupTable from "../../components/GroupView/GroupTable";
+import GroupTable from "../../components/professorComponents/tables/GroupTable";
 
 const ProfessorGroupPage = () =>{
     return (

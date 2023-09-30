@@ -1,4 +1,4 @@
-import StudentTable from "../../components/StudentListingView/StudentTable";
+import StudentTable from "../../components/professorComponents/tables/StudentTable";
 
 const ProfessorStudentPage = () => {
   return (

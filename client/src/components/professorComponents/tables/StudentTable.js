@@ -17,14 +17,14 @@ import {
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv } from 'export-to-csv';
 import { Delete, Edit } from '@mui/icons-material';
-import ImportStudents from '../ImportStudentsView/ImportStudents';
+import ImportStudents from '../ImportStudents';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { FileUpload as FileUploadIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Paper } from '@material-ui/core';
-import { getDate } from '../../helpers/dateHelper';
-import { FilterDataByProfessor } from '../../helpers/FilterDataByValue';
+import { getDate } from '../../../helpers/dateHelper';
+import { FilterDataByProfessor } from '../../../helpers/FilterDataByValue';
 
 
 

@@ -1,5 +1,5 @@
 
-import StudentProjects from "../../components/StudentView/StudentProjects";
+import StudentProjects from "../../components/studentsComponents/StudentProjects";
 
 const StudentProjectPage = () => {
     return (
