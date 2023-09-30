@@ -2,7 +2,7 @@ from flask import jsonify, request, session
 from app.models import project, group
 from bson import ObjectId
 import json
-from server.app.entities.ProjectEntity import ProjectEntity
+from app.entities.ProjectEntity import ProjectEntity
 from . import project_bp
 
 # GET Request to retreive all students from the collection
