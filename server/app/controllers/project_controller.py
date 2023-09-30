@@ -2,8 +2,8 @@ from flask import jsonify, request, session
 from app.models import project, group
 from bson import ObjectId
 import json
+from app.entities.ProjectEntity import ProjectEntity
 from . import project_bp
-
 
 # GET Request to retreive all students from the collection
 @project_bp.route("/projects", methods=["GET"])
@@ -24,14 +24,12 @@ def get_projects():
 @project_bp.route("/project", methods=["POST"])
 def add_Project():
     try:
-        project_obj = json.loads(request.data)
-        result = project.add_project(project_obj)
-        if result:
-            return jsonify(str(result.inserted_id)), 200
-        else:
-            return {"message": "Could not add student."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+        project_data = json.loads(request.data)
+        project_entity = ProjectEntity(project_data)
+        result = project.add_project(project_entity)
+        return jsonify(str(result.inserted_id)), 200
+    except Exception as e:
+        return {"message": e}, 503
 
 
 # PUT Request to update a student info

@@ -18,8 +18,9 @@ def get_all_groups():
 
 def add_group(group_obj):
     result = groupCollection.insert_one(group_obj)
-    for id in group_obj["members"]:
-        student.assign_group_to_student(id, groupName= group_obj["group_id"])
+    if group_obj["members"]:
+        for id in group_obj["members"]:
+            student.assign_group_to_student(id, groupName= group_obj["group_id"])
     
     project.change_status(group_obj["project"], "assigned")
     return result
