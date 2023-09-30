@@ -64,7 +64,7 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
       - name: Install Packages
-        run: npm install
+        run: npm install --force
       - name: Run React Unit Tests
         run: npm run test
 
