@@ -44,9 +44,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Set up Python and Pipenv
         uses: actions/setup-python@v2
-      - name: Install Pipenv
+      - name: Install Pipenv and Coverage
         run: |
           pip3 install pipenv
+          pip3 install coverage
       - name: Install Dependencies with Pipenv
         run: |
           pipenv install
