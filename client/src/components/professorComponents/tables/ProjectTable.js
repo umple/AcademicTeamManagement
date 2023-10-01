@@ -107,12 +107,13 @@ const ProjectTable = () => {
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editingRow,setEditingRow] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingRow,setEditingRow] = useState(false);
   const [editingValues, setEditingValues] = useState(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = '';
@@ -127,7 +128,6 @@ const ProjectTable = () => {
       .then(data => {
         const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
         const filteredProjectsTableData = FilterDataByProfessor(data, professorEmail) // keep only the data that contains the professor's email
-        console.log("data here")
         setTableData(filteredProjectsTableData);
       })
       .catch(error => {
@@ -183,7 +183,6 @@ const ProjectTable = () => {
     //if (!Object.keys(validationErrors).length) {
     const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
     values["professorEmail"] = professorEmail
-    console.log("POG")
       fetch(`api/project/update/${row.original._id}`, {
         method: "PUT",
         headers: {
@@ -192,7 +191,6 @@ const ProjectTable = () => {
         body: JSON.stringify(values)
       })
         .then(response => {
-          console.log("GOT ")
           if (response.ok) {
             console.log("fetching")
             fetchProjects();
