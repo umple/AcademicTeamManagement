@@ -131,6 +131,8 @@ const GroupTable = () => {
 
   const handleSaveRowEdits = async (row, values) => {
     //if (!Object.keys(validationErrors).length) {
+    console.log(row)
+    console.log(values)
     const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
     values["professorEmail"] = professorEmail
       fetch(`api/group/update/${row.original._id}`, {
