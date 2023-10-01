@@ -88,7 +88,11 @@ class TestStudentRetrival(unittest.TestCase):
 
 
 class TestStudentAddition(unittest.TestCase):
+    def setUp(self):
+        session["user"]["preferred_username"]
+
     def tearDown(self):
+        session["user"]["preferred_username"]
         student.studentsCollection.delete_many({})
 
     def test_add_student(self):

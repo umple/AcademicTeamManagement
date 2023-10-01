@@ -67,4 +67,18 @@ jobs:
         with:
           name: coverage-report
           path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/server/htmlcov
+  react-unit-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+      - name: Install Packages
+        run: npm install --force
+      - name: Run React Unit Tests
+        run: npm run test
 
