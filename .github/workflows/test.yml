@@ -49,9 +49,6 @@ jobs:
           export PRIVATE_KEY_PATH=$(pwd)/privateKey/AcademicTeamManagement.pem
           mkdir privateKey
           echo ${{secrets.PRIVATE_KEY}} | base64 --decode > $PRIVATE_KEY_PATH
-          echo $PRIVATE_KEY_PATH
-          cat $PRIVATE_KEY_PATH
-
       - name: Install Pipenv and Coverage
         run: |
           pip3 install coverage
@@ -62,6 +59,7 @@ jobs:
           pipenv lock
       - name: Run Unit Tests
         run: |
+          export PRIVATE_KEY_PATH=$(pwd)/privateKey/AcademicTeamManagement.pem
           pipenv run coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
       - name: Create Coverage Report
         run: | 
