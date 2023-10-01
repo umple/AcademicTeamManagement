@@ -48,7 +48,7 @@ jobs:
         run: |
           export PRIVATE_KEY_PATH=$(pwd)/privateKey/AcademicTeamManagement.pem
           mkdir privateKey
-          echo ${{secret.PRIVATE_KEY}} | base64 --decode > $PRIVATE_KEY_PATH
+          echo ${{secrets.PRIVATE_KEY}} | base64 --decode > $PRIVATE_KEY_PATH
           echo $PRIVATE_KEY_PATH
           cat $PRIVATE_KEY_PATH
 
