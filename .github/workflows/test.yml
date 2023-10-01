@@ -43,14 +43,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up Python
+      - name: Set up Python and Pipenv
         uses: actions/setup-python@v2
       - name: Set up Private key
         run: |
           mkdir privateKey
           echo ${{secrets.PRIVATE_KEY}} | base64 --decode > $PRIVATE_KEY_PATH
-      - name: Install Pipenv
+      - name: Install Pipenv and Coverage
         run: |
+          pip3 install coverage
           pip3 install pipenv
       - name: Install Dependencies with Pipenv
         run: |

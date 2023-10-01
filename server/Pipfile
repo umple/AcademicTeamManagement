@@ -19,7 +19,6 @@ flask-session = "*"
 msal = "*"
 jwt = "*"
 mongomock = "*"
-coverage = "*"
 
 [dev-packages]
 
