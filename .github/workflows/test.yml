@@ -48,6 +48,7 @@ jobs:
         run: |
           pip3 install pipenv
           pip3 install coverage
+          pip3 install flask
       - name: Install Dependencies with Pipenv
         run: |
           pipenv install
