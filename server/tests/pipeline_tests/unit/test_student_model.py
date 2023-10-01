@@ -1,13 +1,10 @@
 import unittest
-from unittest.mock import patch
-from flask import session, Flask
-from unittest.mock import MagicMock, patch
+from flask import session
 from app.models import student
 from werkzeug.datastructures import FileStorage
 from bson import ObjectId
 import json
 import copy
-import os
 from run import app as flask_app 
 
 class StudentDataManager:
@@ -88,11 +85,7 @@ class TestStudentRetrival(unittest.TestCase):
 
 
 class TestStudentAddition(unittest.TestCase):
-    def setUp(self):
-        session["user"]["preferred_username"]
-
     def tearDown(self):
-        session["user"]["preferred_username"]
         student.studentsCollection.delete_many({})
 
     def test_add_student(self):
@@ -110,7 +103,6 @@ class TestStudentAddition(unittest.TestCase):
         actual = student.add_student(studentObj)
         self.assertIsNone(actual)
 
-    @patch('flask.session', {'user': {"preferred_username": "test_user"}})
     def test_import_student(self):        
         try:
             studentObj = StudentDataManager.getStudent()
