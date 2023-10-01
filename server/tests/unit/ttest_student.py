@@ -6,7 +6,6 @@ from unittest.mock import MagicMock
 from bson import ObjectId
 from app.models import db, student
 
-
 class TestStudentModel(unittest.TestCase):
     
     @classmethod
