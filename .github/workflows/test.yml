@@ -46,9 +46,8 @@ jobs:
         uses: actions/setup-python@v2
       - name: Install Pipenv and Coverage
         run: |
-          pip3 install pipenv
           pip3 install coverage
-          pip3 install flask
+          pip3 install pipenv
       - name: Install Dependencies with Pipenv
         run: |
           pipenv install
