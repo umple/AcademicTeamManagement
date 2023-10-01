@@ -49,6 +49,9 @@ jobs:
         run: |
           mkdir privateKey
           echo ${{secrets.PRIVATE_KEY}} | base64 --decode > $PRIVATE_KEY_PATH
+          echo $PRIVATE_KEY_PATH
+          cat $PRIVATE_KEY_PATH
+
       - name: Install Pipenv and Coverage
         run: |
           pip3 install coverage
