@@ -8,7 +8,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Project from "../../entities/Project";
 import projectService from "../../services/projectService";
 import { useStyles } from "./styles/AddProjectModalStyles";
@@ -19,11 +19,17 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const classes = useStyles();
   const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
   const [error, setError] = useState(""); // State for the confirmation message
+  let obj = {
+    professorEmail: professorEmail,
+    currentGroup: currentGroup
+  }
   const [project] = useState(
-    new Project({ professorEmail: professorEmail, currentGroup: currentGroup })
+    new Project(obj)
   );
 
-  console.log("project", project)
+  useEffect(()=>{
+        console.log("project", project)
+  }, [project])
 
   const onSubmit = async (values, actions) => {
     if (values.currentGroup === null) {

@@ -1,12 +1,11 @@
 class Project {
   constructor(projectObj) {
-    console.log("projectObj", projectObj)
     this.name = projectObj.name || "";
     this.description = projectObj.description || "";
     this.client = projectObj.client || "";
     this.clientEmail = projectObj.clientEmail || "";
     this.status = projectObj.status || "proposed";
-    this.professorEmail = projectObj.professorEmail || "";
+    this.professorEmail =  projectObj.professorEmail || "";
     this.currentGroup = projectObj.currentGroup || "";
   }
 
@@ -15,8 +14,8 @@ class Project {
     return this._name;
   }
 
-  set name(name) {
-    this._name = name;
+  set name(value) {
+    this._name = value;
   }
 
   // Getter and setter for 'description'
@@ -24,8 +23,8 @@ class Project {
     return this._description;
   }
 
-  set description(description) {
-    this._description = description;
+  set description(value) {
+    this._description = value;
   }
 
   // Getter and setter for 'client'
@@ -33,8 +32,8 @@ class Project {
     return this._client;
   }
 
-  set client(client) {
-    this._client = client;
+  set client(value) {
+    this._client = value;
   }
 
   // Getter and setter for 'clientEmail'
@@ -42,8 +41,8 @@ class Project {
     return this._clientEmail;
   }
 
-  set clientEmail(clientEmail) {
-    this._clientEmail = clientEmail;
+  set clientEmail(value) {
+    this._clientEmail = value;
   }
 
   // Getter and setter for 'status'
@@ -51,8 +50,8 @@ class Project {
     return this._status;
   }
 
-  set status(status) {
-    this._status = status;
+  set status(value) {
+    this._status = value;
   }
 
   // Getter and setter for 'professorEmail'
@@ -60,8 +59,8 @@ class Project {
     return this._professorEmail;
   }
 
-  set professorEmail(professorEmail) {
-    this._professorEmail = professorEmail;
+  set professorEmail(value) {
+    this._professorEmail = value;
   }
 
   // Getter and setter for 'currentGroup'
@@ -80,7 +79,7 @@ class Project {
       client: this._client,
       clientEmail: this._clientEmail,
       status: this._status,
-      professorEmail: this._professorEmail,
+      professorEmail: this.professorEmail,
       currentGroup: this._currentGroup,
     };
   }

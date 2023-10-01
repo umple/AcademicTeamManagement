@@ -4,7 +4,7 @@ import StudentProjects from "../../components/studentsComponents/StudentProjects
 const StudentProjectPage = () => {
     return (
         <>
-            <StudentProjects></StudentProjects>
+            <StudentProjects key={"a"}></StudentProjects>
         </>
     )
 }
