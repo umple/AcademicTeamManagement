@@ -1,12 +1,14 @@
 import unittest
 from unittest.mock import patch
 from flask import session, Flask
+from unittest.mock import MagicMock, patch
 from app.models import student
 from werkzeug.datastructures import FileStorage
 from bson import ObjectId
 import json
 import copy
 import os
+from run import app as flask_app 
 
 class StudentDataManager:
     def getStudent():
@@ -83,21 +85,9 @@ class TestStudentRetrival(unittest.TestCase):
         self.assertEqual(actual, excepted)
 
 
-# Generate a random secret key
-secret_key = os.urandom(24)
 
-# Create a Flask app for testing
-app = Flask(__name__)
-app.secret_key = secret_key
 
 class TestStudentAddition(unittest.TestCase):
-    def setUp(self):
-        self.app = app.test_client()
-
-        with self.app as client:
-            with client.session_transaction() as sess:
-                sess.clear()
-
     def tearDown(self):
         student.studentsCollection.delete_many({})
 
@@ -116,10 +106,13 @@ class TestStudentAddition(unittest.TestCase):
         actual = student.add_student(studentObj)
         self.assertIsNone(actual)
 
-    def test_import_student(self):
+    @patch('flask.session', {'user': {"preferred_username": "test_user"}})
+    def test_import_student(self):        
         try:
             studentObj = StudentDataManager.getStudent()
-            student.add_import_student(studentObj)
+            with flask_app.test_request_context():
+                session['user'] = {"preferred_username": "test_user"}
+                student.add_import_student(studentObj)
         except Exception:
             self.fail("Exception occured when importing student")
 
