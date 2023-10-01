@@ -100,6 +100,8 @@ class Student extends Component {
     this.setState({ AdjustedFinalGradeDenominator });
   }
 
+  
+
 }
 
 export default Student;

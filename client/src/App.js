@@ -2,19 +2,24 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import PrivateRoutes from "./Authentication/PrivateRoutes";
 import RoleBasedRoutes from "./Authentication/RoleBasedRoutes";
-import Groups from "./components/GroupView/GroupTable";
-import ImportStudents from "./components/ImportStudentsView/ImportStudents";
-import ProjectTable from "./components/ProjectTable/ProjectTable";
 import ResponsiveAppBar from "./components/StaticComponents/NavBar/ResponsiveAppBar";
 import PageNotFound from "./components/StaticComponents/PageNotFound/PageNotFound";
-import StudentTable from "./components/StudentListingView/StudentTable";
-import MyGroup from "./components/StudentView/MyGroup";
-import StudentGroups from "./components/StudentView/StudentGroupTable";
-import StudentProjects from "./components/StudentView/StudentProjects";
-import HomePage from "./pages/HomePage";
+import { ROLES } from "./helpers/Roles";
+
+// login page
 import LoginPage from "./pages/LoginPage";
-import StudentHomePage from "./pages/StudentHomePage";
-import { ROLES } from "./helpers/Roles"
+
+// Professor pages 
+import HomePage from "./pages/professorPages/HomePage";
+import ProfessorGroupPage from "./pages/professorPages/ProfessorGroupPage";
+import ProfessorProjectPage from "./pages/professorPages/ProfessorProjectPage";
+import ProfessorStudentPage from "./pages/professorPages/ProfessorStudentPage";
+
+// Student pages 
+import StudentGroupsPage from "./pages/studentPages/StudentGroupsPage";
+import StudentHomePage from "./pages/studentPages/StudentHomePage";
+import StudentMyGroupPage from "./pages/studentPages/StudentMyGroupPage";
+import StudentProjectPage from "./pages/studentPages/StudentProjectPage";
 
 const App = () => {
   return (
@@ -28,17 +33,16 @@ const App = () => {
             <Route element={<PrivateRoutes />}>
               <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR} />}>
                 <Route path="/ProfessorHome" element={<HomePage />}></Route>
-                <Route path="/Students" element={<StudentTable />}></Route>
-                <Route exact path="/Projects" element={<ProjectTable />}></Route>
-                <Route path="/ImportStudents" element={<ImportStudents />}></Route>
-                <Route path="/GroupView" element={<Groups />}></Route>
+                <Route path="/Students" element={<ProfessorStudentPage />}></Route>
+                <Route exact path="/Projects" element={<ProfessorProjectPage />}></Route>
+                <Route path="/GroupView" element={<ProfessorGroupPage />}></Route>
               </Route>
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.STUDENT} />}>
                 <Route path="/StudentHome" element={<StudentHomePage />}></Route>
-                <Route path="/StudentProjects" element={<StudentProjects />}></Route>
-                <Route path="/StudentGroups"  element={<StudentGroups />}></Route>
-                <Route path="/MyGroup" element={<MyGroup />}></Route>
+                <Route path="/StudentProjects" element={<StudentProjectPage />}></Route>
+                <Route path="/StudentGroups"  element={<StudentGroupsPage />}></Route>
+                <Route path="/MyGroup" element={<StudentMyGroupPage/>}></Route>
               </Route>
 
             </Route>
