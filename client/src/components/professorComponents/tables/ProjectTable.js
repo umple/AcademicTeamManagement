@@ -107,6 +107,7 @@ const ProjectTable = () => {
     []
   );
 
+  const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -114,11 +115,15 @@ const ProjectTable = () => {
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(false);
+
   const [tableData, setTableData] = useState([]);
   const [deletion, setOpenDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
   const [editingValues, setEditingValues] = useState(() =>
@@ -132,7 +137,6 @@ const ProjectTable = () => {
     try {
       setIsLoading(true);
       let data = await projectService.get();
-      const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
       const filteredProjectsTableData = FilterDataByProfessor(
         data,
         professorEmail
@@ -161,7 +165,7 @@ const ProjectTable = () => {
   useEffect(() => {
     fetchProjects();
     fetchApplications();
-  }, []);
+  }, [refreshTrigger]);
 
   const handleSaveRowEdits = async (row, values) => {
     //if (!Object.keys(validationErrors).length) {
@@ -194,7 +198,7 @@ const ProjectTable = () => {
     try {
       let resposne = await projectService.delete(row.original._id);
       setOpenDeletion(false);
-      await fetchProjects();
+      setRefreshTrigger((prevState) => !prevState);
     } catch (error) {
       console.log(error);
     }
@@ -220,7 +224,7 @@ const ProjectTable = () => {
       </Snackbar>
 
       <MaterialReactTable
-        state={{ isLoading }}
+        state={{ showProgressBars:isLoading }}
         displayColumnDefOptions={{
           "mrt-row-actions": {
             muiTableHeadCellProps: {
@@ -370,8 +374,8 @@ const ProjectTable = () => {
         columns={columns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        fetchProjects={fetchProjects}
         projects={tableData}
+        setRefreshTrigger={setRefreshTrigger}
       />
       <EditProjectModal
         handleSaveRowEdits={handleSaveRowEdits}

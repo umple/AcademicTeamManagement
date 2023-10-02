@@ -23,8 +23,8 @@ const CreateNewProjectModal = ({
   open,
   columns,
   onClose,
-  fetchProjects,
   projects,
+  setRefreshTrigger
 }) => {
   const cellValueMap = [
     { value: "new", label: "success" },
@@ -44,7 +44,7 @@ const CreateNewProjectModal = ({
   const onSubmit = async (values, actions) => {
     try {
       let response = await projectService.add(values);
-      fetchProjects()
+      setRefreshTrigger((prevState) => !prevState);
     } catch (error){
       console.error(error)
     } finally { 
