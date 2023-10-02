@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import {
   Box,
-  Grid, Typography,
+  Grid,
+  Typography,
   Button,
-  TextField, Container,
+  TextField,
+  Container,
   Alert,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import { getUserEmail } from "../../helpers/UserEmail";
 import AddProjectModal from "./AddProjectModal";
@@ -124,12 +126,14 @@ function StudentProjects() {
             >
               Add Project
             </Button>
-            <AddProjectModal
-              open={open}
-              onClose={handleClose}
-              professorEmail={currentStudent.professorEmail}
-              currentGroup={currentGroup}
-            />
+            {currentGroup && currentStudent && (
+              <AddProjectModal
+                open={open}
+                onClose={handleClose}
+                professorEmail={currentStudent.professorEmail}
+                currentGroup={currentGroup}
+              />
+            )}
           </Grid>
           {Array.isArray(projects) && projects.length !== 0
             ? filteredProjects.map((project) => (
