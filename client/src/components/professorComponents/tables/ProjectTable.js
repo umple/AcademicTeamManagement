@@ -111,7 +111,6 @@ const ProjectTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
 
   const [tableData, setTableData] = useState([]);
@@ -120,12 +119,7 @@ const ProjectTable = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
-  const [editingValues, setEditingValues] = useState(() =>
-    columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ""] = "";
-      return acc;
-    }, {})
-  );
+   
 
   const fetchProjects = async () => {
     try {
