@@ -1,6 +1,6 @@
 class Project {
   constructor(projectObj) {
-    this.name = projectObj.name || "";
+    this.project = projectObj.project || "";
     this.description = projectObj.description || "";
     this.client = projectObj.client || "";
     this.clientEmail = projectObj.clientEmail || "";
@@ -9,13 +9,13 @@ class Project {
     this.currentGroup = projectObj.currentGroup || "";
   }
 
-  // Getter and setter for 'name'
-  get name() {
-    return this._name;
+  // Getter and setter for 'project'
+  get project() {
+    return this._project;
   }
 
-  set name(value) {
-    this._name = value;
+  set project(value) {
+    this._project = value;
   }
 
   // Getter and setter for 'description'
@@ -74,7 +74,7 @@ class Project {
 
   toRequestBody() {
     return {
-      name: this._name,
+      project: this._project,
       description: this._description,
       client: this._client,
       clientEmail: this._clientEmail,
