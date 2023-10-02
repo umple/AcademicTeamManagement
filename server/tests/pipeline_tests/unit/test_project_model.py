@@ -57,7 +57,7 @@ class TestProjectRetrieval(unittest.TestCase):
     def test_get_interested_groups(self):
         expected = self.project
         actual = project.get_interested_groups()
-        self.assertEqual(len(actual[expected["_id"]]), len(expected["interested groups"]))
+        self.assertEqual(len(actual["interested groups"]), len(expected["interested groups"]))
 
     def test_retrieve_empty_project_list(self):
         # Clear the database
