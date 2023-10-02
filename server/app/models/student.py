@@ -16,7 +16,7 @@ def get_all_student():
 
 def add_student(student_obj):
     # CHECKS FOR EXISTING USER
-    if (get_student_by_username(student_obj.orgdefinedid ) == None):
+    if (get_student_by_username(student_obj.username ) == None):
         student_obj.group = None
         result = studentsCollection.insert_one(student_obj.to_json())
         return result

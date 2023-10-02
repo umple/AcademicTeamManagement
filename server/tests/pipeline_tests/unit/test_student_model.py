@@ -1,6 +1,7 @@
 import unittest
 from flask import session
 from app.models import student
+from app.entities.StudentEntity import StudentEntity
 from werkzeug.datastructures import FileStorage
 from bson import ObjectId
 import json
@@ -9,7 +10,8 @@ from run import app as flask_app
 
 class StudentDataManager:
     def getStudent():
-        studentSample = {    
+
+        student_json_sample = {    
             "_id": ObjectId(),
             "orgdefinedid": "1234",
             "username": "1234user",
@@ -20,7 +22,8 @@ class StudentDataManager:
             "final grade": None,
             "group": None
         }
-        return studentSample
+
+        return student_json_sample
 
 class TestStudentRetrival(unittest.TestCase):
     def setUp(self):
@@ -89,15 +92,13 @@ class TestStudentAddition(unittest.TestCase):
         student.studentsCollection.delete_many({})
 
     def test_add_student(self):
-        studentObj = StudentDataManager.getStudent()
+        studentObj = StudentEntity(StudentDataManager.getStudent())
         actual = student.add_student(studentObj)
         self.assertTrue(actual)
 
     def test_add_student_duplicate(self):
-        studentObj = StudentDataManager.getStudent()
-        # assert the first addition was correct
-        actual = student.add_student(studentObj)
-        self.assertTrue(actual)
+        studentObj = StudentEntity(StudentDataManager.getStudent())
+        student.studentsCollection.insert_one(studentObj.to_json())
 
         # assert the second addition is not allowed
         actual = student.add_student(studentObj)
