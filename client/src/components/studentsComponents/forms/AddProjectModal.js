@@ -8,12 +8,12 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import React, { useState } from "react";
 import Project from "../../../entities/Project";
+import projectSchema from "../../../schemas/projectSchema";
 import projectService from "../../../services/projectService";
 import { useStyles } from "../styles/AddProjectModalStyles";
-import { useFormik } from "formik";
-import projectSchema from "../../../schemas/projectSchema";
 
 function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const classes = useStyles();
@@ -24,10 +24,6 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
     currentGroup: currentGroup,
   };
   const [project] = useState(new Project(obj));
-
-  useEffect(() => {
-    console.log("project", project);
-  }, [project]);
 
   const onSubmit = async (values, actions) => {
     if (values.currentGroup === null) {
@@ -85,7 +81,7 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
             <TextField
               fullWidth
               label="Project Title"
-              name="name"
+              name="project"
               onBlur={handleBlur}
               value={values.project}
               onChange={handleChange}

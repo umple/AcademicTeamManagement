@@ -10,7 +10,7 @@ class Project {
     this.notes = projectObj.notes || "";
   }
 
-  // Getter and setter for 'name'
+  // Getter and setter for 'project'
   get project() {
     return this._project;
   }
