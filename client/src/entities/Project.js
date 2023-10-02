@@ -5,8 +5,9 @@ class Project {
     this.client = projectObj.client || "";
     this.clientEmail = projectObj.clientEmail || "";
     this.status = projectObj.status || "proposed";
-    this.professorEmail =  projectObj.professorEmail || "";
+    this.professorEmail = projectObj.professorEmail || "";
     this.currentGroup = projectObj.currentGroup || "";
+    this.notes = projectObj.notes || "";
   }
 
   // Getter and setter for 'name'
@@ -72,6 +73,14 @@ class Project {
     this._currentGroup = currentGroup;
   }
 
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(value) {
+    this._notes = value;
+  }
+
   toRequestBody() {
     return {
       name: this._name,
@@ -81,6 +90,19 @@ class Project {
       status: this._status,
       professorEmail: this.professorEmail,
       currentGroup: this._currentGroup,
+    };
+  }
+
+  toProfessorRequestBody() {
+    return {
+      name: this._name,
+      description: this._description,
+      client: this._client,
+      clientEmail: this._clientEmail,
+      status: this._status,
+      professorEmail: this._professorEmail,
+      currentGroup: this._currentGroup,
+      notes: this._notes,
     };
   }
 }
