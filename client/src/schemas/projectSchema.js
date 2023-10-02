@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 // Define the Yup schema for validation
 const projectSchema = Yup.object().shape({
-    name: Yup.string().required("Project Title is required"),
+    project: Yup.string().required("Project Title is required"),
     description: Yup.string().required("Description is required"),
     client: Yup.string().required("Client Full Name is required"),
     clientEmail: Yup.string()

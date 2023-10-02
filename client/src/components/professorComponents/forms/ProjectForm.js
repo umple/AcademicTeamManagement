@@ -19,11 +19,11 @@ import { useFormik } from "formik";
 import projectService from "../../../services/projectService";
 import professorProjectSchema from "../../../schemas/professorProjectSchema";
 
-const CreateNewProjectModal = ({
+const ProjectForm = ({
   open,
   columns,
   onClose,
-  projects,
+  projectData,
   setRefreshTrigger
 }) => {
   const cellValueMap = [
@@ -35,7 +35,8 @@ const CreateNewProjectModal = ({
     { value: "proposed", label: "default" },
   ];
 
-  const [project] = useState(
+  const [project] = useState( projectData ? 
+    new Project(projectData.original) :
     new Project({
       professorEmail: JSON.parse(localStorage.getItem("userEmail")),
     })
@@ -149,4 +150,4 @@ const CreateNewProjectModal = ({
   );
 };
 
-export default CreateNewProjectModal;
+export default ProjectForm;

@@ -10,7 +10,7 @@ import {
   Snackbar,
 } from "@mui/material";
 import { getUserEmail } from "../../helpers/UserEmail";
-import AddProjectModal from "./AddProjectModal";
+import AddProjectModal from "./forms/AddProjectModal";
 import projectService from "../../services/projectService";
 import studentService from "../../services/studentService";
 import ProjectCard from "./ProjectCard";

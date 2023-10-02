@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import MaterialReactTable from "material-react-table";
 import {
   Box,
@@ -7,10 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
-  Stack,
-  TextField,
-  Tooltip,
+  IconButton, Tooltip,
   Typography,
   Grid,
   Table,
@@ -24,31 +21,28 @@ import {
   FormGroup,
   Select,
   MenuItem,
-  InputLabel,
-  CircularProgress,
-  TextareaAutosize,
+  InputLabel, TextareaAutosize,
   Alert,
-  Snackbar,
+  Snackbar
 } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { ExportToCsv } from "export-to-csv";
-import { Delete, Edit, Help } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import Chip from "@mui/material/Chip";
 // import { colorStatus } from '../../helpers/statusColors';
 import { colorStatus } from "../../../helpers/statusColors";
 import { csvOptions, handleExportData } from "../../../helpers/exportData";
 import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
-import CreateNewProjectModal from "../forms/CreateNewProjectModal";
 import projectService from "../../../services/projectService";
-import EditProjectModal from "../forms/EditProjectModal";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
+import ProjectForm from "../forms/ProjectForm";
 
 const ProjectTable = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "name",
-        header: "name",
+        accessorKey: "project",
+        header: "Project name",
       },
       {
         accessorKey: "description",
@@ -118,12 +112,12 @@ const ProjectTable = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editingRow, setEditingRow] = useState(false);
+  const [editingRow, setEditingRow] = useState();
 
   const [tableData, setTableData] = useState([]);
   const [deletion, setOpenDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
   const [editingValues, setEditingValues] = useState(() =>
@@ -224,7 +218,7 @@ const ProjectTable = () => {
       </Snackbar>
 
       <MaterialReactTable
-        state={{ showProgressBars:isLoading }}
+        state={{ showProgressBars: isLoading }}
         displayColumnDefOptions={{
           "mrt-row-actions": {
             muiTableHeadCellProps: {
@@ -318,17 +312,8 @@ const ProjectTable = () => {
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={() => {
+                  setCreateModalOpen(true)
                   setEditingRow(row);
-                  var temp = {};
-                  {
-                    columns.map((column) => {
-                      temp[column.accessorKey] = row.getValue(
-                        column.accessorKey
-                      );
-                    });
-                  }
-                  setEditingValues(temp);
-                  setEditModalOpen(true);
                 }}
               >
                 <Edit />
@@ -370,23 +355,12 @@ const ProjectTable = () => {
           </Box>
         )}
       />
-      <CreateNewProjectModal
+      <ProjectForm
         columns={columns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        projects={tableData}
+        projectData={editingRow}
         setRefreshTrigger={setRefreshTrigger}
-      />
-      <EditProjectModal
-        handleSaveRowEdits={handleSaveRowEdits}
-        columns={columns}
-        open={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
-        fetchApplications={fetchApplications}
-        projects={tableData}
-        editingRow={editingRow}
-        values={editingValues}
-        setValues={setEditingValues}
       />
     </Box>
   );

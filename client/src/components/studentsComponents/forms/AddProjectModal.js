@@ -9,11 +9,11 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Project from "../../entities/Project";
-import projectService from "../../services/projectService";
-import { useStyles } from "./styles/AddProjectModalStyles";
+import Project from "../../../entities/Project";
+import projectService from "../../../services/projectService";
+import { useStyles } from "../styles/AddProjectModalStyles";
 import { useFormik } from "formik";
-import projectSchema from "../../schemas/projectSchema";
+import projectSchema from "../../../schemas/projectSchema";
 
 function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const classes = useStyles();
@@ -21,15 +21,13 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const [error, setError] = useState(""); // State for the confirmation message
   let obj = {
     professorEmail: professorEmail,
-    currentGroup: currentGroup
-  }
-  const [project] = useState(
-    new Project(obj)
-  );
+    currentGroup: currentGroup,
+  };
+  const [project] = useState(new Project(obj));
 
-  useEffect(()=>{
-        console.log("project", project)
-  }, [project])
+  useEffect(() => {
+    console.log("project", project);
+  }, [project]);
 
   const onSubmit = async (values, actions) => {
     if (values.currentGroup === null) {
@@ -65,7 +63,6 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
     validationSchema: projectSchema,
     onSubmit,
   });
-  
 
   return (
     <Dialog open={open}>
@@ -90,11 +87,11 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
               label="Project Title"
               name="name"
               onBlur={handleBlur}
-              value={values.name}
+              value={values.project}
               onChange={handleChange}
               variant="outlined"
-              error={Boolean(touched.name && errors.name)}
-              helperText={touched.name && errors.name}
+              error={Boolean(touched.project && errors.project)}
+              helperText={touched.project && errors.project}
               className={classes.textField}
             />
             <TextField
