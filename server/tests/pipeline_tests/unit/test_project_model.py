@@ -92,13 +92,6 @@ class TestProjectAddition(unittest.TestCase):
         actualProject = project.get_project(self.project["_id"])
         self.assertDictEqual(actualProject, expectedProject)
 
-    def test_delete_project_by_id(self):
-        response = project.delete_project_by_id(self.project["_id"])
-        self.assertTrue(response)
-
-        actualState = project.get_project(self.project["_id"])
-        self.assertIsNone(actualState)
-
 
 class TestProjectModification(unittest.TestCase):
     def setUp(self):
@@ -131,3 +124,19 @@ class TestProjectModification(unittest.TestCase):
         # Validate status is updated
         actualStatus = project.get_project(self.project["_id"])["status"]
         self.assertEqual("assigned", actualStatus)
+
+
+class TestProjectDeletion(unittest.TestCase):
+    def setUp(self):
+        self.project = ProjectDataManager.getProject()
+        project.projectCollection.insert_one(self.project)
+
+    def tearDown(self):
+        project.projectCollection.delete_many({})
+
+    def test_delete_project_by_id(self):
+        response = project.delete_project_by_id(self.project["_id"])
+        self.assertTrue(response)
+
+        actualState = project.get_project(self.project["_id"])
+        self.assertIsNone(actualState)
