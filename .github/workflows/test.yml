@@ -34,16 +34,32 @@ jobs:
         run: docker compose up -d
   unit-tests:
     runs-on: ubuntu-latest
+    env:
+        ENVIRONMENT: TESTING
+        PRIVATE_KEY_PATH: privateKey/AcademicTeamManagement.pem
     defaults:
       run:
         working-directory: ./server
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install Coverage Tool
-        run: pip3 install coverage
+      - name: Set up Python and Pipenv
+        uses: actions/setup-python@v2
+      - name: Set up Private key
+        run: |
+          mkdir privateKey
+          echo ${{secrets.PRIVATE_KEY}} | base64 --decode > $PRIVATE_KEY_PATH
+      - name: Install Pipenv and Coverage
+        run: |
+          pip3 install coverage
+          pip3 install pipenv
+      - name: Install Dependencies with Pipenv
+        run: |
+          pipenv install
+          pipenv lock
       - name: Run Unit Tests
-        run: coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
+        run: |
+          pipenv run coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
       - name: Create Coverage Report
         run: | 
           coverage html
