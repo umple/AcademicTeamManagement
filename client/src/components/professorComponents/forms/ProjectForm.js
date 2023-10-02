@@ -1,5 +1,5 @@
 //Modal to create new project
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -24,7 +24,7 @@ const ProjectForm = ({
   columns,
   onClose,
   projectData,
-  setRefreshTrigger
+  setRefreshTrigger,
 }) => {
   const cellValueMap = [
     { value: "new", label: "success" },
@@ -34,21 +34,30 @@ const ProjectForm = ({
     { value: "assigned", label: "error" },
     { value: "proposed", label: "default" },
   ];
+  const [project, setProject] = useState(new Project({
+    professorEmail: JSON.parse(localStorage.getItem("userEmail")),
+  }));
 
-  const [project] = useState( projectData ? 
-    new Project(projectData.original) :
-    new Project({
-      professorEmail: JSON.parse(localStorage.getItem("userEmail")),
-    })
-  );
+  useEffect(() => {
+    if (projectData) {
+      setProject(new Project(projectData.original));
+    } else {
+      setProject(
+        new Project({
+          professorEmail: JSON.parse(localStorage.getItem("userEmail")),
+        })
+      );
+    }
+    console.log("HI", projectData)
+  }, [projectData]); // Watch for changes in projectData prop
 
   const onSubmit = async (values, actions) => {
     try {
       let response = await projectService.add(values);
       setRefreshTrigger((prevState) => !prevState);
-    } catch (error){
-      console.error(error)
-    } finally { 
+    } catch (error) {
+      console.error(error);
+    } finally {
       onClose();
       actions.resetForm();
     }
@@ -64,7 +73,7 @@ const ProjectForm = ({
     setFieldValue,
     setFieldTouched,
   } = useFormik({
-    initialValues: project.toProfessorRequestBody(),
+    initialValues: project?.toProfessorRequestBody(),
     validationSchema: professorProjectSchema,
     onSubmit,
   });

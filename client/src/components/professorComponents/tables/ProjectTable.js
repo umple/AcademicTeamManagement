@@ -112,7 +112,7 @@ const ProjectTable = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editingRow, setEditingRow] = useState();
+  const [editingRow, setEditingRow] = useState(null);
 
   const [tableData, setTableData] = useState([]);
   const [deletion, setOpenDeletion] = useState(false);

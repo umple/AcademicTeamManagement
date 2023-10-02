@@ -1,6 +1,5 @@
 class Project {
   constructor(projectObj) {
-    console.log("HERER", this.projectObj)
     this.project = projectObj.project || "";
     this.description = projectObj.description || "";
     this.client = projectObj.client || "";
