@@ -19,10 +19,12 @@ import { useFormik } from "formik";
 import projectService from "../../../services/projectService";
 import professorProjectSchema from "../../../schemas/professorProjectSchema";
 
-const ProjectForm = ({
+const EditProjectForm = ({
   open,
   columns,
-  setCreateModalOpen,
+  projectData,
+  setEditingRow,
+  setEditModalOpen,
   setRefreshTrigger,
 }) => {
   const cellValueMap = [
@@ -33,25 +35,25 @@ const ProjectForm = ({
     { value: "assigned", label: "error" },
     { value: "proposed", label: "default" },
   ];
-  const [initialProjectValues] = useState(
-    new Project({
-      professorEmail: JSON.parse(localStorage.getItem("userEmail")),
-    })
+  const [initialProjectValues, setInit] = useState(
+    new Project(projectData.original)
   );
 
   const handleClose = () => {
-    setCreateModalOpen(false);
+    setEditingRow(null);
+    setEditModalOpen(false);
+    setFieldValue({}); // Clear the form values when closing the form
   };
 
   const onSubmit = async (values, actions) => {
     try {
-      await projectService.add(values);
+      await projectService.update(projectData.original._id,values);
       setRefreshTrigger((prevState) => !prevState);
-      handleClose();
-      actions.resetForm();
     } catch (error) {
       console.error(error);
     } finally {
+      handleClose();
+      actions.resetForm();
     }
   };
 
@@ -70,9 +72,19 @@ const ProjectForm = ({
     onSubmit,
   });
 
+  useEffect(() => {
+    if (projectData) {
+      Object.keys(projectData.original).forEach((field) => {
+        setFieldValue(field, projectData.original[field]);
+      });
+    }
+  }, [projectData]);
+
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Project</DialogTitle>
+      <DialogTitle textAlign="center">
+        {projectData?.original ? "Update Project" : "Create New Project"}
+      </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
@@ -143,7 +155,7 @@ const ProjectForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Create New Project
+            {projectData?.original ? "Update Project" : "Create New Project"}
           </Button>
         </DialogActions>
       </form>
@@ -151,4 +163,4 @@ const ProjectForm = ({
   );
 };
 
-export default ProjectForm;
+export default EditProjectForm;

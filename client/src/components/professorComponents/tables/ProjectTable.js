@@ -7,7 +7,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton, Tooltip,
+  IconButton,
+  Tooltip,
   Typography,
   Grid,
   Table,
@@ -21,9 +22,10 @@ import {
   FormGroup,
   Select,
   MenuItem,
-  InputLabel, TextareaAutosize,
+  InputLabel,
+  TextareaAutosize,
   Alert,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { ExportToCsv } from "export-to-csv";
@@ -36,7 +38,8 @@ import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
 import projectService from "../../../services/projectService";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import ProjectForm from "../forms/ProjectForm";
-
+import EditProjectForm from "../forms/EditProjectForm";
+import ViewApplicationModal from "../ViewApplicationModal";
 const ProjectTable = () => {
   const columns = useMemo(
     () => [
@@ -49,7 +52,7 @@ const ProjectTable = () => {
         header: "Description",
       },
       {
-        accessorKey: "client",
+        accessorKey: "clientName",
         header: "Client's Full Name",
       },
 
@@ -109,6 +112,10 @@ const ProjectTable = () => {
 
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [deleteRow, setDeleteRow] = useState({});
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+
   const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   const [editingRow, setEditingRow] = useState(null);
@@ -119,7 +126,6 @@ const ProjectTable = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
-   
 
   const fetchProjects = async () => {
     try {
@@ -154,33 +160,6 @@ const ProjectTable = () => {
     fetchProjects();
     fetchApplications();
   }, [refreshTrigger]);
-
-  const handleSaveRowEdits = async (row, values) => {
-    //if (!Object.keys(validationErrors).length) {
-    const professorEmail = JSON.parse(localStorage.getItem("userEmail"));
-    values["professorEmail"] = professorEmail;
-    console.log("POG");
-    fetch(`api/project/update/${row.original._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    })
-      .then((response) => {
-        console.log("GOT ");
-        if (response.ok) {
-          console.log("fetching");
-          fetchProjects();
-        } else {
-          console.error("Error editing row");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    //}
-  };
 
   const handleDeletion = async (row) => {
     try {
@@ -300,13 +279,13 @@ const ProjectTable = () => {
                 setOpen={setOpenDeletion}
                 open={deletion}
                 handleDeletion={handleDeletion}
-                row={row}
+                row={deleteRow}
               ></ConfirmDeletionModal>
             )}
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={() => {
-                  setCreateModalOpen(true)
+                  setEditModalOpen(true);
                   setEditingRow(row);
                 }}
               >
@@ -319,6 +298,7 @@ const ProjectTable = () => {
                 color="error"
                 onClick={() => {
                   setOpenDeletion(true);
+                  setDeleteRow(row);
                 }}
               >
                 <Delete />
@@ -349,136 +329,24 @@ const ProjectTable = () => {
           </Box>
         )}
       />
+      {editingRow && (
+        <EditProjectForm
+          columns={columns}
+          open={editModalOpen}
+          setEditModalOpen={setEditModalOpen}
+          setEditingRow={setEditingRow}
+          projectData={editingRow}
+          setRefreshTrigger={setRefreshTrigger}
+        />
+      )}
+
       <ProjectForm
         columns={columns}
         open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
-        projectData={editingRow}
+        setCreateModalOpen={setCreateModalOpen}
         setRefreshTrigger={setRefreshTrigger}
       />
     </Box>
-  );
-};
-
-//Modal to view application
-export const ViewApplicationModal = ({
-  open,
-  data,
-  onClose,
-  onSubmit,
-  setShowAlert,
-  project,
-  fetchProjects,
-}) => {
-  const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState("");
-  const [status, setStatus] = useState("");
-
-  let states = ["Accepted", "Rejected", "Feedback Provided"];
-
-  const handleStatusChange = (e) => {
-    setStatus(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    data.status = status;
-    fetch("api/application/review", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        fetchProjects();
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 5000);
-      });
-    onSubmit();
-    onClose();
-  };
-
-  return (
-    <Dialog open={open}>
-      <DialogTitle>Project Application: </DialogTitle>
-      <form onSubmit={handleSubmit}>
-        <DialogContent>
-          <Grid container alignItems="center" spacing={2}>
-            <Grid item>
-              <FormLabel component="legend">
-                <Typography variant="body1" gutterBottom>
-                  <Box fontWeight="fontWeightMedium" display="inline">
-                    Group:{" "}
-                  </Box>
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  <Box display="center">{data.group_id}</Box>
-                </Typography>
-              </FormLabel>
-            </Grid>
-          </Grid>
-          <Grid container alignItems="center" spacing={2}>
-            <Grid item>
-              <FormLabel component="legend">
-                <Typography variant="body1" gutterBottom>
-                  <Box fontWeight="fontWeightMedium" display="inline">
-                    submitted_by:{" "}
-                  </Box>
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  <Box display="center">{data.submitted_by} </Box>
-                </Typography>
-              </FormLabel>
-            </Grid>
-          </Grid>
-          <Grid>
-            <FormGroup>
-              <InputLabel id="status-label">Status</InputLabel>
-              <Select labelId="status-label" onChange={handleStatusChange}>
-                {states.map((state) => (
-                  <MenuItem key={state} value={state}>
-                    {state}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormGroup>
-          </Grid>
-          <FormLabel component="legend" sx={{ mt: 1 }}>
-            <Box fontWeight="fontWeightMedium" display="inline">
-              Feedback:{" "}
-            </Box>
-          </FormLabel>
-          <FormGroup row>
-            <TextareaAutosize
-              style={{
-                height: "calc(1.5em + 100px)",
-                width: "calc(1.5em + 250px)",
-              }}
-              name="feedback"
-              multiline={4}
-              value={textFieldFeedback}
-              onChange={(e) => {
-                setTextFieldtextFieldFeedback(e.target.value);
-              }}
-            />
-          </FormGroup>
-        </DialogContent>
-        <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button
-            color="secondary"
-            type="submit"
-            onClick={handleSubmit}
-            variant="contained"
-          >
-            Review Application
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
   );
 };
 

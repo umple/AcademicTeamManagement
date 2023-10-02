@@ -2,7 +2,7 @@ class Project {
   constructor(projectObj) {
     this.project = projectObj.project || "";
     this.description = projectObj.description || "";
-    this.client = projectObj.client || "";
+    this.clientName = projectObj.clientName || "";
     this.clientEmail = projectObj.clientEmail || "";
     this.status = projectObj.status || "proposed";
     this.professorEmail = projectObj.professorEmail || "";
@@ -29,12 +29,12 @@ class Project {
   }
 
   // Getter and setter for 'client'
-  get client() {
-    return this._client;
+  get clientName() {
+    return this._clientName;
   }
 
-  set client(value) {
-    this._client = value;
+  set clientName(value) {
+    this._clientName = value;
   }
 
   // Getter and setter for 'clientEmail'
@@ -85,7 +85,7 @@ class Project {
     return {
       project: this._project,
       description: this._description,
-      client: this._client,
+      clientName: this._clientName,
       clientEmail: this._clientEmail,
       status: this._status,
       professorEmail: this.professorEmail,
@@ -97,7 +97,7 @@ class Project {
     return {
       project: this._project,
       description: this._description,
-      client: this._client,
+      clientName: this._clientName,
       clientEmail: this._clientEmail,
       status: this._status,
       professorEmail: this._professorEmail,

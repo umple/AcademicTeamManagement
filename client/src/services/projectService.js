@@ -41,6 +41,27 @@ const projectService = {
         return { success: false, message: error.message };
       });
   },
+  update: async (row,values) => {
+    return  fetch(`api/project/update/${row}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorMessage) => {
+            throw new Error(`Failed to add project: ${errorMessage}`);
+          });
+        }
+        return { success: true, message: "Project updated successfully" };
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+
   delete: async (row) => {
     return fetch(`api/project/delete/${row}`, {
       method: "DELETE",

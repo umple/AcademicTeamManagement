@@ -28,7 +28,7 @@ const ConfirmDeletionModal = ({ open, setOpen, handleDeletion, row }) => {
         <DialogTitle>{"Are you sure you want to delete project?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Project: {row.getValue("name")}
+            Project: {row.getValue("project")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

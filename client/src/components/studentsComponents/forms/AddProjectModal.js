@@ -108,11 +108,11 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
               fullWidth
               name="client"
               label="Client Full Name"
-              value={values.client}
+              value={values.clientName}
               onBlur={handleBlur}
               onChange={handleChange}
-              error={Boolean(touched.client && errors.client)}
-              helperText={touched.client && errors.client}
+              error={Boolean(touched.clientName && errors.clientName)}
+              helperText={touched.clientName && errors.clientName}
               variant="outlined"
               className={classes.textField}
             />
