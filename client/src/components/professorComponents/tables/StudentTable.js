@@ -55,7 +55,7 @@ const StudentTable = () => {
         header: "Section",
       },
       {
-        accessorKey: "final grade",
+        accessorKey: "finalGrade",
         header: "Final Grade",
       },
     ],

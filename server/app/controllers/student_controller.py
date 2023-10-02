@@ -3,7 +3,7 @@ from app.models import student
 # from app.controllers import  as import_controller
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
-import pandas as pd
+from app.entities.StudentEntity import StudentEntity
 import json
 from . import student_bp
 
@@ -26,8 +26,9 @@ def get_students():
 @student_bp.route("/student", methods=["POST"])
 def add_student():
     try:
-        student_obj = request.json
-        result = student.add_student(student_obj)
+        student_obj = json.loads(request.data)
+        student_entity = StudentEntity(student_obj)
+        result = student.add_student(student_entity)
         if result:
             return jsonify(str(result.inserted_id)), 201
         else:
