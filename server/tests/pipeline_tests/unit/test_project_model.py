@@ -78,6 +78,15 @@ class TestProjectAddition(unittest.TestCase):
         actual = project.add_project(projectObj)
         self.assertTrue(actual)
 
+
+class TestProjectUpdate(unittest.TestCase):
+    def setUp(self):
+        self.project = ProjectDataManager.getProject()
+        project.projectCollection.insert_one(self.project)
+
+    def tearDown(self):
+        project.projectCollection.delete_many({})
+
     def test_update_project_by_id(self):
         # Make edits to project
         expectedProject = copy.deepcopy(self.project)
