@@ -109,7 +109,7 @@ function StudentProjects() {
           alignItems="center"
           style={{ display: "block" }}
         >
-          <Grid container md={9} sm={12} xs={12}>
+          <Grid item container md={9} sm={12} xs={12}>
             <TextField
               id="search"
               label="Search by project name"
@@ -136,8 +136,9 @@ function StudentProjects() {
             )}
           </Grid>
           {Array.isArray(projects) && projects.length !== 0
-            ? filteredProjects.map((project) => (
+            ? filteredProjects.map((project, key) => (
                 <ProjectCard
+                  key={key}
                   project={project}
                   setShowAlert={setShowAlert}
                   currentGroup={currentGroup}

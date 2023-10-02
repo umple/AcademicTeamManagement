@@ -27,10 +27,6 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
     new Project(obj)
   );
 
-  useEffect(()=>{
-        console.log("project", project)
-  }, [project])
-
   const onSubmit = async (values, actions) => {
     if (values.currentGroup === null) {
       setError("You Need to be in a group to propose a project!"); // Set confirmation message
@@ -88,13 +84,13 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
             <TextField
               fullWidth
               label="Project Title"
-              name="name"
+              name="project"
               onBlur={handleBlur}
-              value={values.name}
+              value={values.project}
               onChange={handleChange}
               variant="outlined"
-              error={Boolean(touched.name && errors.name)}
-              helperText={touched.name && errors.name}
+              error={Boolean(touched.project && errors.project)}
+              helperText={touched.project && errors.project}
               className={classes.textField}
             />
             <TextField
