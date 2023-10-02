@@ -42,8 +42,9 @@ class TestProjectRetrieval(unittest.TestCase):
                 self.assertEqual(actual[key], expected[key])
 
     def test_get_project_by_invalid_id(self):
-        with self.assertRaises(TypeError):
-            project.get_project(ObjectId())
+        expected = None
+        actual = project.get_project(ObjectId())
+        self.assertEqual(actual, expected)
 
     def test_get_project_by_name(self):
         expected = self.project
@@ -51,8 +52,9 @@ class TestProjectRetrieval(unittest.TestCase):
         self.assertDictEqual(actual, expected)
 
     def test_get_project_by_invalid_name(self):
-        with self.assertRaises(TypeError):
-            project.get_project_by_name("mock project")
+        expected = None
+        actual = project.get_project_by_name("Mock Project")
+        self.assertEqual(actual, expected)
 
     def test_get_interested_groups(self):
         expected = self.project
