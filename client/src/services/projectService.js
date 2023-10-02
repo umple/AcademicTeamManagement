@@ -41,6 +41,18 @@ const projectService = {
         return { success: false, message: error.message };
       });
   },
+  delete: async (row) => {
+    return fetch(`api/project/delete/${row}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+
   requestToJoinProject: async (body) => {
     return fetch("api/request/join/project", {
       method: "POST",
@@ -53,7 +65,7 @@ const projectService = {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return response.json();  
+        return response.json();
       })
       .catch((error) => {
         throw error;

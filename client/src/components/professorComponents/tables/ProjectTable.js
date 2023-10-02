@@ -40,10 +40,10 @@ import { csvOptions, handleExportData } from "../../../helpers/exportData";
 import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
 import CreateNewProjectModal from "../forms/CreateNewProjectModal";
 import projectService from "../../../services/projectService";
+import EditProjectModal from "../forms/EditProjectModal";
+import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 
 const ProjectTable = () => {
-  // Columns for table
-
   const columns = useMemo(
     () => [
       {
@@ -107,11 +107,17 @@ const ProjectTable = () => {
     []
   );
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const csvExporter = new ExportToCsv(csvOptions("ProjectsFromAcTeams-"));
+
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [deletion, setOpenDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
@@ -184,35 +190,15 @@ const ProjectTable = () => {
     //}
   };
 
-  const handleDeleteRow = useCallback((row) => {
-    if (
-      !window.confirm(
-        `Are you sure you want to delete ${row.getValue("project")}?`
-      )
-    ) {
-      return;
+  const handleDeletion = async (row) => {
+    try {
+      let resposne = await projectService.delete(row.original._id);
+      setOpenDeletion(false);
+      await fetchProjects();
+    } catch (error) {
+      console.log(error);
     }
-
-    fetch(`api/project/delete/${row.original._id}`, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        if (response.ok) {
-          fetchProjects();
-        } else {
-          console.error("Error deleting row");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  // For the model to view project applications
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const csvExporter = new ExportToCsv(csvOptions("ProjectsFromAcTeams-"));
+  };
 
   return (
     <Box sx={{ p: 2 }}>
@@ -224,11 +210,7 @@ const ProjectTable = () => {
       >
         Projects
       </Typography>
-      {/* <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={true}
-        message="I love snacks"
-      /> */}
+
       <Snackbar
         open={showAlert}
         onClose={() => setShowAlert(false)}
@@ -321,6 +303,14 @@ const ProjectTable = () => {
         }}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
+            {deletion && (
+              <ConfirmDeletionModal
+                setOpen={setOpenDeletion}
+                open={deletion}
+                handleDeletion={handleDeletion}
+                row={row}
+              ></ConfirmDeletionModal>
+            )}
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={() => {
@@ -340,8 +330,14 @@ const ProjectTable = () => {
                 <Edit />
               </IconButton>
             </Tooltip>
+            {/* onClick={() => handleDeleteRow(row)}> */}
             <Tooltip arrow placement="right" title="Delete">
-              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+              <IconButton
+                color="error"
+                onClick={() => {
+                  setOpenDeletion(true);
+                }}
+              >
                 <Delete />
               </IconButton>
             </Tooltip>
@@ -389,140 +385,6 @@ const ProjectTable = () => {
         setValues={setEditingValues}
       />
     </Box>
-  );
-};
-
-export const EditProjectModal = ({
-  open,
-  columns,
-  onClose,
-  fetchApplications,
-  handleSaveRowEdits,
-  projects,
-  editingRow,
-  values,
-  setValues,
-}) => {
-  const cellValueMap = [
-    { value: "new", label: "success" },
-    { value: "interested students", label: "warning" },
-    { value: "students needed", label: "primary" },
-    { value: "pending approval", label: "secondary" },
-    { value: "assigned", label: "error" },
-    { value: "proposed", label: "default" },
-  ];
-
-  const [error, setError] = useState("");
-
-  function validateFields() {
-    if (values["project"] === "") {
-      setError("Please Enter a project Name");
-      setTimeout(() => setError(""), 4000);
-      return false;
-    }
-
-    if (projects.length === undefined) {
-      return true;
-    }
-
-    let project = projects.find(
-      (project) =>
-        project.project.toLowerCase() === values["project"].toLowerCase()
-    );
-    if (project === undefined) {
-      return true;
-    }
-
-    if (project._id !== editingRow.original._id) {
-      setError("The project name already exists");
-      setTimeout(() => setError(""), 4000);
-      return false;
-    }
-
-    return true;
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (validateFields() === false) {
-      return;
-    }
-
-    handleSaveRowEdits(editingRow, values);
-    onClose();
-  };
-
-  return (
-    <Dialog open={open}>
-      {error === "" ? "" : <Alert severity="error">{error}</Alert>}
-      <DialogTitle textAlign="center">Edit Project</DialogTitle>
-      <form onSubmit={handleSubmit}>
-        <DialogContent>
-          <Stack
-            sx={{
-              width: "100%",
-              minWidth: { xs: "300px", sm: "360px", md: "400px" },
-              gap: "1.5rem",
-            }}
-          >
-            {columns.map((column) => {
-              if (
-                column.accessorKey === "interested groups" ||
-                column.accessorKey === "group"
-              ) {
-                return null;
-              }
-              if (column.accessorKey === "status") {
-                return (
-                  <FormGroup>
-                    <InputLabel id="status-label">Status</InputLabel>
-                    <Select
-                      labelId="status-label"
-                      key={column.accessorKey}
-                      label={column.header}
-                      name={column.accessorKey}
-                      value={values[column.accessorKey]}
-                      onChange={(e) => {
-                        setValues({
-                          ...values,
-                          [e.target.name]: e.target.value,
-                        });
-                      }}
-                    >
-                      {cellValueMap.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormGroup>
-                );
-              }
-              return (
-                <TextField
-                  key={column.accessorKey}
-                  label={column.header}
-                  name={column.accessorKey}
-                  value={values[column.accessorKey]}
-                  onChange={(e) => {
-                    setValues({ ...values, [e.target.name]: e.target.value });
-                  }}
-                  multiline={column.accessorKey === "description"}
-                  rows={column.accessorKey === "description" ? 5 : 1}
-                />
-              );
-            })}
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button color="secondary" type="submit" variant="contained">
-            Edit Project
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
   );
 };
 
