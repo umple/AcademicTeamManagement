@@ -7,6 +7,7 @@ import app_config
 
 # initilase a Flask app
 app = Flask(__name__)
+
 app.config.from_object(app_config)
 
 # Handle cors
