@@ -117,7 +117,7 @@ class TestGroupModification(unittest.TestCase):
 
         # Validate member is added
         actualMembers = group.get_group(self.group["_id"])["members"]
-        self.assertTrue("test@example.com" == actualMembers[0]["email"])
+        self.assertTrue("12345" in actualMembers)
 
     def test_remove_student_from_group_by_email(self):
         actual = group.remove_student_from_group_by_email(self.group["group_id"], "test@example.com")
