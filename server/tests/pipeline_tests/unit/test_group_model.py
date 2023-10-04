@@ -106,11 +106,13 @@ class TestGroupModification(unittest.TestCase):
         group.groupCollection.delete_many({})
 
     @patch('app.models.student.get_student_by_email')
-    def test_add_student_to_group(self, mock_get_student_by_email):
-        # Mock the behavior of get_student_by_email
+    @patch('app.models.student.assign_group_to_student')
+    def test_add_student_to_group(self, mock_assign_group_to_student, mock_get_student_by_email):
+        # Mock the behavior of get_student_by_email and assign_group_to_student
         mock_get_student_by_email.return_value = {"orgdefinedid": "12345", "email": "test@example.com"}
+        mock_assign_group_to_student.return_value = True
 
-        actual = group.add_student_to_group("test@example.com", self.group["group_id"])
+        actual = group.add_student_to_group("test@example.com", self.group["_id"])
         self.assertTrue(actual)
 
         # Validate member is added
