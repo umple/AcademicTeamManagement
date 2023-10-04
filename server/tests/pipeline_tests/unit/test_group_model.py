@@ -119,26 +119,30 @@ class TestGroupModification(unittest.TestCase):
         actualMembers = group.get_group(self.group["_id"])["members"]
         self.assertTrue("12345" in actualMembers)
 
-    def test_remove_student_from_group_by_email(self):
+    @patch('app.models.student.get_student_by_email')
+    def test_remove_student_from_group_by_email(self, mock_get_student_by_email):
+        # Mock the behavior of get_student_by_email
+        mock_get_student_by_email.return_value = {"orgdefinedid": "12345", "email": "test@example.com"}
         actual = group.remove_student_from_group_by_email(self.group["group_id"], "test@example.com")
         self.assertTrue(actual)
 
         # Validate member is removed
         actualMembers = group.get_group(self.group["_id"])["members"]
-        self.assertFalse("test@example.com" in actualMembers)
+        self.assertFalse("12345" in actualMembers)
 
-    def test_remove_student_from_group(self):
-        student_email = "test@example.com"
-        student_id = "12345"
+    @patch('app.models.student.get_student_by_email')
+    def test_remove_student_from_group(self, mock_get_student_by_email):
+        # Mock the behavior of get_student_by_email
+        mock_get_student_by_email.return_value = {"orgdefinedid": "12345", "email": "test@example.com"}
         # Add student to the group
-        group.add_student_to_group(student_email, self.group["group_id"])
+        group.add_student_to_group("test@example.com", self.group["group_id"])
         # Remove student from the group
-        actual = group.remove_student_from_group(self.group["group_id"], student_id)
+        actual = group.remove_student_from_group(self.group["group_id"], "12345")
         self.assertTrue(actual)
 
         # Validate member is removed
         actualMembers = group.get_group(self.group["_id"])["members"]
-        self.assertFalse(student_id in actualMembers)
+        self.assertFalse("12345" in actualMembers)
 
 
 class TestGroupDeletion(unittest.TestCase):
