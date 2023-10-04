@@ -1,11 +1,7 @@
 from .__init__ import db
-from flask import redirect, url_for
 from bson import ObjectId
-from app.utils.data_conversion import clean_up_json_data
 import app.models.student as student
 import app.models.project as project
-import pandas as pd
-import json
 
 groupCollection = db["groups"]
 
@@ -88,10 +84,6 @@ def is_user_in_group(user_name):
         return False
 
 def update_group_by_id(id, group_obj):
-    # Validate group name does not exist
-    # if get_group_by_group_name(group_obj["group_id"]) != None:
-    #     return
-
     originalGroup  = get_group(id)
     if group_obj["members"] != "":
         group_obj["members"] =  group_obj["members"].split(",")
@@ -116,9 +108,6 @@ def delete_group_by_id(id):
     return result
 
 def add_project_to_group(groupName,projectName):
-    # group = get_group_by_group_name(groupName)
-    # if group.project == "" or group.project == None:
-    #     return False, "Project Already has been assigned"
     result = groupCollection.update_one(
             {"group_id": groupName},
             {"$set": {"project": projectName}}
