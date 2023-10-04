@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 from app.models import group
 from app.entities.GroupEntity import GroupEntity
 from bson import ObjectId
@@ -104,7 +105,11 @@ class TestGroupModification(unittest.TestCase):
     def tearDown(self):
         group.groupCollection.delete_many({})
 
-    def test_add_student_to_group(self):
+    @patch('app.models.student.get_student_by_email')
+    def test_add_student_to_group(self, mock_get_student_by_email):
+        # Mock the behavior of get_student_by_email
+        mock_get_student_by_email.return_value = {"orgdefinedid": "12345", "email": "test@example.com"}
+
         actual = group.add_student_to_group("test@example.com", self.group["group_id"])
         self.assertTrue(actual)
 
