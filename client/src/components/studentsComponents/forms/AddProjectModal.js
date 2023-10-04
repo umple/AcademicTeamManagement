@@ -8,12 +8,12 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import Project from "../../entities/Project";
-import projectService from "../../services/projectService";
-import { useStyles } from "./styles/AddProjectModalStyles";
 import { useFormik } from "formik";
-import projectSchema from "../../schemas/projectSchema";
+import React, { useState } from "react";
+import Project from "../../../entities/Project";
+import projectSchema from "../../../schemas/projectSchema";
+import projectService from "../../../services/projectService";
+import { useStyles } from "../styles/AddProjectModalStyles";
 
 function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const classes = useStyles();
@@ -21,11 +21,9 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const [error, setError] = useState(""); // State for the confirmation message
   let obj = {
     professorEmail: professorEmail,
-    currentGroup: currentGroup
-  }
-  const [project] = useState(
-    new Project(obj)
-  );
+    currentGroup: currentGroup,
+  };
+  const [project] = useState(new Project(obj));
 
   const onSubmit = async (values, actions) => {
     if (values.currentGroup === null) {
@@ -61,7 +59,6 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
     validationSchema: projectSchema,
     onSubmit,
   });
-  
 
   return (
     <Dialog open={open}>
@@ -111,11 +108,11 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
               fullWidth
               name="client"
               label="Client Full Name"
-              value={values.client}
+              value={values.clientName}
               onBlur={handleBlur}
               onChange={handleChange}
-              error={Boolean(touched.client && errors.client)}
-              helperText={touched.client && errors.client}
+              error={Boolean(touched.clientName && errors.clientName)}
+              helperText={touched.clientName && errors.clientName}
               variant="outlined"
               className={classes.textField}
             />
