@@ -2,11 +2,12 @@ class Project {
   constructor(projectObj) {
     this.project = projectObj.project || "";
     this.description = projectObj.description || "";
-    this.client = projectObj.client || "";
+    this.clientName = projectObj.clientName || "";
     this.clientEmail = projectObj.clientEmail || "";
     this.status = projectObj.status || "proposed";
-    this.professorEmail =  projectObj.professorEmail || "";
+    this.professorEmail = projectObj.professorEmail || "";
     this.currentGroup = projectObj.currentGroup || "";
+    this.notes = projectObj.notes || "";
   }
 
   // Getter and setter for 'project'
@@ -28,12 +29,12 @@ class Project {
   }
 
   // Getter and setter for 'client'
-  get client() {
-    return this._client;
+  get clientName() {
+    return this._clientName;
   }
 
-  set client(value) {
-    this._client = value;
+  set clientName(value) {
+    this._clientName = value;
   }
 
   // Getter and setter for 'clientEmail'
@@ -72,15 +73,36 @@ class Project {
     this._currentGroup = currentGroup;
   }
 
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(value) {
+    this._notes = value;
+  }
+
   toRequestBody() {
     return {
       project: this._project,
       description: this._description,
-      client: this._client,
+      clientName: this._clientName,
       clientEmail: this._clientEmail,
       status: this._status,
       professorEmail: this.professorEmail,
       currentGroup: this._currentGroup,
+    };
+  }
+
+  toProfessorRequestBody() {
+    return {
+      project: this._project,
+      description: this._description,
+      clientName: this._clientName,
+      clientEmail: this._clientEmail,
+      status: this._status,
+      professorEmail: this._professorEmail,
+      currentGroup: this._currentGroup,
+      notes: this._notes,
     };
   }
 }
