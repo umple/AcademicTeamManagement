@@ -133,6 +133,7 @@ const GroupTable = () => {
     //if (!Object.keys(validationErrors).length) {
     console.log(row)
     console.log(values)
+    //THIS LINE IS A TEMPORARY FIX AND THIS FIELD SHOULD STORE A GROUP ID.
     values["members"] = ""
     const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
     values["professorEmail"] = professorEmail
