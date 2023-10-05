@@ -127,27 +127,20 @@ const ProjectTable = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editingRow,setEditingRow] = useState(false);
-  const [editingValues, setEditingValues] = useState(() =>
-    columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
-      return acc;
-    }, {}),
-  );
-
-
-  const fetchProjects = () => {
-    fetch("/api/projects")
-      .then(response => response.json())
-      .then(data => {
-        const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
-        const filteredProjectsTableData = FilterDataByProfessor(data, professorEmail) // keep only the data that contains the professor's email
-        setTableData(filteredProjectsTableData);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  const fetchProjects = async () => {
+    try {
+      setIsLoading(true);
+      let data = await projectService.get();
+      const filteredProjectsTableData = FilterDataByProfessor(
+        data,
+        professorEmail
+      ); // keep only the data that contains the professor's email
+      setTableData(filteredProjectsTableData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const fetchApplications = () => {
@@ -168,82 +161,16 @@ const ProjectTable = () => {
     fetchApplications();
   }, [refreshTrigger]);
 
-  const handleAddRow = useCallback(
-    (newRowData) => {
-
-      const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
-      const newProjectInfo = { ...newRowData, professorEmail: professorEmail } // add the professor's email as a new pair
-
-      fetch('/api/project', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newProjectInfo)
-      })
-        .then(response => {
-          if (response.ok) {
-            fetchProjects();
-          }
-        }).catch(error => {
-          console.error(error);
-        });
-    },
-    []
-  );
-
-  const handleSaveRowEdits = async (row, values) => {
-    //if (!Object.keys(validationErrors).length) {
-    const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
-    values["professorEmail"] = professorEmail
-      fetch(`api/project/update/${row.original._id}`, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(values)
-      })
-        .then(response => {
-          if (response.ok) {
-            console.log("fetching")
-            fetchProjects();
-          } else {
-            console.error("Error editing row");
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    //}
+  const handleDeletion = async (row) => {
+    try {
+      let resposne = await projectService.delete(row.original._id);
+      setOpenDeletion(false);
+      setRefreshTrigger((prevState) => !prevState);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleDeleteRow = useCallback((row) => {
-    if (!window.confirm(`Are you sure you want to delete ${row.getValue('project')}?`)) {
-      return;
-    }
-
-    fetch(`api/project/delete/${row.original._id}`, {
-      method: 'DELETE'
-    })
-      .then(response => {
-        if (response.ok) {
-          fetchProjects();
-        } else {
-          console.error('Error deleting row');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
-
-  // For the model to view project applications
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const csvExporter = new ExportToCsv(csvOptions('ProjectsFromAcTeams-'));
- 
-  
   return (
     <Box sx={{ p: 2 }}>
       <Typography

@@ -134,7 +134,7 @@ const GroupTable = () => {
     console.log(row)
     console.log(values)
     //THIS LINE IS A TEMPORARY FIX AND THIS FIELD SHOULD STORE A GROUP ID.
-    values["members"] = ""
+    values["members"] = values["members"].join()
     const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
     values["professorEmail"] = professorEmail
       fetch(`api/group/update/${row.original._id}`, {
