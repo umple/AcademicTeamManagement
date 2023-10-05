@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import {
   Box,
-  Grid, Typography,
+  Grid,
+  Typography,
   Button,
-  TextField, Container,
+  TextField,
+  Container,
   Alert,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import { getUserEmail } from "../../helpers/UserEmail";
-import AddProjectModal from "./AddProjectModal";
+import AddProjectModal from "./forms/AddProjectModal";
 import projectService from "../../services/projectService";
 import studentService from "../../services/studentService";
 import ProjectCard from "./ProjectCard";
@@ -107,7 +109,7 @@ function StudentProjects() {
           alignItems="center"
           style={{ display: "block" }}
         >
-          <Grid container md={9} sm={12} xs={12}>
+          <Grid item container md={9} sm={12} xs={12}>
             <TextField
               id="search"
               label="Search by project name"
@@ -124,16 +126,19 @@ function StudentProjects() {
             >
               Add Project
             </Button>
-            <AddProjectModal
-              open={open}
-              onClose={handleClose}
-              professorEmail={currentStudent.professorEmail}
-              currentGroup={currentGroup}
-            />
+            {currentGroup && currentStudent && (
+              <AddProjectModal
+                open={open}
+                onClose={handleClose}
+                professorEmail={currentStudent.professorEmail}
+                currentGroup={currentGroup}
+              />
+            )}
           </Grid>
           {Array.isArray(projects) && projects.length !== 0
-            ? filteredProjects.map((project) => (
+            ? filteredProjects.map((project, key) => (
                 <ProjectCard
+                  key={key}
                   project={project}
                   setShowAlert={setShowAlert}
                   currentGroup={currentGroup}

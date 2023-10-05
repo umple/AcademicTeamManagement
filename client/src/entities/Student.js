@@ -61,47 +61,44 @@ class Student extends Component {
 
   // Setter methods
   setOrgDefinedId(OrgDefinedId) {
-    this.setState({ OrgDefinedId });
+    this.state.OrgDefinedId = OrgDefinedId;
   }
 
   setUsername(Username) {
-    this.setState({ Username });
+    this.state.Username = Username;
   }
 
   setLastName(LastName) {
-    this.setState({ LastName });
+    this.state.LastName = LastName;
   }
 
   setFirstName(FirstName) {
-    this.setState({ FirstName });
+    this.state.FirstName = FirstName;
   }
 
   setEmail(Email) {
-    this.setState({ Email });
+    this.state.Email = Email;
   }
 
   setSections(Sections) {
-    this.setState({ Sections });
+    this.state.Sections = Sections;
   }
 
   setCalculatedFinalGradeNumerator(CalculatedFinalGradeNumerator) {
-    this.setState({ CalculatedFinalGradeNumerator });
+    this.state.CalculatedFinalGradeNumerator = CalculatedFinalGradeNumerator;
   }
 
   setCalculatedFinalGradeDenominator(CalculatedFinalGradeDenominator) {
-    this.setState({ CalculatedFinalGradeDenominator });
+    this.state.CalculatedFinalGradeDenominator = CalculatedFinalGradeDenominator;
   }
 
   setAdjustedFinalGradeNumerator(AdjustedFinalGradeNumerator) {
-    this.setState({ AdjustedFinalGradeNumerator });
+    this.state.AdjustedFinalGradeNumerator = AdjustedFinalGradeNumerator;
   }
 
   setAdjustedFinalGradeDenominator(AdjustedFinalGradeDenominator) {
-    this.setState({ AdjustedFinalGradeDenominator });
+    this.state.AdjustedFinalGradeDenominator = AdjustedFinalGradeDenominator;
   }
-
-  
-
 }
 
 export default Student;

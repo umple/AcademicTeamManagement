@@ -12,6 +12,7 @@ class ProjectEntity:
         self._professorEmail = project_data.get('professorEmail', '')
         self._visibility = project_data.get('visibility', '')
         self._notes = project_data.get('notes', '')
+    
     def to_json(self):
         return {
             'project': self._project,
@@ -25,6 +26,7 @@ class ProjectEntity:
             'visibility': self._visibility,
             'notes': self._notes
         }
+
     @property
     def project(self):
         return self._project
