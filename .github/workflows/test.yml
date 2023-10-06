@@ -12,7 +12,7 @@ env:
   MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
   INIT_MOUNT: "./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro"
   PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
-  BACKEND_HOST: http://localhost:${FLASK}
+  BACKEND_HOST: http://localhost:5001
   
 # cancel the in-progress job related to the current PR
 concurrency:
@@ -39,9 +39,7 @@ jobs:
         run: curl http://localhost:3000/api/students
       - name: Print Logs
         run:
-          docker logs academicteammanagement-react-server-1 \
-          docker logs academicteammanagement-flask-server-1 \
-          docker logs mongodb \
+          docker logs academicteammanagement-react-server-1 
       - name: Cypress run
         uses: cypress-io/github-action@v6
   unit-tests:
