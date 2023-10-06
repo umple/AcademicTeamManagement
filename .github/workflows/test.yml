@@ -57,11 +57,6 @@ jobs:
       - name: Print Logs
         run:
           docker inspect mongodb
-      - name: Change Directory
-        run: cd client
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        working-directory: ./client
   unit-tests:
     runs-on: ubuntu-latest
     env:
@@ -116,9 +111,15 @@ jobs:
   cypress-end-to-end:
     runs-on: ubuntu-latest
     needs: docker-compose
+    defaults:
+      run:
+        working-directory: .
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Test a fetch
         run: curl localhost:3000/api/students
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        working-directory: ./client
 
