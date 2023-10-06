@@ -42,10 +42,19 @@ jobs:
           docker logs academicteammanagement-react-server-1 
       - name: Print Logs
         run:
+          docker inspect academicteammanagement-react-server-1 
+      - name: Print Logs
+        run:
           docker logs academicteammanagement-flask-server-1 
       - name: Print Logs
         run:
+          docker inspect academicteammanagement-flask-server-1 
+      - name: Print Logs
+        run:
           docker logs mongodb
+      - name: Print Logs
+        run:
+          docker inspect mongodb
       - name: Change Directory
         run: cd client
       - name: Cypress run
