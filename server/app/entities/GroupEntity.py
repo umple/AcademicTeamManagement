@@ -4,6 +4,7 @@ class GroupEntity:
             group_data = {}
         self._group_id = group_data.get('group_id', '')
         self._project = group_data.get('project', '')
+        self._professorEmail = group_data.get('professorEmail', '')
         self._members = group_data.get('members', [])
         self._notes = group_data.get('notes', '')
     
@@ -11,6 +12,7 @@ class GroupEntity:
         return {
             'group_id': self._group_id,
             'project': self._project,
+            'professorEmail': self._professorEmail,
             'members': self._members,
             'notes': self._notes,
         }
@@ -30,6 +32,14 @@ class GroupEntity:
     @project.setter
     def project(self, value):
         self._project = value
+        
+    @property
+    def professorEmail(self):
+        return self._professorEmail
+
+    @professorEmail.setter
+    def professorEmail(self, value):
+        self._professorEmail = value
 
     @property
     def members(self):
