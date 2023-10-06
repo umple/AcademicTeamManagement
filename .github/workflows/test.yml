@@ -31,7 +31,10 @@ jobs:
       - name: Create mock .env
         run: echo mock > .env
       - name: docker-compose build
-        run: docker compose up -d
+        run: | 
+          docker compose up -d
+          sleep 60
+
       - name: Test a fetch
         run: curl http://localhost:3000/api/students
   unit-tests:
