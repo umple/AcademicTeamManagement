@@ -61,8 +61,7 @@ jobs:
         run: cd client
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        with:
-          project: ./client
+        working-directory: ./client
   unit-tests:
     runs-on: ubuntu-latest
     env:
