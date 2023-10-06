@@ -1,11 +1,7 @@
 from .__init__ import db
-from flask import redirect, url_for
 from bson import ObjectId
-from app.utils.data_conversion import clean_up_json_data
 import app.models.student as student
 import app.models.project as project
-import pandas as pd
-import json
 
 groupCollection = db["groups"]
 
@@ -17,12 +13,12 @@ def get_all_groups():
     return group_Collection
 
 def add_group(group_obj):
-    result = groupCollection.insert_one(group_obj)
-    if group_obj["members"]:
-        for id in group_obj["members"]:
-            student.assign_group_to_student(id, groupName= group_obj["group_id"])
+    result = groupCollection.insert_one(group_obj.to_json())
+    if group_obj.members:
+        for id in group_obj.members:
+            student.assign_group_to_student(id, groupName= group_obj.group_id)
     
-    project.change_status(group_obj["project"], "assigned")
+    project.change_status(group_obj.project, "assigned")
     return result
 
 def get_group(id):
@@ -58,6 +54,8 @@ def add_student_to_group(student_email, group_id):
 def remove_student_from_group_by_email(group_id, email):
     group = get_group_by_group_name(group_id)
     student_obj = student.get_student_by_email(email)
+    if student_obj["orgdefinedid"] not in group['members']:
+        return False
     group["members"].remove(student_obj["orgdefinedid"])
     student.remove_student_from_group(student_obj["orgdefinedid"])
     result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
@@ -88,10 +86,6 @@ def is_user_in_group(user_name):
         return False
 
 def update_group_by_id(id, group_obj):
-    # Validate group name does not exist
-    # if get_group_by_group_name(group_obj["group_id"]) != None:
-    #     return
-
     originalGroup  = get_group(id)
     if group_obj["members"] != "":
         group_obj["members"] =  group_obj["members"].split(",")
@@ -116,9 +110,6 @@ def delete_group_by_id(id):
     return result
 
 def add_project_to_group(groupName,projectName):
-    # group = get_group_by_group_name(groupName)
-    # if group.project == "" or group.project == None:
-    #     return False, "Project Already has been assigned"
     result = groupCollection.update_one(
             {"group_id": groupName},
             {"$set": {"project": projectName}}
