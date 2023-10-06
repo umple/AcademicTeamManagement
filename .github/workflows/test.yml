@@ -37,26 +37,10 @@ jobs:
         run: | 
           docker compose up -d
           sleep 120
-      - name: Test a fetch
-        run: curl -v localhost:3000/api/students
-      - name: Print Logs
-        run:
-          docker logs academicteammanagement-react-server-1 
-      - name: Print Logs
-        run:
-          docker inspect academicteammanagement-react-server-1 
-      - name: Print Logs
-        run:
-          docker logs academicteammanagement-flask-server-1 
-      - name: Print Logs
-        run:
-          docker inspect academicteammanagement-flask-server-1 
-      - name: Print Logs
-        run:
-          docker logs mongodb
-      - name: Print Logs
-        run:
-          docker inspect mongodb
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: ./client
   unit-tests:
     runs-on: ubuntu-latest
     env:
@@ -108,17 +92,6 @@ jobs:
         run: npm install --force
       - name: Run React Unit Tests
         run: npm run test
-  cypress-end-to-end:
-    runs-on: ubuntu-latest
-    needs: docker-compose
-    defaults:
-      run:
-        working-directory: client
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Test a fetch
-        run: curl localhost:3000/api/students
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
+
+
 
