@@ -30,13 +30,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Create mock .env
-        run: printenv > .env
+        run: |
+          printenv | grep 'MONGO\|FLASK\|REACT\|INIT_MOUNT\|PRIVATE_KEY\|BACKEND_HOST' > .env
+          cat .env
       - name: docker-compose build
         run: | 
           docker compose up -d
-          sleep 60
       - name: Test a fetch
-        run: curl -v localhost:3000/api/students
+        run: curl -v localhost:3000/api/students -connect-timeout 120
       - name: Print Logs
         run:
           docker logs academicteammanagement-react-server-1 
