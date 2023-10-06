@@ -62,6 +62,7 @@
     "@babel/core": "^7.23.0",
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
-    "babel-jest": "^29.7.0"
+    "babel-jest": "^29.7.0",
+    "cypress": "^13.3.0"
   }
 }

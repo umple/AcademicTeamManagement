@@ -57,7 +57,7 @@ export default function LoginPage() {
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  <Button size="large" fullWidth variant="contained" color="primary">
+                  <Button size="large" fullWidth variant="contained" name="login" color="primary">
                     Login
                   </Button>
                 </Link>
