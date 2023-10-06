@@ -36,10 +36,18 @@ jobs:
           docker compose up -d
           sleep 120
       - name: Test a fetch
-        run: curl http://localhost:3000/api/students
+        run: curl localhost:3000/api/students
       - name: Print Logs
         run:
           docker logs academicteammanagement-react-server-1 
+      - name: Print Logs
+        run:
+          docker logs academicteammanagement-flask-server-1 
+      - name: Print Logs
+        run:
+          docker logs mongodb
+      - name: Change Directory
+        run: cd client
       - name: Cypress run
         uses: cypress-io/github-action@v6
   unit-tests:
@@ -100,5 +108,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Test a fetch
-        run: curl http://localhost:3000/api/students
+        run: curl localhost:3000/api/students
 
