@@ -3,7 +3,7 @@ on: [push]
 env:
   COMPOSE_DOCKER_CLI_BUILD: 0
   DOCKER_BUILDKIT: 0
-  FLASK: 5000
+  FLASK: 5001
   REACT: 3000
   MONGO: 27017
   MONGODB_HOST: mongodb_host
@@ -12,7 +12,7 @@ env:
   MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
   INIT_MOUNT: "./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro"
   PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
-  BACKEND_HOST: http://localhost:5000
+  BACKEND_HOST: http://localhost:5001
   
 # cancel the in-progress job related to the current PR
 concurrency:
@@ -34,7 +34,7 @@ jobs:
       - name: docker-compose build
         run: | 
           docker compose up -d
-          sleep 120
+          sleep 60
       - name: Test a fetch
         run: curl -v localhost:3000/api/students
       - name: Print Logs
