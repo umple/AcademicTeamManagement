@@ -11,6 +11,7 @@ class GroupDataManager:
             "_id": ObjectId(),
             "group_id": "Test Group",
             "project": None,
+            "professorEmail": "prof@test.com",
             "members": [],
             "notes": "Test Notes"
         }
