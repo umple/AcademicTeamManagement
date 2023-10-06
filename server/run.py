@@ -17,4 +17,5 @@ initialize_routes(app) # initialise the routes to use
 authentication(app) # authenticate the user
 
 if __name__ == '__main__':
+    print(os.getenv("FLASK"))
     app.run(debug=True, host='0.0.0.0', port=os.getenv("FLASK"))
