@@ -113,7 +113,7 @@ jobs:
     needs: docker-compose
     defaults:
       run:
-        working-directory: .
+        working-directory: client
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -121,5 +121,4 @@ jobs:
         run: curl localhost:3000/api/students
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        working-directory: ./client
 
