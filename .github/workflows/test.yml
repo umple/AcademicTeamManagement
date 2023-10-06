@@ -37,7 +37,7 @@ jobs:
       - name: Test a fetch
         run: curl http://localhost:5001/api/students
       - name: Cypress run
-        uses: cypress-io/github-action@v1
+        uses: cypress-io/github-action@v6
   unit-tests:
     runs-on: ubuntu-latest
     env:
