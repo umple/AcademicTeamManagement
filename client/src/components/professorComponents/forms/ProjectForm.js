@@ -142,7 +142,7 @@ const ProjectForm = ({
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button color="secondary" type="submit" variant="contained">
+          <Button color="secondary" name="submitForm" type="submit" variant="contained">
             Create New Project
           </Button>
         </DialogActions>
