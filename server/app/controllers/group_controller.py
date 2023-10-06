@@ -1,4 +1,5 @@
 from flask import jsonify, request, session, make_response
+from app.entities.GroupEntity import GroupEntity
 from app.models import group
 from bson import json_util
 import pandas as pd
@@ -22,8 +23,9 @@ def get_groups():
 @group_bp.route("/group", methods=["POST"])
 def add_group():
     try:
-        group_obj = request.json
-        result = group.add_group(group_obj)
+        group_obj = json.loads(request.data)
+        group_entity = GroupEntity(group_obj)
+        result = group.add_group(group_entity)
         if result == 409:
             return {"message" : "Group Names need to be unique"}, 409
         elif result:
