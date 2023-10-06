@@ -16,14 +16,17 @@ const ConfirmDeletionModal = ({ open, setOpen, handleDeletion, row }) => {
     setOpen(false);
   };
 
+  const dialogId = `dialog-${row.id}`
+
   return (
     <>
       <Dialog
         open={open}
         TransitionComponent={Transition}
         keepMounted
+        className="modal-dialog"
         onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
+        aria-describedby={`alert-dialog-slide-description-${dialogId}`} // Use a unique aria-describedby
       >
         <DialogTitle>{"Are you sure you want to delete project?"}</DialogTitle>
         <DialogContent>
@@ -34,6 +37,7 @@ const ConfirmDeletionModal = ({ open, setOpen, handleDeletion, row }) => {
         <DialogActions>
           <Button onClick={handleClose}>Disagree</Button>
           <Button
+            name="agreeToDelete"
             onClick={() => {
               handleDeletion(row);
             }}

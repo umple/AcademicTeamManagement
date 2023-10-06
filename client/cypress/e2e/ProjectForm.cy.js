@@ -1,28 +1,43 @@
 import Project from "../../src/entities/Project"; // Adjust the path based on your project structure
 
-Cypress.Commands.add('ssoLogin', () => {
-  cy.visit('http://localhost:3000'); // Replace with your SSO login URL
-  cy.get('button[name="login"]').click();
+ 
 
-  // Assuming you need to click a button to initiate the SSO login
-  cy.get('button.sso-login-button').click();
+before(() => {
+  cy.visit("http://localhost:3000");
 
-  // You may need to interact with the Microsoft login page
-  cy.get('input[name="loginfmt"]').type('test@robertnbasilehotmailcom.onmicrosoft.com');
-  cy.get('input[name="passwd"]').type('107Z0ucunb5GDz17xVCd');
-  cy.get('input[type="submit"]').click();
+  cy.window().then((win) => {
+    win.localStorage.setItem("userEmail", JSON.stringify("test@uottawa.ca"));
+  });
+  
+  cy.intercept('GET', '/api/getusertype', {
+    statusCode: 200,
+    body: { "userType": "professor" }, // Mocked response
+    headers: { 'Access-Control-Allow-Credentials': 'true' } // Ensure credentials are allowed
+  }).as('getUserType');
 
-  // Handle any redirects and assertions as needed
-  // For example, check if you are redirected to the expected page after successful login
-  cy.url().should('eq', 'https://your-app.com/dashboard'); // Replace with the expected URL
+  cy.intercept('GET', '/api/checksession', { statusCode: 200, body: { authenticated: true } }).as('checkSession');
+  cy.intercept('POST', '/api/login', { statusCode: 200, body: { token: 'mocked-token' } }).as('login');
+  cy.visit("http://localhost:3000/Projects");
 
-  // Add more assertions and handling as needed
+  // cy.ssoLogin(); // Use the SSO login command to log in
 });
-
 describe("Submit Form", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000");
-    cy.ssoLogin(); // Use the SSO login command to log in
+
+    cy.window().then((win) => {
+      win.localStorage.setItem("userEmail", JSON.stringify("test@uottawa.ca"));
+    });
+    
+    cy.intercept('GET', '/api/getusertype', {
+      statusCode: 200,
+      body: { "userType": "professor" }, // Mocked response
+      headers: { 'Access-Control-Allow-Credentials': 'true' } // Ensure credentials are allowed
+    }).as('getUserType');
+  
+    cy.intercept('GET', '/api/checksession', { statusCode: 200, body: { authenticated: true } }).as('checkSession');
+    cy.intercept('POST', '/api/login', { statusCode: 200, body: { token: 'mocked-token' } }).as('login');
+    cy.visit("http://localhost:3000/Projects");
   });
 
   it("should fill out a project form and submit it", () => {
@@ -33,7 +48,7 @@ describe("Submit Form", () => {
       clientName: "ROBERT",
       clientEmail: "TEST@hotmail.com",
       status: "Pending",
-      professorEmail: "Professor@hotmail.com",
+      professorEmail: "test@uottawa.ca",
       currentGroup: "1",
       notes: "Notes",
     };
@@ -41,20 +56,36 @@ describe("Submit Form", () => {
     cy.get('button[name="create-new-project"]').click();
 
     cy.get("input[name=project]").type(projectData.project);
-    cy.get("input[name=description]").type(projectData.description);
+    cy.get("textarea[name=description]").type(projectData.description);
     cy.get("input[name=clientName]").type(projectData.clientName);
     cy.get("input[name=clientEmail]").type(projectData.clientEmail);
-    cy.get("select[name=status]").select(projectData.status);
-    cy.get("input[name=professorEmail]").type(projectData.professorEmail);
-    cy.get("input[name=currentGroup]").type(projectData.currentGroup);
-    cy.get("textarea[name=notes]").type(projectData.notes);
-
-    // Submit the form
-    cy.get("form").submit();
-
-    // Assert that the project is created successfully
+    cy.get("input[name=notes]").type(projectData.notes);
+    cy.get('button[name="submitForm"]').click();
     cy.contains("tbody tr", projectData.project).should("exist");
-
-    // Add more assertions as needed for successful form submission
   });
+
+  it("should delete the project that was added", () => {
+    cy.get('button[name="deleteProject"]').each(($button) => {
+      // Click the delete button for the current row
+      cy.wrap($button).parents('tr').within(() => {
+        // Click the delete button for the current row
+        cy.get('button[name="deleteProject"]').click();
+      });
+  
+      // Wait for the modal dialog to appear (adjust the selector as needed)
+      cy.get('.modal-dialog').should('be.visible');
+  
+      // Click the "Agree to Delete" button in the modal dialog
+    
+      cy.get('button[name="agreeToDelete"]').click();
+     
+  
+      // Wait for the modal dialog to disappear
+      cy.get('.modal-dialog').should('not.exist');
+    });
+  
+    // After deleting all rows, verify that none of them exist in the table
+    cy.contains("tbody tr", "TEST").should("not.exist");
+  });
+  
 });

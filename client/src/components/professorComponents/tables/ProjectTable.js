@@ -274,14 +274,7 @@ const ProjectTable = () => {
         }}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
-            {deletion && (
-              <ConfirmDeletionModal
-                setOpen={setOpenDeletion}
-                open={deletion}
-                handleDeletion={handleDeletion}
-                row={deleteRow}
-              ></ConfirmDeletionModal>
-            )}
+             
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={() => {
@@ -296,6 +289,7 @@ const ProjectTable = () => {
             <Tooltip arrow placement="right" title="Delete">
               <IconButton
                 color="error"
+                name="deleteProject"
                 onClick={() => {
                   setOpenDeletion(true);
                   setDeleteRow(row);
@@ -347,6 +341,14 @@ const ProjectTable = () => {
         setCreateModalOpen={setCreateModalOpen}
         setRefreshTrigger={setRefreshTrigger}
       />
+      {deletion && (
+              <ConfirmDeletionModal
+                setOpen={setOpenDeletion}
+                open={deletion}
+                handleDeletion={handleDeletion}
+                row={deleteRow}
+              ></ConfirmDeletionModal>
+            )}
     </Box>
   );
 };
