@@ -312,6 +312,7 @@ const ProjectTable = () => {
           >
             <Button
               color="success"
+              name="create-new-project"
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
             >
