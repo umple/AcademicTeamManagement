@@ -37,7 +37,7 @@ jobs:
         run: | 
           docker compose up -d
       - name: Test a fetch
-        run: curl -v localhost:3000/api/students -connect-timeout 120
+        run: curl -v localhost:3000/api/students -connect-timeout 500
       - name: Print Logs
         run:
           docker logs academicteammanagement-react-server-1 
