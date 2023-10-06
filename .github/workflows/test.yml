@@ -33,9 +33,14 @@ jobs:
       - name: docker-compose build
         run: | 
           docker compose up -d
-          sleep 60
+          sleep 120
       - name: Test a fetch
-        run: curl http://localhost:5001/api/students
+        run: curl http://localhost:3000/api/students
+      - name: Print Logs
+        run:
+          docker logs academicteammanagement-react-server-1
+          docker logs academicteammanagement-flask-server-1
+          docker logs mongodb
       - name: Cypress run
         uses: cypress-io/github-action@v6
   unit-tests:
