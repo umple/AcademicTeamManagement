@@ -37,11 +37,18 @@ jobs:
         run: | 
           docker compose up -d
           sleep 120
-      - name: Cypress run
-        run: |
-          npm install --force
-          npm run cypress:run
+      - name: Perform npm Install
+        run: npm install --force
         working-directory: ./client
+      - name: Run End-to-End Tests
+        run: npm run cypress:run
+        working-directory: ./client
+      - name: Upload Screenshot of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Upload End-to-End failed tests Screenshot artifact
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/client/cypress/screenshots
   unit-tests:
     runs-on: ubuntu-latest
     env:
