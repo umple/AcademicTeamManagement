@@ -4,6 +4,9 @@ from bson import ObjectId
 import json
 from app.entities.ProjectEntity import ProjectEntity
 from . import project_bp
+from pymongo.errors import WriteError
+import logging
+
 
 # GET Request to retreive all students from the collection
 @project_bp.route("/projects", methods=["GET"])
@@ -32,19 +35,27 @@ def add_Project():
         return {"message": e}, 503
 
 
-# PUT Request to update a student info
-@project_bp.route("/project/update/<id>", methods=["PUT"])
-def update_project_by_id(id):
+@project_bp.route("/project/update", methods=["PUT"])
+def update_project_by_id():
     try:
         project_obj = request.json
-        print(project_obj)
-        result = project.update_project_by_id(id, project_obj)
-        if result:
-            return jsonify(str(result.modified_count)), 200
+        project_id = project_obj["_id"]
+        if not ObjectId.is_valid(project_id):
+            return {"message": "Invalid project ID."}, 400
+
+        if not project_obj:
+            return {"message": "Invalid JSON data in the request body."}, 400
+
+        result = project.update_project_by_id(project_id, project_obj)
+        if result.modified_count > 0:
+            return jsonify({"message": "Project updated successfully."}), 200
         else:
-            return {"message": "Could not edit student."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+            return {"message": "Project not found or update failed."}, 404
+    except WriteError as e:
+        return {"message": "An error occurred while updating the project." + str(e)}, 500
+    except Exception as e:
+        return {"message": "An error occurred: " + str(e)}, 500
+
 
 # DELETE Request to remove a student from the collection
 @project_bp.route("/project/delete/<id>", methods=["DELETE"])
