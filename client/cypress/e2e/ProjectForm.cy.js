@@ -69,7 +69,7 @@ describe("Submit Form", () => {
       // Click the delete button for the current row
       cy.wrap($button).parents('tr').within(() => {
         // Click the delete button for the current row
-        cy.get('button[name="deleteProject"]').click();
+        cy.get('button[name="deleteProject"]').as("btn").click();
       });
   
       // Wait for the modal dialog to appear (adjust the selector as needed)
