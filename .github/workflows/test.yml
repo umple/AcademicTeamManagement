@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  End-to-End Tests:
+  End-to-End-tests:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     defaults:
