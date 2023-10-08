@@ -156,20 +156,19 @@ const ProjectTable = () => {
       });
   };
 
-  useEffect(() => {
-    fetchProjects();
-    fetchApplications();
-  }, [refreshTrigger]);
-
   const handleDeletion = async (row) => {
     try {
-      let resposne = await projectService.delete(row.original._id);
+      await projectService.delete(row.original._id);
       setOpenDeletion(false);
-      setRefreshTrigger((prevState) => !prevState);
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    fetchProjects();
+    fetchApplications();
+  }, [refreshTrigger]);
 
   return (
     <Box sx={{ p: 2 }}>
@@ -274,7 +273,6 @@ const ProjectTable = () => {
         }}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
-             
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={() => {
@@ -342,13 +340,14 @@ const ProjectTable = () => {
         setRefreshTrigger={setRefreshTrigger}
       />
       {deletion && (
-              <ConfirmDeletionModal
-                setOpen={setOpenDeletion}
-                open={deletion}
-                handleDeletion={handleDeletion}
-                row={deleteRow}
-              ></ConfirmDeletionModal>
-            )}
+        <ConfirmDeletionModal
+          setOpen={setOpenDeletion}
+          open={deletion}
+          handleDeletion={handleDeletion}
+          setRefreshTrigger={setRefreshTrigger}
+          row={deleteRow}
+        ></ConfirmDeletionModal>
+      )}
     </Box>
   );
 };
