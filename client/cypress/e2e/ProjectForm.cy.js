@@ -76,9 +76,7 @@ describe("Submit Form", () => {
       cy.get('.modal-dialog').should('be.visible');
   
       // Click the "Agree to Delete" button in the modal dialog
-    
       cy.get('button[name="agreeToDelete"]').click();
-     
   
       // Wait for the modal dialog to disappear
       cy.get('.modal-dialog').should('not.exist');
