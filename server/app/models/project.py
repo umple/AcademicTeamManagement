@@ -55,7 +55,7 @@ def add_project(project_obj):
         return None
 
 def update_project_by_id(id, updated_fields):
-    del updated_fields["_id"]
+    updated_fields.pop("_id", None)
 
     result = projectCollection.update_one(
         {"_id": ObjectId(id)},

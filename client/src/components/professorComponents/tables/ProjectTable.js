@@ -158,9 +158,8 @@ const ProjectTable = () => {
 
   const handleDeletion = async (row) => {
     try {
-      let resposne = await projectService.delete(row.original._id);
+      await projectService.delete(row.original._id);
       setOpenDeletion(false);
-      setRefreshTrigger(!refreshTrigger);
     } catch (error) {
       console.log(error);
     }
@@ -345,6 +344,7 @@ const ProjectTable = () => {
           setOpen={setOpenDeletion}
           open={deletion}
           handleDeletion={handleDeletion}
+          setRefreshTrigger={setRefreshTrigger}
           row={deleteRow}
         ></ConfirmDeletionModal>
       )}
