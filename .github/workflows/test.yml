@@ -12,6 +12,7 @@ env:
   MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
   INIT_MOUNT: "./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro"
   PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+  BACKEND_HOST: http://localhost:5001
   
 # cancel the in-progress job related to the current PR
 concurrency:
@@ -19,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  docker-compose:
+  End-to-End-tests:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     defaults:
@@ -29,9 +30,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Create mock .env
-        run: echo mock > .env
+        run: |
+          printenv | grep 'MONGO\|FLASK\|REACT\|INIT_MOUNT\|PRIVATE_KEY\|BACKEND_HOST' > .env
+          cat .env
       - name: docker-compose build
-        run: docker compose up -d
+        run: | 
+          docker compose up -d
+          sleep 120
+      - name: Perform npm Install
+        run: npm install --force
+        working-directory: ./client
+      - name: Run End-to-End Tests
+        run: npm run cypress:run
+        working-directory: ./client
+      - name: Upload Screenshot of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Failed Tests Screenshots
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/client/cypress/screenshots
   unit-tests:
     runs-on: ubuntu-latest
     env:
@@ -77,10 +94,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v3
       - name: Install Packages
         run: npm install --force
       - name: Run React Unit Tests
         run: npm run test
+
+
 
