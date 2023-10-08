@@ -80,9 +80,8 @@ describe("Submit Form", () => {
 
       // Wait for the modal dialog to disappear
       cy.get('.modal-dialog').should('not.exist');
-
-      // After deleting all rows, verify that none of them exist in the table
-      cy.contains("tbody tr", "TEST").should("not.exist");
     });
+    // After deleting all rows, verify that none of them exist in the table
+    cy.contains("tbody tr").should("not.exist");
   });
 });
