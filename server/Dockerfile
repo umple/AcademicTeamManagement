@@ -21,6 +21,7 @@ RUN pip install pipenv
 
 # install dependencies
 RUN pipenv install
+RUN pipenv lock
 
 # expose container port 5001
 EXPOSE 5001
