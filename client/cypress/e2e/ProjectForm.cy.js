@@ -1,6 +1,6 @@
 import Project from "../../src/entities/Project"; // Adjust the path based on your project structure
 
- 
+
 
 before(() => {
   cy.visit("http://localhost:3000");
@@ -8,7 +8,7 @@ before(() => {
   cy.window().then((win) => {
     win.localStorage.setItem("userEmail", JSON.stringify("test@uottawa.ca"));
   });
-  
+
   cy.intercept('GET', '/api/getusertype', {
     statusCode: 200,
     body: { "userType": "professor" }, // Mocked response
@@ -28,13 +28,13 @@ describe("Submit Form", () => {
     cy.window().then((win) => {
       win.localStorage.setItem("userEmail", JSON.stringify("test@uottawa.ca"));
     });
-    
+
     cy.intercept('GET', '/api/getusertype', {
       statusCode: 200,
       body: { "userType": "professor" }, // Mocked response
       headers: { 'Access-Control-Allow-Credentials': 'true' } // Ensure credentials are allowed
     }).as('getUserType');
-  
+
     cy.intercept('GET', '/api/checksession', { statusCode: 200, body: { authenticated: true } }).as('checkSession');
     cy.intercept('POST', '/api/login', { statusCode: 200, body: { token: 'mocked-token' } }).as('login');
     cy.visit("http://localhost:3000/Projects");
@@ -71,19 +71,18 @@ describe("Submit Form", () => {
         // Click the delete button for the current row
         cy.get('button[name="deleteProject"]').as("btn").click();
       });
-  
+
       // Wait for the modal dialog to appear (adjust the selector as needed)
       cy.get('.modal-dialog').should('be.visible');
-  
+
       // Click the "Agree to Delete" button in the modal dialog
       cy.get('button[name="agreeToDelete"]').click();
-  
+
       // Wait for the modal dialog to disappear
       cy.get('.modal-dialog').should('not.exist');
+
+      // After deleting all rows, verify that none of them exist in the table
+      cy.contains("tbody tr", "TEST").should("not.exist");
     });
-  
-    // After deleting all rows, verify that none of them exist in the table
-    cy.contains("tbody tr", "TEST").should("not.exist");
   });
-  
 });
