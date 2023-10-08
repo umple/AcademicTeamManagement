@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  docker-compose:
+  End-to-End Tests:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     defaults:
@@ -94,7 +94,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v3
       - name: Install Packages
         run: npm install --force
