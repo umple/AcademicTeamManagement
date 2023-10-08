@@ -11,7 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ConfirmDeletionModal = ({ open, setOpen, handleDeletion, row }) => {
+const ConfirmDeletionModal = ({ open, setOpen, handleDeletion, setRefreshTrigger, row }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -40,6 +40,7 @@ const ConfirmDeletionModal = ({ open, setOpen, handleDeletion, row }) => {
             name="agreeToDelete"
             onClick={() => {
               handleDeletion(row);
+              setRefreshTrigger((prevState) => !prevState);
             }}
           >
             Agree

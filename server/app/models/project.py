@@ -54,8 +54,14 @@ def add_project(project_obj):
         print(f"Error adding project: {e}")
         return None
 
-def update_project_by_id(id, project_obj):
-    result = projectCollection.replace_one({"_id": ObjectId(id)}, project_obj)
+def update_project_by_id(id, updated_fields):
+    updated_fields.pop("_id", None)
+
+    result = projectCollection.update_one(
+        {"_id": ObjectId(id)},
+        {"$set": updated_fields}
+    )
+    
     return result
 
 

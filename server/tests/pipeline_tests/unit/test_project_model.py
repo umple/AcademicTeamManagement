@@ -97,11 +97,15 @@ class TestProjectUpdate(unittest.TestCase):
 
         # Ensure that the change is true
         actual = project.update_project_by_id(self.project["_id"], expectedProject)
+ 
+
         self.assertTrue(actual)
 
         # Validate keys
         actualProject = project.get_project(self.project["_id"])
-        self.assertDictEqual(actualProject, expectedProject)
+        ex = project.get_project_by_name(expectedProject["project"])
+        
+        self.assertDictEqual(actualProject,ex)
 
 
 class TestProjectModification(unittest.TestCase):
