@@ -92,12 +92,12 @@ describe('Student class', () => {
   });
 
   it('should correctly set and get Email', () => {
-    student.setEmail('alice.smith@example.com');
+    student.Email = 'alice.smith@example.com';
     expect(student.Email).toBe('alice.smith@example.com');
   });
 
   it('should correctly set and get Sections', () => {
-    student.setSections(['History', 'English']);
+    student.Sections = ['History', 'English'];
     expect(student.Sections).toEqual(['History', 'English']);
   });
 
