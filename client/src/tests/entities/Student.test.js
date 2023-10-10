@@ -102,12 +102,12 @@ describe('Student class', () => {
   });
 
   it('should correctly set and get CalculatedFinalGradeNumerator', () => {
-    student.setCalculatedFinalGradeNumerator(95);
+    student.CalculatedFinalGradeNumerator = 110;
     expect(student.getCalculatedFinalGradeNumerator()).toBe(95);
   });
 
   it('should correctly set and get CalculatedFinalGradeDenominator', () => {
-    student.setCalculatedFinalGradeDenominator(110);
+    student.CalculatedFinalGradeDenominator = 110;
     expect(student.getCalculatedFinalGradeDenominator()).toBe(110);
   });
 
