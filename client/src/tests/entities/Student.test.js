@@ -19,7 +19,7 @@ describe('Student class', () => {
   });
 
   it('should correctly get OrgDefinedId', () => {
-    expect(student.orgDefinedId).toBe('12345');
+    expect(student.orgdefinedid).toBe('12345');
   });
 
   it('should correctly set and get Username', () => {
@@ -44,11 +44,11 @@ describe('Student class', () => {
   });
 
   it('should correctly get LastName', () => {
-    expect(student.lastName).toBe('Doe');
+    expect(student.lastname).toBe('Doe');
   });
 
   it('should correctly get FirstName', () => {
-    expect(student.firstName).toBe('John');
+    expect(student.firstname).toBe('John');
   });
 
   it('should correctly get Email', () => {
@@ -60,19 +60,20 @@ describe('Student class', () => {
   });
 
   it('should correctly get CalculatedFinalGradeNumerator', () => {
-    expect(student.calculatedFinalGradeNumerator).toBe(90);
+    expect(student.calculatedfinalgradenumerator).toBe(90);
   });
 
   it('should correctly get CalculatedFinalGradeDenominator', () => {
-    expect(student.calculatedFinalGradeDenominator).toBe(100);
+    expect(student.calculatedfinalgradedenominator).toBe(100);
   });
 
   it('should correctly get AdjustedFinalGradeNumerator', () => {
-    expect(student.adjustedFinalGradeNumerator).toBe(88);
+    expect(student.adjustedfinalgradenumerator).toBe(88);
   });
 
   it('should correctly get AdjustedFinalGradeDenominator', () => {
-    expect(student.adjustedFinalGradeDenominator).toBe(100);
+    console.log(student)
+    expect(student.adjustedfinalgradedenominator).toBe(100);
   });
 
   it('should correctly set and get OrgDefinedId', () => {
@@ -103,7 +104,7 @@ describe('Student class', () => {
 
   it('should correctly set and get CalculatedFinalGradeNumerator', () => {
     student.calculatedFinalGradeNumerator = 110;
-    expect(student.calculatedFinalGradeNumerator).toBe(95);
+    expect(student.calculatedFinalGradeNumerator).toBe(110);
   });
 
   it('should correctly set and get CalculatedFinalGradeDenominator', () => {

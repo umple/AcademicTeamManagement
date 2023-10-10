@@ -8,10 +8,10 @@ class Student {
     this._sections = props.sections || '';
     this._group = props.group || '';
     this._professorEmail = props.professorEmail || '';
-    this._calculatedfinalgradenumerator = props.calculatedfinalgradenumerator || '';
-    this._calculatedfinalgradedenominator = props.calculatedfinalgradedenominator || '';
-    this._adjustedfinalgradenumerator = props.adjustedfinalgradenumerator || '';
-    this._adjustedfinalgradedenominator = props.adjustedfinalgradedenominator || '';
+    this._calculatedfinalgradenumerator = props.calculatedfinalgradenumerator ;
+    this._calculatedfinalgradedenominator = props.calculatedfinalgradedenominator 
+    this._adjustedfinalgradenumerator = props.adjustedfinalgradenumerator
+    this._adjustedfinalgradedenominator = props.adjustedfinalgradedenominator 
   }
 
   // Getter methods
