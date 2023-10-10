@@ -1,103 +1,131 @@
-import React, { Component } from 'react';
-
-class Student extends Component {
+class Student {
   constructor(props) {
-    super(props);
-
-    this.state = {
-      OrgDefinedId: props.OrgDefinedId,
-      Username: props.Username,
-      LastName: props.LastName,
-      FirstName: props.FirstName,
-      Email: props.Email,
-      Sections: props.Sections,
-      CalculatedFinalGradeNumerator: props.CalculatedFinalGradeNumerator,
-      CalculatedFinalGradeDenominator: props.CalculatedFinalGradeDenominator,
-      AdjustedFinalGradeNumerator: props.AdjustedFinalGradeNumerator,
-      AdjustedFinalGradeDenominator: props.AdjustedFinalGradeDenominator,
-    };
+    this._orgdefinedid = props.orgdefinedid || '';
+    this._username = props.username || '';
+    this._lastname = props.lastname || '';
+    this._firstname = props.firstname || '';
+    this._email = props.email || '';
+    this._sections = props.sections || '';
+    this._group = props.group || '';
+    this._professorEmail = props.professorEmail || '';
+    this._calculatedfinalgradenumerator = props.calculatedfinalgradenumerator || '';
+    this._calculatedfinalgradedenominator = props.calculatedfinalgradedenominator || '';
+    this._adjustedfinalgradenumerator = props.adjustedfinalgradenumerator || '';
+    this._adjustedfinalgradedenominator = props.adjustedfinalgradedenominator || '';
   }
 
   // Getter methods
-  getOrgDefinedId() {
-    return this.state.OrgDefinedId;
+  get orgdefinedid() {
+    return this._orgdefinedid;
   }
 
-  getUsername() {
-    return this.state.Username;
+  get username() {
+    return this._username;
   }
 
-  getLastName() {
-    return this.state.LastName;
+  get lastname() {
+    return this._lastname;
   }
 
-  getFirstName() {
-    return this.state.FirstName;
+  get firstname() {
+    return this._firstname;
   }
 
-  getEmail() {
-    return this.state.Email;
+  get email() {
+    return this._email;
   }
 
-  getSections() {
-    return this.state.Sections;
+  get sections() {
+    return this._sections;
   }
 
-  getCalculatedFinalGradeNumerator() {
-    return this.state.CalculatedFinalGradeNumerator;
+  get calculatedfinalgradenumerator() {
+    return this._calculatedfinalgradenumerator;
   }
 
-  getCalculatedFinalGradeDenominator() {
-    return this.state.CalculatedFinalGradeDenominator;
+  get calculatedfinalgradedenominator() {
+    return this._calculatedfinalgradedenominator;
   }
 
-  getAdjustedFinalGradeNumerator() {
-    return this.state.AdjustedFinalGradeNumerator;
+  get adjustedfinalgradenumerator() {
+    return this._adjustedfinalgradenumerator;
   }
 
-  getAdjustedFinalGradeDenominator() {
-    return this.state.AdjustedFinalGradeDenominator;
+  get adjustedfinalgradedenominator() {
+    return this._adjustedfinalgradedenominator;
   }
 
   // Setter methods
-  setOrgDefinedId(OrgDefinedId) {
-    this.state.OrgDefinedId = OrgDefinedId;
+  set orgdefinedid(orgdefinedid) {
+    this._orgdefinedid = orgdefinedid;
   }
 
-  setUsername(Username) {
-    this.state.Username = Username;
+  set username(username) {
+    this._username = username;
   }
 
-  setLastName(LastName) {
-    this.state.LastName = LastName;
+  set lastname(lastname) {
+    this._lastname = lastname;
   }
 
-  setFirstName(FirstName) {
-    this.state.FirstName = FirstName;
+  set firstname(firstname) {
+    this._firstname = firstname;
   }
 
-  setEmail(Email) {
-    this.state.Email = Email;
+  set email(email) {
+    this._email = email;
   }
 
-  setSections(Sections) {
-    this.state.Sections = Sections;
+  set sections(sections) {
+    this._sections = sections;
   }
 
-  setCalculatedFinalGradeNumerator(CalculatedFinalGradeNumerator) {
-    this.state.CalculatedFinalGradeNumerator = CalculatedFinalGradeNumerator;
+  set calculatedfinalgradenumerator(calculatedfinalgradenumerator) {
+    this._calculatedfinalgradenumerator = calculatedfinalgradenumerator;
   }
 
-  setCalculatedFinalGradeDenominator(CalculatedFinalGradeDenominator) {
-    this.state.CalculatedFinalGradeDenominator = CalculatedFinalGradeDenominator;
+  set calculatedfinalgradedenominator(calculatedfinalgradedenominator) {
+    this._calculatedfinalgradedenominator = calculatedfinalgradedenominator;
   }
 
-  setAdjustedFinalGradeNumerator(AdjustedFinalGradeNumerator) {
-    this.state.AdjustedFinalGradeNumerator = AdjustedFinalGradeNumerator;
+  set adjustedfinalgradenumerator(adjustedfinalgradenumerator) {
+    this._adjustedfinalgradenumerator = adjustedfinalgradenumerator;
   }
 
-  setAdjustedFinalGradeDenominator(AdjustedFinalGradeDenominator) {
-    this.state.AdjustedFinalGradeDenominator = AdjustedFinalGradeDenominator;
+  set adjustedfinalgradedenominator(adjustedfinalgradedenominator) {
+    this._adjustedfinalgradedenominator = adjustedfinalgradedenominator;
+  }
+
+  get group() {
+    return this._group;
+  }
+
+  set group(value) {
+    this._group = value;
+  }
+
+  // Getter and setter for 'professorEmail'
+  get professorEmail() {
+    return this._professorEmail;
+  }
+
+  set professorEmail(value) {
+    this._professorEmail = value;
+  }
+
+  toRequestBody() {
+    return {
+      orgdefinedid: this._orgdefinedid,
+      firstname: this._firstname,
+      lastname: this._lastname,
+      email: this._email,
+      username: this._username,
+      sections: this._sections,
+      calculatedfinalgradenumerator: this._calculatedfinalgradenumerator,
+      calculatedfinalgradedenominator: this._calculatedfinalgradedenominator,
+      adjustedfinalgradenumerator: this._adjustedfinalgradenumerator,
+      adjustedfinalgradedenominator: this._adjustedfinalgradedenominator,
+    };
   }
 }
 

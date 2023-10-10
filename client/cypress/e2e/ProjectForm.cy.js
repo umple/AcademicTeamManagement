@@ -1,6 +1,6 @@
 import Project from "../../src/entities/Project"; // Adjust the path based on your project structure
 
-
+ 
 
 before(() => {
   cy.visit("http://localhost:3000");

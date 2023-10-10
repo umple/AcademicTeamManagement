@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import studentService from "../../../services/studentService";
+import Student from "../../../entities/Student";
 
 export const CreateNewStudentModal = ({
   open,
@@ -26,10 +27,9 @@ export const CreateNewStudentModal = ({
 
   const handleSubmit = async () => {
     const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
-    const newStudentInfo = { ...values, professorEmail: professorEmail }; // add the professor's email as a new pair
-
+    const payload = new Student({...values, professorEmail: professorEmail})
     try {
-      let response = await studentService.add(newStudentInfo);
+      let response = await studentService.add(payload.toRequestBody());
       if (response.success) {
         fetchStudents();
       }
@@ -37,7 +37,6 @@ export const CreateNewStudentModal = ({
       console.log(error);
     }
 
-    onSubmit(newStudentInfo);
     onClose();
   };
 

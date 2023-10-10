@@ -34,7 +34,7 @@ const studentService = {
             throw new Error(`Failed to add student: ${errorMessage}`);
           });
         }
-        return { success: true, message: "Student added successfully" };
+        return response;
       })
       .catch((error) => {
         return { success: false, message: error.message };

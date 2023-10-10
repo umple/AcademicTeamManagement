@@ -21,7 +21,7 @@ import { Formik } from "formik";
 import React, { useState } from "react";
 import Group from "../../../entities/Group";
 import groupService from "../../../services/groupService";
-import groupSchema from "../../../schemas/groupSchema";
+import createGroupSchema from "../../../schemas/createGroupSchema";
 
 const GroupForm = ({
   open,
@@ -98,92 +98,9 @@ const GroupForm = ({
     setFieldTouched,
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
-    validationSchema: groupSchema,
+    validationSchema: createGroupSchema(groups),
     onSubmit,
-    context: { groups }
   });
-
-  // function validateFields() {
-  //   if (values["group_id"] === "") {
-  //     setError("Please Enter a Group Name");
-  //     setTimeout(() => setError(""), 4000);
-  //     return false;
-  //   }
-
-  //   if (groups.length === 0) {
-  //     return true;
-  //   }
-
-  //   let group = groups.find(
-  //     (group) =>
-  //       group.group_id.toLowerCase() === values["group_id"].toLowerCase()
-  //   );
-  //   if (typeof group !== "undefined") {
-  //     setError("The name already exists");
-  //     setTimeout(() => setError(""), 4000);
-  //     return false;
-  //   }
-
-  //   return true;
-  // }
-
-  // const handleChange = (event) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   setMembers(
-  //     // On autofill we get a stringified value.
-  //     typeof value === 'string' ? value.split(',') : value,
-  //   );
-  // };
-
-  // const [values, setValues] = useState(() =>
-  //   columns.reduce((acc, column) => {
-  //     acc[column.accessorKey ?? ''] = '';
-  //     return acc;
-  //   }, {}),
-  // );
-
-  // log error
-
-  // values["members"] = members
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault()
-
-  //   if ( validateFields() === false){
-  //     return
-  //   }
-
-  //   const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
-  //   const newGroupInfo = { ...values, professorEmail: professorEmail } // add the professor's email as a new pair
-
-  //   fetch("api/group", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify(newGroupInfo)
-  //   })
-  //     .then(response => {
-  //       if (response.ok) {
-  //         fetchData();
-  //         Object.entries(values).map(([key,value]) =>{
-  //           if (key === 'members'){
-  //             values[key] = []
-  //           } else {
-  //             values[key] = ''
-  //           }
-  //         })
-  //         setMembers([])
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-
-  //   onClose();
-  // };
 
   const handleClose = () => {
     setCreateModalOpen(false);
@@ -194,7 +111,7 @@ const GroupForm = ({
       {err === "" ? "" : <Alert severity="error">{err}</Alert>}
 
       <DialogTitle textAlign="center">Create New Group</DialogTitle>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
             sx={{

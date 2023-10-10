@@ -287,6 +287,7 @@ const GroupTable = () => {
               color="success"
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
+              name="create-new-group"
             >
               Create New Group
             </Button>

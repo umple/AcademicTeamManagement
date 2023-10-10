@@ -35,7 +35,8 @@ const projectService = {
             throw new Error(`Failed to add project: ${errorMessage}`);
           });
         }
-        return { success: true, message: "Project added successfully" };
+        // return { success: true, message: "Project added successfully", _id:response.body };
+        return response
       })
       .catch((error) => {
         return { success: false, message: error.message };
