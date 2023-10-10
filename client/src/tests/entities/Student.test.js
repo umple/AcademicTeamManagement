@@ -37,7 +37,7 @@ describe('Student class', () => {
     });
 
     // Set Username using the method
-    studentInstance.setUsername('jane.doe');
+    studentInstance.username  = 'jane.doe';
 
     // Get Username and assert the value
     expect(studentInstance.getUsername()).toBe('jane.doe');
@@ -76,18 +76,18 @@ describe('Student class', () => {
   });
 
   it('should correctly set and get OrgDefinedId', () => {
-    student.setOrgDefinedId('54321');
+    student.OrgDefinedId = '54321';
     expect(student.getOrgDefinedId()).toBe('54321');
   });
 
 
   it('should correctly set and get LastName', () => {
-    student.setLastName('Smith');
+    student.LastName  = 'Smith';
     expect(student.getLastName()).toBe('Smith');
   });
 
   it('should correctly set and get FirstName', () => {
-    student.setFirstName('Alice');
+    student.FirstName = 'Alice';
     expect(student.getFirstName()).toBe('Alice');
   });
 
