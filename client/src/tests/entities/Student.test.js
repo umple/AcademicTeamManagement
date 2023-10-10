@@ -5,21 +5,21 @@ describe('Student class', () => {
 
   beforeEach(() => {
     student = new Student({
-      OrgDefinedId: '12345',
-      Username: 'john.doe',
-      LastName: 'Doe',
-      FirstName: 'John',
-      Email: 'john.doe@example.com',
-      Sections: ['Math', 'Science'],
-      CalculatedFinalGradeNumerator: 90,
-      CalculatedFinalGradeDenominator: 100,
-      AdjustedFinalGradeNumerator: 88,
-      AdjustedFinalGradeDenominator: 100,
+      orgdefinedid: '12345',
+      username: 'john.doe',
+      lastname: 'Doe',
+      firstname: 'John',
+      email: 'john.doe@example.com',
+      sections: ['Math', 'Science'],
+      calculatedfinalgradenumerator: 90,
+      calculatedfinalgradedenominator: 100,
+      adjustedfinalgradenumerator: 88,
+      adjustedfinalgradedenominator: 100,
     });
   });
 
   it('should correctly get OrgDefinedId', () => {
-    expect(student.OrgDefinedId).toBe('12345');
+    expect(student.orgDefinedId).toBe('12345');
   });
 
   it('should correctly set and get Username', () => {
