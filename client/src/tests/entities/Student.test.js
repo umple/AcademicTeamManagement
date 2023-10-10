@@ -19,7 +19,7 @@ describe('Student class', () => {
   });
 
   it('should correctly get OrgDefinedId', () => {
-    expect(student.getOrgDefinedId()).toBe('12345');
+    expect(student.OrgDefinedId).toBe('12345');
   });
 
   it('should correctly set and get Username', () => {
@@ -40,84 +40,84 @@ describe('Student class', () => {
     studentInstance.username  = 'jane.doe';
 
     // Get Username and assert the value
-    expect(studentInstance.getUsername()).toBe('jane.doe');
+    expect(studentInstance.Username).toBe('jane.doe');
   });
 
   it('should correctly get LastName', () => {
-    expect(student.getLastName()).toBe('Doe');
+    expect(student.LastName).toBe('Doe');
   });
 
   it('should correctly get FirstName', () => {
-    expect(student.getFirstName()).toBe('John');
+    expect(student.FirstName).toBe('John');
   });
 
   it('should correctly get Email', () => {
-    expect(student.getEmail()).toBe('john.doe@example.com');
+    expect(student.Email).toBe('john.doe@example.com');
   });
 
   it('should correctly get Sections', () => {
-    expect(student.getSections()).toEqual(['Math', 'Science']);
+    expect(student.Sections).toEqual(['Math', 'Science']);
   });
 
   it('should correctly get CalculatedFinalGradeNumerator', () => {
-    expect(student.getCalculatedFinalGradeNumerator()).toBe(90);
+    expect(student.CalculatedFinalGradeNumerator).toBe(90);
   });
 
   it('should correctly get CalculatedFinalGradeDenominator', () => {
-    expect(student.getCalculatedFinalGradeDenominator()).toBe(100);
+    expect(student.CalculatedFinalGradeDenominator).toBe(100);
   });
 
   it('should correctly get AdjustedFinalGradeNumerator', () => {
-    expect(student.getAdjustedFinalGradeNumerator()).toBe(88);
+    expect(student.AdjustedFinalGradeNumerator).toBe(88);
   });
 
   it('should correctly get AdjustedFinalGradeDenominator', () => {
-    expect(student.getAdjustedFinalGradeDenominator()).toBe(100);
+    expect(student.AdjustedFinalGradeDenominator).toBe(100);
   });
 
   it('should correctly set and get OrgDefinedId', () => {
     student.OrgDefinedId = '54321';
-    expect(student.getOrgDefinedId()).toBe('54321');
+    expect(student.OrgDefinedId).toBe('54321');
   });
 
 
   it('should correctly set and get LastName', () => {
     student.LastName  = 'Smith';
-    expect(student.getLastName()).toBe('Smith');
+    expect(student.LastName).toBe('Smith');
   });
 
   it('should correctly set and get FirstName', () => {
     student.FirstName = 'Alice';
-    expect(student.getFirstName()).toBe('Alice');
+    expect(student.FirstName).toBe('Alice');
   });
 
   it('should correctly set and get Email', () => {
     student.setEmail('alice.smith@example.com');
-    expect(student.getEmail()).toBe('alice.smith@example.com');
+    expect(student.Email).toBe('alice.smith@example.com');
   });
 
   it('should correctly set and get Sections', () => {
     student.setSections(['History', 'English']);
-    expect(student.getSections()).toEqual(['History', 'English']);
+    expect(student.Sections).toEqual(['History', 'English']);
   });
 
   it('should correctly set and get CalculatedFinalGradeNumerator', () => {
     student.CalculatedFinalGradeNumerator = 110;
-    expect(student.getCalculatedFinalGradeNumerator()).toBe(95);
+    expect(student.CalculatedFinalGradeNumerator).toBe(95);
   });
 
   it('should correctly set and get CalculatedFinalGradeDenominator', () => {
     student.CalculatedFinalGradeDenominator = 110;
-    expect(student.getCalculatedFinalGradeDenominator()).toBe(110);
+    expect(student.CalculatedFinalGradeDenominator).toBe(110);
   });
 
   it('should correctly set and get AdjustedFinalGradeNumerator', () => {
     student.AdjustedFinalGradeNumerator =  92 ;
-    expect(student.getAdjustedFinalGradeNumerator()).toBe(92);
+    expect(student.AdjustedFinalGradeNumerator).toBe(92);
   });
 
   it('should correctly set and get AdjustedFinalGradeDenominator', () => {
     student.AdjustedFinalGradeDenominator = 95;
-    expect(student.getAdjustedFinalGradeDenominator()).toBe(95);
+    expect(student.AdjustedFinalGradeDenominator).toBe(95);
   });
 });
