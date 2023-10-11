@@ -70,6 +70,19 @@ class TestProjectRetrieval(unittest.TestCase):
         # Assertion condition
         self.assertEqual(actual, expected)
 
+    def test_get_project_not_applied_to(self):
+        # Add another project to the projects collection
+        self.project2 = ProjectDataManager.getProject()
+        self.project2["status"] = "assigned"
+        project.projectCollection.insert_one(self.project2)
+
+        # Call the function and get the list of projects not applied to
+        actual = project.get_project_not_applied_to()
+
+        # Verify that only the project with "new" status is returned
+        self.assertEqual(len(actual), 1)
+        self.assertEqual(actual[0]["status"], "new")
+
 
 class TestProjectAddition(unittest.TestCase):
     def tearDown(self):
@@ -79,6 +92,23 @@ class TestProjectAddition(unittest.TestCase):
         projectObj = ProjectEntity(ProjectDataManager.getProject())
         actual = project.add_project(projectObj)
         self.assertTrue(actual)
+
+    def test_add_project_when_status_null(self):
+        projectObj = ProjectEntity(ProjectDataManager.getProject())
+        projectObj.status = None
+        actual = project.add_project(projectObj)
+        self.assertTrue(actual)
+
+    def test_add_project_exception(self):
+        project_obj = ProjectEntity(ProjectDataManager.getProject())
+        with unittest.mock.patch('app.models.project.insert_one') as mock_insert:
+            mock_insert.side_effect = Exception("Test Exception")
+
+            result = project.add_project(project_obj)
+            self.assertIsNone(result)
+
+            self.assertTrue(mock_insert.called)
+            self.assertTrue("Error adding project:" in mock_insert.call_args_list[0][0][0])
 
 
 class TestProjectUpdate(unittest.TestCase):
@@ -123,6 +153,11 @@ class TestProjectModification(unittest.TestCase):
         # Validate group name is correct
         actualGroup = project.get_project(self.project["_id"])["group"]
         self.assertEqual("Test Group", actualGroup)
+
+    def test_add_group_to_project_returns_false_when_project_assigned(self):
+        self.project["status"] = "assigned"
+        actual = project.add_group_to_project(self.project["project"], "Test Group")
+        self.assertFalse(actual)
 
     def test_add_interested_group_to_project(self):
         actual = project.add_interested_group_to_project(self.project["project"], "Interest Group")
