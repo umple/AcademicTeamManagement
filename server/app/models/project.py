@@ -14,14 +14,6 @@ def get_all_projects():
     return project_list
 
 
-def get_project_not_applied_to():
-    project_list = []
-    for document in projectCollection.find():
-        document["_id"] = str(document["_id"])
-        project_list.append(document)
-    return project_list
-
-
 def get_project(id):
     result = projectCollection.find_one({"_id": ObjectId(id)})
     if result:

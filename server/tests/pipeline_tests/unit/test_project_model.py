@@ -70,20 +70,6 @@ class TestProjectRetrieval(unittest.TestCase):
         # Assertion condition
         self.assertEqual(actual, expected)
 
-    def test_get_project_not_applied_to(self):
-        # Add another project to the projects collection
-        self.project2 = ProjectDataManager.getProject()
-        self.project2["project"] = "Sample Project 2"
-        self.project2["status"] = "assigned"
-        project.projectCollection.insert_one(self.project2)
-
-        # Call the function and get the list of projects not applied to
-        actual = project.get_project_not_applied_to()
-
-        # Verify that only the project with "new" status is returned
-        self.assertEqual(len(actual), 1)
-        self.assertEqual(actual[0]["status"], "new")
-
 
 class TestProjectAddition(unittest.TestCase):
     def tearDown(self):
