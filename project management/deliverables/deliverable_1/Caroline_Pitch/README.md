@@ -1,3 +1,3 @@
 Link to Pitch
 
-https://uottawa-my.sharepoint.com/personal/ctipp015_uottawa_ca/_layouts/15/guestaccess.aspx?share=EWvPJCE86MJNsROk0n75h8sBO0NpDtuHu2Y8jAKUOo9hDg&e=sikbv6
+[SEG4105_Deliverable1_7691410.pdf](https://github.com/umple/AcademicTeamManagement/files/12873764/SEG4105_Deliverable1_7691410.pdf)
