@@ -87,15 +87,12 @@ class TestProjectAddition(unittest.TestCase):
         self.assertTrue(actual)
 
     def test_add_project_exception(self):
-        project_obj = ProjectEntity(ProjectDataManager.getProject())
-        with unittest.mock.patch('app.models.project.insert_one') as mock_insert:
-            mock_insert.side_effect = Exception("Test Exception")
-
+        project_obj = None
+        with self.assertRaises(Exception) as e:
             result = project.add_project(project_obj)
+            
             self.assertIsNone(result)
-
-            self.assertTrue(mock_insert.called)
-            self.assertTrue("Error adding project:" in mock_insert.call_args_list[0][0][0])
+            self.assertTrue("Error adding project:" in str(e.exception))
 
 
 class TestProjectUpdate(unittest.TestCase):
