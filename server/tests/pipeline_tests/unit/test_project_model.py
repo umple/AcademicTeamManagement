@@ -73,6 +73,7 @@ class TestProjectRetrieval(unittest.TestCase):
     def test_get_project_not_applied_to(self):
         # Add another project to the projects collection
         self.project2 = ProjectDataManager.getProject()
+        self.project2["project"] = "Sample Project 2"
         self.project2["status"] = "assigned"
         project.projectCollection.insert_one(self.project2)
 
@@ -157,6 +158,7 @@ class TestProjectModification(unittest.TestCase):
     def test_add_group_to_project_returns_false_when_project_assigned(self):
         # Add another project to the projects collection
         self.project2 = ProjectDataManager.getProject()
+        self.project2["project"] = "Sample Project 2"
         self.project2["status"] = "assigned"
         project.projectCollection.insert_one(self.project2)
         actual = project.add_group_to_project(self.project2["project"], "Test Group")
