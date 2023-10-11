@@ -155,7 +155,7 @@ class TestProjectModification(unittest.TestCase):
         self.assertEqual("Test Group", actualGroup)
 
     def test_add_group_to_project_returns_false_when_project_assigned(self):
-        self.project["status"] = "assigned"
+        self.project.status = "assigned"
         actual = project.add_group_to_project(self.project["project"], "Test Group")
         self.assertFalse(actual)
 
