@@ -86,7 +86,7 @@ const StudentTable = () => {
         students,
         professorEmail
       ); // keep only the data that contains the professor's email
-      setTableData(filteredStudentsTableData);
+      setTableData(students);
     } catch (error) {
       console.error("There was a problem with the network request:", error);
     }

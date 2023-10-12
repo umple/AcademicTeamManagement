@@ -11,12 +11,19 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ConfirmDeletionModal = ({ open, setOpen, handleDeletion, setRefreshTrigger, row }) => {
+const ConfirmDeletionModal = ({
+  open,
+  setOpen,
+  handleDeletion,
+  setRefreshTrigger,
+  row,
+  type,
+}) => {
   const handleClose = () => {
     setOpen(false);
   };
 
-  const dialogId = `dialog-${row.id}`
+  const dialogId = `dialog-${row.id}`;
 
   return (
     <>
@@ -28,10 +35,20 @@ const ConfirmDeletionModal = ({ open, setOpen, handleDeletion, setRefreshTrigger
         onClose={handleClose}
         aria-describedby={`alert-dialog-slide-description-${dialogId}`} // Use a unique aria-describedby
       >
-        <DialogTitle>{"Are you sure you want to delete project?"}</DialogTitle>
+        <DialogTitle>
+          {type === "group" ? (
+            <span>Are you sure you want to delete group?</span>
+          ) : (
+            <span>Are you sure you want to delete project?</span>
+          )}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Project: {row.getValue("project")}
+            {type === "group" ? (
+              <span>Group {row.getValue("group_id")}</span>
+            ) : (
+              <span>Project: {row.getValue("project")}</span>
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

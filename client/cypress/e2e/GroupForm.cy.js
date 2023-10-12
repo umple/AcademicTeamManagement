@@ -15,12 +15,11 @@ const student = [
     professorEmail: "",
   },
 ];
- 
 
 describe("Submit Group Form", () => {
   let body_id; // Declare a variable to store body_id
   let project_id; // Declare a variable to store project_id
-  before(() => {
+  beforeEach(() => {
     cy.visit("http://localhost:3000");
 
     cy.window().then((win) => {
@@ -55,7 +54,7 @@ describe("Submit Group Form", () => {
         firstname: "username1",
         lastname: "Lastname1",
         email: "email1@example.com",
-        username: "TESTThh",
+        username: "TESTs",
         sections: "",
         finalGrade: "",
         group: "",
@@ -87,7 +86,7 @@ describe("Submit Group Form", () => {
         "Content-Type": "application/json",
       },
     }).then((response) => {
-      project_id = response.body      
+      project_id = response.body;
       expect(response.status).to.equal(200);
     });
     // Define the group data
@@ -100,19 +99,46 @@ describe("Submit Group Form", () => {
     };
 
     cy.get('button[name="create-new-group"]').click();
-    const selectedLabel = '300111111 - Firstname Lastname';
-
     // Example: Fill out the form fields and submit the form
     cy.get('input[name="group_id"]').type(groupData.group_id);
-    cy.get('input[name="members"]').select(["300111111"]);
-    cy.get('select[name="project"]').select("your-project-name");
+    cy.get(
+      '[tabindex="0"][role="button"][aria-expanded="false"][aria-haspopup="listbox"][id="demo-multiple-chip"]'
+    ).click();
+    cy.get('ul[aria-labelledby="demo-multiple-chip-label"]') // Select the <ul> element by its aria-labelledby attribute
+      .contains("300111311 - username1 Lastname1") // Find the element with the specified text
+      .click();
+    cy.get("body").click();
+
+    cy.get('div[aria-labelledby="project-label mui-component-select-project"]') // Select the <div> element by its aria-labelledby attribute
+      .click(); // Click the element
+    cy.get('ul[role="listbox"] li').contains("TEST").click();
     cy.get('input[name="notes"]').type("Notes");
     cy.get('button[type="submit"]').click();
+
+    cy.contains("tbody tr", "TEST").should("exist");
 
     // Your assertions here
   });
 
-  afterEach(() => {
+  it("should delete the group that was added", () => {
+    cy.get('button[name="deleteGroup"]').each(($button) => {
+      // Click the delete button for the current row
+      cy.wrap($button)
+        .parents("tr")
+        .within(() => {
+          // Click the delete button for the current row
+          cy.get('button[name="deleteGroup"]').as("btn").click();
+        });
+
+      cy.get(".modal-dialog").should("be.visible");
+      cy.get('button[name="agreeToDelete"]').click();
+      cy.get(".modal-dialog").should("not.exist");
+    });
+    // After deleting all rows, verify that none of them exist in the table
+    cy.contains("tbody tr").should("not.exist");
+  });
+
+  after(() => {
     cy.request({
       method: "DELETE",
       url: `/api/student/delete/${body_id}`,

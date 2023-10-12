@@ -40,6 +40,17 @@ const groupService = {
         console.error(error);
       });
   },
+  delete: async (row) => {
+    return fetch(`api/group/delete/${row}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
 };
 
 export default groupService;

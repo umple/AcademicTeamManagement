@@ -67,7 +67,6 @@ const GroupForm = ({
     try {
       let response = await groupService.add(values);
       if (response.ok) {
-        fetchData();
         Object.entries(values).map(([key, value]) => {
           if (key === "members") {
             values[key] = [];
@@ -77,6 +76,7 @@ const GroupForm = ({
         });
       }
       handleClose();
+      fetchData();
       actions.resetForm();
     } catch (error) {
       setError(error);
@@ -108,8 +108,6 @@ const GroupForm = ({
 
   return (
     <Dialog open={open}>
-      {err === "" ? "" : <Alert severity="error">{err}</Alert>}
-
       <DialogTitle textAlign="center">Create New Group</DialogTitle>
       <form onSubmit={handleSubmit} >
         <DialogContent>

@@ -30,6 +30,7 @@ import groupService from "../../../services/groupService";
 import projectService from "../../../services/projectService";
 import studentService from "../../../services/studentService";
 import GroupForm from "../forms/GroupForm";
+import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 
 const GroupTable = () => {
   // For the create profile modal
@@ -39,6 +40,10 @@ const GroupTable = () => {
   const [projects, setProjects] = useState([]);
   const [students, setStudents] = useState([]);
   const [message, setMessage] = useState("");
+  const [deletion, setDeletion] = useState(false);
+  const [row,setDeleteRow] = useState();
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
 
   const columns = useMemo(
     () => [
@@ -158,9 +163,9 @@ const GroupTable = () => {
     await fetchGroups();
   };
 
-  useEffect(()=>{
-    fetchData()
-  },[])
+  useEffect(() => {
+    fetchData();
+  }, [refreshTrigger]);
 
   const handleSaveRowEdits = async (row, values) => {
     //if (!Object.keys(validationErrors).length) {
@@ -190,32 +195,43 @@ const GroupTable = () => {
     //}
   };
 
+  const handleDeletion = async (row) => {
+    try {
+      await groupService.delete(row.original._id);
+      setDeletion(false);
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   // To delete the row
-  const handleDeleteRow = useCallback(
-    (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete group: ${row.getValue("group_id")}`
-        )
-      ) {
-        return;
-      }
-      fetch(`api/group/delete/${row.original._id}`, {
-        method: "DELETE",
-      })
-        .then((response) => {
-          if (response.ok) {
-            fetchData();
-          } else {
-            console.error("Error deleting row");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    [tableData]
-  );
+  // const handleDeleteRow = useCallback(
+  //   (row) => {
+  //     if (
+  //       !window.confirm(
+  //         `Are you sure you want to delete group: ${row.getValue("group_id")}`
+  //       )
+  //     ) {
+  //       return;
+  //     }
+  //     fetch(`api/group/delete/${row.original._id}`, {
+  //       method: "DELETE",
+  //     })
+  //       .then((response) => {
+  //         if (response.ok) {
+  //           fetchData();
+  //         } else {
+  //           console.error("Error deleting row");
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //       });
+  //   },
+  //   [tableData]
+  // );
 
   const csvExporter = new ExportToCsv(csvOptions("GroupsFromAcTeams-"));
 
@@ -273,7 +289,10 @@ const GroupTable = () => {
               </IconButton>
             </Tooltip>
             <Tooltip arrow placement="right" title="Delete">
-              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+              <IconButton color="error" name="deleteGroup" onClick={() =>{  
+                setDeleteRow(row);
+                setDeletion(true)
+                }}>
                 <Delete />
               </IconButton>
             </Tooltip>
@@ -311,6 +330,17 @@ const GroupTable = () => {
         groups={tableData}
         setCreateModalOpen={setCreateModalOpen}
       />
+
+      {deletion && (
+        <ConfirmDeletionModal
+          setOpen={setDeletion}
+          open={deletion}
+          handleDeletion={handleDeletion}
+          setRefreshTrigger={setRefreshTrigger}
+          row={row}
+          type={"group"}
+        ></ConfirmDeletionModal>
+      )}
       {/* <EditGroupModal
         columns={columns}
         open={editModalOpen}
