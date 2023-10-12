@@ -5,119 +5,120 @@ describe('Student class', () => {
 
   beforeEach(() => {
     student = new Student({
-      OrgDefinedId: '12345',
-      Username: 'john.doe',
-      LastName: 'Doe',
-      FirstName: 'John',
-      Email: 'john.doe@example.com',
-      Sections: ['Math', 'Science'],
-      CalculatedFinalGradeNumerator: 90,
-      CalculatedFinalGradeDenominator: 100,
-      AdjustedFinalGradeNumerator: 88,
-      AdjustedFinalGradeDenominator: 100,
+      orgdefinedid: '12345',
+      username: 'john.doe',
+      lastname: 'Doe',
+      firstname: 'John',
+      email: 'john.doe@example.com',
+      sections: ['Math', 'Science'],
+      calculatedfinalgradenumerator: 90,
+      calculatedfinalgradedenominator: 100,
+      adjustedfinalgradenumerator: 88,
+      adjustedfinalgradedenominator: 100,
     });
   });
 
   it('should correctly get OrgDefinedId', () => {
-    expect(student.getOrgDefinedId()).toBe('12345');
+    expect(student.orgdefinedid).toBe('12345');
   });
 
   it('should correctly set and get Username', () => {
     const studentInstance = new Student({
-      OrgDefinedId: '12345',
-      Username: 'john.doe',
-      LastName: 'Doe',
-      FirstName: 'John',
-      Email: 'john.doe@example.com',
-      Sections: ['Math', 'Science'],
-      CalculatedFinalGradeNumerator: 90,
-      CalculatedFinalGradeDenominator: 100,
-      AdjustedFinalGradeNumerator: 88,
-      AdjustedFinalGradeDenominator: 100,
+      orgdefinedid: '12345',
+      username: 'john.doe',
+      lastname: 'Doe',
+      firstname: 'John',
+      email: 'john.doe@example.com',
+      sections: ['Math', 'Science'],
+      calculatedfinalgradenumerator: 90,
+      calculatedfinalgradedenominator: 100,
+      adjustedfinalgradenumerator: 88,
+      adjustedfinalgradedenominator: 100,
     });
 
     // Set Username using the method
-    studentInstance.setUsername('jane.doe');
+    studentInstance.username  = 'jane.doe';
 
     // Get Username and assert the value
-    expect(studentInstance.getUsername()).toBe('jane.doe');
+    expect(studentInstance.username).toBe('jane.doe');
   });
 
   it('should correctly get LastName', () => {
-    expect(student.getLastName()).toBe('Doe');
+    expect(student.lastname).toBe('Doe');
   });
 
   it('should correctly get FirstName', () => {
-    expect(student.getFirstName()).toBe('John');
+    expect(student.firstname).toBe('John');
   });
 
   it('should correctly get Email', () => {
-    expect(student.getEmail()).toBe('john.doe@example.com');
+    expect(student.email).toBe('john.doe@example.com');
   });
 
   it('should correctly get Sections', () => {
-    expect(student.getSections()).toEqual(['Math', 'Science']);
+    expect(student.sections).toEqual(['Math', 'Science']);
   });
 
   it('should correctly get CalculatedFinalGradeNumerator', () => {
-    expect(student.getCalculatedFinalGradeNumerator()).toBe(90);
+    expect(student.calculatedfinalgradenumerator).toBe(90);
   });
 
   it('should correctly get CalculatedFinalGradeDenominator', () => {
-    expect(student.getCalculatedFinalGradeDenominator()).toBe(100);
+    expect(student.calculatedfinalgradedenominator).toBe(100);
   });
 
   it('should correctly get AdjustedFinalGradeNumerator', () => {
-    expect(student.getAdjustedFinalGradeNumerator()).toBe(88);
+    expect(student.adjustedfinalgradenumerator).toBe(88);
   });
 
   it('should correctly get AdjustedFinalGradeDenominator', () => {
-    expect(student.getAdjustedFinalGradeDenominator()).toBe(100);
+    console.log(student)
+    expect(student.adjustedfinalgradedenominator).toBe(100);
   });
 
   it('should correctly set and get OrgDefinedId', () => {
-    student.setOrgDefinedId('54321');
-    expect(student.getOrgDefinedId()).toBe('54321');
+    student.orgDefinedId = '54321';
+    expect(student.orgDefinedId).toBe('54321');
   });
 
 
   it('should correctly set and get LastName', () => {
-    student.setLastName('Smith');
-    expect(student.getLastName()).toBe('Smith');
+    student.lastName  = 'Smith';
+    expect(student.lastName).toBe('Smith');
   });
 
   it('should correctly set and get FirstName', () => {
-    student.setFirstName('Alice');
-    expect(student.getFirstName()).toBe('Alice');
+    student.firstName = 'Alice';
+    expect(student.firstName).toBe('Alice');
   });
 
   it('should correctly set and get Email', () => {
-    student.setEmail('alice.smith@example.com');
-    expect(student.getEmail()).toBe('alice.smith@example.com');
+    student.email = 'alice.smith@example.com';
+    expect(student.email).toBe('alice.smith@example.com');
   });
 
   it('should correctly set and get Sections', () => {
-    student.setSections(['History', 'English']);
-    expect(student.getSections()).toEqual(['History', 'English']);
+    student.sections = ['History', 'English'];
+    expect(student.sections).toEqual(['History', 'English']);
   });
 
   it('should correctly set and get CalculatedFinalGradeNumerator', () => {
-    student.setCalculatedFinalGradeNumerator(95);
-    expect(student.getCalculatedFinalGradeNumerator()).toBe(95);
+    student.calculatedFinalGradeNumerator = 110;
+    expect(student.calculatedFinalGradeNumerator).toBe(110);
   });
 
   it('should correctly set and get CalculatedFinalGradeDenominator', () => {
-    student.setCalculatedFinalGradeDenominator(110);
-    expect(student.getCalculatedFinalGradeDenominator()).toBe(110);
+    student.calculatedFinalGradeDenominator = 110;
+    expect(student.calculatedFinalGradeDenominator).toBe(110);
   });
 
   it('should correctly set and get AdjustedFinalGradeNumerator', () => {
-    student.setAdjustedFinalGradeNumerator(92);
-    expect(student.getAdjustedFinalGradeNumerator()).toBe(92);
+    student.adjustedFinalGradeNumerator =  92 ;
+    expect(student.adjustedFinalGradeNumerator).toBe(92);
   });
 
   it('should correctly set and get AdjustedFinalGradeDenominator', () => {
-    student.setAdjustedFinalGradeDenominator(95);
-    expect(student.getAdjustedFinalGradeDenominator()).toBe(95);
+    student.adjustedFinalGradeDenominator = 95;
+    expect(student.adjustedFinalGradeDenominator).toBe(95);
   });
 });

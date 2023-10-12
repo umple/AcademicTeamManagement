@@ -73,7 +73,7 @@ const ProjectForm = ({
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Create New Project</DialogTitle>
-      <form onSubmit={handleSubmit}>
+      <form name="project-form" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{
