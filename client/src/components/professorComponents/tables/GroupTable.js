@@ -204,35 +204,7 @@ const GroupTable = () => {
       console.log(error);
     }
   };
-
-
-  // To delete the row
-  // const handleDeleteRow = useCallback(
-  //   (row) => {
-  //     if (
-  //       !window.confirm(
-  //         `Are you sure you want to delete group: ${row.getValue("group_id")}`
-  //       )
-  //     ) {
-  //       return;
-  //     }
-  //     fetch(`api/group/delete/${row.original._id}`, {
-  //       method: "DELETE",
-  //     })
-  //       .then((response) => {
-  //         if (response.ok) {
-  //           fetchData();
-  //         } else {
-  //           console.error("Error deleting row");
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   },
-  //   [tableData]
-  // );
-
+ 
   const csvExporter = new ExportToCsv(csvOptions("GroupsFromAcTeams-"));
 
   return (

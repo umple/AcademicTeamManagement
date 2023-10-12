@@ -54,7 +54,7 @@ describe("Submit Group Form", () => {
         firstname: "username1",
         lastname: "Lastname1",
         email: "email1@example.com",
-        username: "TESTs",
+        username: "TESTsa",
         sections: "",
         finalGrade: "",
         group: "",
@@ -98,6 +98,7 @@ describe("Submit Group Form", () => {
       notes: "", // You can add notes if needed
     };
 
+    cy.reload();
     cy.get('button[name="create-new-group"]').click();
     // Example: Fill out the form fields and submit the form
     cy.get('input[name="group_id"]').type(groupData.group_id);
