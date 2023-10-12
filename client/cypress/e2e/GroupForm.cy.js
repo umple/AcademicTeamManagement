@@ -73,7 +73,7 @@ describe("Submit Group Form", () => {
       url: "/api/project", // Replace with the correct URL
       body: {
         _id: "your-project-id", // Replace with a unique project ID
-        project: "TEST",
+        project: "MYGROUPTEST",
         description: "TEST",
         clientName: "ROBERT",
         clientEmail: "TEST@hotmail.com",
@@ -111,11 +111,11 @@ describe("Submit Group Form", () => {
 
     cy.get('div[aria-labelledby="project-label mui-component-select-project"]') // Select the <div> element by its aria-labelledby attribute
       .click(); // Click the element
-    cy.get('ul[role="listbox"] li').contains("TEST").click();
+    cy.get('ul[role="listbox"] li').contains("MYGROUPTEST").click();
     cy.get('input[name="notes"]').type("Notes");
     cy.get('button[type="submit"]').click();
 
-    cy.contains("tbody tr", "TEST").should("exist");
+    cy.contains("tbody tr", "MYGROUPTEST").should("exist");
 
     // Your assertions here
   });
