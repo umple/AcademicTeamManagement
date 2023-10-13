@@ -254,6 +254,7 @@ const StudentTable = () => {
           editingRow={editingRow}
           setEditingRow={setEditingRow}
           update={update}
+          students={tableData}
           setUpdate={setUpdate}
         />
       )}

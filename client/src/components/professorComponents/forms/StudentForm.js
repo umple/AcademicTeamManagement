@@ -21,6 +21,7 @@ const StudentForm = ({
   update,
   setUpdate,
   editingRow,
+  students,
   setEditingRow,
 }) => {
   const onSubmit = async (values, actions) => {
@@ -64,7 +65,7 @@ const StudentForm = ({
     setFieldTouched,
   } = useFormik({
     initialValues: initialStudentValues.toRequestJSON(),
-    validationSchema: studentSchema,
+    validationSchema: studentSchema(students,editingRow._id),
     onSubmit,
   });
   return (

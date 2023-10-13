@@ -1,7 +1,16 @@
 import * as Yup from "yup";
 
-const studentSchema = Yup.object().shape({
-  orgdefinedid: Yup.string().required("Org Defined ID is required").matches(/^\d{6,9}$/, "Org Defined ID must be a 6-9-digit number"),
+const studentSchema =  (students,_id) => { 
+  
+  
+  
+  const studentSchema = Yup.object().shape({
+  orgdefinedid: Yup.string().required("Org Defined ID is required").matches(/^\d{6,9}$/, "Org Defined ID must be a 6-9-digit number").test("is-unique", "Student ID already exists", function (value) {
+    const group = students.find(
+      (student) => student._id != _id && student.orgdefinedid === value
+    );
+    return typeof group === "undefined";
+  }),
   username: Yup.string().required("Username is required"),
   lastname: Yup.string().required("Last Name is required"),
   firstname: Yup.string().required("First Name is required"),
@@ -12,5 +21,7 @@ const studentSchema = Yup.object().shape({
   group: Yup.string(),
   professorEmail: Yup.string(),
 });
+  return studentSchema
+}
 
 export default studentSchema;
