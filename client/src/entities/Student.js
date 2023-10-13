@@ -127,6 +127,20 @@ class Student {
       adjustedfinalgradedenominator: this._adjustedfinalgradedenominator,
     };
   }
+
+  toRequestJSON() {
+    return {
+      orgdefinedid: this._orgdefinedid,
+      firstname: this._firstname,
+      lastname: this._lastname,
+      email: this._email,
+      username: this._username,
+      sections: this._sections,
+      finalGrade: this._finalGrade,
+      group: this._group,
+      professorEmail: this._professorEmail,
+    };
+  }
 }
 
 export default Student;

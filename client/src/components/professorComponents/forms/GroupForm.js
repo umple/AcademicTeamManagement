@@ -26,14 +26,16 @@ import createGroupSchema from "../../../schemas/createGroupSchema";
 const GroupForm = ({
   open,
   columns,
-  onClose,
   fetchData,
   projects,
   students,
   groups,
   setCreateModalOpen,
+  update,
+  setUpdate,
+  editingRow,
+  setEditingRow
 }) => {
-  const [err, setError] = useState("");
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -58,32 +60,38 @@ const GroupForm = ({
   const [members, setMembers] = useState([]);
 
   const [initialGroupValues] = useState(
+    update ?   new Group(editingRow):
     new Group({
       professorEmail: JSON.parse(localStorage.getItem("userEmail")),
     })
   );
 
+
   const onSubmit = async (values, actions) => {
     try {
-      let response = await groupService.add(values);
-      if (response.ok) {
-        Object.entries(values).map(([key, value]) => {
-          if (key === "members") {
-            values[key] = [];
-          } else {
-            values[key] = "";
-          }
-        });
+      let response;
+      if (update){
+        response = await groupService.update(editingRow._id,values);
+      } else {
+        response = await groupService.add(values);
+
       }
+      // if (response.ok) {
+      //   Object.entries(values).map(([key, value]) => {
+      //     if (key === "members") {
+      //       values[key] = [];
+      //     } else {
+      //       values[key] = "";
+      //     }
+      //   });
+      // }
       handleClose();
       fetchData();
       actions.resetForm();
     } catch (error) {
-      setError(error);
+      console.log("error", error)
     } finally {
-      setTimeout(() => {
-        setError();
-      }, 5000);
+      
     }
   };
 
@@ -98,17 +106,21 @@ const GroupForm = ({
     setFieldTouched,
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
-    validationSchema: createGroupSchema(groups),
+    validationSchema: createGroupSchema(groups,editingRow?._id),
     onSubmit,
   });
 
+  console.log("MEMBERS", initialGroupValues.members)
+  
   const handleClose = () => {
     setCreateModalOpen(false);
+    setUpdate(false);
+    setEditingRow({});
   };
 
   return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Group</DialogTitle>
+    <Dialog open={open || update}>
+      <DialogTitle textAlign="center">{update ? "Edit" : "Create"} Group</DialogTitle>
       <form onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
@@ -172,7 +184,7 @@ const GroupForm = ({
                     >
                       {students.length > 0 &&
                         students.map((student) => {
-                          if (student.group === null) {
+                          if (student.group === null || student.group === "") {
                             return (
                               <MenuItem
                                 key={student.orgdefinedid}
@@ -250,7 +262,7 @@ const GroupForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Create
+            {update ? "Edit" : "Create"}
           </Button>
         </DialogActions>
       </form>

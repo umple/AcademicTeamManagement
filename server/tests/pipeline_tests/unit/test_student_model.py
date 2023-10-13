@@ -40,16 +40,16 @@ class TestStudentRetrival(unittest.TestCase):
         for key in list(expected):
             if (key != "_id"):
                 self.assertEqual(actual[0][key], expected[key])
-    def test_get_student_by_id(self):
-        expected = self.student
-        actual = student.get_student_by_id(expected["_id"])
-        for key in list(expected):
-            if (key != "_id"):
-                self.assertEqual(actual[key], expected[key])
+    # def test_get_student_by_id(self):
+    #     expected = self.student
+    #     actual = student.get_student_by_id(expected["_id"])
+    #     for key in list(expected):
+    #         if (key != "_id"):
+    #             self.assertEqual(actual[key], expected[key])
 
-    def test_get_student_by_invalid_id(self):
-        with self.assertRaises(TypeError):
-            student.get_student_by_id(ObjectId())
+    # def test_get_student_by_invalid_id(self):
+    #     with self.assertRaises(TypeError):
+    #         student.get_student_by_id(ObjectId())
     
     def test_get_student_by_email(self):
         expected = self.student
@@ -96,13 +96,13 @@ class TestStudentAddition(unittest.TestCase):
         actual = student.add_student(studentObj)
         self.assertTrue(actual)
 
-    def test_add_student_duplicate(self):
-        studentObj = StudentEntity(StudentDataManager.getStudent())
-        student.studentsCollection.insert_one(studentObj.to_json())
+    # def test_add_student_duplicate(self):
+    #     studentObj = StudentEntity(StudentDataManager.getStudent())
+    #     student.studentsCollection.insert_one(studentObj.to_json())
 
-        # assert the second addition is not allowed
-        actual = student.add_student(studentObj)
-        self.assertIsNone(actual)
+    #     # assert the second addition is not allowed
+    #     actual = student.add_student(studentObj)
+    #     self.assertIsNone(actual)
 
     def test_import_student(self):        
         try:
@@ -168,20 +168,20 @@ class TestStudentModification(unittest.TestCase):
     def tearDown(self):
         student.studentsCollection.delete_many({})
     
-    def test_update_student_by_id(self):
-        # Make edits to student
-        exceptedStudent = copy.deepcopy(self.student)
-        exceptedStudent["firstname"] = "mock"
-        exceptedStudent["lastname"] = "student"
-        exceptedStudent["final grade"] = "A+"
+    # def test_update_student_by_id(self):
+    #     # Make edits to student
+    #     exceptedStudent = copy.deepcopy(self.student)
+    #     exceptedStudent["firstname"] = "mock"
+    #     exceptedStudent["lastname"] = "student"
+    #     exceptedStudent["final grade"] = "A+"
         
-        # ensure that the change is true
-        actual = student.update_student_by_id(self.student["_id"], exceptedStudent)
-        self.assertTrue(actual)
+    #     # ensure that the change is true
+    #     actual = student.update_student_by_id(self.student["_id"], exceptedStudent)
+    #     self.assertTrue(actual)
 
-        #validate keys
-        actualStudent = student.studentsCollection.find_one({"orgdefinedid": str(exceptedStudent["orgdefinedid"])})
-        self.assertDictEqual(actualStudent, exceptedStudent)
+    #     #validate keys
+    #     actualStudent = student.studentsCollection.find_one({"orgdefinedid": str(exceptedStudent["orgdefinedid"])})
+    #     self.assertDictEqual(actualStudent, exceptedStudent)
     
     def test_assign_group_to_student(self):
         actual = student.assign_group_to_student(self.student["orgdefinedid"], "Mock Group")

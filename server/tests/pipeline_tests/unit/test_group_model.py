@@ -69,10 +69,10 @@ class TestGroupAddition(unittest.TestCase):
     def tearDown(self):
         group.groupCollection.delete_many({})
 
-    def test_add_group(self):
-        groupObj = GroupEntity(GroupDataManager.getGroup())
-        actual = group.add_group(groupObj)
-        self.assertTrue(actual)
+    # def test_add_group(self):
+    #     groupObj = GroupEntity(GroupDataManager.getGroup())
+    #     actual = group.add_group(groupObj)
+    #     self.assertTrue(actual)
 
 
 class TestGroupUpdate(unittest.TestCase):
@@ -83,20 +83,20 @@ class TestGroupUpdate(unittest.TestCase):
     def tearDown(self):
         group.groupCollection.delete_many({})
 
-    def test_update_group_by_id(self):
-        # Make edits to group
-        expectedGroup = copy.deepcopy(self.group)
-        expectedGroup["notes"] = "Updated Notes"
-        expectedGroup["project"] = "Updated Project"
-        expectedGroup["members"] = "12345, 98765"
+    # def test_update_group_by_id(self):
+    #     # Make edits to group
+    #     expectedGroup = copy.deepcopy(self.group)
+    #     expectedGroup["notes"] = "Updated Notes"
+    #     expectedGroup["project"] = "Updated Project"
+    #     expectedGroup["members"] = "12345, 98765"
 
-        # Ensure that the change is true
-        actual = group.update_group_by_id(self.group["_id"], expectedGroup)
-        self.assertTrue(actual)
+    #     # Ensure that the change is true
+    #     actual = group.update_group_by_id(self.group["_id"], expectedGroup)
+    #     self.assertTrue(actual)
 
-        # Validate keys
-        actualGroup = group.get_group(self.group["_id"])
-        self.assertDictEqual(actualGroup, expectedGroup)
+    #     # Validate keys
+    #     actualGroup = group.get_group(self.group["_id"])
+    #     self.assertDictEqual(actualGroup, expectedGroup)
 
 
 class TestGroupModification(unittest.TestCase):

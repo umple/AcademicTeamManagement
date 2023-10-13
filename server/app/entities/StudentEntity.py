@@ -9,7 +9,7 @@ class StudentEntity:
         self._username = student_data.get('username', '')
         self._sections = student_data.get('sections', '')
         self._finalGrade = student_data.get('finalGrade', '')
-        self._group = student_data.get('group', None)
+        self._group =  student_data.get('group', '')
         self._professorEmail = student_data.get('professorEmail', None)
         
     def to_json(self):

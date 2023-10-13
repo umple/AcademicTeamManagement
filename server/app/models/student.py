@@ -15,21 +15,20 @@ def get_all_student():
     return student_list
 
 def add_student(student_obj):
-    # CHECKS FOR EXISTING USER
-    if (get_student_by_username(student_obj.username ) == None):
-        student_obj.group = None
+    try:
         result = studentsCollection.insert_one(student_obj.to_json())
         return result
-    return None
+    except Exception as e:
+        print(f"Error adding project: {e}")
+        return None
 
 def add_import_student(student_obj):
-    student_obj["group"] = None
+    student_obj["group"] = ''
     student_obj["professorEmail"] = session.get("user")["preferred_username"]
     studentsCollection.insert_one(student_obj)
 
-def get_student_by_id(id):
-    document = studentsCollection.find_one({"_id": ObjectId(id)})
-    document["_id"] = str(document["_id"])
+def get_student_by_id(a):
+    document = studentsCollection.find_one({"_id": ObjectId(a)})
     return document
 
 def get_student_by_email(email):
@@ -55,7 +54,7 @@ def get_student_by_username(username):
 
 def update_student_by_id(id, student_obj):
     result = studentsCollection.update_one({"_id": ObjectId(id)}, {
-        "$set":student_obj
+        "$set":student_obj.to_json()
     })
     return result
 
@@ -79,15 +78,31 @@ def remove_student_from_group(orgdefinedid):
     )
     return result
 
-def delete_student_by_id(id):
-    student_to_delete = get_student_by_id(id)
-    result = True
-    if (student_to_delete["group"] != None):
-        result = group.remove_student_from_group(group_id=student_to_delete["group"], orgdefinedid=student_to_delete["orgdefinedid"])
-    if not result:
-        return result
-    result = studentsCollection.delete_one({"_id": ObjectId(id)})
-    return result
+def delete_student_by_id(a):
+    try:
+        student_to_delete = get_student_by_id(a)
+        if student_to_delete is not None:
+            # Check if the student is in a group and try to remove them
+            group_id = student_to_delete.get("group")
+            if group_id is not None and group_id != "":
+                orgdefinedid = student_to_delete["orgdefinedid"]
+                result = group.remove_student_from_group(group_id, orgdefinedid)
+                if not result:
+                    return {"message": f"Failed to remove student {orgdefinedid} from the group."}, 500
+ 
+            # Delete the student document
+            result = studentsCollection.delete_one({"_id": ObjectId(a)})
+
+            if result.deleted_count > 0:
+                return "works"
+            else:
+                return "not works"
+        else:
+            return "not works"
+
+    except Exception as e:
+        raise e
+
 
 def import_students(file, accessor_keys):
     if not file or not file.filename:

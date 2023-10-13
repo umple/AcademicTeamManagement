@@ -39,7 +39,39 @@ const studentService = {
       .catch((error) => {
         return { success: false, message: error.message };
       });
+  }, 
+  delete: async (id) => {
+    return fetch(`api/student/delete/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+  update: async (id, values) => {
+    return fetch(`/api/student/update/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(`Failed to update student: ${errorMessage}`);
+        });
+      }
+      return { success: true, message: "Student updated successfully" };
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
+
 };
 
 export default studentService;

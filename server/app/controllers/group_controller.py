@@ -25,28 +25,24 @@ def add_group():
     try:
         group_obj = json.loads(request.data)
         group_entity = GroupEntity(group_obj)
+        
         result = group.add_group(group_entity)
-        if result == 409:
-            return {"message" : "Group Names need to be unique"}, 409
-        elif result:
-            return jsonify(str(result.inserted_id)), 201
-        else:
-            return {"message": "Could not add student."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
-
+        return jsonify(str(result.inserted_id)), 201
+    except Exception as e:
+        # Handle the exception and return an error response
+        error_message = str(e)  # Get the error message as a string
+        return {"message": error_message}, 500
+    
 # PUT Request to update a student info
 @group_bp.route("/group/update/<id>", methods=["PUT"])
 def update_group_by_id(id):
     try:
         group_obj = request.json
         result = group.update_group_by_id(id, group_obj)
-        if result:
-            return jsonify(str(result.modified_count)), 200
-        else:
-            return {"message": "Could not edit Group."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+        return jsonify({"message": f"Group updated successfully: {result}"}), 200
+    except Exception as e:
+        return jsonify({"message": f"Internal server error: {str(e)}"}), 503
+
 
 # DELETE Request to remove a student from the collection
 @group_bp.route("/group/delete/<id>", methods=["DELETE"])

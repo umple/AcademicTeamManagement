@@ -71,14 +71,21 @@ def get_project_by_name(name):
         return None
 
 def add_group_to_project(projectName, group_id):
-    project = get_project_by_name(projectName)
-    if project["status"] == "assigned":
-        return False
+    # project = get_project_by_name(projectName)
+    # if project["status"] == "assigned":
+    #     return False
     result1 = projectCollection.update_one(
             {"project": projectName},
             {"$set": {"group": group_id}}
         )
     return result1
+
+def remove_group_from_project(projectName):
+    result = projectCollection.update_one(
+            {"project": projectName},
+            {"$set": {"group": ""}}
+        )
+    return result
 
 def change_status(projectName, status):
     result = projectCollection.update_one(

@@ -21,13 +21,12 @@ import { ExportToCsv } from "export-to-csv";
 import MaterialReactTable from "material-react-table";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
-import { getDate } from "../../../helpers/dateHelper";
-import ImportStudents from "../ImportStudents";
-import { CreateNewStudentModal } from "../forms/CreateNewStudentModal";
-import { useStyles } from "./styles/StudentTableStyles";
-import studentService from "../../../services/studentService";
 import { csvOptions, handleExportData } from "../../../helpers/exportData";
-
+import studentService from "../../../services/studentService";
+import ImportStudents from "../ImportStudents";
+import StudentForm from "../forms/StudentForm";
+import { useStyles } from "./styles/StudentTableStyles";
+import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 
 const StudentTable = () => {
   const defaultColumns = useMemo(
@@ -70,6 +69,11 @@ const StudentTable = () => {
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
   const [importSuccess, setImportSuccess] = useState(false);
+  const [deletion, setOpenDeletion] = useState(false);
+  const [row, setDeleteRow] = useState();
+  const [editingRow, setEditingRow] = useState({});
+  const [update, setUpdate] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   function handleImportSuccess(success) {
     setImportSuccess(success);
@@ -86,7 +90,7 @@ const StudentTable = () => {
         students,
         professorEmail
       ); // keep only the data that contains the professor's email
-      setTableData(students);
+      setTableData(filteredStudentsTableData);
     } catch (error) {
       console.error("There was a problem with the network request:", error);
     }
@@ -94,82 +98,18 @@ const StudentTable = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [refreshTrigger]);
 
-  const handleAddRow = useCallback((newRowData) => {
-    fetch("api/student", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newRowData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        fetchStudents();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  const handleCreateNewRow = (values) => {};
-
-  const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
-      fetch(`api/student/update/${row.original._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      })
-        .then((response) => {
-          if (response.ok) {
-            fetchStudents();
-          } else {
-            console.error("Error deleting row");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      exitEditingMode();
+  const handleDeletion = async (row) => {
+    try {
+      await studentService.delete(row.original._id);
+      setOpenDeletion(false);
+      fetchStudents();
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  const handleCancelRowEdits = () => {
-    setValidationErrors({});
-  };
-
-  // To delete the row
-  const handleDeleteRow = useCallback(
-    (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue("username")}`
-        )
-      ) {
-        return;
-      }
-      fetch(`api/student/delete/${row.original._id}`, {
-        method: "DELETE",
-      })
-        .then((response) => {
-          if (response.ok) {
-            fetchStudents();
-          } else {
-            console.error("Error deleting row");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    [tableData]
-  );
-
-  
   const csvExporter = new ExportToCsv(csvOptions("StudentsFromAcTeams-"));
 
   const [isImportModalOpen, setImportModalOpen] = useState(false);
@@ -216,17 +156,29 @@ const StudentTable = () => {
         }}
         enableEditing
         initialState={{ showColumnFilters: false, density: "compact" }}
-        onEditingRowSave={handleSaveRowEdits}
-        onEditingRowCancel={handleCancelRowEdits}
+        // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
             <Tooltip arrow placement="left" title="Edit">
-              <IconButton onClick={() => table.setEditingRow(row)}>
+              <IconButton
+                onClick={() => {
+                  setEditingRow(row.original);
+                  setUpdate(true);
+                  setCreateModalOpen(false);
+                }}
+              >
                 <Edit />
               </IconButton>
             </Tooltip>
             <Tooltip arrow placement="right" title="Delete">
-              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+              <IconButton
+                color="error"
+                name="deleteStudent"
+                onClick={() => {
+                  setOpenDeletion(true);
+                  setDeleteRow(row);
+                }}
+              >
                 <Delete />
               </IconButton>
             </Tooltip>
@@ -245,12 +197,13 @@ const StudentTable = () => {
               color="success"
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
+              name="create-new-student"
             >
               Create New Student
             </Button>
             <Button
               color="primary"
-              onClick={()=> handleExportData(tableData,columns,csvExporter)}
+              onClick={() => handleExportData(tableData, columns, csvExporter)}
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
@@ -292,14 +245,30 @@ const StudentTable = () => {
           </Box>
         )}
       />
-      <CreateNewStudentModal
-        columns={columns}
-        open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
-        onSubmit={handleCreateNewRow}
-        onAddRow={handleAddRow}
-        fetchStudents={fetchStudents}
-      />
+
+      {(update || createModalOpen) && (
+        <StudentForm
+          columns={columns}
+          open={createModalOpen}
+          setCreateModalOpen={setCreateModalOpen}
+          fetchStudents={fetchStudents}
+          editingRow={editingRow}
+          setEditingRow={setEditingRow}
+          update={update}
+          students={tableData}
+          setUpdate={setUpdate}
+        />
+      )}
+      {deletion && (
+        <ConfirmDeletionModal
+          setOpen={setOpenDeletion}
+          open={deletion}
+          handleDeletion={handleDeletion}
+          setRefreshTrigger={setRefreshTrigger}
+          row={row}
+          type={"student"}
+        ></ConfirmDeletionModal>
+      )}
     </Box>
   );
 };

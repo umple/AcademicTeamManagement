@@ -21,6 +21,7 @@ before(() => {
 
   // cy.ssoLogin(); // Use the SSO login command to log in
 });
+
 describe("Submit Form", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000");

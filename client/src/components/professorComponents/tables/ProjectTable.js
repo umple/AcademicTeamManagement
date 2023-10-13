@@ -346,6 +346,7 @@ const ProjectTable = () => {
           handleDeletion={handleDeletion}
           setRefreshTrigger={setRefreshTrigger}
           row={deleteRow}
+          type={"project"}
         ></ConfirmDeletionModal>
       )}
     </Box>
