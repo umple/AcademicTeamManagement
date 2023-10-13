@@ -63,7 +63,7 @@ def get_student_by_id(id):
 @student_bp.route("/student/update/<id>", methods=["PUT"])
 def update_student_by_id(id):
     try:
-        student_obj = request.json
+        student_obj = StudentEntity(json.loads(request.data))
         result = student.update_student_by_id(id, student_obj)
         if result:
             return jsonify(str(result.modified_count)), 200
@@ -77,12 +77,7 @@ def update_student_by_id(id):
 def delete_student_by_id(id):
     try:
         result = student.delete_student_by_id(id)
-        
-        if result:
-            return jsonify({"message": f"Student with ID {id} deleted successfully.", "deleted_count": result}), 200
-        else:
-            return {"message": f"Student with ID {id} not found."}, 404
-    
+        return jsonify({"message": f"Student with ID {id} deleted successfully.", "deleted_count": result}), 200
     except ValueError as ve:
         return {"message": str(ve)}, 400  # Bad Request
     except Exception as e:

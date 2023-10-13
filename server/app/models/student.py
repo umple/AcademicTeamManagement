@@ -15,12 +15,12 @@ def get_all_student():
     return student_list
 
 def add_student(student_obj):
-    # CHECKS FOR EXISTING USER
-    if (get_student_by_username(student_obj.username ) == None):
-        student_obj.group = None
+    try:
         result = studentsCollection.insert_one(student_obj.to_json())
         return result
-    return None
+    except Exception as e:
+        print(f"Error adding project: {e}")
+        return None
 
 def add_import_student(student_obj):
     student_obj["group"] = None
@@ -29,7 +29,6 @@ def add_import_student(student_obj):
 
 def get_student_by_id(id):
     document = studentsCollection.find_one({"_id": ObjectId(id)})
-    document["_id"] = str(document["_id"])
     return document
 
 def get_student_by_email(email):
@@ -55,7 +54,7 @@ def get_student_by_username(username):
 
 def update_student_by_id(id, student_obj):
     result = studentsCollection.update_one({"_id": ObjectId(id)}, {
-        "$set":student_obj
+        "$set":student_obj.to_json()
     })
     return result
 
@@ -82,8 +81,6 @@ def remove_student_from_group(orgdefinedid):
 def delete_student_by_id(id):
     try:
         student_to_delete = get_student_by_id(id)
-        print(student_to_delete)
-
         if student_to_delete is not None:
             # Check if the student is in a group and try to remove them
             if student_to_delete.get("group") != "" or student_to_delete.get("group") is not None :
@@ -97,11 +94,11 @@ def delete_student_by_id(id):
             result = studentsCollection.delete_one({"_id": ObjectId(id)})
 
             if result.deleted_count > 0:
-                return {"message": f"Student with ID {id} deleted successfully."}, 200
+                return "works"
             else:
-                return {"message": f"Student with ID {id} not found."}, 404
+                return "not works"
         else:
-            return {"message": f"Student with ID {id} not found."}, 404
+            return "not works"
 
     except Exception as e:
         raise e

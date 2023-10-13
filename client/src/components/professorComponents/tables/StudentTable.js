@@ -196,6 +196,7 @@ const StudentTable = () => {
               color="success"
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
+              name="create-new-student"
             >
               Create New Student
             </Button>

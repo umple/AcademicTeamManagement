@@ -40,8 +40,8 @@ const studentService = {
         return { success: false, message: error.message };
       });
   }, 
-  delete: async (row) => {
-    return fetch(`api/student/delete/${row}`, {
+  delete: async (id) => {
+    return fetch(`api/student/delete/${id}`, {
       method: "DELETE",
     })
       .then((response) => {

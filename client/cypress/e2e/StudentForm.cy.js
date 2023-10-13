@@ -1,19 +1,43 @@
 describe("addingStudent", () => {
-  it("tests addingStudent", () => {
-    cy.viewport(1920, 939);
+  beforeEach(() => {
+    cy.visit("http://localhost:3000");
+
+    cy.window().then((win) => {
+      win.localStorage.setItem("userEmail", JSON.stringify("test@uottawa.ca"));
+    });
+
+    cy.intercept("GET", "/api/getusertype", {
+      statusCode: 200,
+      body: { userType: "professor" }, // Mocked response
+      headers: { "Access-Control-Allow-Credentials": "true" }, // Ensure credentials are allowed
+    }).as("getUserType");
+
+    cy.intercept("GET", "/api/checksession", {
+      statusCode: 200,
+      body: { authenticated: true },
+    }).as("checkSession");
+    cy.intercept("POST", "/api/login", {
+      statusCode: 200,
+      body: { token: "mocked-token" },
+    }).as("login");
     cy.visit("http://localhost:3000/Students");
-    cy.get("button.MuiButton-containedSuccess").click();
-    cy.get("#\\:r2f\\:").click();
-    cy.get("#\\:r2f\\:").type("311111111");
-    cy.get("div.MuiDialogContent-root div:nth-of-type(2)").click();
-    cy.get("#\\:r2h\\:").type("Ro");
-    cy.get("#\\:r2h\\:").type("Robert");
-    cy.get("#\\:r2j\\:").type("B");
-    cy.get("#\\:r2j\\:").type("Basile");
-    cy.get("#\\:r2l\\:").type("robert");
-    cy.get("#\\:r2n\\:").type("robert@hotmail.com");
-    cy.get("#\\:r2r\\:").type("85");
-    cy.get("div.MuiDialog-root button.MuiButton-contained").click();
-    cy.visit("chrome://extensions/");
+  });
+  it("tests addingStudent", () => {
+    cy.get('button[name="create-new-student"]').click();
+    const  studentData = {
+      orgdefinedid: "300000000",
+      firstname:   "robert",
+      lastname:   "basile",
+      email:   "test@hotmail.com",
+      username:   "username",
+      sections:   "5",
+      finalGrade:   "85",
+    }
+    for (const key in  studentData) {
+      cy.get(`input[name=${key}]`).type( studentData[key]);
+    }
+
+    cy.get('button[name="submitForm"]').click();
+    cy.contains("tbody tr",  studentData.project).should("exist");
   });
 });

@@ -31,9 +31,7 @@ const StudentForm = ({
       } else {
         response = await studentService.add(values);
       }
-      if (response.success) {
-        fetchStudents();
-      }
+      fetchStudents();
     } catch (error) {
       console.log(error);
     }
@@ -103,7 +101,7 @@ const StudentForm = ({
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button color="secondary" type="submit" variant="contained">
+          <Button color="secondary" type="submit" name="submitForm" variant="contained">
             {update ? "Edit Student" : "Create New Student"}
           </Button>
         </DialogActions>
