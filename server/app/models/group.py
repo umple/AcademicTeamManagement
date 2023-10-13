@@ -18,7 +18,7 @@ def add_group(group_obj):
             for org in group_obj.members:
                 student.assign_group_to_student(org, groupName=group_obj.group_id)
 
-        project.add_group_to_project(group_obj["project"], group_obj["group_id"])
+        project.add_group_to_project(group_obj.project, group_obj.group_id)
         project.change_status(group_obj.project, "assigned")
         result = groupCollection.insert_one(group_obj.to_json())
         return result

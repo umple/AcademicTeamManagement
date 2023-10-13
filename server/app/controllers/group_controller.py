@@ -27,21 +27,12 @@ def add_group():
         group_entity = GroupEntity(group_obj)
         
         result = group.add_group(group_entity)
-        
-        if result == 409:
-            return {"message": "Group Names need to be unique"}, 409
-        elif result:
-            return jsonify(str(result.inserted_id)), 201
-        else:
-            return {"message": "Could not add the group."}, 500
-
-    except ValueError:
-        # Handle JSON parsing error
-        return {"message": "Invalid JSON data in the request."}, 400
+        return jsonify(str(result.inserted_id)), 201
     except Exception as e:
-        # Handle other unexpected errors
-        print(f"An error occurred: {str(e)}")
-        return {"message": "Internal server error."}, 500
+        # Handle the exception and return an error response
+        error_message = str(e)  # Get the error message as a string
+        return {"message": error_message}, 500
+    
 # PUT Request to update a student info
 @group_bp.route("/group/update/<id>", methods=["PUT"])
 def update_group_by_id(id):

@@ -110,6 +110,8 @@ const GroupForm = ({
     onSubmit,
   });
 
+  console.log("MEMBERS", initialGroupValues.members)
+  
   const handleClose = () => {
     setCreateModalOpen(false);
     setUpdate(false);
@@ -182,7 +184,7 @@ const GroupForm = ({
                     >
                       {students.length > 0 &&
                         students.map((student) => {
-                          if (student.group === null) {
+                          if (student.group === null || student.group === "") {
                             return (
                               <MenuItem
                                 key={student.orgdefinedid}

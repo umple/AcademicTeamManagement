@@ -98,7 +98,10 @@ describe("Submit Group Form", () => {
       notes: "", // You can add notes if needed
     };
 
-    cy.reload();
+    cy.wait(2000)
+    cy.reload()
+ 
+
     cy.get('button[name="create-new-group"]').click();
     // Example: Fill out the form fields and submit the form
     cy.get('input[name="group_id"]').type(groupData.group_id);
