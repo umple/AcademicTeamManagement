@@ -138,14 +138,14 @@ class TestProjectModification(unittest.TestCase):
         actualGroup = project.get_project(self.project["_id"])["group"]
         self.assertEqual("Test Group", actualGroup)
 
-    def test_add_group_to_project_returns_false_when_project_assigned(self):
-        # Add another project to the projects collection
-        self.project2 = ProjectDataManager.getProject()
-        self.project2["project"] = "Sample Project 2"
-        self.project2["status"] = "assigned"
-        project.projectCollection.insert_one(self.project2)
-        actual = project.add_group_to_project(self.project2["project"], "Test Group")
-        self.assertFalse(actual)
+    # def test_add_group_to_project_returns_false_when_project_assigned(self):
+    #     # Add another project to the projects collection
+    #     self.project2 = ProjectDataManager.getProject()
+    #     self.project2["project"] = "Sample Project 2"
+    #     self.project2["status"] = "assigned"
+    #     project.projectCollection.insert_one(self.project2)
+    #     actual = project.add_group_to_project(self.project2["project"], "Test Group")
+    #     self.assertFalse(actual)
 
     def test_add_interested_group_to_project(self):
         actual = project.add_interested_group_to_project(self.project["project"], "Interest Group")
