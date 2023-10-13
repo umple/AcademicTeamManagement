@@ -173,6 +173,7 @@ const StudentTable = () => {
             <Tooltip arrow placement="right" title="Delete">
               <IconButton
                 color="error"
+                name="deleteStudent"
                 onClick={() => {
                   setOpenDeletion(true);
                   setDeleteRow(row);
