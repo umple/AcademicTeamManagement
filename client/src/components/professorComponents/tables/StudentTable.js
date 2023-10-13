@@ -98,36 +98,13 @@ const StudentTable = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [refreshTrigger]);
 
-  const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
-      fetch(`api/student/update/${row.original._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      })
-        .then((response) => {
-          if (response.ok) {
-            fetchStudents();
-          } else {
-            console.error("Error deleting row");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      exitEditingMode();
-    }
-  };
-
-  
   const handleDeletion = async (row) => {
     try {
       await studentService.delete(row.original._id);
       setOpenDeletion(false);
+      setRefreshTrigger((prevState) => !prevState);
     } catch (error) {
       console.log(error);
     }
@@ -179,15 +156,15 @@ const StudentTable = () => {
         }}
         enableEditing
         initialState={{ showColumnFilters: false, density: "compact" }}
-        onEditingRowSave={handleSaveRowEdits}
+        // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={() => {
                   setEditingRow(row.original);
-                  setCreateModalOpen(false)
                   setUpdate(true);
+                  setCreateModalOpen(false);
                 }}
               >
                 <Edit />
@@ -266,12 +243,19 @@ const StudentTable = () => {
           </Box>
         )}
       />
-      <StudentForm
-        columns={columns}
-        open={createModalOpen}
-        setCreateModalOpen={setCreateModalOpen}
-        fetchStudents={fetchStudents}
-      />
+
+      {(update || createModalOpen) && (
+        <StudentForm
+          columns={columns}
+          open={createModalOpen}
+          setCreateModalOpen={setCreateModalOpen}
+          fetchStudents={fetchStudents}
+          editingRow={editingRow}
+          setEditingRow={setEditingRow}
+          update={update}
+          setUpdate={setUpdate}
+        />
+      )}
       {deletion && (
         <ConfirmDeletionModal
           setOpen={setOpenDeletion}

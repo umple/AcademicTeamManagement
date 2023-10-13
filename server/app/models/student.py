@@ -83,24 +83,29 @@ def delete_student_by_id(id):
     try:
         student_to_delete = get_student_by_id(id)
         print(student_to_delete)
-        # Check if the student is in a group and try to remove them
-        if student_to_delete["group"] is not None:
-            group_id = student_to_delete["group"]
-            orgdefinedid = student_to_delete["orgdefinedid"]
-            result = group.remove_student_from_group(group_id, orgdefinedid)
-            if not result:
-                return {"message": f"Failed to remove student {orgdefinedid} from the group."}, 500
+
+        if student_to_delete is not None:
+            # Check if the student is in a group and try to remove them
+            if student_to_delete.get("group") != "" or student_to_delete.get("group") is not None :
+                group_id = student_to_delete["group"]
+                orgdefinedid = student_to_delete["orgdefinedid"]
+                result = group.remove_student_from_group(group_id, orgdefinedid)
+                if not result:
+                    return {"message": f"Failed to remove student {orgdefinedid} from the group."}, 500
 
             # Delete the student document
-        result = studentsCollection.delete_one({"_id": ObjectId(id)})
+            result = studentsCollection.delete_one({"_id": ObjectId(id)})
 
-        if result.deleted_count > 0:
-            return {"message": f"Student with ID {id} deleted successfully."}, 200
+            if result.deleted_count > 0:
+                return {"message": f"Student with ID {id} deleted successfully."}, 200
+            else:
+                return {"message": f"Student with ID {id} not found."}, 404
         else:
             return {"message": f"Student with ID {id} not found."}, 404
 
     except Exception as e:
         raise e
+
 
 def import_students(file, accessor_keys):
     if not file or not file.filename:

@@ -61,7 +61,6 @@ const ConfirmDeletionModal = ({
             name="agreeToDelete"
             onClick={() => {
               handleDeletion(row);
-              setRefreshTrigger((prevState) => !prevState);
             }}
           >
             Agree

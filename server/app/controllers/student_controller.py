@@ -79,7 +79,7 @@ def delete_student_by_id(id):
         result = student.delete_student_by_id(id)
         
         if result:
-            return jsonify({"message": f"Student with ID {id} deleted successfully.", "deleted_count": result.deleted_count}), 200
+            return jsonify({"message": f"Student with ID {id} deleted successfully.", "deleted_count": result}), 200
         else:
             return {"message": f"Student with ID {id} not found."}, 404
     

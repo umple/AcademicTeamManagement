@@ -18,29 +18,41 @@ const StudentForm = ({
   columns,
   setCreateModalOpen,
   fetchStudents,
+  update,
+  setUpdate,
+  editingRow,
+  setEditingRow,
 }) => {
-   
-  const onSubmit = async (values,actions) => {
+  const onSubmit = async (values, actions) => {
     try {
-      let response = await studentService.add(values);
+      let response;
+      if (update) {
+        response = await studentService.update(editingRow._id, values);
+      } else {
+        response = await studentService.add(values);
+      }
       if (response.success) {
         fetchStudents();
       }
     } catch (error) {
       console.log(error);
     }
-    actions.resetForm()
+    actions.resetForm();
     handleClose();
   };
 
   const handleClose = () => {
-    setCreateModalOpen(false)
+    setCreateModalOpen(false);
+    setUpdate(false);
+    setEditingRow({});
   };
 
-  const [initialProjectValues] = useState(
-    new Student({
-      professorEmail: JSON.parse(localStorage.getItem("userEmail")),
-    })
+  const [initialStudentValues] = useState(
+    update
+      ? new Student(editingRow)
+      : new Student({
+          professorEmail: JSON.parse(localStorage.getItem("userEmail")),
+        })
   );
 
   const {
@@ -53,13 +65,15 @@ const StudentForm = ({
     setFieldValue,
     setFieldTouched,
   } = useFormik({
-    initialValues: initialProjectValues.toRequestJSON(),
+    initialValues: initialStudentValues.toRequestJSON(),
     validationSchema: studentSchema,
     onSubmit,
   });
   return (
-    <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Student</DialogTitle>
+    <Dialog open={open || update}>
+      <DialogTitle textAlign="center">
+        {update ? "Edit Student" : "Create New Student"}
+      </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
@@ -78,12 +92,10 @@ const StudentForm = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={Boolean(
-                  touched[column.accessorKey] &&
-                    errors[column.accessorKey]
+                  touched[column.accessorKey] && errors[column.accessorKey]
                 )}
                 helperText={
-                  touched[column.accessorKey] &&
-                  errors[column.accessorKey]
+                  touched[column.accessorKey] && errors[column.accessorKey]
                 }
               />
             ))}
@@ -92,7 +104,7 @@ const StudentForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Create New Student
+            {update ? "Edit Student" : "Create New Student"}
           </Button>
         </DialogActions>
       </form>
