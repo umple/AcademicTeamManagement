@@ -38,17 +38,21 @@ const ConfirmDeletionModal = ({
         <DialogTitle>
           {type === "group" ? (
             <span>Are you sure you want to delete group?</span>
-          ) : (
+          ) : type === "project" ? (
             <span>Are you sure you want to delete project?</span>
-          )}
+          ) : type === "student" ? (
+            <span>Are you sure you want to delete student?</span>
+          ) : null}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {type === "group" ? (
               <span>Group {row.getValue("group_id")}</span>
-            ) : (
+            ) : type === "project" ? (
               <span>Project: {row.getValue("project")}</span>
-            )}
+            ) : type === "student" ? (
+              <span>Student: {row.getValue("username")}</span>
+            ) : null}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

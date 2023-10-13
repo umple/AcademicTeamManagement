@@ -80,14 +80,27 @@ def remove_student_from_group(orgdefinedid):
     return result
 
 def delete_student_by_id(id):
-    student_to_delete = get_student_by_id(id)
-    result = True
-    if (student_to_delete["group"] != None):
-        result = group.remove_student_from_group(group_id=student_to_delete["group"], orgdefinedid=student_to_delete["orgdefinedid"])
-    if not result:
-        return result
-    result = studentsCollection.delete_one({"_id": ObjectId(id)})
-    return result
+    try:
+        student_to_delete = get_student_by_id(id)
+        print(student_to_delete)
+        # Check if the student is in a group and try to remove them
+        if student_to_delete["group"] is not None:
+            group_id = student_to_delete["group"]
+            orgdefinedid = student_to_delete["orgdefinedid"]
+            result = group.remove_student_from_group(group_id, orgdefinedid)
+            if not result:
+                return {"message": f"Failed to remove student {orgdefinedid} from the group."}, 500
+
+            # Delete the student document
+        result = studentsCollection.delete_one({"_id": ObjectId(id)})
+
+        if result.deleted_count > 0:
+            return {"message": f"Student with ID {id} deleted successfully."}, 200
+        else:
+            return {"message": f"Student with ID {id} not found."}, 404
+
+    except Exception as e:
+        raise e
 
 def import_students(file, accessor_keys):
     if not file or not file.filename:

@@ -1,13 +1,13 @@
 import * as Yup from "yup";
 
 // Define the Yup schema for validation
-const createGroupSchema = (groups) => {
+const createGroupSchema = (groups,_id) => {
   const groupSchema = Yup.object().shape({
     group_id: Yup.string()
       .required("Group ID is required")
       .test("is-unique", "Group ID already exists", function (value) {
         const group = groups.find(
-          (group) => group.group_id.toLowerCase() === value.toLowerCase()
+          (group) => group._id != _id && group.group_id.toLowerCase() === value.toLowerCase() 
         );
         return typeof group === "undefined";
       }),

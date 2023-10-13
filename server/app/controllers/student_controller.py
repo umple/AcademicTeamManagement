@@ -77,12 +77,16 @@ def update_student_by_id(id):
 def delete_student_by_id(id):
     try:
         result = student.delete_student_by_id(id)
+        
         if result:
-            return jsonify(str(result.deleted_count)), 200
+            return jsonify({"message": f"Student with ID {id} deleted successfully.", "deleted_count": result.deleted_count}), 200
         else:
-            return {"message": "Could not delete student."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+            return {"message": f"Student with ID {id} not found."}, 404
+    
+    except ValueError as ve:
+        return {"message": str(ve)}, 400  # Bad Request
+    except Exception as e:
+        return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
 
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():

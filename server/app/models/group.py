@@ -13,13 +13,18 @@ def get_all_groups():
     return group_Collection
 
 def add_group(group_obj):
-    result = groupCollection.insert_one(group_obj.to_json())
-    if group_obj.members:
-        for id in group_obj.members:
-            student.assign_group_to_student(id, groupName= group_obj.group_id)
-    
-    project.change_status(group_obj.project, "assigned")
-    return result
+    try:
+        if group_obj.members:
+            for org in group_obj.members:
+                student.assign_group_to_student(org, groupName=group_obj.group_id)
+
+        project.add_group_to_project(group_obj["project"], group_obj["group_id"])
+        project.change_status(group_obj.project, "assigned")
+        result = groupCollection.insert_one(group_obj.to_json())
+        return result
+    except Exception as e:
+        # Raise the exception so it can be caught and handled in the calling code
+        raise e
 
 def get_group(id):
     result = groupCollection.find_one({"_id": ObjectId(id)})
@@ -85,21 +90,36 @@ def is_user_in_group(user_name):
     else:
         return False
 
-def update_group_by_id(id, group_obj):
-    originalGroup  = get_group(id)
-    if group_obj["members"] != "":
-        group_obj["members"] =  group_obj["members"].split(",")
-    else:
-        group_obj["members"] = []
+from bson import ObjectId  # Assuming you are using MongoDB
 
-    if originalGroup["group_id"] != group_obj["group_id"]:
-        for orgdefinedId in group_obj["members"]:
-                result = student.assign_group_to_student(orgdefinedId, groupName= group_obj["group_id"])
-    project.change_status(group_obj["project"], "assigned")       
+def update_group_by_id(id, group_obj):
+    try:
+        original_group = get_group(id)
+        if not original_group:
+            return "Group not found"
+        
+        if "members" in group_obj and group_obj["members"]:
+            # group_obj["members"] = group_obj["members"].split(",")
+            pass
+        else:
+            group_obj["members"] = []
+
+        if original_group["group_id"] != group_obj["group_id"]:
+            for orgdefinedId in group_obj["members"]:
+                result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
+        
+        project.add_group_to_project(group_obj["project"],group_obj["group_id"])
+        project.change_status(group_obj["project"], "assigned")
+        
+        result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": group_obj})
+        
+        if result.modified_count > 0:
+            return "Group updated successfully"
+        else:
+            return "No changes were made to the group"
     
-    result = groupCollection.update_one({"_id": ObjectId(id)},  {"$set" : group_obj})
-    
-    return result
+    except Exception as e:
+        return str(e)
 
 def delete_group_by_id(id):
     originalGroup  = get_group(id)
@@ -107,6 +127,8 @@ def delete_group_by_id(id):
             result = student.assign_group_to_student(orgdefinedId, groupName=None)
     result = groupCollection.delete_one({"_id": ObjectId(id)})
     project.change_status(originalGroup["project"], "students needed")
+    project.remove_group_from_project(originalGroup["project"])
+
     return result
 
 def add_project_to_group(groupName,projectName):

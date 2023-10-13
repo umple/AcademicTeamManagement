@@ -39,7 +39,19 @@ const studentService = {
       .catch((error) => {
         return { success: false, message: error.message };
       });
-  }
+  }, 
+  delete: async (row) => {
+    return fetch(`api/student/delete/${row}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+
 };
 
 export default studentService;
