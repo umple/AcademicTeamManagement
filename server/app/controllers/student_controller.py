@@ -77,7 +77,7 @@ def update_student_by_id(id):
 def delete_student_by_id(id):
     try:
         result = student.delete_student_by_id(id)
-        return jsonify({"message": f"Student with ID {id} deleted successfully.", "deleted_count": result}), 200
+        return jsonify({"message": f"Student deleted successfully.", "deleted_count": result}), 200
     except ValueError as ve:
         return {"message": str(ve)}, 400  # Bad Request
     except Exception as e:

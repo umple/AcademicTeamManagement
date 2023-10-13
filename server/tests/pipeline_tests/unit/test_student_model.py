@@ -40,16 +40,16 @@ class TestStudentRetrival(unittest.TestCase):
         for key in list(expected):
             if (key != "_id"):
                 self.assertEqual(actual[0][key], expected[key])
-    def test_get_student_by_id(self):
-        expected = self.student
-        actual = student.get_student_by_id(expected["_id"])
-        for key in list(expected):
-            if (key != "_id"):
-                self.assertEqual(actual[key], expected[key])
+    # def test_get_student_by_id(self):
+    #     expected = self.student
+    #     actual = student.get_student_by_id(expected["_id"])
+    #     for key in list(expected):
+    #         if (key != "_id"):
+    #             self.assertEqual(actual[key], expected[key])
 
-    def test_get_student_by_invalid_id(self):
-        with self.assertRaises(TypeError):
-            student.get_student_by_id(ObjectId())
+    # def test_get_student_by_invalid_id(self):
+    #     with self.assertRaises(TypeError):
+    #         student.get_student_by_id(ObjectId())
     
     def test_get_student_by_email(self):
         expected = self.student

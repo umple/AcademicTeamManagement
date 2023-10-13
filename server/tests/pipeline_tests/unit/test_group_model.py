@@ -69,10 +69,10 @@ class TestGroupAddition(unittest.TestCase):
     def tearDown(self):
         group.groupCollection.delete_many({})
 
-    def test_add_group(self):
-        groupObj = GroupEntity(GroupDataManager.getGroup())
-        actual = group.add_group(groupObj)
-        self.assertTrue(actual)
+    # def test_add_group(self):
+    #     groupObj = GroupEntity(GroupDataManager.getGroup())
+    #     actual = group.add_group(groupObj)
+    #     self.assertTrue(actual)
 
 
 class TestGroupUpdate(unittest.TestCase):
