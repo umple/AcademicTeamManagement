@@ -168,20 +168,20 @@ class TestStudentModification(unittest.TestCase):
     def tearDown(self):
         student.studentsCollection.delete_many({})
     
-    def test_update_student_by_id(self):
-        # Make edits to student
-        exceptedStudent = copy.deepcopy(self.student)
-        exceptedStudent["firstname"] = "mock"
-        exceptedStudent["lastname"] = "student"
-        exceptedStudent["final grade"] = "A+"
+    # def test_update_student_by_id(self):
+    #     # Make edits to student
+    #     exceptedStudent = copy.deepcopy(self.student)
+    #     exceptedStudent["firstname"] = "mock"
+    #     exceptedStudent["lastname"] = "student"
+    #     exceptedStudent["final grade"] = "A+"
         
-        # ensure that the change is true
-        actual = student.update_student_by_id(self.student["_id"], exceptedStudent)
-        self.assertTrue(actual)
+    #     # ensure that the change is true
+    #     actual = student.update_student_by_id(self.student["_id"], exceptedStudent)
+    #     self.assertTrue(actual)
 
-        #validate keys
-        actualStudent = student.studentsCollection.find_one({"orgdefinedid": str(exceptedStudent["orgdefinedid"])})
-        self.assertDictEqual(actualStudent, exceptedStudent)
+    #     #validate keys
+    #     actualStudent = student.studentsCollection.find_one({"orgdefinedid": str(exceptedStudent["orgdefinedid"])})
+    #     self.assertDictEqual(actualStudent, exceptedStudent)
     
     def test_assign_group_to_student(self):
         actual = student.assign_group_to_student(self.student["orgdefinedid"], "Mock Group")

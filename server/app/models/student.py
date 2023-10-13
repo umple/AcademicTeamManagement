@@ -23,7 +23,7 @@ def add_student(student_obj):
         return None
 
 def add_import_student(student_obj):
-    student_obj["group"] = None
+    student_obj["group"] = ''
     student_obj["professorEmail"] = session.get("user")["preferred_username"]
     studentsCollection.insert_one(student_obj)
 

@@ -162,34 +162,6 @@ const GroupTable = () => {
     fetchData();
   }, [refreshTrigger]);
 
-  const handleSaveRowEdits = async (row, values) => {
-    //if (!Object.keys(validationErrors).length) {
-    console.log(row);
-    console.log(values);
-    //THIS LINE IS A TEMPORARY FIX AND THIS FIELD SHOULD STORE A GROUP ID.
-    values["members"] = values["members"].join();
-    const professorEmail = JSON.parse(localStorage.getItem("userEmail"));
-    values["professorEmail"] = professorEmail;
-    fetch(`api/group/update/${row.original._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    })
-      .then((response) => {
-        if (response.ok) {
-          fetchData();
-        } else {
-          console.error("Error editing row");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    //}
-  };
-
   const handleDeletion = async (row) => {
     try {
       await groupService.delete(row.original._id);
