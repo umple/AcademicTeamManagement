@@ -104,7 +104,7 @@ const StudentTable = () => {
     try {
       await studentService.delete(row.original._id);
       setOpenDeletion(false);
-      setRefreshTrigger((prevState) => !prevState);
+      fetchStudents();
     } catch (error) {
       console.log(error);
     }

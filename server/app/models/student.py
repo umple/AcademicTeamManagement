@@ -27,8 +27,8 @@ def add_import_student(student_obj):
     student_obj["professorEmail"] = session.get("user")["preferred_username"]
     studentsCollection.insert_one(student_obj)
 
-def get_student_by_id(id):
-    document = studentsCollection.find_one({"_id": ObjectId(id)})
+def get_student_by_id(a):
+    document = studentsCollection.find_one({"_id": ObjectId(a)})
     return document
 
 def get_student_by_email(email):
@@ -78,20 +78,20 @@ def remove_student_from_group(orgdefinedid):
     )
     return result
 
-def delete_student_by_id(id):
+def delete_student_by_id(a):
     try:
-        student_to_delete = get_student_by_id(id)
+        student_to_delete = get_student_by_id(a)
         if student_to_delete is not None:
             # Check if the student is in a group and try to remove them
-            if student_to_delete.get("group") != "" or student_to_delete.get("group") is not None :
-                group_id = student_to_delete["group"]
+            group_id = student_to_delete.get("group")
+            if group_id is not None and group_id != "":
                 orgdefinedid = student_to_delete["orgdefinedid"]
                 result = group.remove_student_from_group(group_id, orgdefinedid)
                 if not result:
                     return {"message": f"Failed to remove student {orgdefinedid} from the group."}, 500
-
+ 
             # Delete the student document
-            result = studentsCollection.delete_one({"_id": ObjectId(id)})
+            result = studentsCollection.delete_one({"_id": ObjectId(a)})
 
             if result.deleted_count > 0:
                 return "works"
