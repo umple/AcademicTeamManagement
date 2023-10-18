@@ -84,7 +84,7 @@ const StudentGroupTable = () => {
       ).then(([groups, currentUserGroup, students]) => {
         
         if (groups.message !== "Group list is empty."){
-          setTableData(groups)
+          setTableData(groups.groups)
         }
 
         if (typeof currentUserGroup.error === "undefined"){
@@ -93,7 +93,7 @@ const StudentGroupTable = () => {
         }
 
         if (students.message !== "Student list is empty."){
-          setStudents(students)
+          setStudents(students.students)
         }
         setIsLoading(false)
       });

@@ -11,7 +11,11 @@ def get_groups():
     try:
         group_list = group.get_all_groups()
         if group_list:
-            return jsonify(group_list), 200
+            response = {
+                "groups": group_list,
+                "count": len(group_list)
+            }
+            return jsonify(response), 200
         elif len(group_list) == 0:
             return {"message": "Group list is empty."}, 200
         else:

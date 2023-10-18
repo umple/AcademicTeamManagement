@@ -111,7 +111,7 @@ const GroupTable = () => {
       const projects = await projectService.get();
 
       if (projects.message !== "Project list is empty.") {
-        const filteredProjects = projects.filter(
+        const filteredProjects = projects.projects.filter(
           (project) => project.status !== "assigned"
         );
         setProjects(filteredProjects);
@@ -126,7 +126,7 @@ const GroupTable = () => {
       const students = await studentService.get();
 
       if (students.message !== "Student list is empty.") {
-        setStudents(students);
+        setStudents(students.students);
       }
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -140,7 +140,7 @@ const GroupTable = () => {
       if (groups.message !== "Group list is empty.") {
         const professorEmail = JSON.parse(localStorage.getItem("userEmail"));
         const filteredGroupTableData = FilterDataByProfessor(
-          groups,
+          groups.groups,
           professorEmail
         );
         setTableData(filteredGroupTableData);

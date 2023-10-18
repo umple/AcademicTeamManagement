@@ -14,7 +14,11 @@ def get_students():
     try:
         student_list = student.get_all_student()
         if student_list:
-            return jsonify(student_list), 200
+            response = {
+                "students": student_list,
+                "count": len(student_list)
+            }
+            return jsonify(response), 200
         elif len(student_list) == 0:
             return {"message": "Students list is empty."}, 200
         else:

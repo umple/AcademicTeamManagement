@@ -87,7 +87,7 @@ const StudentTable = () => {
       let students = await studentService.get();
       const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
       const filteredStudentsTableData = FilterDataByProfessor(
-        students,
+        students.students,
         professorEmail
       ); // keep only the data that contains the professor's email
       setTableData(filteredStudentsTableData);
