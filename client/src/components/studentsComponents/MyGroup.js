@@ -32,9 +32,9 @@ const MyGroup = () => {
       try {
         setIsLoading(true)
         const studentsData = await fetchData("api/students");
-        setStudents(studentsData);
+        setStudents(studentsData.students);
 
-        const projectApplicationsData = fetch("api/retrieve/project/application");
+        const projectApplicationsData = await fetchData("api/retrieve/project/application");
         setProjectApplications(projectApplicationsData);
       } catch (error) {
         console.error(error);
