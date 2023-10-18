@@ -46,14 +46,11 @@ function StudentProjects() {
 
   const fetchProjects = async () => {
     try {
-      let projects = await projectService.get();
-      if (
-        projects.length > 0 &&
-        projects.message !== "Project list is empty."
-      ) {
-        projects = projects.filter((project) => project.status !== "assigned");
-        setProjects(projects);
-        setFilteredProjects(projects);
+      let projectsData = await projectService.get();
+      if (projectsData.count > 0) {
+        const projectsFiltered = projectsData.projects.filter((project) => project.status !== "assigned");
+        setProjects(projectsData.projects);
+        setFilteredProjects(projectsFiltered);
       }
     } catch (error) {
       console.log(error);
@@ -62,13 +59,10 @@ function StudentProjects() {
 
   const fetchStudents = async () => {
     try {
-      let students = await studentService.get();
+      let studentsData = await studentService.get();
       let Email = await getUserEmail();
-      if (
-        students.length > 0 &&
-        students.message !== "Student list is empty."
-      ) {
-        let currStudent = students.students.filter((student) => student.email === Email);
+      if (studentsData.count > 0) {
+        let currStudent = studentsData.students.filter((student) => student.email === Email);
         setCurrentStudent(currStudent[0]);
         setCurrGroup(currStudent[0].group);
       }

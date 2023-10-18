@@ -24,27 +24,9 @@ def retrieve_project_application():
     try:
         student_email = session.get("user")["preferred_username"]
         result = projectApplication.get_project_applications(student_email)
-        if result:
-                return jsonify(result), 200
-        else:
-                return {"message": "Could not delete student."}, 404
+        return jsonify(result), 200
     except:
         return {"message": "Internal server error."}, 503
-
-
-# @project_application_bp.route("/has/project/application/<id>", methods=["GET"])
-# def has_project_application(id):
-#     try:
-#         student_name = session.get("user")["name"]
-#         result = projectApplication.has_project_application(
-#             str(id), student_name)
-        
-#         if result:
-#             return  jsonify(True), 200
-#         else:
-#             return jsonify(False), 200
-#     except:
-#         return {"message": "Internal server error."}, 503
     
 
 @project_application_bp.route("/application/review", methods=["PUT"])
