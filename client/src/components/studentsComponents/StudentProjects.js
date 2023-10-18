@@ -68,7 +68,7 @@ function StudentProjects() {
         students.length > 0 &&
         students.message !== "Student list is empty."
       ) {
-        let currStudent = students.filter((student) => student.email === Email);
+        let currStudent = students.students.filter((student) => student.email === Email);
         setCurrentStudent(currStudent[0]);
         setCurrGroup(currStudent[0].group);
       }

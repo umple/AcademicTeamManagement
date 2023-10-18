@@ -14,7 +14,11 @@ def get_projects():
     try:
         project_list = project.get_all_projects()
         if project_list:
-            return jsonify(project_list), 200
+            response = {
+                "projects": project_list,
+                "count": len(project_list)
+            }
+            return jsonify(response), 200
         elif len(project_list) == 0:
             return {"message": "Project list is empty."}, 200
         else:

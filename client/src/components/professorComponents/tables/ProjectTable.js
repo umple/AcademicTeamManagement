@@ -132,7 +132,7 @@ const ProjectTable = () => {
       setIsLoading(true);
       let data = await projectService.get();
       const filteredProjectsTableData = FilterDataByProfessor(
-        data,
+        data.projects,
         professorEmail
       ); // keep only the data that contains the professor's email
       setTableData(filteredProjectsTableData);
