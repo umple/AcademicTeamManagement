@@ -41,8 +41,9 @@ def send_feedback_to_group(feedback_obj):
 def get_project_applications(student_email):
     try:
         project_applications = []
-        student_group = json.loads(group.get_user_group(student_email))
-        for document in projectApplicationCollection.find({"group_id": student_group['group_id']}):
+        student_group = group.get_user_group(student_email)
+        project_applications_for_group = projectApplicationCollection.find({"group_id": student_group['group_id']})
+        for document in project_applications_for_group:
             document["_id"] = str(document["_id"])
             project_applications.append(document)
     except Exception as e:
@@ -57,12 +58,6 @@ def request_project_application(project_name, student_email, group_id):
             return Exception(f"Application already Submitted {project_name}.") , 400
         create_application(project_name, student_email, group_id)
         return True, 200
-        # result = project.add_interested_group_to_project(project_name, group_id)
-
-        # if result.modified_count > 0 or result.matched_count > 0:
-            # applications = create_application(project_name, group_id)
-        # else:
-            # raise Exception(f"Could not update project {project_name}.")
     except Exception as e:
         print(e)
         return e, 500
