@@ -26,10 +26,6 @@ The solution is implementing a solid internationalization (i18n) feature within 
 
 The fat marker sketches below show two alternative views of the UI with internationalization. Figure 4 shows a fat marker sketch with the application navigation bar with a dropdown element with the option to select the language. While this is a good idea, it might need to be more intuitive for users as they must understand that the dropdown menu is for selecting languages. Thus, an alternative view is provided (see Figure 5). This fat marker sketch has a button instead of a dropdown that allows the user to toggle from French to English. This is a convenient and straightforward way to implement an option to switch languages.
 
-![Alt text](image-3.png)
-
-![Alt text](image-4.png)
-
 ![Alt text](image-5.png)
 
 ![Alt text](image-6.png)
