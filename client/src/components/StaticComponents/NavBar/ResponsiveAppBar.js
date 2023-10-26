@@ -30,9 +30,9 @@ const professorPages = {
 // Nav elements to display for the admin
 const adminPages = {
   page1: {key: 'Home', value:'/AdminHome'},
-  page2: {key: 'Projects', value:'/Projects'},
-  page3: {key:'Groups', value:'/GroupView'},
-  page4: {key: 'Students', value:'/Students'},
+  page2: {key: 'Projects', value:'/AdminProjects'},
+  page3: {key:'Groups', value:'/AdminGroupView'},
+  page4: {key: 'Students', value:'/AdminStudents'},
 };
 
 

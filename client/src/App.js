@@ -37,9 +37,9 @@ const App = () => {
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.ADMIN} />}> 
                 <Route path="/AdminHome" element={<AdminHomePage />}></Route>
-                <Route path="/Students" element={<ProfessorStudentPage />}></Route>
-                <Route exact path="/Projects" element={<ProfessorProjectPage />}></Route>
-                <Route path="/GroupView" element={<ProfessorGroupPage />}></Route>
+                <Route path="/AdminStudents" element={<ProfessorStudentPage />}></Route>
+                <Route exact path="/AdminProjects" element={<ProfessorProjectPage />}></Route>
+                <Route path="/AdminGroupView" element={<ProfessorGroupPage />}></Route>
               </Route>
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR} />}> 
