@@ -27,6 +27,8 @@ import ImportStudents from "../ImportStudents";
 import StudentForm from "../forms/StudentForm";
 import { useStyles } from "./styles/StudentTableStyles";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
+import { ROLES } from "../../../helpers/Roles";
+import { getUserType } from "../../../helpers/UserType"
 
 const StudentTable = () => {
   const defaultColumns = useMemo(
@@ -84,13 +86,28 @@ const StudentTable = () => {
 
   const fetchStudents = async () => {
     try {
+      let userType = ""
       let students = await studentService.get();
-      const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
-      const filteredStudentsTableData = FilterDataByProfessor(
-        students.students,
-        professorEmail
-      ); // keep only the data that contains the professor's email
-      setTableData(filteredStudentsTableData);
+      
+      await getUserType()
+      .then((type) => {
+        userType = type
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+      if (userType == ROLES.ADMIN) {
+        setTableData(students.students); // show all data if user is an admin
+      } else {
+        const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
+        const filteredStudentsTableData = FilterDataByProfessor(
+          students.students,
+          professorEmail
+        ); // keep only the data that contains the professor's email
+        setTableData(filteredStudentsTableData);
+      }
+
     } catch (error) {
       console.error("There was a problem with the network request:", error);
     }
