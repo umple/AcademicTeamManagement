@@ -145,7 +145,7 @@ const ResponsiveAppBar = () => {
                 }}
               >
                 {Object.entries(pages).map(([key,value]) => (
-                  <MenuItem key={key} onClick={handleCloseNavMenu}>
+                  <MenuItem key={key} component="a" href={value.value} onClick={handleCloseNavMenu}>
                     <Typography  style={{ textTransform: "none" }} textAlign="center">{pages[key].key}</Typography>
                   </MenuItem>
                 ))}
