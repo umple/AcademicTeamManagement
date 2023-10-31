@@ -27,6 +27,14 @@ const professorPages = {
   page4: {key: 'Students', value:'/Students'},
 };
 
+// Nav elements to display for the admin
+const adminPages = {
+  page1: {key: 'Home', value:'/AdminHome'},
+  page2: {key: 'Projects', value:'/AdminProjects'},
+  page3: {key:'Groups', value:'/AdminGroupView'},
+  page4: {key: 'Students', value:'/AdminStudents'},
+};
+
 
 const ResponsiveAppBar = () => {
 
@@ -60,6 +68,10 @@ const ResponsiveAppBar = () => {
 
     case 'professor':
       pages = professorPages;
+      break;
+
+    case 'admin':
+      pages = adminPages;
       break;
 
     default:

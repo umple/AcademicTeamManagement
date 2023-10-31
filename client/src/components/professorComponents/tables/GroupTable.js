@@ -32,6 +32,8 @@ import studentService from "../../../services/studentService";
 import GroupForm from "../forms/GroupForm";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import EditGroupModal from "../forms/EditGroupModal";
+import { ROLES } from "../../../helpers/Roles";
+import { getUserType } from "../../../helpers/UserType"
 
 const GroupTable = () => {
   // For the create profile modal
@@ -135,15 +137,28 @@ const GroupTable = () => {
 
   const fetchGroups = async () => {
     try {
+      let userType = ""
       const groups = await groupService.get();
 
+      await getUserType()
+      .then((type) => {
+        userType = type
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
       if (groups.message !== "Group list is empty.") {
-        const professorEmail = JSON.parse(localStorage.getItem("userEmail"));
-        const filteredGroupTableData = FilterDataByProfessor(
-          groups.groups,
-          professorEmail
-        );
-        setTableData(filteredGroupTableData);
+        if (userType === ROLES.ADMIN) {
+          setTableData(groups.groups); // show all data for admin users
+        } else {
+          const professorEmail = JSON.parse(localStorage.getItem("userEmail"));
+          const filteredGroupTableData = FilterDataByProfessor(
+            groups.groups,
+            professorEmail
+          );
+          setTableData(filteredGroupTableData);
+        }
       } else {
         setTableData([]);
       }

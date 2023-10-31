@@ -31,7 +31,6 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { ExportToCsv } from "export-to-csv";
 import { Delete, Edit } from "@mui/icons-material";
 import Chip from "@mui/material/Chip";
-// import { colorStatus } from '../../helpers/statusColors';
 import { colorStatus } from "../../../helpers/statusColors";
 import { csvOptions, handleExportData } from "../../../helpers/exportData";
 import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
@@ -40,6 +39,9 @@ import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import ProjectForm from "../forms/ProjectForm";
 import EditProjectForm from "../forms/EditProjectForm";
 import ViewApplicationModal from "../ViewApplicationModal";
+import { ROLES } from "../../../helpers/Roles";
+import { getUserType } from "../../../helpers/UserType"
+
 const ProjectTable = () => {
   const columns = useMemo(
     () => [
@@ -130,12 +132,26 @@ const ProjectTable = () => {
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
+      let userType = ""
       let data = await projectService.get();
-      const filteredProjectsTableData = FilterDataByProfessor(
-        data.projects,
-        professorEmail
-      ); // keep only the data that contains the professor's email
-      setTableData(filteredProjectsTableData);
+      
+      await getUserType()
+      .then((type) => {
+        userType = type
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+      if (userType === ROLES.ADMIN) {
+        setTableData(data.projects); // show all data if user is an admin
+      } else {
+        const filteredProjectsTableData = FilterDataByProfessor(
+          data.projects,
+          professorEmail
+        ); // keep only the data that contains the professor's email
+        setTableData(filteredProjectsTableData);
+      }
     } catch (error) {
       console.error(error);
     } finally {

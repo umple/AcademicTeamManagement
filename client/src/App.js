@@ -9,6 +9,9 @@ import { ROLES } from "./helpers/Roles";
 // login page
 import LoginPage from "./pages/LoginPage";
 
+// Admin pages 
+import AdminHomePage from "./pages/adminPages/AdminHomePage";
+
 // Professor pages 
 import HomePage from "./pages/professorPages/HomePage";
 import ProfessorGroupPage from "./pages/professorPages/ProfessorGroupPage";
@@ -31,7 +34,15 @@ const App = () => {
           </div>
           <Routes>
             <Route element={<PrivateRoutes />}>
-              <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR} />}>
+
+              <Route element={<RoleBasedRoutes allowedRole={ROLES.ADMIN} />}> 
+                <Route path="/AdminHome" element={<AdminHomePage />}></Route>
+                <Route path="/AdminStudents" element={<ProfessorStudentPage />}></Route>
+                <Route exact path="/AdminProjects" element={<ProfessorProjectPage />}></Route>
+                <Route path="/AdminGroupView" element={<ProfessorGroupPage />}></Route>
+              </Route>
+
+              <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR} />}> 
                 <Route path="/ProfessorHome" element={<HomePage />}></Route>
                 <Route path="/Students" element={<ProfessorStudentPage />}></Route>
                 <Route exact path="/Projects" element={<ProfessorProjectPage />}></Route>
@@ -46,6 +57,7 @@ const App = () => {
               </Route>
 
             </Route>
+            
             <Route path="/" element={<LoginPage />}></Route>
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="*" element={<PageNotFound />} />
