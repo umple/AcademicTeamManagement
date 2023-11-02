@@ -151,3 +151,45 @@
     -  Assigned most important tasks
 - **To do:** 
     - Meet up with Prof. Lethbridge to test the app
+
+## 09/29/2023
+- Team
+- **Next meeting:** 1-2 weeks
+- **Summary:**
+  - Discuss issues with the app and assign tasks
+- **To do:**
+  - Implement tasks with a focus on testing
+
+## 10/06/2023
+- Team
+- **Next meeting:** 1-2 weeks
+- **Summary:**
+  - Discussed feature of table refactoring be implemented and test it out
+
+## 10/13/2023
+- Team and client (Prof. Lethbridge)
+- **Next meeting:** 1-2 weeks
+- **Summary:**
+  - Contact micheal garzon
+  - Contact prof more (no we wont half us of are terrified)
+  - Multiple clients are possible
+  - Simplify status (not allow input and set it to a default one or an explanation of the status)
+  - Make system baby proof
+  - Add uOcampus vs Brightspace templates
+
+## 10/20/2023
+- Team
+- **Next meeting:** 1-2 weeks
+- **Summary:**
+  - Practice presentation
+  - Discuss tasks that need to be completed
+
+## 11/01/2023
+- Team and client (Prof. Lethbridge)
+- **Next meeting:** 1-2 weeks
+- **Summary:**
+  - Discussed feature to be added for sections to be assigned to students
+  - Professor approved mockups
+- **To do:**
+  - Implement section feature and show Prof. Lethbridge
+  - Meet with Prof. Lethbridge after he discusses app with Prof. Garzon
