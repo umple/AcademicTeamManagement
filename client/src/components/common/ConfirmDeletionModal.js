@@ -42,6 +42,8 @@ const ConfirmDeletionModal = ({
             <span>Are you sure you want to delete project?</span>
           ) : type === "student" ? (
             <span>Are you sure you want to delete student?</span>
+          ) : type === "section" ? (
+            <span>Are you sure you want to delete section?</span>
           ) : null}
         </DialogTitle>
         <DialogContent>
@@ -52,6 +54,8 @@ const ConfirmDeletionModal = ({
               <span>Project: {row.getValue("project")}</span>
             ) : type === "student" ? (
               <span>Student: {row.getValue("username")}</span>
+            ) : type === "section" ? (
+              <span>Section: {row.getValue("name")}</span>
             ) : null}
           </DialogContentText>
         </DialogContent>
