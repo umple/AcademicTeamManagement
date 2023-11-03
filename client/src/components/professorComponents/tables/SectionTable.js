@@ -57,7 +57,8 @@ const SectionTable = () => {
 
   const fetchSections = async () => {
     try {
-        // TODO: finish this
+      let sections = await sectionService.get();
+      setTableData(sections.sections)
     } catch (error) {
       console.error("There was a problem with the network request:", error);
     }
