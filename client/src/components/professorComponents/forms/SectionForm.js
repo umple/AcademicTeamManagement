@@ -65,7 +65,7 @@ import {
       setFieldTouched,
     } = useFormik({
       initialValues: initialSectionValues.toRequestJSON(),
-      validationSchema: sectionSchema(sections,editingRow._id),
+      validationSchema: sectionSchema(sections,editingRow?._id),
       onSubmit,
     });
     return (
