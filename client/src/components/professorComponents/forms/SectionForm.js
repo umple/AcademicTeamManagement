@@ -12,7 +12,6 @@ import {
   import sectionService from "../../../services/sectionService";
   import Section from "../../../entities/Section";
   import sectionSchema from "../../../schemas/sectionSchema";
-  import DatePicker from "@mui/lab/DatePicker";
   
   const SectionForm = ({
     open,
