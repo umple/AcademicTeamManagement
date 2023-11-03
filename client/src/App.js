@@ -17,6 +17,7 @@ import HomePage from "./pages/professorPages/HomePage";
 import ProfessorGroupPage from "./pages/professorPages/ProfessorGroupPage";
 import ProfessorProjectPage from "./pages/professorPages/ProfessorProjectPage";
 import ProfessorStudentPage from "./pages/professorPages/ProfessorStudentPage";
+import ProfessorSectionPage from "./pages/professorPages/ProfessorSectionPage";
 
 // Student pages 
 import StudentGroupsPage from "./pages/studentPages/StudentGroupsPage";
@@ -40,6 +41,7 @@ const App = () => {
                 <Route path="/AdminStudents" element={<ProfessorStudentPage />}></Route>
                 <Route exact path="/AdminProjects" element={<ProfessorProjectPage />}></Route>
                 <Route path="/AdminGroupView" element={<ProfessorGroupPage />}></Route>
+                <Route path="/AdminSections" element={<ProfessorSectionPage />}></Route>
               </Route>
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR} />}> 
@@ -47,6 +49,7 @@ const App = () => {
                 <Route path="/Students" element={<ProfessorStudentPage />}></Route>
                 <Route exact path="/Projects" element={<ProfessorProjectPage />}></Route>
                 <Route path="/GroupView" element={<ProfessorGroupPage />}></Route>
+                <Route path="/Sections" element={<ProfessorSectionPage />}></Route>
               </Route>
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.STUDENT} />}>
