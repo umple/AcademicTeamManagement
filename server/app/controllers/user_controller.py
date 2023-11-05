@@ -1,4 +1,5 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
+from flask_cors import cross_origin
 from app.models import user
 from app.entities.UserEntity import UserEntity
 import json
@@ -36,17 +37,19 @@ def add_user():
             return {"message": "Could not add user."}, 404
     except:
         return {"message": "Internal server error."}, 503
-    
-@user_bp.route("/user/<email>", methods=["GET"])
-def get_user_by_email(email):
+
+@cross_origin(supports_credentials=True)    
+@user_bp.route("/user/retrieve/user/role", methods=["GET"])
+def get_user_role_by_email():
     try:
+        email = session.get("user")["preferred_username"]
         document = user.get_user_by_email(email)
         if document:
-            return jsonify(document), 200
+            return jsonify(document["role"]), 200, {'Access-Control-Allow-Credentials': 'true'}
         else:
-            return {"message": "Users list not found."}, 404
+            return {"message": "Users list not found."}, 404, {'Access-Control-Allow-Credentials': 'true'}
     except:
-        return {"message": "Internal server error."}, 503
+        return {"message": "Internal server error."}, 503, {'Access-Control-Allow-Credentials': 'true'}
 
 # GET Request to get a user by id
 @user_bp.route("/user/<id>", methods=["GET"])
