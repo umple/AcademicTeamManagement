@@ -92,17 +92,17 @@ class TestStudentAddition(unittest.TestCase):
         student.studentsCollection.delete_many({})
 
     def test_add_student(self):
-        studentObj = StudentEntity(StudentDataManager.getStudent())
+        studentObj = StudentEntity("1234", StudentDataManager.getStudent())
         actual = student.add_student(studentObj)
         self.assertTrue(actual)
 
-    # def test_add_student_duplicate(self):
-    #     studentObj = StudentEntity(StudentDataManager.getStudent())
-    #     student.studentsCollection.insert_one(studentObj.to_json())
+    def test_add_student_duplicate(self):
+        studentObj = StudentEntity("1234", StudentDataManager.getStudent())
+        student.studentsCollection.insert_one(studentObj.to_json())
 
-    #     # assert the second addition is not allowed
-    #     actual = student.add_student(studentObj)
-    #     self.assertIsNone(actual)
+        # assert the second addition is not allowed
+        actual = student.add_student(studentObj)
+        self.assertIsNone(actual)
 
     def test_import_student(self):        
         try:
