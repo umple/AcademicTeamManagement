@@ -73,6 +73,7 @@ jobs:
       - name: Install Dependencies with Pipenv
         run: |
           pipenv install
+          pipenv update setuptools wheel
           pipenv lock
       - name: Run Unit Tests
         run: |

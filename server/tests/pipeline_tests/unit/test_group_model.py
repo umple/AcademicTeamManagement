@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from app.models import group
+import app.models.group as group
 from app.entities.GroupEntity import GroupEntity
 from bson import ObjectId
 import copy
