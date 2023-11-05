@@ -12,6 +12,28 @@ export const getUserType = async () => {
     return cachedUserType;
   }
 
+  // check the user type from the database based on the user email
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/user/retrieve/user/role`, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include' // include cookies in the request
+    })
+
+    if (response.status == 200) {
+      const data = await response.json();
+      cachedUserType = data; // Cache the user type
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cachedUserType)); // Store in local storage
+  
+      return cachedUserType;
+    }
+
+  } catch (error) {
+    console.error('Error fetching user type:', error);
+    throw error;
+  }
+
+  // check user type from Azure
   try {
     const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/getusertype`, {
       method: 'GET',
