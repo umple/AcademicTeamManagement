@@ -35,6 +35,7 @@ const adminPages = {
   page3: {key:'Groups', value:'/AdminGroupView'},
   page4: {key: 'Students', value:'/AdminStudents'},
   page5: {key: 'Sections', value:'/AdminSections'},
+  page7: {key: 'Staff', value:'/AdminStaff'},
 };
 
 
