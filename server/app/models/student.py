@@ -53,8 +53,10 @@ def get_student_by_username(username):
     return document
 
 def update_student_by_id(id, student_obj):
+    data = student_obj.to_json()
+    del data["_id"]
     result = studentsCollection.update_one({"_id": ObjectId(id)}, {
-        "$set":student_obj.to_json()
+        "$set":data
     })
     return result
 
