@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from "@mui/material";
+import { Box,Select,MenuItem } from "@mui/material";
 import { Button } from "@material-ui/core";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -107,6 +107,17 @@ const ImportStudents = (props) => {
       });
   };
 
+  const cellValueMap = [
+    { value: "new", label: "success" },
+    { value: "interested students", label: "warning" },
+    { value: "students needed", label: "primary" },
+    { value: "pending approval", label: "secondary" },
+    { value: "assigned", label: "error" },
+    { value: "proposed", label: "default" },
+  ];
+
+  const [sectionValue, setSectionValue] = useState("");
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
       <form onSubmit={handleSubmit} className={classes.container}>
@@ -116,7 +127,20 @@ const ImportStudents = (props) => {
             <Box sx={{ mt: '1rem' }}>
               <strong>{file.name}</strong>
             </Box>
-            <Button variant="contained" type="submit" color="success" className={classes.uploadButton}>
+            <label> Section Select:
+              <Select
+                labelId="demo-multiple-chip-label"
+                id="select-section"
+                onChange={(e) => setSectionValue(e.target.value)}
+              >
+                {cellValueMap.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </Select>
+            </label>
+            <Button variant="contained" type="submit" disabled={!sectionValue} color="success" className={classes.uploadButton}>
               Submit
             </Button>
           </Box>
@@ -153,7 +177,6 @@ const ImportStudents = (props) => {
                 <a style={{ all: "unset" }} href="assets/student_import_template.xlsx">
                   Download Template
                 </a>
-
               </Button>
             </label>
 
@@ -161,6 +184,7 @@ const ImportStudents = (props) => {
         )}
       </form>
     </Box>
+    
   );
 };
 
