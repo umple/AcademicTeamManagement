@@ -1,6 +1,6 @@
 import unittest
 from flask import session
-from app.models import student
+import app.models.student as student
 from app.entities.StudentEntity import StudentEntity
 from werkzeug.datastructures import FileStorage
 from bson import ObjectId
