@@ -22,7 +22,7 @@ const MyGroup = () => {
       // Check if the user has a group or not
       try {
         const groupData = await fetchData("api/retrieve/curr/user/group");
-        setGroup(groupData);
+        groupData && setGroup(groupData);
       } catch (error) {
         console.error(error)
         setGroup({});
@@ -32,10 +32,10 @@ const MyGroup = () => {
       try {
         setIsLoading(true)
         const studentsData = await fetchData("api/students");
-        setStudents(studentsData.students);
+        studentsData && setStudents(studentsData.students);
 
         const projectApplicationsData = await fetchData("api/retrieve/project/application");
-        setProjectApplications(projectApplicationsData);
+        projectApplicationsData && setProjectApplications(projectApplicationsData);
       } catch (error) {
         console.error(error);
       } finally {

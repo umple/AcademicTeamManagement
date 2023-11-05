@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage";
 
 // Admin pages 
 import AdminHomePage from "./pages/adminPages/AdminHomePage";
+import AdminStaffPage from "./pages/adminPages/AdminStaffPage";
 
 // Professor pages 
 import HomePage from "./pages/professorPages/HomePage";
@@ -42,6 +43,7 @@ const App = () => {
                 <Route exact path="/AdminProjects" element={<ProfessorProjectPage />}></Route>
                 <Route path="/AdminGroupView" element={<ProfessorGroupPage />}></Route>
                 <Route path="/AdminSections" element={<ProfessorSectionPage />}></Route>
+                <Route path="/AdminStaff" element={<AdminStaffPage />}></Route>
               </Route>
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR} />}> 

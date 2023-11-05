@@ -9,12 +9,13 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { CardContent } from "@mui/material";
 import GroupsSharpIcon from "@mui/icons-material/GroupsSharp";
-import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
+import ClassIcon from '@mui/icons-material/Class';
 import PersonIcon from "@mui/icons-material/Person";
 import DesignServicesSharpIcon from "@mui/icons-material/DesignServicesSharp";
 import projectService from "../../services/projectService";
 import groupService from "../../services/groupService";
 import studentService from "../../services/studentService";
+import sectionService from "../../services/sectionService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,6 +100,7 @@ const DashBoardInfo = () => {
   const [studentsCount, setStudentCount] = useState(0);
   const [groupsCount, setGroupCount] = useState(0);
   const [projectsCount, setProjectCount] = useState(0);
+  const [sectionsCount, setSectionsCount] = useState(0);
 
   useEffect(() => {
     studentService.get().then((data) => {
@@ -109,6 +111,9 @@ const DashBoardInfo = () => {
     });
     projectService.get().then((data) => {
       setProjectCount(data.count ?? 0);
+    });
+    sectionService.get().then((data) => {
+      setSectionsCount(data.count ?? 0);
     });
   }, []);
 
@@ -273,6 +278,45 @@ const DashBoardInfo = () => {
                       <div style={badgeStyle}>
                         <Typography style={badgeTextStyle}>
                           {studentsCount}
+                        </Typography>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card style={cardStyle}>
+              <CardContent>
+                <Typography variant="h6" style={titleStyle}>
+                  Sections
+                </Typography>
+                <div style={contentStyle}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4em",
+                    }}
+                  >
+                    <div style={{ float: "left" }}>
+                      <ClassIcon style={iconStyle} />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <div style={{ textAlign: "center" }}>
+                        <Typography>Total # of sections</Typography>
+                      </div>
+
+                      <div style={badgeStyle}>
+                        <Typography style={badgeTextStyle}>
+                          {sectionsCount}
                         </Typography>
                       </div>
                     </div>
