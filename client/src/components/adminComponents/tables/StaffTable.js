@@ -62,9 +62,7 @@ const StaffTable = () => {
   const fetchStaffs = async () => {
     try {
       let staff = await staffService.get();
-      if (staff.staff) {
-        setTableData(staff.staff)
-      }
+      staff.staff && setTableData(staff.staff)
     } catch (error) {
       console.error("There was a problem with the network request:", error);
     }
