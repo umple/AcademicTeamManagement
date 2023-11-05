@@ -1,7 +1,8 @@
 class StudentEntity:
-    def __init__(self, student_data):
+    def __init__(self, student_id, student_data):
         if student_data is None:
             student_data = {}
+        self._student_id = student_id
         self._orgdefinedid = student_data.get('orgdefinedid', '')
         self._firstname = student_data.get('firstname', '')
         self._lastname = student_data.get('lastname', '')
@@ -14,6 +15,7 @@ class StudentEntity:
         
     def to_json(self):
         return {
+            '_id': self._student_id,
             'orgdefinedid': self._orgdefinedid,
             'firstname': self._firstname,
             'lastname': self._lastname,
@@ -25,6 +27,14 @@ class StudentEntity:
             'professorEmail': self._professorEmail
         }
 
+    @property
+    def student_id(self):
+        return self._student_id
+    
+    @student_id.setter
+    def student_id(self, student_id):
+        self._student_id = student_id
+        
     @property
     def orgdefinedid(self):
         return self._orgdefinedid
