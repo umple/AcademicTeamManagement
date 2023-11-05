@@ -70,10 +70,10 @@ jobs:
         run: |
           pip3 install coverage
           pip3 install pipenv
-          pip3 install --upgrade pip setuptools wheel
       - name: Install Dependencies with Pipenv
         run: |
           pipenv install
+          pipenv update setuptools wheel
           pipenv lock
       - name: Run Unit Tests
         run: |
