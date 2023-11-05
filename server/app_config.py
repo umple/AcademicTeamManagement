@@ -1,6 +1,8 @@
 from datetime import timedelta
 from app.utils.decryption_manager import getDecryptedSecret
 
+TENANT_ID  = '5ee1d726-eaf0-4d71-bcf8-666152bb7058'
+
 CLIENT_ID = getDecryptedSecret("CLIENT_ID") # Application (client) ID of app registration
 
 CLIENT_SECRET = getDecryptedSecret("CLIENT_SECRET") # Placeholder - for use ONLY during testing.
