@@ -1,4 +1,6 @@
 from .__init__ import db
+from security import azure
+import os
 from bson import ObjectId
 
 usersCollection = db["users"]
@@ -12,6 +14,9 @@ def get_all_users():
 
 def add_user(user_obj):
     try:
+        if os.getenv('ENV') != 'DEV': # do not create users in Azure if it's a dev ENV
+            azure.add_user_to_azure(user_obj.to_json())
+        
         result = usersCollection.insert_one(user_obj.to_json())
         return result
     except Exception as e:

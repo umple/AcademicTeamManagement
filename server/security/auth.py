@@ -6,6 +6,7 @@ from flask_session import Session
 import requests
 import msal
 import app_config
+from app.models import user
 
 def authentication(app):
     app.config.from_object(app_config)
@@ -18,6 +19,15 @@ def authentication(app):
     def index():
         if not session.get("user"):
             return redirect(url_for("login"))
+
+        # check if the user exists in the database
+        user_email = session["user"]["preferred_username"]
+        document = user.get_user_by_email(user_email)
+        if document["role"]:
+            user_role = document["role"]
+            return redirect(get_redirection_url_for_user(user_role)) 
+        
+        # otherwise get the user from Azur
         user_role = session.get("user")["roles"][0] # get the user role, by default we use the first role
         return redirect(get_redirection_url_for_user(user_role))
 

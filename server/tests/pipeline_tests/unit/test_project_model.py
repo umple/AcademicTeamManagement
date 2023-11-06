@@ -1,5 +1,5 @@
 import unittest
-from app.models import project
+import app.models.project as project
 from app.entities.ProjectEntity import ProjectEntity
 from bson import ObjectId
 import copy
