@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import MaterialReactTable from 'material-react-table';
+
 import {
   Box,
   Button,
@@ -103,9 +104,25 @@ const StudentGroupTable = () => {
     fetchData();
   }, []);
 
+  const handleCreateGroup = async () => {
+    try {
+      // Logic to add a group
+    } catch (error) {
+      console.error(error);
+    }
+  };  
+
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Student Groups</Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleCreateGroup}
+        sx={{ marginBottom: '1rem' }}
+      >
+        Create Group
+      </Button>
       <Snackbar open={showJoinedTeam} onClose={() => setShowJoinedTeam(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="success">
           Group Member Added!
