@@ -1,0 +1,112 @@
+name: "Release to Production"
+on:
+  push:
+    tags:
+      - v*.*.*
+env:
+  COMPOSE_DOCKER_CLI_BUILD: 0
+  DOCKER_BUILDKIT: 0
+  FLASK: 5001
+  REACT: 3000
+  MONGO: 27017
+  MONGODB_HOST: mongodb_host
+  MONGODB_INITDB_DATABASE: AcademicTeamManagementDB
+  MONGODB_INITDB_ROOT_USERNAME: ${{secrets.MONGODB_INITDB_ROOT_USERNAME}}
+  MONGODB_INITDB_ROOT_PASSWORD: ${{secrets.MONGODB_INITDB_ROOT_PASSWORD}}
+  INIT_MOUNT: "./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro"
+  PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+  BACKEND_HOST: http://localhost:5001
+  
+# cancel the in-progress job related to the current PR
+concurrency:
+  group:  ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  End-to-End-tests:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Create mock .env
+        run: |
+          printenv | grep 'MONGO\|FLASK\|REACT\|INIT_MOUNT\|PRIVATE_KEY\|BACKEND_HOST' > .env
+          cat .env
+      - name: docker-compose build
+        run: | 
+          docker compose up -d
+          sleep 120
+      - name: Perform npm Install
+        run: npm install --force
+        working-directory: ./client
+      - name: Run End-to-End Tests
+        run: npm run cypress:run
+        working-directory: ./client
+      - name: Upload Screenshot of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Failed Tests Screenshots
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/client/cypress/screenshots
+  unit-tests:
+    runs-on: ubuntu-latest
+    env:
+        ENVIRONMENT: TESTING
+        PRIVATE_KEY_PATH: privateKey/AcademicTeamManagement.pem
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python and Pipenv
+        uses: actions/setup-python@v2
+      - name: Set up Private key
+        run: |
+          mkdir privateKey
+          echo ${{secrets.PRIVATE_KEY}} | base64 --decode > $PRIVATE_KEY_PATH
+      - name: Install Pipenv and Coverage
+        run: |
+          pip3 install coverage
+          pip3 install pipenv
+      - name: Install Dependencies with Pipenv
+        run: |
+          pipenv install
+          pipenv update setuptools wheel
+          pipenv lock
+      - name: Run Unit Tests
+        run: |
+          pipenv run coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py
+      - name: Create Coverage Report
+        run: | 
+          coverage html
+          coverage report
+      - name: Upload coverage report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/server/htmlcov
+  react-unit-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+      - name: Install Packages
+        run: npm install --force
+      - name: Run React Unit Tests
+        run: npm run test
+  Trigger-Production-Pipeline:
+    runs-on: ubuntu-latest
+    needs: [react-unit-tests,unit-tests, End-to-End-tests]
+    steps:
+      - name: Curl Production URL
+        run: curl https://cruise.umple.org/umpleonline/scripts/update-academic-teams.php?pass=${{secrets.PROD_PASS}}
