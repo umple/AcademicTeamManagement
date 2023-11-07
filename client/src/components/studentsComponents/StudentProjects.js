@@ -61,7 +61,7 @@ function StudentProjects() {
     try {
       let studentsData = await studentService.get();
       let Email = await getUserEmail();
-      if (studentsData.count > 0) {
+      if (studentsData.count && studentsData.count > 0) {
         let currStudent = studentsData.students.filter((student) => student.email === Email);
         setCurrentStudent(currStudent[0]);
         setCurrGroup(currStudent[0].group);
