@@ -110,3 +110,4 @@ jobs:
       - name: Curl Production URL
         run: curl https://cruise.umple.org/umpleonline/scripts/update-academic-teams.php?
         # pass=${{secrets.PROD_PASS}}
+        
