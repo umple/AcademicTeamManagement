@@ -103,11 +103,10 @@ jobs:
         run: npm install --force
       - name: Run React Unit Tests
         run: npm run test
-  Trigger Production Pipeline:
+  Trigger-Production-Pipeline:
     runs-on: ubuntu-latest
     needs: [react-unit-tests,unit-tests ]
     steps:
       - name: Curl Production URL
         run: curl https://cruise.umple.org/umpleonline/scripts/update-academic-teams.php?
         # pass=${{secrets.PROD_PASS}}
-        
