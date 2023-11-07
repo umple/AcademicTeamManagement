@@ -96,16 +96,19 @@ def delete_student_by_id(id):
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
     try:
-        
+       
         file = request.files["file"]
         columns = json.loads(request.form["column"])
+        students_sections = request.form["sections"]
         accessor_keys = [column['accessorKey'] for column in columns]
         
         result = student.import_students(file, accessor_keys)
         json_dict = json.loads(result)
 
         for res in json_dict:
+            print(res)
             if (student.get_student_by_username(res["username"]) == None):
+                res["sections"] = students_sections # override the section
                 student.add_import_student(res)
 
         return result, 201
