@@ -29,7 +29,8 @@ def get_user_by_id(a):
 
 def get_user_by_email(email):
     document = usersCollection.find_one({"email": email})
-    document["email"] = str(document["email"])
+    if document:
+        document["email"] = str(document["email"])
     return document
 
 def update_user_by_id(id, user_obj):
