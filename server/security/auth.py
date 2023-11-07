@@ -22,8 +22,8 @@ def authentication(app):
 
         # check if the user exists in the database
         user_email = session["user"]["preferred_username"]
-        document = user.get_user_by_email(user_email)
-        if document["role"]:
+        document = user.get_user_by_email(user_email) 
+        if document and document["role"]:
             user_role = document["role"]
             return redirect(get_redirection_url_for_user(user_role)) 
         
