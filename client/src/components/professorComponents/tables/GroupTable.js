@@ -112,7 +112,7 @@ const GroupTable = () => {
     try {
       const projects = await projectService.get();
 
-      if (projects.message !== "Project list is empty.") {
+      if (projects.projects && projects.message !== "Project list is empty.") {
         const filteredProjects = projects.projects.filter(
           (project) => project.status !== "assigned"
         );
@@ -128,7 +128,7 @@ const GroupTable = () => {
       const students = await studentService.get();
 
       if (students.message !== "Student list is empty.") {
-        setStudents(students.students);
+        students.students && setStudents(students.students);
       }
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -148,7 +148,7 @@ const GroupTable = () => {
         console.error(error);
       });
 
-      if (groups.message !== "Group list is empty.") {
+      if (groups.groups && groups.message !== "Group list is empty.") {
         if (userType === ROLES.ADMIN) {
           setTableData(groups.groups); // show all data for admin users
         } else {
