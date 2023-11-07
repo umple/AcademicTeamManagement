@@ -1,7 +1,7 @@
 name: "Release to Production"
-on: [push]
-  # tags:
-  #   - v*.*.*
+on:
+  tags:
+    - v*.*.*
 env:
   COMPOSE_DOCKER_CLI_BUILD: 0
   DOCKER_BUILDKIT: 0
@@ -108,5 +108,4 @@ jobs:
     needs: [react-unit-tests,unit-tests, End-to-End-tests]
     steps:
       - name: Curl Production URL
-        run: curl https://cruise.umple.org/umpleonline/scripts/update-academic-teams.php?
-        # pass=${{secrets.PROD_PASS}}
+        run: curl https://cruise.umple.org/umpleonline/scripts/update-academic-teams.php?pass=${{secrets.PROD_PASS}}
