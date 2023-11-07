@@ -1,8 +1,9 @@
 import { React, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@mui/material";
-import { Button } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { TextField } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -55,6 +56,7 @@ const ImportStudents = (props) => {
   const classes = useStyles();
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
+  const [section, setSection] = useState('');
   const [isDragActive, setIsDragActive] = useState(false); // State to track if a file is being dragged over the drop area
 
   const handleDragEnter = (event) => {
@@ -86,7 +88,7 @@ const ImportStudents = (props) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("column", JSON.stringify(props.columns))
-    // formData.append("columns",props.defaultColumns)
+    formData.append("sections", section);
     fetch("api/importStudent", {
       method: "POST",
       body: formData,
@@ -108,7 +110,19 @@ const ImportStudents = (props) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
+      <Typography variant="h6" gutterBottom>Select the Section and Import The Students</Typography>
+      <TextField
+        fullWidth
+        label="Section"
+        name="section"
+        value={section}
+        onChange={(e) => setSection(e.target.value)}
+        variant="outlined"
+        className={classes.textField}
+        sx={{ mb: '1rem' }}
+      />
+      <br></br>
       <form onSubmit={handleSubmit} className={classes.container}>
         {file ? (
           <Box className={classes.fileBox} >
