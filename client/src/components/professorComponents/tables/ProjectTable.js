@@ -143,14 +143,16 @@ const ProjectTable = () => {
         console.error(error);
       });
 
-      if (userType === ROLES.ADMIN) {
-        setTableData(data.projects); // show all data if user is an admin
-      } else {
-        const filteredProjectsTableData = FilterDataByProfessor(
-          data.projects,
-          professorEmail
-        ); // keep only the data that contains the professor's email
-        setTableData(filteredProjectsTableData);
+      if (data.projects){
+        if (userType === ROLES.ADMIN) {
+          setTableData(data.projects); // show all data if user is an admin
+        } else {
+          const filteredProjectsTableData = FilterDataByProfessor(
+            data.projects,
+            professorEmail
+          ); // keep only the data that contains the professor's email
+          setTableData(filteredProjectsTableData);
+        }
       }
     } catch (error) {
       console.error(error);

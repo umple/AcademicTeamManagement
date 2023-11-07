@@ -104,16 +104,16 @@ const DashBoardInfo = () => {
 
   useEffect(() => {
     studentService.get().then((data) => {
-      setStudentCount(data.count ?? 0);
+      data.count && setStudentCount(data.count ?? 0);
     });
     groupService.get().then((data) => {
-      setGroupCount(data.count ?? 0);
+      data.count && setGroupCount(data.count ?? 0);
     });
     projectService.get().then((data) => {
-      setProjectCount(data.count ?? 0);
+      data.count && setProjectCount(data.count ?? 0);
     });
     sectionService.get().then((data) => {
-      setSectionsCount(data.count ?? 0);
+      data.count && setSectionsCount(data.count ?? 0);
     });
   }, []);
 
