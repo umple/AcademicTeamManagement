@@ -1,7 +1,8 @@
 name: "Release to Production"
 on:
-  tags:
-    - v*.*.*
+  push:
+    tags:
+      - v*.*.*
 env:
   COMPOSE_DOCKER_CLI_BUILD: 0
   DOCKER_BUILDKIT: 0
