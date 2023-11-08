@@ -114,11 +114,9 @@ const ImportStudents = (props) => {
 
   const fetchSections = async () => {
     try {
-      const sections = await sectionService.get();
-
-      if (sections.message !== "Section list is empty.") {
-        setSections(sections);
-      }
+      let sections = await sectionService.get();
+      //currently does not check for empty section list
+      setSections(sections.sections);
     } catch (error) {
       console.error("Error fetching sections:", error);
     }
@@ -129,21 +127,21 @@ const ImportStudents = (props) => {
     fetchSections();
   });
 
-  const [sectionValue, setSectionValue] = useState("");
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
-      <Typography variant="h6" gutterBottom>Select the Section and Import The Students</Typography>
-      <TextField
+        <Select
         fullWidth
-        label="Section"
-        name="section"
-        value={section}
-        onChange={(e) => setSection(e.target.value)}
-        variant="outlined"
-        className={classes.textField}
-        sx={{ mb: '1rem' }}
-      />
+          labelId="demo-multiple-chip-label"
+          id="select-section"
+          onChange={(e) => setSection(e.target.value)}
+        >
+          {sections.map((option) => (
+            <MenuItem key={option.name} value={option.name}>
+              {option.name}-{option.term}-{option.year}
+            </MenuItem>
+          ))}
+        </Select>
       <br></br>
       <form onSubmit={handleSubmit} className={classes.container}>
         {file ? (
@@ -152,20 +150,8 @@ const ImportStudents = (props) => {
             <Box sx={{ mt: '1rem' }}>
               <strong>{file.name}</strong>
             </Box>
-            <label> Section Select:
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="select-section"
-                onChange={(e) => setSectionValue(e.target.value)}
-              >
-                {sections.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.value}
-                  </MenuItem>
-                ))}
-              </Select>
-            </label>
-            <Button variant="contained" type="submit" disabled={!sectionValue} color="success" className={classes.uploadButton}>
+            
+            <Button variant="contained" type="submit" disabled={!section} color="success" className={classes.uploadButton}>
               Submit
             </Button>
           </Box>
