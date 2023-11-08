@@ -1,6 +1,6 @@
 import { React, useState,useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box,Select,MenuItem } from "@mui/material";
+import { Box,Select,MenuItem,InputLabel } from "@mui/material";
 import { Button, Typography, TextField } from "@material-ui/core";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import sectionService from "../../services/sectionService";
@@ -130,14 +130,14 @@ const ImportStudents = (props) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
+        <InputLabel id="demo-multiple-chip-label">
+                        Section
+                      </InputLabel>
         <Select
         fullWidth
-        label="Section"
+        labelId="demo-multiple-chip-label"
         name="section"
-        className={classes.textField}
-        sx={{ mb: '1rem' }}
         variant="outlined"
-          labelId="demo-multiple-chip-label"
           id="select-section"
           onChange={(e) => setSection(e.target.value)}
         >
