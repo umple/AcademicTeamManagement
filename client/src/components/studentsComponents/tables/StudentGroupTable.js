@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import MaterialReactTable from 'material-react-table';
 
 import {
@@ -10,10 +10,18 @@ import {
 } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
+import StudentGroupForm from '../forms/StudentGroupForm';
+import projectService from '../../../services/projectService';
+import studentService from "../../../services/studentService";
+import groupService from "../../../services/groupService";
+import { getUserType } from "../../../helpers/UserType"
+import { ROLES } from "../../../helpers/Roles";
+import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
 
 const StudentGroupTable = () => {
 
   // For the create profile modal
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [tableData, setTableData] = useState({});
   const [students, setStudents] = useState([]);
   const [group, setGroup] = useState();
@@ -21,6 +29,19 @@ const StudentGroupTable = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showJoinedTeam, setShowJoinedTeam] = useState(false);
   const [loading, setIsLoading] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [editingRow, setEditingRow] = useState({});
+  const [projects, setProjects] = useState([]);
+
+
+
+  // State variable to control the visibility of the create student group modal
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+
+  // Function to open the create student group modal
+  const openCreateStudentGroupModal = () => {
+    setCreateModalOpen(true);
+  };
 
   const columns = useMemo(
     () => [
@@ -71,46 +92,78 @@ const StudentGroupTable = () => {
     [students],
   );
 
-  const fetchData = () => {
-    Promise.all(
-      [
-        fetch("/api/groups"),
-        fetch("/api/retrieve/curr/user/group"),
-        fetch("/api/students")
-      ])
-      .then(([resGroups, currentUserGroup, resStudents]) =>
-        Promise.all([resGroups.json(), currentUserGroup.json(), resStudents.json()])
-      
-        
-      ).then(([groups, currentUserGroup, students]) => {
-        
-        if (groups.message !== "Group list is empty."){
-          setTableData(groups.groups)
-        }
+  const fetchProjects = async () => {
+    try {
+      const projects = await projectService.get();
 
-        if (typeof currentUserGroup.error === "undefined"){
-          setGroup(currentUserGroup.group_id)
-          setisCurrentUserInGroup(true)
-        }
+      if (projects.projects && projects.message !== "Project list is empty.") {
+        const filteredProjects = projects.projects.filter(
+          (project) => project.status !== "assigned"
+        );
+        setProjects(filteredProjects);
+      }
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
 
-        if (students.message !== "Student list is empty."){
-          setStudents(students.students)
-        }
-        setIsLoading(false)
+  const fetchStudents = async () => {
+    try {
+      const students = await studentService.get();
+
+      if (students.message !== "Student list is empty.") {
+        students.students && setStudents(students.students);
+      }
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  };
+
+  const fetchGroups = async () => {
+    try {
+      let userType = ""
+      const groups = await groupService.get();
+
+      await getUserType()
+      .then((type) => {
+        userType = type
+      })
+      .catch((error) => {
+        console.error(error);
       });
-  }
+
+      if (groups.groups && groups.message !== "Group list is empty.") {
+        if (userType === ROLES.ADMIN) {
+          setTableData(groups.groups); // show all data for admin users
+        } else {
+          const professorEmail = JSON.parse(localStorage.getItem("userEmail"));
+          const filteredGroupTableData = FilterDataByProfessor(
+            groups.groups,
+            professorEmail
+          );
+          setTableData(filteredGroupTableData);
+        }
+      } else {
+        setTableData([]);
+      }
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    }
+  };
+
+  const fetchData = async () => {
+    await fetchProjects();
+    await fetchStudents();
+    await fetchGroups();
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [refreshTrigger]);
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleCreateGroup = async () => {
-    try {
-      // Logic to add a group
-    } catch (error) {
-      console.error(error);
-    }
-  };  
 
   return (
     <Box sx={{ p: 2 }}>
@@ -118,11 +171,27 @@ const StudentGroupTable = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={handleCreateGroup}
+        onClick={openCreateStudentGroupModal}  // Open the create student group modal when the button is clicked
         sx={{ marginBottom: '1rem' }}
       >
         Create Group
       </Button>
+      {(update || createModalOpen) && (
+        <StudentGroupForm
+          columns={columns}
+          open={createModalOpen}
+          fetchData={fetchData}
+          projects={projects}
+          students={students}
+          groups={tableData}
+          setCreateModalOpen={setCreateModalOpen}
+          update={update}
+          setUpdate={setUpdate}
+          setEditingRow={setEditingRow}
+          editingRow={editingRow}
+        />
+      )}
+
       <Snackbar open={showJoinedTeam} onClose={() => setShowJoinedTeam(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="success">
           Group Member Added!
