@@ -1,6 +1,7 @@
 // Imports
 import React, { useState, useEffect } from 'react';
 import { getUserName } from '../../helpers/UserName';
+import { getUserEmail } from "../../helpers/UserEmail";
 import {
     makeStyles,
     Grid,
@@ -32,6 +33,7 @@ import {
   function StudentHomePage() {
     const classes = useStyles();
     const [userName, setUserName] = useState("");
+    const [studentEmail, setStudentEmail] = useState(null);
 
     // Retrieve the username
     useEffect(() => {
@@ -43,7 +45,18 @@ import {
           console.error(error);
         });
     }, [setUserName]);
-  
+
+    // Cache the value of the students's email
+    useEffect(() => {
+      getUserEmail()
+        .then((email) => {
+          setStudentEmail(email);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }, [studentEmail]);
+   
     return (
       <div className={classes.root}>
         <Grid container spacing={4} justifyContent="center" alignItems="center">

@@ -25,6 +25,8 @@ const StudentGroupTable = () => {
   const [tableData, setTableData] = useState({});
   const [students, setStudents] = useState([]);
   const [group, setGroup] = useState();
+  const [currStudent, setCurrStudent] = useState({})
+  const [professorEmail, setProfessorEmail] = useState('')
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
   const [showAlert, setShowAlert] = useState(false);
   const [showJoinedTeam, setShowJoinedTeam] = useState(false);
@@ -111,8 +113,8 @@ const StudentGroupTable = () => {
     try {
       const students = await studentService.get();
 
-      if (students.message !== "Student list is empty.") {
-        students.students && setStudents(students.students);
+      if (students.message !== "Student list is empty." && students.students) {
+        setStudents(students.students);
       }
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -121,28 +123,19 @@ const StudentGroupTable = () => {
 
   const fetchGroups = async () => {
     try {
-      let userType = ""
-      const groups = await groupService.get();
 
-      await getUserType()
-      .then((type) => {
-        userType = type
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      const groups = await groupService.get();
+      const student = await studentService.getByEmail(JSON.parse(localStorage.getItem("userEmail")))
+      setCurrStudent(student)
 
       if (groups.groups && groups.message !== "Group list is empty.") {
-        if (userType === ROLES.ADMIN) {
-          setTableData(groups.groups); // show all data for admin users
-        } else {
-          const professorEmail = JSON.parse(localStorage.getItem("userEmail"));
-          const filteredGroupTableData = FilterDataByProfessor(
-            groups.groups,
-            professorEmail
-          );
-          setTableData(filteredGroupTableData);
-        }
+        const professorEmail = student?.professorEmail;
+        setProfessorEmail(professorEmail)
+        const filteredGroupTableData = FilterDataByProfessor(
+          groups.groups,
+          professorEmail
+        );
+        setTableData(filteredGroupTableData);
       } else {
         setTableData([]);
       }
@@ -189,6 +182,7 @@ const StudentGroupTable = () => {
           setUpdate={setUpdate}
           setEditingRow={setEditingRow}
           editingRow={editingRow}
+          professorEmail={professorEmail}
         />
       )}
 
