@@ -16,7 +16,13 @@ const studentSchema =  (students,_id) => {
   firstname: Yup.string().required("First Name is required"),
   email: Yup.string()
     .required("Email is required")
-    .email("Invalid email address"),
+    .email("Invalid email address")
+    .test("is-unique", "Email already exists", function (value) {
+      const group = students.find(
+        (student) => student._id != _id && student.email === value
+      );
+      return typeof group === "undefined";
+    }),
   sections: Yup.string(),
   group: Yup.string(),
   professorEmail: Yup.string(),

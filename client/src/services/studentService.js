@@ -9,7 +9,28 @@ const studentService = {
       .then(async (response) => {
         if (!response.ok) {
           const errorMessage = await response.text();
-          throw new Error(`Failed to get project: ${errorMessage}`);
+          throw new Error(`Failed to get student: ${errorMessage}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        return { success: false, message: error.message };
+      });
+  },
+  getByEmail: async (email) => {
+    return fetch(`/api/student/${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Failed to get student by email: ${errorMessage}`);
         }
         return response.json();
       })
