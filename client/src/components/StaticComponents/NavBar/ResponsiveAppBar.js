@@ -2,41 +2,16 @@ import AdbIcon from '@mui/icons-material/Adb';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
+import LanguageIcon from '@mui/icons-material/Language';
 import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { clearCachedUserEmail } from "../../../helpers/UserEmail";
 import { clearCachedUserType } from '../../../helpers/UserType';
 import {getUserType} from '../../../helpers/UserType';
 import { clearCachedUserName } from '../../../helpers/UserName';
 import './ResponsiveAppBar.css';
-
-// Nav elements to display for the students
-const studentPages = {
-  page1: {key: 'Home', value:'/StudentHome'},
-  page2: {key: 'Projects', value:'/StudentProjects'},
-  page3: {key: 'Groups', value:'/StudentGroups'},
-  page4: {key: 'My Group', value:'/MyGroup'},
-};
-
-// Nav elements to display for the professor
-const professorPages = {
-  page1: {key: 'Home', value:'/ProfessorHome'},
-  page2: {key: 'Projects', value:'/Projects'},
-  page3: {key:'Groups', value:'/GroupView'},
-  page4: {key: 'Students', value:'/Students'},
-  page5: {key: 'Sections', value:'/Sections'},
-};
-
-// Nav elements to display for the admin
-const adminPages = {
-  page1: {key: 'Home', value:'/AdminHome'},
-  page2: {key: 'Projects', value:'/AdminProjects'},
-  page3: {key:'Groups', value:'/AdminGroupView'},
-  page4: {key: 'Students', value:'/AdminStudents'},
-  page5: {key: 'Sections', value:'/AdminSections'},
-  page7: {key: 'Staff', value:'/AdminStaff'},
-};
 
 
 const ResponsiveAppBar = () => {
@@ -46,6 +21,42 @@ const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [userType, setUserType] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // code for internationalization
+  const { t, i18n } = useTranslation();
+  let [switchLanguage, setSwitchLanguage] = useState(false)
+
+  const changeLanguage = (switchLanguage) => {
+      switchLanguage ? i18n.changeLanguage('en') : i18n.changeLanguage('fr');
+      setSwitchLanguage(!switchLanguage)
+  }
+
+  // Nav elements to display for the students
+const studentPages = {
+  page1: {key: t('header.navbar.home'), value:'/StudentHome'},
+  page2: {key: t('header.navbar.projects'), value:'/StudentProjects'},
+  page3: {key: t('header.navbar.groups'), value:'/StudentGroups'},
+  page4: {key: t('header.navbar.my-group'), value:'/MyGroup'},
+};
+
+// Nav elements to display for the professor
+const professorPages = {
+  page1: {key: t('header.navbar.home'), value:'/ProfessorHome'},
+  page2: {key: t('header.navbar.projects'), value:'/Projects'},
+  page3: {key: t('header.navbar.groups'), value:'/GroupView'},
+  page4: {key: t('header.navbar.students'), value:'/Students'},
+  page5: {key: t('header.navbar.sections'), value:'/Sections'},
+};
+
+// Nav elements to display for the admin
+const adminPages = {
+  page1: {key: t('header.navbar.home'), value:'/AdminHome'},
+  page2: {key: t('header.navbar.projects'), value:'/AdminProjects'},
+  page3: {key: t('header.navbar.groups'), value:'/AdminGroupView'},
+  page4: {key: t('header.navbar.students'), value:'/AdminStudents'},
+  page5: {key: t('header.navbar.sections'), value:'/AdminSections'},
+  page7: {key: t('header.navbar.staff'), value:'/AdminStaff'},
+};
 
   useEffect(() => {
     getUserType()
@@ -200,6 +211,11 @@ const ResponsiveAppBar = () => {
                 </Button >
                 ))}
             </Box>
+            <Button
+              onClick={() => changeLanguage(switchLanguage)}
+              endIcon={<LanguageIcon style={{ fontSize: 35 }}/>}
+              sx={{ mr:2, color: 'white', borderColor: 'white'}}
+            ></Button>
             {
               isAuthenticated ? 
                 <Button
