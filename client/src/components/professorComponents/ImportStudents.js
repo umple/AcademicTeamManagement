@@ -116,7 +116,7 @@ const ImportStudents = (props) => {
     try {
       let sections = await sectionService.get();
       //currently does not check for empty section list
-      setSections(sections.sections);
+      sections.sections && setSections(sections.sections);
     } catch (error) {
       console.error("Error fetching sections:", error);
     }
