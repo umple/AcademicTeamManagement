@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState,useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box,Select,MenuItem } from "@mui/material";
 import { Button } from "@material-ui/core";
@@ -108,6 +108,7 @@ const ImportStudents = (props) => {
       });
   };
 
+
   const [sections, setSections] = useState([]);
 
   const fetchSections = async () => {
@@ -121,6 +122,11 @@ const ImportStudents = (props) => {
       console.error("Error fetching sections:", error);
     }
   };
+
+
+  useEffect(() => {
+    fetchSections();
+  });
 
   const [sectionValue, setSectionValue] = useState("");
 
