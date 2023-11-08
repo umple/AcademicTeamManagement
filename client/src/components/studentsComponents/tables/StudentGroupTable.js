@@ -144,10 +144,22 @@ const StudentGroupTable = () => {
     }
   };
 
+  const fetchCurrUserGroup = async () => {
+    // Check if the user has a group or not
+    try {
+      const groupData = await groupService.getCurrGroup();
+      groupData && setGroup(groupData?.group_id);
+    } catch (error) {
+      console.error(error)
+      setGroup({});
+    }
+  }
+
   const fetchData = async () => {
     await fetchProjects();
     await fetchStudents();
     await fetchGroups();
+    await fetchCurrUserGroup();
   };
 
   useEffect(() => {
