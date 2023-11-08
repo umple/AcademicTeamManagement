@@ -126,7 +126,7 @@ const StudentGroupTable = () => {
 
       const groups = await groupService.get();
       const student = await studentService.getByEmail(JSON.parse(localStorage.getItem("userEmail")))
-      setCurrStudent(student)
+      student && setCurrStudent(student)
 
       if (groups.groups && groups.message !== "Group list is empty.") {
         const professorEmail = student?.professorEmail;

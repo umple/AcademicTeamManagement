@@ -52,7 +52,7 @@ def get_student_by_email(email):
         if document:
             return jsonify(document), 200
         else:
-            return {"message": "Students list not found."}, 404
+            return {"message": "Student is not found."}, 404
     except:
         return {"message": "Internal server error."}, 503
 
