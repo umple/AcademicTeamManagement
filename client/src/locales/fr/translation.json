@@ -1,0 +1,18 @@
+{
+    "common": {
+        "project": "projet",
+        "student": "étudiant",
+        "group": "groupe"
+    },
+    "header": {
+        "navbar": {
+            "home": "Accueil",
+            "projects": "Projets",
+            "groups": "Groupes",
+            "my-group": "Mon Groupe",
+            "students": "Étudiants",
+            "sections": "Sections",
+            "staff": "Personnel"
+        }
+    }
+}
