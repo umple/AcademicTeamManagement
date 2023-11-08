@@ -132,6 +132,9 @@ const ImportStudents = (props) => {
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
         <Select
         fullWidth
+        label="Section"
+        name="section"
+        variant="outlined"
           labelId="demo-multiple-chip-label"
           id="select-section"
           onChange={(e) => setSection(e.target.value)}
