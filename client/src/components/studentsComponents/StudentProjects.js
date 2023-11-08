@@ -8,7 +8,10 @@ import {
   Container,
   Alert,
   Snackbar,
+  Tooltip
 } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
 import { getUserEmail } from "../../helpers/UserEmail";
 import AddProjectModal from "./forms/AddProjectModal";
 import projectService from "../../services/projectService";
@@ -103,23 +106,29 @@ function StudentProjects() {
           alignItems="center"
           style={{ display: "block" }}
         >
-          <Grid item container md={9} sm={12} xs={12}>
+          <Grid item container md={9} sm={12} xs={12} align="center" justify="center" alignItems="center" style={{ marginTop: "3rem" }}>
             <TextField
               id="search"
               label="Search by project name"
               variant="outlined"
               size="small"
               onChange={handleSearch}
-              style={{ marginTop: "3rem", width: "30%" }}
+              style={{ width: "50%" }}
             />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpen}
-              style={{ marginTop: "3rem", width: "30%", marginLeft: "1rem" }}
-            >
-              Add Project
-            </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOpen}
+                disabled={!currentGroup}
+                style={{ width: "30%", marginLeft: "1rem" }}
+              >
+                Add Project
+              </Button>
+              <Tooltip title="Make sure to join a group before adding a project" arrow>
+                <IconButton>
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
             {currentGroup && currentStudent && (
               <AddProjectModal
                 open={open}
