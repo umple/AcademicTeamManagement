@@ -107,14 +107,19 @@ const ImportStudents = (props) => {
       });
   };
 
-  const cellValueMap = [
-    { value: "new", label: "success" },
-    { value: "interested students", label: "warning" },
-    { value: "students needed", label: "primary" },
-    { value: "pending approval", label: "secondary" },
-    { value: "assigned", label: "error" },
-    { value: "proposed", label: "default" },
-  ];
+  const [sections, setSections] = useState([]);
+
+  const fetchSections = async () => {
+    try {
+      const sections = await sectionService.get();
+
+      if (sections.message !== "Section list is empty.") {
+        setSections(sections);
+      }
+    } catch (error) {
+      console.error("Error fetching sections:", error);
+    }
+  };
 
   const [sectionValue, setSectionValue] = useState("");
 
@@ -133,7 +138,7 @@ const ImportStudents = (props) => {
                 id="select-section"
                 onChange={(e) => setSectionValue(e.target.value)}
               >
-                {cellValueMap.map((option) => (
+                {sections.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.value}
                   </MenuItem>
