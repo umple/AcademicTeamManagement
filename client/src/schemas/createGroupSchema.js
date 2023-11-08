@@ -11,8 +11,8 @@ const createGroupSchema = (groups,_id) => {
         );
         return typeof group === "undefined";
       }),
-    project: Yup.string().required("Project name is required"),
-    members: Yup.array().min(1, "At least one member is required"),
+    //project: Yup.string().required("Project name is required"),
+    //members: Yup.array().min(1, "At least one member is required"),
     notes: Yup.string(),
   });
   return groupSchema;
