@@ -134,6 +134,8 @@ const ImportStudents = (props) => {
         fullWidth
         label="Section"
         name="section"
+        className={classes.textField}
+        sx={{ mb: '1rem' }}
         variant="outlined"
           labelId="demo-multiple-chip-label"
           id="select-section"
