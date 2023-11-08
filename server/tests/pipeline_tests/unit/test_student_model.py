@@ -12,7 +12,7 @@ class StudentDataManager:
     def getStudent():
 
         student_json_sample = {    
-            "_id": ObjectId(),
+            "_id": str(ObjectId()),
             "orgdefinedid": "1234",
             "username": "1234user",
             "lastname": "Doe",
