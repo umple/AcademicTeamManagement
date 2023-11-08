@@ -1,9 +1,9 @@
-import { React, useState } from "react";
+import { React, useState,useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from "@mui/material";
-import { Button, Typography } from "@material-ui/core";
+import { Box,Select,MenuItem,InputLabel } from "@mui/material";
+import { Button, Typography, TextField } from "@material-ui/core";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { TextField } from "@mui/material";
+import sectionService from "../../services/sectionService";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -109,19 +109,45 @@ const ImportStudents = (props) => {
       });
   };
 
+
+  const [sections, setSections] = useState([]);
+
+  const fetchSections = async () => {
+    try {
+      let sections = await sectionService.get();
+      //currently does not check for empty section list
+      sections.sections && setSections(sections.sections);
+    } catch (error) {
+      console.error("Error fetching sections:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchSections();
+  });
+
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
-      <Typography variant="h6" gutterBottom>Select the Section and Import The Students</Typography>
-      <TextField
+section-while-importing
+        <InputLabel id="demo-multiple-chip-label">
+                        Section
+                      </InputLabel>
+        <Select
         fullWidth
-        label="Section"
+        labelId="demo-multiple-chip-label"
         name="section"
-        value={section}
-        onChange={(e) => setSection(e.target.value)}
         variant="outlined"
-        className={classes.textField}
-        sx={{ mb: '1rem' }}
-      />
+          id="select-section"
+          onChange={(e) => setSection(e.target.value)}
+        >
+          {sections.map((option) => (
+            <MenuItem key={option.name} value={option.name}>
+              {option.name}-{option.term}-{option.year}
+            </MenuItem>
+          ))}
+        </Select>
       <br></br>
       <form onSubmit={handleSubmit} className={classes.container}>
         {file ? (
@@ -130,7 +156,8 @@ const ImportStudents = (props) => {
             <Box sx={{ mt: '1rem' }}>
               <strong>{file.name}</strong>
             </Box>
-            <Button variant="contained" type="submit" color="success" className={classes.uploadButton}>
+            
+            <Button variant="contained" type="submit" disabled={!section} color="success" className={classes.uploadButton}>
               Submit
             </Button>
           </Box>
@@ -167,7 +194,6 @@ const ImportStudents = (props) => {
                 <a style={{ all: "unset" }} href="assets/student_import_template.xlsx">
                   Download Template
                 </a>
-
               </Button>
             </label>
 
@@ -175,6 +201,7 @@ const ImportStudents = (props) => {
         )}
       </form>
     </Box>
+    
   );
 };
 
