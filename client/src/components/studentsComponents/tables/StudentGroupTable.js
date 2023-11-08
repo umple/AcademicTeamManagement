@@ -148,7 +148,10 @@ const StudentGroupTable = () => {
     // Check if the user has a group or not
     try {
       const groupData = await groupService.getCurrGroup();
-      groupData && setGroup(groupData?.group_id);
+      if (!groupData.error){
+        groupData && setGroup(groupData?.group_id);
+        setisCurrentUserInGroup(true)
+      }
     } catch (error) {
       console.error(error)
       setGroup({});
@@ -285,7 +288,7 @@ const StudentGroupTable = () => {
 
           return (
             <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-              <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original._id === group._id || row.original.members.length >= 5}>Join</Button>
+              <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original.group_id === group || row.original.members.length >= 5}>Join</Button>
               {row.original.group_id === group && <Button color= "error" onClick={() => handleLeaveGroup()}> Leave </Button>}
               <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert
