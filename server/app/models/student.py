@@ -74,7 +74,7 @@ def remove_student_from_group(orgdefinedid):
     result = studentsCollection.update_one(
         {"orgdefinedid" : orgdefinedid}, 
         {"$set" : {
-            "group": ""
+            "group": None
         }
         }
     )

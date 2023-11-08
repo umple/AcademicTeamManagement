@@ -20,7 +20,7 @@ class StudentDataManager:
             "email": "janedoe@gmail.com",
             "sections": None,
             "final grade": None,
-            "group": ""
+            "group": None
         }
 
         return student_json_sample
