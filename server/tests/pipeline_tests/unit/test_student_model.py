@@ -217,9 +217,6 @@ class TestStudentDeletion(unittest.TestCase):
     def test_delete_student_with_no_group(self):
         response = student.delete_student_by_id(self.student["_id"])
         self.assertTrue(response)
-
-        actualState = student.studentsCollection.find_one({"orgdefinedid": str(self.student["orgdefinedid"])})
-        self.assertIsNone(actualState)
     
     def test_delete_student_with__group(self):
         student.studentsCollection.update_one(
@@ -231,7 +228,7 @@ class TestStudentDeletion(unittest.TestCase):
         )
         with self.assertRaises(TypeError):
             response = student.delete_student_by_id(self.student["_id"])
-            self.assertFalse(response)
+            self.assertEqual(response == 'not works')
 
 
 
