@@ -25,6 +25,8 @@ const StudentGroupTable = () => {
   const [tableData, setTableData] = useState({});
   const [students, setStudents] = useState([]);
   const [group, setGroup] = useState();
+  const [currStudent, setCurrStudent] = useState({})
+  const [professorEmail, setProfessorEmail] = useState('')
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
   const [showAlert, setShowAlert] = useState(false);
   const [showJoinedTeam, setShowJoinedTeam] = useState(false);
@@ -111,8 +113,8 @@ const StudentGroupTable = () => {
     try {
       const students = await studentService.get();
 
-      if (students.message !== "Student list is empty.") {
-        students.students && setStudents(students.students);
+      if (students.message !== "Student list is empty." && students.students) {
+        setStudents(students.students);
       }
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -121,28 +123,19 @@ const StudentGroupTable = () => {
 
   const fetchGroups = async () => {
     try {
-      let userType = ""
-      const groups = await groupService.get();
 
-      await getUserType()
-      .then((type) => {
-        userType = type
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      const groups = await groupService.get();
+      const student = await studentService.getByEmail(JSON.parse(localStorage.getItem("userEmail")))
+      student && setCurrStudent(student)
 
       if (groups.groups && groups.message !== "Group list is empty.") {
-        if (userType === ROLES.ADMIN) {
-          setTableData(groups.groups); // show all data for admin users
-        } else {
-          const professorEmail = JSON.parse(localStorage.getItem("userEmail"));
-          const filteredGroupTableData = FilterDataByProfessor(
-            groups.groups,
-            professorEmail
-          );
-          setTableData(filteredGroupTableData);
-        }
+        const professorEmail = student?.professorEmail;
+        setProfessorEmail(professorEmail)
+        const filteredGroupTableData = FilterDataByProfessor(
+          groups.groups,
+          professorEmail
+        );
+        setTableData(filteredGroupTableData);
       } else {
         setTableData([]);
       }
@@ -151,10 +144,25 @@ const StudentGroupTable = () => {
     }
   };
 
+  const fetchCurrUserGroup = async () => {
+    // Check if the user has a group or not
+    try {
+      const groupData = await groupService.getCurrGroup();
+      if (!groupData.error){
+        groupData && setGroup(groupData?.group_id);
+        setisCurrentUserInGroup(true)
+      }
+    } catch (error) {
+      console.error(error)
+      setGroup({});
+    }
+  }
+
   const fetchData = async () => {
     await fetchProjects();
     await fetchStudents();
     await fetchGroups();
+    await fetchCurrUserGroup();
   };
 
   useEffect(() => {
@@ -189,6 +197,7 @@ const StudentGroupTable = () => {
           setUpdate={setUpdate}
           setEditingRow={setEditingRow}
           editingRow={editingRow}
+          professorEmail={professorEmail}
         />
       )}
 
@@ -279,7 +288,7 @@ const StudentGroupTable = () => {
 
           return (
             <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-              <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original._id === group._id || row.original.members.length >= 5}>Join</Button>
+              <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original.group_id === group || row.original.members.length >= 5}>Join</Button>
               {row.original.group_id === group && <Button color= "error" onClick={() => handleLeaveGroup()}> Leave </Button>}
               <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert

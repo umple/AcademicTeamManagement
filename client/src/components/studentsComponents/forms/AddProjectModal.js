@@ -106,7 +106,7 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
             />
             <TextField
               fullWidth
-              name="client"
+              name="clientName"
               label="Client Full Name"
               value={values.clientName}
               onBlur={handleBlur}

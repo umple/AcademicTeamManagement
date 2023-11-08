@@ -33,7 +33,7 @@ def get_student_by_id(a):
 
 def get_student_by_email(email):
     document = studentsCollection.find_one({"email": email})
-    document["email"] = str(document["email"])
+    document['_id'] = str(document['_id'])
     return document
 
 def get_student_name_from_email(email):

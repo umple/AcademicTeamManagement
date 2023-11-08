@@ -20,6 +20,27 @@ const groupService = {
         return { success: false, message: error.message };
       });
   },
+  getCurrGroup: async () => {
+    return fetch("api/retrieve/curr/user/group", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Failed to get the group of the current user: ${errorMessage}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        return { success: false, message: error.message };
+      });
+  },
   add: async (newGroupInfo) => {
     return fetch("api/group", {
       method: "POST",

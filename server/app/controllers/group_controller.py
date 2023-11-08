@@ -84,10 +84,9 @@ def remove_student_from_group(id):
     
 @group_bp.route("retrieve/curr/user/group", methods=["GET"])
 def get_curr_user_group():
-    print("here")
     user_group = group.get_user_group(session.get("user")["preferred_username"])
     if user_group == False:
-        return jsonify({"error":"User is not in a group"}),400
+        return jsonify({"error":"User is not in a group"}),200
     return jsonify(json.loads(json_util.dumps(user_group))), 200
     
 @group_bp.route("curr/user/in/group", methods=["GET"])

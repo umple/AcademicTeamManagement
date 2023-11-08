@@ -34,7 +34,8 @@ const StudentGroupForm = ({
   update,
   setUpdate,
   editingRow,
-  setEditingRow
+  setEditingRow,
+  professorEmail
 }) => {
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -62,7 +63,7 @@ const StudentGroupForm = ({
   const [initialGroupValues] = useState(
     update ?   new Group(editingRow):
     new Group({
-      professorEmail: JSON.parse(localStorage.getItem("userEmail")),
+      professorEmail: professorEmail,
     })
   );
 
@@ -100,8 +101,6 @@ const StudentGroupForm = ({
     validationSchema: createGroupSchema(groups,editingRow?._id),
     onSubmit,
   });
-
-  console.log("MEMBERS", initialGroupValues.members)
   
   const handleClose = () => {
     setCreateModalOpen(false);

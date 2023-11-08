@@ -22,7 +22,7 @@ const MyGroup = () => {
       // Check if the user has a group or not
       try {
         const groupData = await fetchData("api/retrieve/curr/user/group");
-        groupData && setGroup(groupData);
+        !groupData.error && setGroup(groupData);
       } catch (error) {
         console.error(error)
         setGroup({});
