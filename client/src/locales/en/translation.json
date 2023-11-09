@@ -19,9 +19,9 @@
     "home": {
         "welcome": "Welcome",
         "explanation": "Managing academic teams for capstone courses at the University of Ottawa",
-        "count-projects":"Nombre total de projets",
-        "count-students": "Nombre total d'étudiants",
-        "count-groups": "Nombre total de groupes",
-        "count-sections": "Nombre total de sections"
+        "count-projects": "Total # of projects",
+        "count-students": "Total # of students",
+        "count-groups": "Total # of groups",
+        "count-sections": "Total # of sections"
     }
 }

@@ -19,9 +19,9 @@
     "home": {
         "welcome": "Bienvenue",
         "explanation": "Gérer des équipes académiques pour les cours de synthèse à l'Université d'Ottawa",
-        "count-projects": "Total # of projects",
-        "count-students": "Total # of students",
-        "count-groups": "Total # of groups",
-        "count-sections": "Total # of sections"
+        "count-projects":"Nombre total de projets",
+        "count-students": "Nombre total d'étudiants",
+        "count-groups": "Nombre total de groupes",
+        "count-sections": "Nombre total de sections"
     }
 }
