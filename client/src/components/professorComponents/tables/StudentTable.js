@@ -29,6 +29,7 @@ import { useStyles } from "./styles/StudentTableStyles";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import { ROLES } from "../../../helpers/Roles";
 import { getUserType } from "../../../helpers/UserType"
+import EditStudentForm from "../forms/EditStudentModal";
 
 const StudentTable = () => {
   const defaultColumns = useMemo(
@@ -70,10 +71,11 @@ const StudentTable = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [importSuccess, setImportSuccess] = useState(false);
   const [deletion, setOpenDeletion] = useState(false);
   const [row, setDeleteRow] = useState();
-  const [editingRow, setEditingRow] = useState({});
+  const [editingRow, setEditingRow] = useState(null);
   const [update, setUpdate] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
 
@@ -181,9 +183,8 @@ const StudentTable = () => {
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={() => {
-                  setEditingRow(row.original);
-                  setUpdate(true);
-                  setCreateModalOpen(false);
+                  setEditingRow(row);
+                  setEditModalOpen(true);
                 }}
               >
                 <Edit />
@@ -265,19 +266,26 @@ const StudentTable = () => {
         )}
       />
 
-      {(update || createModalOpen) && (
-        <StudentForm
+      {editingRow && (
+        <EditStudentForm
           columns={columns}
-          open={createModalOpen}
-          setCreateModalOpen={setCreateModalOpen}
-          fetchStudents={fetchStudents}
-          editingRow={editingRow}
+          open={editModalOpen}
+          setEditModalOpen={setEditModalOpen}
           setEditingRow={setEditingRow}
-          update={update}
+          studentData={editingRow}
+          setRefreshTrigger={setRefreshTrigger}
           students={tableData}
-          setUpdate={setUpdate}
         />
       )}
+
+      <StudentForm
+        columns={columns}
+        open={createModalOpen}
+        setCreateModalOpen={setCreateModalOpen}
+        fetchStudents={fetchStudents}
+        students={tableData}
+      />
+
       {deletion && (
         <ConfirmDeletionModal
           setOpen={setOpenDeletion}
