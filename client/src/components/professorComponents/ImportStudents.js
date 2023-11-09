@@ -176,11 +176,11 @@ const ImportStudents = (props) => {
             <iframe title="student import" style={{ height: 100, width: '100%' }} src="assets/student_import_template.html"></iframe>
             <Box mt={2}>
               <Link 
-                href="https://github.com"
+                href="https://github.com/umple/AcademicTeamManagement/blob/main/docs/information/ImportingClassList.md"
                 underline="always"
                 target="_blank"
                 rel="noopener">
-                  Learn More: Importing from BrightSpace
+                  Learn More: Creating a Class List
               </Link>
             </Box>
             <Box my={5} className={classes.fileBox}>
