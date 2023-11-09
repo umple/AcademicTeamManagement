@@ -1,8 +1,9 @@
 import { React, useState,useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box,Select,MenuItem,InputLabel, FormControl } from "@mui/material";
+import { Box,Select,MenuItem,InputLabel, FormControl, Link } from "@mui/material";
 import { Button, Typography, TextField } from "@material-ui/core";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import sectionService from "../../services/sectionService";
 
 const useStyles = makeStyles((theme) => ({
@@ -153,12 +154,12 @@ const ImportStudents = (props) => {
       <form onSubmit={handleSubmit} className={classes.container}>
         {file ? (
           <Box className={classes.fileBox} >
-            <CloudUploadIcon sx={{ fontSize: '4rem', color: '#999' }} />
+            <CloudDoneIcon sx={{ fontSize: '4rem', color: '#999' }} />
             <Box sx={{ mt: '1rem' }}>
               <strong>{file.name}</strong>
             </Box>
             
-            <Button variant="contained" type="submit" disabled={!section} color="success" className={classes.uploadButton}>
+            <Button variant="contained" type="submit" disabled={!section} color="primary" className={classes.uploadButton}>
               Submit
             </Button>
           </Box>
@@ -171,20 +172,29 @@ const ImportStudents = (props) => {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <p style={{ color: "#3c90f0", fontWeight: "bold" }}>Expected Template:</p>
+            <p style={{ fontWeight: "bold" }}>Expected Template:</p>
             <iframe title="student import" style={{ height: 100, width: '100%' }} src="assets/student_import_template.html"></iframe>
-            <p sx={{ mb: '1rem' }}>Drag and drop your file here</p>
-            <br></br>
-            <input
-              accept="*"
-              htmlFor="input-file-upload"
-              className={classes.input}
-              id="contained-button-file"
-              type="file"
-              onChange={handleChange}
-            />
-            <br></br>
-            <br></br>
+            <Box mt={2}>
+              <Link 
+                href="https://github.com"
+                underline="always"
+                target="_blank"
+                rel="noopener">
+                  Learn More: Importing from BrightSpace
+              </Link>
+            </Box>
+            <Box my={5} className={classes.fileBox}>
+              <CloudUploadIcon sx={{ fontSize: '4rem', color: '#999' }} />
+              <Typography>Drag and drop your file here</Typography>
+              <input
+                accept="*"
+                htmlFor="input-file-upload"
+                className={classes.input}
+                id="contained-button-file"
+                type="file"
+                onChange={handleChange}
+              />
+            </Box>
             <label sx={{ m: '10rem' }} htmlFor="contained-button-file" className={classes.buttonLabel}>
               <Button variant="contained" color="warning" component="span" >
                 Browse Files
