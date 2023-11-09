@@ -176,7 +176,7 @@ const ImportStudents = (props) => {
             <iframe title="student import" style={{ height: 100, width: '100%' }} src="assets/student_import_template.html"></iframe>
             <Box mt={2}>
               <Link 
-                href="https://github.com/umple/AcademicTeamManagement/blob/main/docs/information/ImportingClassList.md"
+                href="https://github.com/umple/AcademicTeamManagement/blob/main/docs/information/CreatingClassList.md"
                 underline="always"
                 target="_blank"
                 rel="noopener">
