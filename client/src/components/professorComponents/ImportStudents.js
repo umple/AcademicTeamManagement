@@ -1,6 +1,6 @@
 import { React, useState,useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box,Select,MenuItem,InputLabel } from "@mui/material";
+import { Box,Select,MenuItem,InputLabel, FormControl } from "@mui/material";
 import { Button, Typography, TextField } from "@material-ui/core";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import sectionService from "../../services/sectionService";
@@ -115,7 +115,6 @@ const ImportStudents = (props) => {
   const fetchSections = async () => {
     try {
       let sections = await sectionService.get();
-      //currently does not check for empty section list
       sections.sections && setSections(sections.sections);
     } catch (error) {
       console.error("Error fetching sections:", error);
@@ -125,29 +124,31 @@ const ImportStudents = (props) => {
 
   useEffect(() => {
     fetchSections();
-  });
+  }, []);
 
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '30px', width: 500 }}>
-section-while-importing
-        <InputLabel id="demo-multiple-chip-label">
-                        Section
-                      </InputLabel>
-        <Select
-        fullWidth
-        labelId="demo-multiple-chip-label"
-        name="section"
-        variant="outlined"
-          id="select-section"
-          onChange={(e) => setSection(e.target.value)}
-        >
-          {sections.map((option) => (
-            <MenuItem key={option.name} value={option.name}>
-              {option.name}-{option.term}-{option.year}
-            </MenuItem>
-          ))}
-        </Select>
+        <Typography variant="h6" gutterBottom>Select the Section and Import The Students</Typography>
+        <FormControl fullWidth>
+          <InputLabel id="section-select-label">Section</InputLabel>
+          <Select
+            fullWidth
+            defaultValue=""
+            labelId="section-select-label"
+            name="section"
+            label="Section"
+            variant="outlined"
+              id="select-section"
+              onChange={(e) => setSection(e.target.value)}
+            >
+            {sections.map((option) => (
+              <MenuItem key={option.name} value={option.name}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       <br></br>
       <form onSubmit={handleSubmit} className={classes.container}>
         {file ? (
