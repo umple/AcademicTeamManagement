@@ -23,11 +23,8 @@ const StudentForm = ({
   columns,
   setCreateModalOpen,
   fetchStudents,
-  update,
-  setUpdate,
   editingRow,
   students,
-  setEditingRow,
 }) => {
 
   // retrieve the sections
@@ -48,11 +45,7 @@ const StudentForm = ({
   const onSubmit = async (values, actions) => {
     try {
       let response;
-      if (update) {
-        response = await studentService.update(editingRow._id, values);
-      } else {
-        response = await studentService.add(values);
-      }
+      response = await studentService.add(values);
       fetchStudents();
     } catch (error) {
       console.log(error);
@@ -63,16 +56,12 @@ const StudentForm = ({
 
   const handleClose = () => {
     setCreateModalOpen(false);
-    setUpdate(false);
-    setEditingRow({});
   };
 
   const [initialStudentValues] = useState(
-    update
-      ? new Student(editingRow)
-      : new Student({
-          professorEmail: JSON.parse(localStorage.getItem("userEmail")),
-        })
+    new Student({
+        professorEmail: JSON.parse(localStorage.getItem("userEmail")),
+    })
   );
 
   const {
@@ -86,14 +75,12 @@ const StudentForm = ({
     setFieldTouched,
   } = useFormik({
     initialValues: initialStudentValues.toRequestJSON(),
-    validationSchema: studentSchema(students,editingRow._id),
+    validationSchema: studentSchema(students),
     onSubmit,
   });
   return (
-    <Dialog open={open || update}>
-      <DialogTitle textAlign="center">
-        {update ? "Edit Student" : "Create New Student"}
-      </DialogTitle>
+    <Dialog open={open}>
+      <DialogTitle textAlign="center">Create New Student</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
@@ -158,7 +145,7 @@ const StudentForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" name="submitForm" variant="contained">
-            {update ? "Edit Student" : "Create New Student"}
+            Create New Student
           </Button>
         </DialogActions>
       </form>
