@@ -16,6 +16,7 @@ import projectService from "../../services/projectService";
 import groupService from "../../services/groupService";
 import studentService from "../../services/studentService";
 import sectionService from "../../services/sectionService";
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +51,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const HomePage = () => {
+  const { t, i18n } = useTranslation();
   const classes = useStyles();
   const [professorEmail, setProfessorEmail] = useState(null);
 
@@ -70,11 +72,10 @@ const HomePage = () => {
         <Grid container spacing={4} justifyContent="center" alignItems="center">
           <Grid item sm={4} className={classes.column1}>
             <Typography variant="h3" className={classes.title} gutterBottom>
-              Academic Team Management
+              {t('common.academic-team-management')}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Managing academic teams for capstone courses at the University of
-              Ottawa
+              {t('home.welcome')}
             </Typography>
           </Grid>
           <Grid item sm={3} className={classes.column2}>
@@ -101,6 +102,7 @@ const DashBoardInfo = () => {
   const [groupsCount, setGroupCount] = useState(0);
   const [projectsCount, setProjectCount] = useState(0);
   const [sectionsCount, setSectionsCount] = useState(0);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     studentService.get().then((data) => {
@@ -195,7 +197,7 @@ const DashBoardInfo = () => {
                       }}
                     >
                       <div style={{ textAlign: "center" }}>
-                        <Typography>Total # of projects</Typography>
+                        <Typography>{t('home.count-projects')}</Typography>
                       </div>
 
                       <div style={badgeStyle}>
@@ -233,7 +235,7 @@ const DashBoardInfo = () => {
                       }}
                     >
                       <div style={{ textAlign: "center" }}>
-                        <Typography>Total # of groups</Typography>
+                        <Typography>{t('home.count-groups')}</Typography>
                       </div>
 
                       <div style={badgeStyle}>
@@ -272,7 +274,7 @@ const DashBoardInfo = () => {
                       }}
                     >
                       <div style={{ textAlign: "center" }}>
-                        <Typography>Total # of students</Typography>
+                        <Typography>{t('home.count-students')}</Typography>
                       </div>
 
                       <div style={badgeStyle}>
@@ -311,7 +313,7 @@ const DashBoardInfo = () => {
                       }}
                     >
                       <div style={{ textAlign: "center" }}>
-                        <Typography>Total # of sections</Typography>
+                        <Typography>{t('home.count-sections')}</Typography>
                       </div>
 
                       <div style={badgeStyle}>
