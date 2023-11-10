@@ -176,7 +176,7 @@ const DashBoardInfo = () => {
             <Card style={cardStyle}>
               <CardContent>
                 <Typography variant="h6" style={titleStyle}>
-                  Projects
+                  {t('header.navbar.projects')}
                 </Typography>
                 <div style={contentStyle}>
                   <div
@@ -215,7 +215,7 @@ const DashBoardInfo = () => {
             <Card style={cardStyle}>
               <CardContent>
                 <Typography variant="h6" style={titleStyle}>
-                  Groups
+                  {t('header.navbar.groups')}
                 </Typography>
                 <div style={contentStyle}>
                   <div
@@ -253,7 +253,7 @@ const DashBoardInfo = () => {
             <Card style={cardStyle}>
               <CardContent>
                 <Typography variant="h6" style={titleStyle}>
-                  Students
+                  {t('header.navbar.students')}
                 </Typography>
                 <div style={contentStyle}>
                   <div
@@ -292,7 +292,7 @@ const DashBoardInfo = () => {
             <Card style={cardStyle}>
               <CardContent>
                 <Typography variant="h6" style={titleStyle}>
-                  Sections
+                  {t('header.navbar.sections')}
                 </Typography>
                 <div style={contentStyle}>
                   <div
