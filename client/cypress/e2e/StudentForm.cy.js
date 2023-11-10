@@ -30,7 +30,6 @@ describe("addingStudent", () => {
       lastname:   "basile",
       email:   "test@hotmail.com",
       username:   "username",
-      sections:   "5",
       finalGrade:   "85",
     }
     for (const key in  studentData) {

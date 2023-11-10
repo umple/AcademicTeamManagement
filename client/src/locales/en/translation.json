@@ -2,7 +2,8 @@
     "common": {
         "project": "project",
         "student": "student",
-        "group": "group"
+        "group": "group",
+        "academic-team-management": "Academic Team Management"
     },
     "header": {
         "navbar": {
@@ -14,5 +15,13 @@
             "sections": "Sections",
             "staff": "Staff"
         }
+    },
+    "home": {
+        "welcome": "Welcome",
+        "explanation": "Managing academic teams for capstone courses at the University of Ottawa",
+        "count-projects": "Total # of projects",
+        "count-students": "Total # of students",
+        "count-groups": "Total # of groups",
+        "count-sections": "Total # of sections"
     }
 }

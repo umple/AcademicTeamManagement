@@ -2,7 +2,8 @@
     "common": {
         "project": "projet",
         "student": "étudiant",
-        "group": "groupe"
+        "group": "groupe",
+        "academic-team-management": "Gestion d'équipe académique"
     },
     "header": {
         "navbar": {
@@ -14,5 +15,13 @@
             "sections": "Sections",
             "staff": "Personnel"
         }
+    },
+    "home": {
+        "welcome": "Bienvenue",
+        "explanation": "Gérer des équipes académiques pour les cours de synthèse à l'Université d'Ottawa",
+        "count-projects":"Nombre total de projets",
+        "count-students": "Nombre total d'étudiants",
+        "count-groups": "Nombre total de groupes",
+        "count-sections": "Nombre total de sections"
     }
 }
