@@ -1,68 +1,71 @@
+//Modal to create new project
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
+  DialogTitle,
   Stack,
   TextField,
-  DialogActions,
-  FormControl,
+  FormGroup,
+  Select,
   MenuItem,
   InputLabel,
-  Select,
+  Alert,
+  FormControl,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import studentService from "../../../services/studentService";
 import Student from "../../../entities/Student";
 import studentSchema from "../../../schemas/studentSchema";
 import sectionService from "../../../services/sectionService";
 
-const StudentForm = ({
+const EditStudentForm = ({
   open,
   columns,
-  setCreateModalOpen,
-  fetchStudents,
-  editingRow,
-  students,
+  studentData,
+  setEditingRow,
+  setEditModalOpen,
+  setRefreshTrigger,
+  students
 }) => {
+  const [initialStudentValues, setInit] = useState(
+    new Student(studentData.original)
+  );
 
-  // retrieve the sections
-  const [sections, setSections] = useState([]);
-  const fetchSections = async () => {
-    try {
-      let sections = await sectionService.get();
-      sections.sections && setSections(sections.sections);
-    } catch (error) {
-      console.error("Error fetching sections:", error);
-    }
+    // retrieve the sections
+    const [sections, setSections] = useState([]);
+    const fetchSections = async () => {
+        try {
+            let sections = await sectionService.get();
+            sections.sections && setSections(sections.sections);
+        } catch (error) {
+            console.error("Error fetching sections:", error);
+        }
+    };
+  
+    useEffect(() => {
+      fetchSections();
+    }, []);
+
+  const handleClose = () => {
+    setEditingRow(null);
+    setEditModalOpen(false);
+    setFieldValue({}); // Clear the form values when closing the form
   };
-
-  useEffect(() => {
-    fetchSections();
-  }, []);
 
   const onSubmit = async (values, actions) => {
     try {
-      let response;
-      response = await studentService.add(values);
-      fetchStudents();
+      await studentService.update(studentData.original._id,values);
+      setRefreshTrigger((prevState) => !prevState);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+      handleClose();
+      actions.resetForm();
     }
-    actions.resetForm();
-    handleClose();
   };
-
-  const handleClose = () => {
-    setCreateModalOpen(false);
-  };
-
-  const [initialStudentValues] = useState(
-    new Student({
-        professorEmail: JSON.parse(localStorage.getItem("userEmail")),
-    })
-  );
 
   const {
     values,
@@ -75,12 +78,23 @@ const StudentForm = ({
     setFieldTouched,
   } = useFormik({
     initialValues: initialStudentValues.toRequestJSON(),
-    validationSchema: studentSchema(students),
+    validationSchema: studentSchema(students, studentData.original._id),
     onSubmit,
   });
+
+  useEffect(() => {
+    if (studentData) {
+      Object.keys(studentData.original).forEach((field) => {
+        setFieldValue(field, studentData.original[field]);
+      });
+    }
+  }, [studentData]);
+
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Student</DialogTitle>
+      <DialogTitle textAlign="center">
+        {studentData?.original ? "Update Student" : "Create New Student"}
+      </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
@@ -124,6 +138,17 @@ const StudentForm = ({
                   </FormControl>
                 );
               }
+              if (column.accessorKey === "orgdefinedid" || column.accessorKey === "email") {
+                return (
+                <TextField
+                    key={column.accessorKey}
+                    label={column.header}
+                    name={column.accessorKey}
+                    value={values[column.accessorKey]}
+                    disabled={true} // don't allow chnging those fields
+                />
+                )
+              }
               return (
               <TextField
                 key={column.accessorKey}
@@ -144,12 +169,13 @@ const StudentForm = ({
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button color="secondary" type="submit" name="submitForm" variant="contained">
-            Create New Student
+          <Button color="secondary" type="submit" variant="contained">
+            {studentData?.original ? "Update Student" : "Create New Student"}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
   );
 };
-export default StudentForm;
+
+export default EditStudentForm;
