@@ -51,7 +51,7 @@ function StudentProjects() {
     try {
       let projectsData = await projectService.get();
       if (projectsData.count > 0) {
-        const projectsFiltered = projectsData.projects.filter((project) => project.status !== "assigned");
+        const projectsFiltered = projectsData.projects.filter((project) => project.status !== "Completed" || project.status != "Cancelled");
         setProjects(projectsData.projects);
         setFilteredProjects(projectsFiltered);
       }
@@ -77,7 +77,7 @@ function StudentProjects() {
   useEffect(() => {
     fetchProjects();
     fetchStudents();
-  }, []);
+  }, [open]);
 
   return (
     <Container>
