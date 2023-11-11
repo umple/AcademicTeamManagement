@@ -92,9 +92,11 @@ def is_user_in_group(user_name):
 
 from bson import ObjectId  # Assuming you are using MongoDB
 
-def update_group_by_id(id, group_obj):
+def update_group_by_id(id, group_obj): 
     try:
         original_group = get_group(id)
+        group_obj.pop("_id", None)
+        
         if not original_group:
             return "Group not found"
         
