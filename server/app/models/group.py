@@ -19,7 +19,7 @@ def add_group(group_obj):
                 student.assign_group_to_student(org, groupName=group_obj.group_id)
 
         project.add_group_to_project(group_obj.project, group_obj.group_id)
-        project.change_status(group_obj.project, "assigned")
+        project.change_status(group_obj.project, "Underway")
         result = groupCollection.insert_one(group_obj.to_json())
         return result
     except Exception as e:
@@ -116,7 +116,7 @@ def update_group_by_id(id, group_obj):
 
         
         project.add_group_to_project(group_obj["project"],group_obj["group_id"])
-        project.change_status(group_obj["project"], "assigned")
+        project.change_status(group_obj["project"], "Underway")
         
         result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": group_obj})
         
@@ -130,7 +130,7 @@ def delete_group_by_id(id):
     for orgdefinedId in originalGroup["members"]:
             result = student.assign_group_to_student(orgdefinedId, groupName=None)
     result = groupCollection.delete_one({"_id": ObjectId(id)})
-    project.change_status(originalGroup["project"], "students needed")
+    project.change_status(originalGroup["project"], "Available")
     project.remove_group_from_project(originalGroup["project"])
 
     return result
