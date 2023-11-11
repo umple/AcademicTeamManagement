@@ -77,7 +77,7 @@ describe("Submit Group Form", () => {
         description: "TEST",
         clientName: "ROBERT",
         clientEmail: "TEST@hotmail.com",
-        status: "Pending",
+        status: "Available",
         professorEmail: "test@uottawa.ca",
         group: "1",
         notes: "Notes",
