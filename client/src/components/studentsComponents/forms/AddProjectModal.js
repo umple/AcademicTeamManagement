@@ -19,7 +19,6 @@ function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
   const classes = useStyles();
   const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
   const [error, setError] = useState(""); // State for the confirmation message
-  const [refresh, setRefresh] = useState(false)
   let obj = {
     professorEmail: professorEmail,
     currentGroup: currentGroup,
