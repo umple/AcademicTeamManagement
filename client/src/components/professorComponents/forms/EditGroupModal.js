@@ -99,8 +99,6 @@ const EditGroupModal = ({
     onSubmit,
   });
 
-  console.log("MEMBERS", initialGroupValues.members)
-
   useEffect(() => {
     if (groupData) {
       Object.keys(groupData.original).forEach((field) => {
@@ -210,7 +208,7 @@ const EditGroupModal = ({
                       labelId="project-label"
                       key={column.accessorKey}
                       name={column.accessorKey}
-                      value={values[column.accessorKey]}
+                      defaultValue={groupData.original.project}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       error={Boolean(

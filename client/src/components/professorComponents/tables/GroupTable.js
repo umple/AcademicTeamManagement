@@ -302,7 +302,7 @@ const GroupTable = () => {
           setRefreshTrigger={setRefreshTrigger}
           fetchData={fetchData}
           groupData={editingRow}
-          projects={projects}
+          projects={[...projects, editingRow.original]}
           students={students}
           groups={tableData}
         />

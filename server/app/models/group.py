@@ -110,6 +110,11 @@ def update_group_by_id(id, group_obj):
             for orgdefinedId in group_obj["members"]:
                 result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
         
+        # Update old project if the group's project has been changed
+        if original_group["project"] != group_obj["project"]:
+            _ = project.remove_group_from_project(original_group["project"])
+
+        
         project.add_group_to_project(group_obj["project"],group_obj["group_id"])
         project.change_status(group_obj["project"], "assigned")
         
