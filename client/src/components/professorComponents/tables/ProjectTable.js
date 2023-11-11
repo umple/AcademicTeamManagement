@@ -71,17 +71,15 @@ const ProjectTable = () => {
             component="span"
             sx={(theme) => ({
               backgroundColor:
-                cell.getValue() === "new"
+                cell.getValue() === "Available"
                   ? theme.palette.success.light
-                  : cell.getValue() === "interested students"
+                  : cell.getValue() === "Underway"
                   ? theme.palette.warning.light
-                  : cell.getValue() === "students needed"
-                  ? theme.palette.primary.light
-                  : cell.getValue() === "pending approval"
+                  : cell.getValue() === "Completed"
                   ? theme.palette.secondary.main
-                  : cell.getValue() === "assigned"
+                  : cell.getValue() === "Cancelled"
                   ? theme.palette.error.dark
-                  : cell.getValue() === "proposed"
+                  : cell.getValue() === "Proposed"
                   ? "#ef6694"
                   : theme.palette.info.dark,
               borderRadius: "0.25rem",

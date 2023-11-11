@@ -39,7 +39,7 @@ def get_interested_groups():
 def add_project(project_obj):
     try:
         if not project_obj.status:
-            project_obj.status = 'new'
+            project_obj.status = 'Available'
         result = projectCollection.insert_one(project_obj.to_json())
         return result
     except Exception as e:

@@ -102,7 +102,7 @@ def reviewApplication(applicationObject):
         if not result:
             return False, 400
         group.add_project_to_group(applicationObject["group_id"], applicationObject["project"])
-        project.change_status(applicationObject["project"], "assigned")
+        project.change_status(applicationObject["project"], "Underway")
     # x = applicationObject.pop(applicationObject["_id"], None)
     id = ObjectId(applicationObject["_id"])
     applicationObject.pop("_id", None)
