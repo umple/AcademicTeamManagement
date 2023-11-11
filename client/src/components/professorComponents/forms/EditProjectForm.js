@@ -12,12 +12,14 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Tooltip,
   Alert,
 } from "@mui/material";
 import Project from "../../../entities/Project";
 import { useFormik } from "formik";
 import projectService from "../../../services/projectService";
 import professorProjectSchema from "../../../schemas/professorProjectSchema";
+import statusByValue from "../../common/StatusHelper";
 
 const EditProjectForm = ({
   open,
@@ -27,17 +29,11 @@ const EditProjectForm = ({
   setEditModalOpen,
   setRefreshTrigger,
 }) => {
-  const cellValueMap = [
-    { value: "new", label: "success" },
-    { value: "interested students", label: "warning" },
-    { value: "students needed", label: "primary" },
-    { value: "pending approval", label: "secondary" },
-    { value: "assigned", label: "error" },
-    { value: "proposed", label: "default" },
-  ];
+
   const [initialProjectValues, setInit] = useState(
     new Project(projectData.original)
   );
+  const onUpdateStatus = statusByValue(initialProjectValues.status)
 
   const handleClose = () => {
     setEditingRow(null);
@@ -122,11 +118,18 @@ const EditProjectForm = ({
                         errors[column.accessorKey]
                       }
                     >
-                      {cellValueMap.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.value}
-                        </MenuItem>
-                      ))}
+                      {
+                        onUpdateStatus.possibilities.map((option) => {
+                          const tmp = statusByValue(option);
+                          return (
+                            <MenuItem value={option}>
+                              <Tooltip title={tmp.info} style={{ width: '100%' }} arrow>
+                                {option}
+                              </Tooltip>
+                            </MenuItem>
+                          );
+                        })
+                      }
                     </Select>
                   </FormGroup>
                 );
