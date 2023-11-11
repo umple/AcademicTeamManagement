@@ -73,9 +73,9 @@ const groupService = {
       });
   },
   update: async (id, values) => {
-    return fetch(`/api/group/update/${id}`, {
+    return fetch("/api/group/update", {
       method: "PUT",
-      headers: {
+      headers: { 
         "Content-Type": "application/json",
       },
       body: JSON.stringify(values),
