@@ -113,6 +113,7 @@ def update_group_by_id(id, group_obj):
         # Update old project if the group's project has been changed
         if original_group["project"] != group_obj["project"]:
             _ = project.remove_group_from_project(original_group["project"])
+            _ = project.change_status(original_group["project"], "Available")
 
         
         project.add_group_to_project(group_obj["project"],group_obj["group_id"])
