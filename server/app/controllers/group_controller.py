@@ -51,7 +51,7 @@ def update_group_by_id():
             return {"message": "Invalid JSON data in the request body."}, 400
 
         result = group.update_group_by_id(group_id, group_obj)
-        if result.modified_count > 0:
+        if result:
             return jsonify({"message": "Group updated successfully."}), 200
         else:
             return {"message": "Group not found or update failed."}, 404

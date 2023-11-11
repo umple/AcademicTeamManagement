@@ -115,10 +115,7 @@ def update_group_by_id(id, group_obj):
         
         result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": group_obj})
         
-        if result.modified_count > 0:
-            return "Group updated successfully"
-        else:
-            return "No changes were made to the group"
+        return result.modified_count > 0
     
     except Exception as e:
         return str(e)
