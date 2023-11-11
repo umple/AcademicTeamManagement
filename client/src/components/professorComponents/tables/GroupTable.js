@@ -115,7 +115,7 @@ const GroupTable = () => {
 
       if (projects.projects && projects.message !== "Project list is empty.") {
         const filteredProjects = projects.projects.filter(
-          (project) => project.status !== "assigned"
+          (project) => project.status === "Available"
         );
         setProjects(filteredProjects);
       }
