@@ -12,12 +12,15 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Tooltip,
   Alert,
 } from "@mui/material";
+import InfoIcon from '@mui/icons-material/Info';
 import Project from "../../../entities/Project";
 import { useFormik } from "formik";
 import projectService from "../../../services/projectService";
 import professorProjectSchema from "../../../schemas/professorProjectSchema";
+import statusByValue from "../../common/StatusHelper";
 
 const ProjectForm = ({
   open,
@@ -25,19 +28,13 @@ const ProjectForm = ({
   setCreateModalOpen,
   setRefreshTrigger,
 }) => {
-  const cellValueMap = [
-    { value: "new", label: "success" },
-    { value: "interested students", label: "warning" },
-    { value: "students needed", label: "primary" },
-    { value: "pending approval", label: "secondary" },
-    { value: "assigned", label: "error" },
-    { value: "proposed", label: "default" },
-  ];
   const [initialProjectValues] = useState(
     new Project({
       professorEmail: JSON.parse(localStorage.getItem("userEmail")),
     })
   );
+
+  const onCreateStatus = statusByValue("RAW")
 
   const handleClose = () => {
     setCreateModalOpen(false);
@@ -69,6 +66,7 @@ const ProjectForm = ({
     validationSchema: professorProjectSchema,
     onSubmit,
   });
+
 
   return (
     <Dialog open={open}>
@@ -103,18 +101,25 @@ const ProjectForm = ({
                       onBlur={handleBlur}
                       error={Boolean(
                         touched[column.accessorKey] &&
-                          errors[column.accessorKey]
+                        errors[column.accessorKey]
                       )}
                       helperText={
                         touched[column.accessorKey] &&
                         errors[column.accessorKey]
                       }
                     >
-                      {cellValueMap.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.value}
-                        </MenuItem>
-                      ))}
+                      {
+                        onCreateStatus.possibilities.map((option) => {
+                          const tmp = statusByValue(option);
+                          return (
+                            <MenuItem value={option}>
+                              <Tooltip title={tmp.info} style={{ width: '100%' }} arrow>
+                                {option}
+                              </Tooltip>
+                            </MenuItem>
+                          );
+                        })
+                      }
                     </Select>
                   </FormGroup>
                 );
