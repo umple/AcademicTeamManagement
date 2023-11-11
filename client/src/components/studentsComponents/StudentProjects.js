@@ -24,7 +24,7 @@ function StudentProjects() {
   const [open, setOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
-  const [currentGroup, setCurrGroup] = useState(null);
+  const [group, setCurrGroup] = useState(null);
   const [currentStudent, setCurrentStudent] = useState({});
 
   const handleSearch = (event) => {
@@ -119,7 +119,7 @@ function StudentProjects() {
                 variant="contained"
                 color="primary"
                 onClick={handleOpen}
-                disabled={!currentGroup}
+                disabled={!group}
                 style={{ width: "30%", marginLeft: "1rem" }}
               >
                 Add Project
@@ -129,12 +129,12 @@ function StudentProjects() {
                   <InfoIcon />
                 </IconButton>
               </Tooltip>
-            {currentGroup && currentStudent && (
+            {group && currentStudent && (
               <AddProjectModal
                 open={open}
                 onClose={handleClose}
                 professorEmail={currentStudent.professorEmail}
-                currentGroup={currentGroup}
+                group={group}
               />
             )}
           </Grid>
@@ -144,7 +144,7 @@ function StudentProjects() {
                   key={key}
                   project={project}
                   setShowAlert={setShowAlert}
-                  currentGroup={currentGroup}
+                  group={group}
                   setErrorShowAlert={setErrorShowAlert}
                 ></ProjectCard>
               ))

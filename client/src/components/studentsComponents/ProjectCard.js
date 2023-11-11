@@ -13,7 +13,7 @@ import projectService from "../../services/projectService";
 const ProjectCard = ({
   project,
   setShowAlert,
-  currentGroup,
+  group,
   setErrorShowAlert,
 }) => {
   const classes = useStyles();
@@ -23,7 +23,7 @@ const ProjectCard = ({
     let body = {
       project_name: project.project,
       project_id: project._id,
-      group_id: currentGroup,
+      group_id: group,
     };
 
     try {
@@ -101,7 +101,7 @@ const ProjectCard = ({
                 project.status === "pending approval" ||
                 project.status === "assigned" ||
                 project.status === "proposed" ||
-                currentGroup === null
+                group === null
               }
               className={classes.button}
               style={{ marginTop: "1rem" }}

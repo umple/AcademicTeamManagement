@@ -10,7 +10,7 @@ const projectSchema = Yup.object().shape({
       .email("Invalid email address"),
     status : Yup.string(),
     professorEmail : Yup.string(),
-    currentGroup : Yup.string()
+    group : Yup.string()
   });
 
 export default projectSchema
