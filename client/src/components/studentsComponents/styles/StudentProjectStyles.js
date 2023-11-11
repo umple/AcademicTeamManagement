@@ -34,22 +34,19 @@ export const useStyles = makeStyles((theme) => ({
       maxWidth: "9ch",
       padding: "0.25rem",
     },
-    new: {
+    Available: {
       backgroundColor: "#4caf50",
     },
-    interested: {
+    Underway: {
       backgroundColor: "#ff9800",
     },
-    needed: {
-      backgroundColor: "#2196f3",
-    },
-    approval: {
+    Completed: {
       backgroundColor: "#3f51b5",
     },
-    assigned: {
+    Cancelled: {
       backgroundColor: "#f44336",
     },
-    proposed: {
+    Proposed: {
       backgroundColor: "#ef6694",
     },
     info: {

@@ -23,14 +23,15 @@ function AddProjectModal({ open, onClose, professorEmail, group }) {
     professorEmail: professorEmail,
     group: group,
   };
-  const [project] = useState(new Project(obj));
 
+  const [project] = useState(new Project(obj));
   const onSubmit = async (values, actions) => {
     if (values.group === null) {
       setError("You Need to be in a group to propose a project!"); // Set confirmation message
       return;
     }
     try {
+      values.status = "Proposed"
       let response = await projectService.add(values);
       setConfirmationMessage(response.message);
       onClose();
