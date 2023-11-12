@@ -69,22 +69,8 @@ const GroupForm = ({
 
   const onSubmit = async (values, actions) => {
     try {
-      let response;
-      if (update){
-        response = await groupService.update(editingRow._id,values);
-      } else {
-        response = await groupService.add(values);
+      let response = await groupService.add(values);
 
-      }
-      // if (response.ok) {
-      //   Object.entries(values).map(([key, value]) => {
-      //     if (key === "members") {
-      //       values[key] = [];
-      //     } else {
-      //       values[key] = "";
-      //     }
-      //   });
-      // }
       handleClose();
       fetchData();
       actions.resetForm();
@@ -106,21 +92,17 @@ const GroupForm = ({
     setFieldTouched,
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
-    validationSchema: createGroupSchema(groups,editingRow?._id),
+    validationSchema: createGroupSchema(groups),
     onSubmit,
   });
-
-  console.log("MEMBERS", initialGroupValues.members)
   
   const handleClose = () => {
     setCreateModalOpen(false);
-    setUpdate(false);
-    setEditingRow({});
   };
 
   return (
     <Dialog open={open || update}>
-      <DialogTitle textAlign="center">{update ? "Edit" : "Create"} Group</DialogTitle>
+      <DialogTitle textAlign="center">Create Group</DialogTitle>
       <form onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
@@ -262,7 +244,7 @@ const GroupForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {update ? "Edit" : "Create"}
+            Create
           </Button>
         </DialogActions>
       </form>

@@ -92,9 +92,11 @@ def is_user_in_group(user_name):
 
 from bson import ObjectId  # Assuming you are using MongoDB
 
-def update_group_by_id(id, group_obj):
+def update_group_by_id(id, group_obj): 
     try:
         original_group = get_group(id)
+        group_obj.pop("_id", None)
+        
         if not original_group:
             return "Group not found"
         
@@ -108,15 +110,18 @@ def update_group_by_id(id, group_obj):
             for orgdefinedId in group_obj["members"]:
                 result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
         
+        # Update old project if the group's project has been changed
+        if original_group["project"] != group_obj["project"]:
+            _ = project.remove_group_from_project(original_group["project"])
+            _ = project.change_status(original_group["project"], "Available")
+
+        
         project.add_group_to_project(group_obj["project"],group_obj["group_id"])
         project.change_status(group_obj["project"], "Underway")
         
         result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": group_obj})
         
-        if result.modified_count > 0:
-            return "Group updated successfully"
-        else:
-            return "No changes were made to the group"
+        return result.modified_count > 0
     
     except Exception as e:
         return str(e)

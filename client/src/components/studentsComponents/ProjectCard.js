@@ -13,7 +13,7 @@ import projectService from "../../services/projectService";
 const ProjectCard = ({
   project,
   setShowAlert,
-  currentGroup,
+  group,
   setErrorShowAlert,
 }) => {
   const classes = useStyles();
@@ -23,7 +23,7 @@ const ProjectCard = ({
     let body = {
       project_name: project.project,
       project_id: project._id,
-      group_id: currentGroup,
+      group_id: group,
     };
 
     try {
@@ -96,7 +96,7 @@ const ProjectCard = ({
               color="primary"
               type="sumbit"
               disabled={
-                project.status !== "Available" || currentGroup === null
+                project.status !== "Available" || group === null
               }
               className={classes.button}
               style={{ marginTop: "1rem" }}

@@ -15,18 +15,18 @@ import projectSchema from "../../../schemas/projectSchema";
 import projectService from "../../../services/projectService";
 import { useStyles } from "../styles/AddProjectModalStyles";
 
-function AddProjectModal({ open, onClose, professorEmail, currentGroup }) {
+function AddProjectModal({ open, onClose, professorEmail, group }) {
   const classes = useStyles();
   const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
   const [error, setError] = useState(""); // State for the confirmation message
   let obj = {
     professorEmail: professorEmail,
-    currentGroup: currentGroup,
+    group: group,
   };
 
   const [project] = useState(new Project(obj));
   const onSubmit = async (values, actions) => {
-    if (values.currentGroup === null) {
+    if (values.group === null) {
       setError("You Need to be in a group to propose a project!"); // Set confirmation message
       return;
     }
