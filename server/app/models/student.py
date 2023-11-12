@@ -19,13 +19,8 @@ def add_student(student_obj):
         result = studentsCollection.insert_one(student_obj.to_json())
         return result
     except Exception as e:
-        print(f"Error adding project: {e}")
+        print(f"Error adding student: {e}")
         return None
-
-def add_import_student(student_obj):
-    student_obj["group"] = ''
-    student_obj["professorEmail"] = session.get("user")["preferred_username"]
-    studentsCollection.insert_one(student_obj)
 
 def get_student_by_id(a):
     document = studentsCollection.find_one({"_id": ObjectId(a)})
