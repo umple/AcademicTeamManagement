@@ -52,6 +52,13 @@ def get_student_by_username(username):
             document["username"] = str(username_field)
     return document
 
+def get_all_students_by_section(section):
+    documents = studentsCollection.find({"sections": str(section)})
+    students_list = []
+    for student in documents:
+        students_list.append(student)
+    return students_list
+
 def update_student_by_id(id, student_obj):
     data = student_obj.to_json()
     del data["_id"]
@@ -65,6 +72,16 @@ def assign_group_to_student(orgdefinedid, groupName):
         {"orgdefinedid" : orgdefinedid}, 
         {"$set" : {
             "group": groupName
+        }
+        }
+    )
+    return result
+
+def update_section_for_student(id, new_section):
+    result = studentsCollection.update_one(
+        {"_id": ObjectId(id)}, 
+        {"$set" : {
+            "sections": new_section
         }
         }
     )
