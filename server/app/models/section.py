@@ -1,3 +1,4 @@
+from app.models import student
 from .__init__ import db
 from bson import ObjectId
 
@@ -28,10 +29,13 @@ def get_section_by_name(name):
     return document
 
 def update_section_by_id(id, section_obj):
+    old_section_name = get_section_by_id(id)["name"]
     result = sectionsCollection.update_one({"_id": ObjectId(id)}, {
         "$set":section_obj.to_json()
     })
-    return result
+    if result and (old_section_name != section_obj.to_json()["name"]):
+        _update_section_name_for_students(old_section_name, section_obj.to_json()["name"])
+    return result.modified_count > 0
 
 def delete_section_by_id(a):
     try:
@@ -49,3 +53,8 @@ def delete_section_by_id(a):
 
     except Exception as e:
         raise e
+
+def _update_section_name_for_students(old_section_name, new_section_name):
+    students = student.get_all_students_by_section(old_section_name)
+    for st in students:
+        _ = student.update_section_for_student(str(st["_id"]), new_section_name)
