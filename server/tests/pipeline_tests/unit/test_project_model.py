@@ -11,7 +11,7 @@ class ProjectDataManager:
             "_id": ObjectId(),
             "project": "Sample Project",
             "description": "This is a sample project.",
-            "status": "new",
+            "status": "Available",
             "group": None,
             "interested groups": []
         }
@@ -107,7 +107,7 @@ class TestProjectUpdate(unittest.TestCase):
         # Make edits to project
         expectedProject = copy.deepcopy(self.project)
         expectedProject["description"] = "Updated description"
-        expectedProject["status"] = "assigned"
+        expectedProject["status"] = "Underway"
 
         # Ensure that the change is true
         actual = project.update_project_by_id(self.project["_id"], expectedProject)
@@ -156,12 +156,12 @@ class TestProjectModification(unittest.TestCase):
         self.assertTrue("Interest Group" in actualInterestedGroups)
 
     def test_change_status(self):
-        actual = project.change_status(self.project["project"], "assigned")
+        actual = project.change_status(self.project["project"], "Underway")
         self.assertTrue(actual)
 
         # Validate status is updated
         actualStatus = project.get_project(self.project["_id"])["status"]
-        self.assertEqual("assigned", actualStatus)
+        self.assertEqual("Underway", actualStatus)
 
 
 class TestProjectDeletion(unittest.TestCase):

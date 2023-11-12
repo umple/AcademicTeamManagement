@@ -24,7 +24,7 @@ function StudentProjects() {
   const [open, setOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
-  const [currentGroup, setCurrGroup] = useState(null);
+  const [group, setCurrGroup] = useState(null);
   const [currentStudent, setCurrentStudent] = useState({});
 
   const handleSearch = (event) => {
@@ -51,7 +51,7 @@ function StudentProjects() {
     try {
       let projectsData = await projectService.get();
       if (projectsData.count > 0) {
-        const projectsFiltered = projectsData.projects.filter((project) => project.status !== "assigned");
+        const projectsFiltered = projectsData.projects.filter((project) => project.status !== "Completed" || project.status != "Cancelled");
         setProjects(projectsData.projects);
         setFilteredProjects(projectsFiltered);
       }
@@ -77,7 +77,7 @@ function StudentProjects() {
   useEffect(() => {
     fetchProjects();
     fetchStudents();
-  }, []);
+  }, [open]);
 
   return (
     <Container>
@@ -119,7 +119,7 @@ function StudentProjects() {
                 variant="contained"
                 color="primary"
                 onClick={handleOpen}
-                disabled={!currentGroup}
+                disabled={!group}
                 style={{ width: "30%", marginLeft: "1rem" }}
               >
                 Add Project
@@ -129,12 +129,12 @@ function StudentProjects() {
                   <InfoIcon />
                 </IconButton>
               </Tooltip>
-            {currentGroup && currentStudent && (
+            {group && currentStudent && (
               <AddProjectModal
                 open={open}
                 onClose={handleClose}
                 professorEmail={currentStudent.professorEmail}
-                currentGroup={currentGroup}
+                group={group}
               />
             )}
           </Grid>
@@ -144,7 +144,7 @@ function StudentProjects() {
                   key={key}
                   project={project}
                   setShowAlert={setShowAlert}
-                  currentGroup={currentGroup}
+                  group={group}
                   setErrorShowAlert={setErrorShowAlert}
                 ></ProjectCard>
               ))

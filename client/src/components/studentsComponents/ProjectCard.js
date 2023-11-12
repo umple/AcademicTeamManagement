@@ -13,7 +13,7 @@ import projectService from "../../services/projectService";
 const ProjectCard = ({
   project,
   setShowAlert,
-  currentGroup,
+  group,
   setErrorShowAlert,
 }) => {
   const classes = useStyles();
@@ -23,7 +23,7 @@ const ProjectCard = ({
     let body = {
       project_name: project.project,
       project_id: project._id,
-      group_id: currentGroup,
+      group_id: group,
     };
 
     try {
@@ -72,18 +72,16 @@ const ProjectCard = ({
               <Box
                 component="span"
                 className={`${classes.status} ${
-                  project.status === "new"
-                    ? classes.new
-                    : project.status === "interested students"
-                    ? classes.interested
-                    : project.status === "students needed"
-                    ? classes.needed
-                    : project.status === "pending approval"
-                    ? classes.approval
-                    : project.status === "assigned"
-                    ? classes.assigned
-                    : project.status === "proposed"
-                    ? classes.proposed
+                  project.status === "Available"
+                    ? classes.Available
+                    : project.status === "Underway"
+                    ? classes.Underway
+                    : project.status === "Completed"
+                    ? classes.Completed
+                    : project.status === "Cancelled"
+                    ? classes.Cancelled
+                    : project.status === "Proposed"
+                    ? classes.Proposed
                     : classes.info
                 }`}
               >
@@ -98,10 +96,7 @@ const ProjectCard = ({
               color="primary"
               type="sumbit"
               disabled={
-                project.status === "pending approval" ||
-                project.status === "assigned" ||
-                project.status === "proposed" ||
-                currentGroup === null
+                project.status !== "Available" || group === null
               }
               className={classes.button}
               style={{ marginTop: "1rem" }}

@@ -6,7 +6,7 @@ class Project {
     this.clientEmail = projectObj.clientEmail || "";
     this.status = projectObj.status || "proposed";
     this.professorEmail = projectObj.professorEmail || "";
-    this.currentGroup = projectObj.currentGroup || "";
+    this.group = projectObj.group || "";
     this.notes = projectObj.notes || "";
   }
 
@@ -64,13 +64,13 @@ class Project {
     this._professorEmail = value;
   }
 
-  // Getter and setter for 'currentGroup'
-  get currentGroup() {
-    return this._currentGroup;
+  // Getter and setter for 'group'
+  get group() {
+    return this._group;
   }
 
-  set currentGroup(currentGroup) {
-    this._currentGroup = currentGroup;
+  set group(group) {
+    this._group = group;
   }
 
   get notes() {
@@ -89,7 +89,7 @@ class Project {
       clientEmail: this._clientEmail,
       status: this._status,
       professorEmail: this.professorEmail,
-      currentGroup: this._currentGroup,
+      group: this._group,
     };
   }
 
@@ -101,7 +101,7 @@ class Project {
       clientEmail: this._clientEmail,
       status: this._status,
       professorEmail: this._professorEmail,
-      currentGroup: this._currentGroup,
+      group: this._group,
       notes: this._notes,
     };
   }

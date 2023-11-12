@@ -8,9 +8,9 @@ const projectSchema = Yup.object().shape({
     clientEmail: Yup.string()
       .required("Client Email is required")
       .email("Invalid email address"),
-    status : Yup.string(),
+    status : Yup.string().required("Status is required"),
     professorEmail : Yup.string(),
-    currentGroup : Yup.string()
+    group : Yup.string()
   });
 
 export default projectSchema

@@ -48,7 +48,8 @@ const GroupTable = () => {
   const [deletion, setDeletion] = useState(false);
   const [row, setDeleteRow] = useState();
   const [refreshTrigger, setRefreshTrigger] = useState(false);
-  const [editingRow, setEditingRow] = useState({});
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingRow, setEditingRow] = useState(null);
 
   const columns = useMemo(
     () => [
@@ -114,7 +115,7 @@ const GroupTable = () => {
 
       if (projects.projects && projects.message !== "Project list is empty.") {
         const filteredProjects = projects.projects.filter(
-          (project) => project.status !== "assigned"
+          (project) => project.status === "Available"
         );
         setProjects(filteredProjects);
       }
@@ -226,9 +227,8 @@ const GroupTable = () => {
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={(e) => {
-                  setEditingRow(row.original);
-                  setCreateModalOpen(false)
-                  setUpdate(true);
+                  setEditingRow(row);
+                  setEditModalOpen(true);
                 }}
               >
                 <Edit />
@@ -272,21 +272,15 @@ const GroupTable = () => {
         )}
       />
 
-      {(update || createModalOpen) && (
-        <GroupForm
-          columns={columns}
-          open={createModalOpen}
-          fetchData={fetchData}
-          projects={projects}
-          students={students}
-          groups={tableData}
-          setCreateModalOpen={setCreateModalOpen}
-          update={update}
-          setUpdate={setUpdate}
-          setEditingRow={setEditingRow}
-          editingRow={editingRow}
-        />
-      )}
+      <GroupForm
+        columns={columns}
+        open={createModalOpen}
+        setCreateModalOpen={setCreateModalOpen}
+        fetchData={fetchData}
+        projects={projects}
+        students={students}
+        groups={tableData}
+      />
 
       {deletion && (
         <ConfirmDeletionModal
@@ -298,19 +292,21 @@ const GroupTable = () => {
           type={"group"}
         ></ConfirmDeletionModal>
       )}
-      {/* <EditGroupModal
-        columns={columns}
-        open={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
-        onSubmit={handleSaveRowEdits}
-        fetchData={fetchData}
-        projects={projects}
-        students={students}
-        editingRow={editingRow}
-        values={editingValues}
-        setValues={setEditingValues}
-        groups={tableData}
-      /> */}
+
+      {editingRow && (
+        <EditGroupModal
+          columns={columns}
+          open={editModalOpen}
+          setEditModalOpen={setEditModalOpen}
+          setEditingRow={setEditingRow}
+          setRefreshTrigger={setRefreshTrigger}
+          fetchData={fetchData}
+          groupData={editingRow}
+          projects={[...projects, editingRow.original]}
+          students={students}
+          groups={tableData}
+        />
+      )}
     </Box>
   );
 };
