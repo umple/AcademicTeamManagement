@@ -114,7 +114,7 @@ const EditGroupModal = ({
         {err === "" ? "" : <Alert severity="error">{err}</Alert>}
   
         <DialogTitle textAlign="center">Edit Group</DialogTitle>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={(e) => e.preventDefault()} acceptCharset="Enter">
           <DialogContent>
             <Stack
               sx={{
@@ -235,7 +235,7 @@ const EditGroupModal = ({
           <DialogActions sx={{ p: "1.25rem" }}>
             <Button onClick={onClose}>Cancel</Button>
             <Button color="secondary" onClick={handleSubmit} variant="contained">
-              Edit Group
+              Save Group
             </Button>
           </DialogActions>
         </form>

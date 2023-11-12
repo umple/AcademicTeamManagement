@@ -4,9 +4,8 @@ import * as Yup from "yup";
 const professorProjectSchema = Yup.object().shape({
     project: Yup.string().required("Project Title is required"),
     description: Yup.string().required("Description is required"),
-    clientName: Yup.string().required("Client Full Name is required"),
+    clientName: Yup.string(),
     clientEmail: Yup.string()
-      .required("Client Email is required")
       .email("Invalid email address"),
     status : Yup.string(),
     professorEmail : Yup.string(),

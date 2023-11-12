@@ -81,7 +81,7 @@ const StudentForm = ({
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Create New Student</DialogTitle>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} acceptCharset="Enter">
         <DialogContent>
           <Stack
             sx={{

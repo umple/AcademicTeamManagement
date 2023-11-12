@@ -73,7 +73,7 @@ const ProjectForm = ({
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Create New Project</DialogTitle>
-      <form name="project-form" onSubmit={handleSubmit}>
+      <form name="project-form" onSubmit={handleSubmit} acceptCharset="Enter">
         <DialogContent>
           <Stack
             sx={{
@@ -148,6 +148,7 @@ const ProjectForm = ({
         </DialogActions>
       </form>
     </Dialog>
+
   );
 };
 
