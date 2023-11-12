@@ -67,7 +67,7 @@ def update_section_by_id(id):
         section_obj = SectionEntity(json.loads(request.data))
         result = section.update_section_by_id(id, section_obj)
         if result:
-            return jsonify(str(result.modified_count)), 200
+            return {"message": "Updated section successfully."}, 200
         else:
             return {"message": "Could not edit section."}, 404
     except:
