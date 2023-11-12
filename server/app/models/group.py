@@ -101,8 +101,8 @@ def update_group_by_id(id, group_obj):
             return "Group not found"
         
         if "members" in group_obj and group_obj["members"]:
-            # group_obj["members"] = group_obj["members"].split(",")
-            pass
+            for org in group_obj["members"]:
+                student.assign_group_to_student(org, groupName=group_obj["group_id"])
         else:
             group_obj["members"] = []
 
