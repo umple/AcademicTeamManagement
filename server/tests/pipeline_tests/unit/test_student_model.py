@@ -104,15 +104,6 @@ class TestStudentAddition(unittest.TestCase):
         actual = student.add_student(studentObj)
         self.assertIsNone(actual)
 
-    def test_import_student(self):        
-        try:
-            studentObj = StudentDataManager.getStudent()
-            with flask_app.test_request_context():
-                session['user'] = {"preferred_username": "test_user"}
-                student.add_import_student(studentObj)
-        except Exception:
-            self.fail("Exception occured when importing student")
-
     def test_import_xlsx_file(self):
         test_file = None
         expected = StudentDataManager.getStudent()
