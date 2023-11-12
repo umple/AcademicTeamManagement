@@ -50,7 +50,7 @@ describe("Submit Form", () => {
       clientEmail: "TEST@hotmail.com",
       status: "Pending",
       professorEmail: "test@uottawa.ca",
-      currentGroup: "1",
+      group: "1",
       notes: "Notes",
     };
 
