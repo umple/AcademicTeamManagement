@@ -96,7 +96,7 @@ const ProjectCard = ({
               color="primary"
               type="sumbit"
               disabled={
-                project.status !== "Available" || currentGroup === null
+                project.status !== "Available" || group === null
               }
               className={classes.button}
               style={{ marginTop: "1rem" }}
