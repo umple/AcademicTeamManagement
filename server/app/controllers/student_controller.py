@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
 from app.models import student, user
 # from app.controllers import  as import_controller
 from bson import ObjectId
@@ -106,11 +106,17 @@ def import_students():
         json_dict = json.loads(result)
 
         for res in json_dict:
-            print(res)
             if (student.get_student_by_username(res["username"]) == None):
                 res["sections"] = students_sections # override the section
-                student.add_import_student(res)
+                res["group"] = ''
+                res["professorEmail"] = session.get("user")["preferred_username"]
+                student_id = ObjectId()
+                student_entity = StudentEntity(student_id, res)
+                user_entity = UserEntity(student_id, "student", res)
+                result = student.add_student(student_entity)
+                if result:
+                    _ = user.add_user(user_entity)
 
-        return result, 201
+        return {"message": "Students imported successfully."}, 201
     except :
         return {"message": "Internal server error."}, 500
