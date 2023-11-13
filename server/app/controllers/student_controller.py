@@ -7,6 +7,8 @@ from app.entities.StudentEntity import StudentEntity
 from app.entities.UserEntity import UserEntity
 import json
 from . import student_bp
+import time
+
 
 
 # GET Request to retreive all students from the collection
@@ -117,10 +119,17 @@ def delete_bulk_students():
     except Exception as e:
         return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
 
+start_time = None
+total_records = 0
+processed_records = 0
+
+
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
+    global start_time, total_records, processed_records
+
     try:
-       
+        start_time = time.time()
         file = request.files["file"]
         columns = json.loads(request.form["column"])
         students_sections = request.form["sections"]
@@ -129,9 +138,12 @@ def import_students():
         result = student.import_students(file, accessor_keys)
         json_dict = json.loads(result)
 
+        # Update total_records based on the number of records in the file
+        total_records = len(json_dict)
+
         for res in json_dict:
-            if (student.get_student_by_username(res["username"]) == None):
-                res["sections"] = students_sections # override the section
+            if student.get_student_by_username(res["username"]) is None:
+                res["sections"] = students_sections  # override the section
                 res["group"] = ''
                 res["professorEmail"] = session.get("user")["preferred_username"]
                 student_id = ObjectId()
@@ -141,6 +153,36 @@ def import_students():
                 if result:
                     _ = user.add_user(user_entity)
 
+                    # Increment processed_records as each record is processed
+                    processed_records += 1
+        
+        # Reset the global variables upon completion
+        start_time = None
+        total_records = 0
+        processed_records = 0
         return {"message": "Students imported successfully."}, 201
-    except :
-        return {"message": "Internal server error."}, 500
+    except Exception as e:
+        return {"message": f"Internal server error: {str(e)}"}, 500
+
+@student_bp.route("/getTime/completion", methods=["GET"])
+def get_time_completion_in_percentage():
+    global start_time, total_records, processed_records
+
+    if start_time is None:
+        return {"error": "No task in progress."}, 400
+
+    current_time = time.time()
+    elapsed_time = current_time - start_time
+
+    # Avoid division by zero
+    if total_records == 0:
+        completion_percentage = 0
+    else:
+        # Additional check to handle processed_records being zero
+        completion_percentage = (processed_records / max(1, total_records)) * 100
+
+    # Return the completion percentage and estimated end time
+    return jsonify({
+        "completion_percentage": completion_percentage,
+        "estimated_end_time": start_time + (elapsed_time / max(1, processed_records)) * total_records,
+    })
