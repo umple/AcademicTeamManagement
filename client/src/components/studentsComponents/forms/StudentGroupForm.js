@@ -252,7 +252,7 @@ const StudentGroupForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {update ? "Save" : "Create new Student Group"}
+            {update ? "Save" : "Create New Student Group"}
           </Button>
         </DialogActions>
       </form>
