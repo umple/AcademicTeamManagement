@@ -173,7 +173,7 @@ const EditStudentForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {studentData?.original ? "Save Student" : "Create New Student"}
+            {studentData?.original ? "Save" : "Create Student"}
           </Button>
         </DialogActions>
       </form>
