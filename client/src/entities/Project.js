@@ -4,7 +4,7 @@ class Project {
     this.description = projectObj.description || "";
     this.clientName = projectObj.clientName || "";
     this.clientEmail = projectObj.clientEmail || "";
-    this.status = projectObj.status || "proposed";
+    this.status = projectObj.status || "Available";
     this.professorEmail = projectObj.professorEmail || "";
     this.group = projectObj.group || "";
     this.notes = projectObj.notes || "";
