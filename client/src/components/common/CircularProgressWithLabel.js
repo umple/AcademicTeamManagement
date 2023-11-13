@@ -6,33 +6,31 @@ import Box from "@mui/material/Box";
 
 function CircularProgressWithLabel(props) {
   return (
-    <Box
-      sx={{
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <CircularProgress
-        variant="determinate"
-        size={100} // Adjust the size as needed
-        thickness={2} // Adjust the thickness as needed
-        label="Importing Students"
-        {...props}
-      />
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column", // Center items vertically
-        }}
-      >
-        <Typography variant="caption" component="div" color="text.secondary">
-          {`${Math.round(props.value)}%`}
-        </Typography>
+    <>
+      <Box sx={{ position: "relative", display: "inline-flex" }}>
+        <CircularProgress
+          variant="determinate"
+          size={100} // Adjust the size as needed
+          thickness={2} // Adjust the thickness as needed
+          label="Importing Students"
+          {...props}
+        />
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="caption" component="div" color="text.secondary">
+            {`${Math.round(props.value)}%`}
+          </Typography>
+        </Box>
       </Box>
       <Typography
         variant="caption"
@@ -43,7 +41,7 @@ function CircularProgressWithLabel(props) {
         Importing students. Please do not close this dialog (may take several
         seconds)...
       </Typography>
-    </Box>
+    </>
   );
 }
 
