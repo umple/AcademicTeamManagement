@@ -77,10 +77,11 @@ def delete_group_by_id(id):
 @group_bp.route("/group/clear/members/<id>", methods=["PUT"])
 def clear_group_members(id):
     try:
-        print("Helloooooooooooo")
-        print(id)
-        _ = group.clear_group_members(id)
-        return {"message": "Group members is cleared."}, 200
+        result = group.clear_group_members(id)
+        if result.modified_count > 0:
+            return {"message": "Group members is cleared."}, 200
+        else:
+            return {"message": "Error while removing group members."}, 404
     except:
         return {"message": "Internal server error."}, 503
  
