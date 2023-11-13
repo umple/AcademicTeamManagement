@@ -1,3 +1,4 @@
+from app.models import user
 from .__init__ import db
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
@@ -102,6 +103,7 @@ def delete_students_by_ids(student_ids):
 
             # Check if the deletion was successful
             if result == "works":
+                _ = user.delete_user_by_id(student_id) # remove the related user too
                 deleted_count += 1
 
         return deleted_count

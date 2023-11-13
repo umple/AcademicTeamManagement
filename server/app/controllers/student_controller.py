@@ -110,7 +110,7 @@ def delete_bulk_students():
         # Perform bulk deletion
         deleted_count = student.delete_students_by_ids(student_ids)
 
-        return jsonify({"message": f"Students deleted successfully.", "deleted_count": 1}), 200
+        return jsonify({"message": f"Students deleted successfully.", "deleted_count": deleted_count}), 200
 
     except ValueError as ve:
         return {"message": str(ve)}, 400  # Bad Request
