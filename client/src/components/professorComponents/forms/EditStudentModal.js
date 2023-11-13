@@ -149,6 +149,9 @@ const EditStudentForm = ({
                 />
                 )
               }
+              if (column.accessorKey === "group") {
+                return null
+              }
               return (
               <TextField
                 key={column.accessorKey}
