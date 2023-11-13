@@ -111,7 +111,7 @@ const StudentGroupForm = ({
   return (
     <Dialog open={open || update}>
       <DialogTitle textAlign="center">{update ? "Edit" : "Create"} Group</DialogTitle>
-      <form onSubmit={handleSubmit} >
+      <form acceptCharset="Enter" onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
             sx={{
@@ -252,7 +252,7 @@ const StudentGroupForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {update ? "Edit" : "Create"}
+            {update ? "Save" : "Create new Student Group"}
           </Button>
         </DialogActions>
       </form>

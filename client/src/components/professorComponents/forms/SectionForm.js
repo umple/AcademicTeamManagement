@@ -73,7 +73,7 @@ import {
         <DialogTitle textAlign="center">
           {update ? "Edit Section" : "Create New Section"}
         </DialogTitle>
-        <form onSubmit={handleSubmit}>
+        <form acceptCharset="Enter" onSubmit={handleSubmit}>
           <DialogContent>
             <Stack
               sx={{
@@ -103,7 +103,7 @@ import {
           <DialogActions sx={{ p: "1.25rem" }}>
             <Button onClick={handleClose}>Cancel</Button>
             <Button color="secondary" type="submit" name="submitForm" variant="contained">
-              {update ? "Edit Section" : "Create New Section"}
+              {update ? "Save" : "Create New Section"}
             </Button>
           </DialogActions>
         </form>

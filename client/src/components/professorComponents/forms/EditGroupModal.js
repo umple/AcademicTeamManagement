@@ -123,7 +123,7 @@ const EditGroupModal = ({
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Edit Group</DialogTitle>
-      <form onSubmit={handleSubmit} >
+      <form acceptCharset="Enter" onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
             sx={{

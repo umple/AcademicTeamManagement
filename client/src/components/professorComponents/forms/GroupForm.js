@@ -103,7 +103,7 @@ const GroupForm = ({
   return (
     <Dialog open={open || update}>
       <DialogTitle textAlign="center">Create Group</DialogTitle>
-      <form onSubmit={handleSubmit} >
+      <form acceptCharset="Enter" onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
             sx={{
@@ -244,7 +244,7 @@ const GroupForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Create
+            Create New Group
           </Button>
         </DialogActions>
       </form>

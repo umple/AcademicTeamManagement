@@ -70,7 +70,7 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
       >
         Add Project
       </DialogTitle>
-      <form onSubmit={handleSubmit}>
+      <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{
@@ -135,7 +135,7 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={onClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Add Project
+            Create New Project
           </Button>
         </DialogActions>
       </form>

@@ -151,7 +151,7 @@ const ImportStudents = (props) => {
           </Select>
         </FormControl>
       <br></br>
-      <form onSubmit={handleSubmit} className={classes.container}>
+      <form acceptCharset="Enter" onSubmit={handleSubmit} className={classes.container}>
         {file ? (
           <Box className={classes.fileBox} >
             <CloudDoneIcon sx={{ fontSize: '4rem', color: '#999' }} />

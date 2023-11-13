@@ -95,7 +95,7 @@ const EditStudentForm = ({
       <DialogTitle textAlign="center">
         {studentData?.original ? "Update Student" : "Create New Student"}
       </DialogTitle>
-      <form onSubmit={handleSubmit}>
+      <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{
@@ -173,7 +173,7 @@ const EditStudentForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {studentData?.original ? "Update Student" : "Create New Student"}
+            {studentData?.original ? "Save Student" : "Create New Student"}
           </Button>
         </DialogActions>
       </form>
