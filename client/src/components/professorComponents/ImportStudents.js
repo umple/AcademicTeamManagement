@@ -200,7 +200,7 @@ const ImportStudents = (props) => {
       {isImporting ? (
         <CircularWithValueLabel progress={progress} />
       ) : (
-        <form onSubmit={handleSubmit} className={classes.container}>
+        <form acceptCharset="Enter" onSubmit={handleSubmit} className={classes.container}>
           {file ? (
             <Box className={classes.fileBox}>
               <CloudDoneIcon sx={{ fontSize: "4rem", color: "#999" }} />

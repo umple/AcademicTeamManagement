@@ -57,7 +57,7 @@ const ViewApplicationModal = ({
     return (
       <Dialog open={open}>
         <DialogTitle>Project Application: </DialogTitle>
-        <form onSubmit={handleSubmit}>
+        <form acceptCharset="Enter" onSubmit={handleSubmit}>
           <DialogContent>
             <Grid container alignItems="center" spacing={2}>
               <Grid item>

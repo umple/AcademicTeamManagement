@@ -132,6 +132,7 @@ function StudentProjects() {
             {group && currentStudent && (
               <AddProjectModal
                 open={open}
+                projects={projects}
                 onClose={handleClose}
                 professorEmail={currentStudent.professorEmail}
                 group={group}

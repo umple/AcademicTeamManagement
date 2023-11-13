@@ -25,6 +25,7 @@ import statusByValue from "../../common/StatusHelper";
 const ProjectForm = ({
   open,
   columns,
+  projects,
   setCreateModalOpen,
   setRefreshTrigger,
 }) => {
@@ -63,7 +64,7 @@ const ProjectForm = ({
     setFieldTouched,
   } = useFormik({
     initialValues: initialProjectValues.toProfessorRequestBody(),
-    validationSchema: professorProjectSchema,
+    validationSchema: professorProjectSchema(projects),
     onSubmit,
   });
 
@@ -71,7 +72,7 @@ const ProjectForm = ({
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">Create New Project</DialogTitle>
-      <form name="project-form" onSubmit={handleSubmit}>
+      <form acceptCharset="Enter" name="project-form" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{

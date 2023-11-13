@@ -15,7 +15,7 @@ import projectSchema from "../../../schemas/projectSchema";
 import projectService from "../../../services/projectService";
 import { useStyles } from "../styles/AddProjectModalStyles";
 
-function AddProjectModal({ open, onClose, professorEmail, group }) {
+function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
   const classes = useStyles();
   const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
   const [error, setError] = useState(""); // State for the confirmation message
@@ -57,7 +57,7 @@ function AddProjectModal({ open, onClose, professorEmail, group }) {
     setFieldTouched,
   } = useFormik({
     initialValues: project.toRequestBody(),
-    validationSchema: projectSchema,
+    validationSchema: projectSchema(projects),
     onSubmit,
   });
 
@@ -70,7 +70,7 @@ function AddProjectModal({ open, onClose, professorEmail, group }) {
       >
         Add Project
       </DialogTitle>
-      <form onSubmit={handleSubmit}>
+      <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{
@@ -135,7 +135,7 @@ function AddProjectModal({ open, onClose, professorEmail, group }) {
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={onClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Add Project
+            Create Project
           </Button>
         </DialogActions>
       </form>
