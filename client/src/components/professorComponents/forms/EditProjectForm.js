@@ -24,6 +24,7 @@ import statusByValue from "../../common/StatusHelper";
 const EditProjectForm = ({
   open,
   columns,
+  projects,
   projectData,
   setEditingRow,
   setEditModalOpen,
@@ -64,7 +65,7 @@ const EditProjectForm = ({
     setFieldTouched,
   } = useFormik({
     initialValues: initialProjectValues.toProfessorRequestBody(),
-    validationSchema: professorProjectSchema,
+    validationSchema: professorProjectSchema(projects, projectData.original._id),
     onSubmit,
   });
 
