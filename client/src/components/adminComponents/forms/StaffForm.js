@@ -143,7 +143,7 @@ const StaffForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" name="submitForm" variant="contained">
-            {update ? "Save" : "Create New Staff"}
+            {update ? "Save" : "Create Staff"}
           </Button>
         </DialogActions>
       </form>
