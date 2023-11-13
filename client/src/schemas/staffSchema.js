@@ -6,10 +6,14 @@ const staffSchema =  (staffs,_id) => {
   
 const staffSchema = Yup.object().shape({
   email: Yup.string().required("Email is required").email("Invalid email address").test("is-unique", "Email already exists", function (value) {
-    const staff = staffs.find(
+    if (staffs && staffs.length > 0) {
+      const staff = staffs.find(
         (staff) => staff._id != _id && staff.email === value 
     );
-    return typeof staff === "undefined";
+      return typeof staff === "undefined";
+    } else {
+      return true
+    }
     }),
   username: Yup.string().required("Username is required"),
   lastname: Yup.string().required("Last Name is required"),
