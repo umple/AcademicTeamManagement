@@ -15,7 +15,7 @@ import projectSchema from "../../../schemas/projectSchema";
 import projectService from "../../../services/projectService";
 import { useStyles } from "../styles/AddProjectModalStyles";
 
-function AddProjectModal({ open, onClose, professorEmail, group }) {
+function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
   const classes = useStyles();
   const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
   const [error, setError] = useState(""); // State for the confirmation message
@@ -57,7 +57,7 @@ function AddProjectModal({ open, onClose, professorEmail, group }) {
     setFieldTouched,
   } = useFormik({
     initialValues: project.toRequestBody(),
-    validationSchema: projectSchema,
+    validationSchema: projectSchema(projects),
     onSubmit,
   });
 
