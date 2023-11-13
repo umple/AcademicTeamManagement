@@ -92,6 +92,30 @@ def delete_student_by_id(id):
         return {"message": str(ve)}, 400  # Bad Request
     except Exception as e:
         return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
+    
+@student_bp.route("/student/delete/bulk", methods=["DELETE"])
+def delete_bulk_students():
+    try:
+        # Load JSON data from the request body
+        print("HELLO IM GETTING HERE")
+        student_obj = request.get_json()
+        
+        # Ensure that student_obj is a dictionary
+        if not isinstance(student_obj, dict):
+            raise ValueError("Invalid input format. Expected a dictionary.")
+
+        # Extract student IDs from the keys of the dictionary
+        student_ids = list(student_obj.keys())
+
+        # Perform bulk deletion
+        deleted_count = student.delete_students_by_ids(student_ids)
+
+        return jsonify({"message": f"Students deleted successfully.", "deleted_count": deleted_count}), 200
+
+    except ValueError as ve:
+        return {"message": str(ve)}, 400  # Bad Request
+    except Exception as e:
+        return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
 
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():

@@ -40,7 +40,7 @@ import ProjectForm from "../forms/ProjectForm";
 import EditProjectForm from "../forms/EditProjectForm";
 import ViewApplicationModal from "../ViewApplicationModal";
 import { ROLES } from "../../../helpers/Roles";
-import { getUserType } from "../../../helpers/UserType"
+import { getUserType } from "../../../helpers/UserType";
 
 const ProjectTable = () => {
   const columns = useMemo(
@@ -130,18 +130,18 @@ const ProjectTable = () => {
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
-      let userType = ""
+      let userType = "";
       let data = await projectService.get();
-      
-      await getUserType()
-      .then((type) => {
-        userType = type
-      })
-      .catch((error) => {
-        console.error(error);
-      });
 
-      if (data.projects){
+      await getUserType()
+        .then((type) => {
+          userType = type;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      console.log("DATA", data.projects)
+      if (data.projects) {
         if (userType === ROLES.ADMIN) {
           setTableData(data.projects); // show all data if user is an admin
         } else {
@@ -151,6 +151,8 @@ const ProjectTable = () => {
           ); // keep only the data that contains the professor's email
           setTableData(filteredProjectsTableData);
         }
+      } else {
+        setTableData({})
       }
     } catch (error) {
       console.error(error);
@@ -176,14 +178,18 @@ const ProjectTable = () => {
     try {
       await projectService.delete(row.original._id);
       setOpenDeletion(false);
+      setRefreshTrigger((prevState) => !prevState);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    fetchProjects();
-    fetchApplications();
+    const fetchData = async () => {
+      fetchProjects();
+      fetchApplications();
+    };
+    fetchData();
   }, [refreshTrigger]);
 
   return (
@@ -360,7 +366,6 @@ const ProjectTable = () => {
           setOpen={setOpenDeletion}
           open={deletion}
           handleDeletion={handleDeletion}
-          setRefreshTrigger={setRefreshTrigger}
           row={deleteRow}
           type={"project"}
         ></ConfirmDeletionModal>
