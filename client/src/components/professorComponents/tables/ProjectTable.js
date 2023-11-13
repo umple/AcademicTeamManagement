@@ -348,6 +348,7 @@ const ProjectTable = () => {
         <EditProjectForm
           columns={columns}
           open={editModalOpen}
+          projects={tableData}
           setEditModalOpen={setEditModalOpen}
           setEditingRow={setEditingRow}
           projectData={editingRow}
@@ -358,6 +359,7 @@ const ProjectTable = () => {
       <ProjectForm
         columns={columns}
         open={createModalOpen}
+        projects={tableData}
         setCreateModalOpen={setCreateModalOpen}
         setRefreshTrigger={setRefreshTrigger}
       />
