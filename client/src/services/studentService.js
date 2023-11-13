@@ -72,6 +72,24 @@ const studentService = {
         console.error(error);
       });
   },
+  deleteBulkStudents: async (rows) => {
+    const  s = Object.fromEntries(
+      Object.entries(rows).map(([key, value]) => [String(key), value])
+    );
+    return fetch("api/student/delete/bulk", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(s)
+    })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
   update: async (id, values) => {
     return fetch(`/api/student/update/${id}`, {
       method: "PUT",

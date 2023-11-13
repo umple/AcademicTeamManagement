@@ -19,7 +19,14 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { ExportToCsv } from "export-to-csv";
 import MaterialReactTable from "material-react-table";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+  useRef,
+} from "react";
 import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
 import { csvOptions, handleExportData } from "../../../helpers/exportData";
 import studentService from "../../../services/studentService";
@@ -28,8 +35,9 @@ import StudentForm from "../forms/StudentForm";
 import { useStyles } from "./styles/StudentTableStyles";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import { ROLES } from "../../../helpers/Roles";
-import { getUserType } from "../../../helpers/UserType"
+import { getUserType } from "../../../helpers/UserType";
 import EditStudentForm from "../forms/EditStudentModal";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const StudentTable = () => {
   const defaultColumns = useMemo(
@@ -82,6 +90,8 @@ const StudentTable = () => {
   const [editingRow, setEditingRow] = useState(null);
   const [update, setUpdate] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [deletionModal, setDeletionModal] = useState(false);
+  const table = useRef(null);
 
   function handleImportSuccess(success) {
     setImportSuccess(success);
@@ -92,16 +102,16 @@ const StudentTable = () => {
 
   const fetchStudents = async () => {
     try {
-      let userType = ""
+      let userType = "";
       let students = await studentService.get();
-      
+
       await getUserType()
-      .then((type) => {
-        userType = type
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+        .then((type) => {
+          userType = type;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       if (students.students) {
         if (userType == ROLES.ADMIN) {
@@ -115,7 +125,6 @@ const StudentTable = () => {
           setTableData(filteredStudentsTableData);
         }
       }
-
     } catch (error) {
       console.error("There was a problem with the network request:", error);
     }
@@ -135,9 +144,23 @@ const StudentTable = () => {
     }
   };
 
+
+  const handleBulkDeletion = async (rows) => {
+    try {
+      await studentService.deleteBulkStudents(rows);
+      setDeletionModal(false);
+      setRowSelection({})
+      fetchStudents();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const csvExporter = new ExportToCsv(csvOptions("StudentsFromAcTeams-"));
 
   const [isImportModalOpen, setImportModalOpen] = useState(false);
+  const [rowSelection, setRowSelection] = useState({});
+
 
   const closeModal = () => {
     setImportModalOpen(false);
@@ -171,7 +194,12 @@ const StudentTable = () => {
         enablePagination={true}
         columns={columns}
         data={tableData}
+        ref={table}
+        onRowSelectionChange={setRowSelection}
+        state={{ rowSelection }}
         editingMode="modal"
+        getRowId= {(originalRow) => originalRow._id}
+        enableRowSelection
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
@@ -241,6 +269,18 @@ const StudentTable = () => {
             >
               Import Students
             </Button>
+            {Object.keys(rowSelection).length > 0 ? (
+              <Button
+                color="error"
+                onClick={() => setDeletionModal(true)}
+                startIcon={<DeleteIcon />}
+                variant="contained"
+              >
+                Delete {Object.keys(rowSelection).length} Students
+              </Button>
+            ) : (
+              <></>
+            )}
 
             <Dialog
               PaperComponent={Paper}
@@ -266,6 +306,17 @@ const StudentTable = () => {
                 closeModal={closeModal}
               />
             </Dialog>
+
+            {deletionModal && (
+              <ConfirmDeletionModal
+                setOpen={setDeletionModal}
+                open={deletionModal}
+                handleDeletion={handleBulkDeletion}
+                setRefreshTrigger={setRefreshTrigger}
+                row={rowSelection}
+                type={"bulk"}
+              ></ConfirmDeletionModal>
+            )}
           </Box>
         )}
       />

@@ -22,8 +22,7 @@ const ConfirmDeletionModal = ({
   const handleClose = () => {
     setOpen(false);
   };
-
-  const dialogId = `dialog-${row.id}`;
+  const dialogId = type !== "bulk" ? `dialog-${row.id}` : "bulk";
 
   return (
     <>
@@ -46,7 +45,9 @@ const ConfirmDeletionModal = ({
             <span>Are you sure you want to delete section?</span>
           ) :type === "staff" ? (
             <span>Are you sure you want to delete staff?</span>
-          ) : null}
+          ) : type === "bulk" ? (
+            <span>Are you sure you want to delete the selected students? By doing so, they cannot be restored.</span>
+          ): null}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
@@ -60,7 +61,9 @@ const ConfirmDeletionModal = ({
               <span>Staff: {row.getValue("username")}</span>
             ) : type === "section" ? (
               <span>Section: {row.getValue("name")}</span>
-            ) : null}
+            ) :  type === "bulk" ? (
+              <span>Total students selected: {Object.keys(row).length}</span>
+            ): null}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

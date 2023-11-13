@@ -92,6 +92,23 @@ def remove_student_from_group(orgdefinedid):
     )
     return result
 
+def delete_students_by_ids(student_ids):
+    try:
+        deleted_count = 0
+
+        for student_id in student_ids:
+            # Call the existing delete_student_by_id function for each ID
+            result = delete_student_by_id(student_id)
+
+            # Check if the deletion was successful
+            if result == "works":
+                deleted_count += 1
+
+        return deleted_count
+
+    except Exception as e:
+        raise e
+
 def delete_student_by_id(a):
     try:
         student_to_delete = get_student_by_id(a)
