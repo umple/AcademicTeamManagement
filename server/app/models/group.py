@@ -136,6 +136,17 @@ def delete_group_by_id(id):
 
     return result
 
+def clear_group_members(id):
+    originalGroup  = get_group(id)
+    for orgdefinedId in originalGroup["members"]:
+            _ = student.assign_group_to_student(orgdefinedId, groupName=None)
+    result = groupCollection.update_one(
+        {"_id": ObjectId(id)},
+        {"$set": {"members": []}}
+    )
+    return result
+    
+
 def add_project_to_group(groupName,projectName):
     result = groupCollection.update_one(
             {"group_id": groupName},
