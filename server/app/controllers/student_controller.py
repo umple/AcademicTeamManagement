@@ -9,7 +9,10 @@ import json
 from . import student_bp
 import time
 
-
+#GLOBAL VARIABLES
+start_time = None #start time of importing
+total_records = 0 #total rows imported
+processed_records = 0 #total rows completed on import
 
 # GET Request to retreive all students from the collection
 @student_bp.route("/students", methods=["GET"])
@@ -119,11 +122,6 @@ def delete_bulk_students():
     except Exception as e:
         return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
 
-start_time = None
-total_records = 0
-processed_records = 0
-
-
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
     global start_time, total_records, processed_records
@@ -162,7 +160,7 @@ def import_students():
         processed_records = 0
         return {"message": "Students imported successfully."}, 201
     except Exception as e:
-        return {"message": f"Internal server error: {str(e)}"}, 500
+        return {"message": f"Please verify the file to match the same as the tempalte"}, 500
 
 @student_bp.route("/getTime/completion", methods=["GET"])
 def get_time_completion_in_percentage():
