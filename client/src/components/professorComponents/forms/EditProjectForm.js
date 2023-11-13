@@ -82,7 +82,7 @@ const EditProjectForm = ({
       <DialogTitle textAlign="center">
         {projectData?.original ? "Update Project" : "Create New Project"}
       </DialogTitle>
-      <form onSubmit={handleSubmit}>
+      <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{
@@ -159,7 +159,7 @@ const EditProjectForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {projectData?.original ? "Update Project" : "Create New Project"}
+            {projectData?.original ? "Save" : "Create Project"}
           </Button>
         </DialogActions>
       </form>
