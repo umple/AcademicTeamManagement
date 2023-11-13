@@ -15,7 +15,6 @@ const ConfirmDeletionModal = ({
   open,
   setOpen,
   handleDeletion,
-  setRefreshTrigger,
   row,
   type,
 }) => {

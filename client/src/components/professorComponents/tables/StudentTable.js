@@ -89,7 +89,6 @@ const StudentTable = () => {
   const [row, setDeleteRow] = useState();
   const [editingRow, setEditingRow] = useState(null);
   const [update, setUpdate] = useState(false);
-  const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [deletionModal, setDeletionModal] = useState(false);
   const table = useRef(null);
 
@@ -124,6 +123,8 @@ const StudentTable = () => {
           ); // keep only the data that contains the professor's email
           setTableData(filteredStudentsTableData);
         }
+      } else {
+        setTableData({})
       }
     } catch (error) {
       console.error("There was a problem with the network request:", error);
@@ -132,7 +133,7 @@ const StudentTable = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, [refreshTrigger]);
+  }, []);
 
   const handleDeletion = async (row) => {
     try {
@@ -157,7 +158,6 @@ const StudentTable = () => {
   }
 
   const csvExporter = new ExportToCsv(csvOptions("StudentsFromAcTeams-"));
-
   const [isImportModalOpen, setImportModalOpen] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
 
@@ -312,7 +312,6 @@ const StudentTable = () => {
                 setOpen={setDeletionModal}
                 open={deletionModal}
                 handleDeletion={handleBulkDeletion}
-                setRefreshTrigger={setRefreshTrigger}
                 row={rowSelection}
                 type={"bulk"}
               ></ConfirmDeletionModal>
@@ -328,7 +327,6 @@ const StudentTable = () => {
           setEditModalOpen={setEditModalOpen}
           setEditingRow={setEditingRow}
           studentData={editingRow}
-          setRefreshTrigger={setRefreshTrigger}
           students={tableData}
         />
       )}
@@ -346,7 +344,6 @@ const StudentTable = () => {
           setOpen={setOpenDeletion}
           open={deletion}
           handleDeletion={handleDeletion}
-          setRefreshTrigger={setRefreshTrigger}
           row={row}
           type={"student"}
         ></ConfirmDeletionModal>
