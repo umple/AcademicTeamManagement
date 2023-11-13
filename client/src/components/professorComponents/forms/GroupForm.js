@@ -103,7 +103,7 @@ const GroupForm = ({
   return (
     <Dialog open={open || update}>
       <DialogTitle textAlign="center">Create Group</DialogTitle>
-      <form onSubmit={handleSubmit} >
+      <form onSubmit={handleSubmit} acceptCharset="Enter">
         <DialogContent>
           <Stack
             sx={{
