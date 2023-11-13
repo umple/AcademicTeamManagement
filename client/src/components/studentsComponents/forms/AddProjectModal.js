@@ -135,7 +135,7 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={onClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Create New Project
+            Create Project
           </Button>
         </DialogActions>
       </form>
