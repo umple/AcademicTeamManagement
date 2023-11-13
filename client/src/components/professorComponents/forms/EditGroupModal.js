@@ -72,6 +72,18 @@ const EditGroupModal = ({
     setFieldValue({});
   };
 
+  const clearGroupMembers = async () => {
+    try {
+      const isConfirmed = window.confirm('Are you sure you want to delete all group members?');
+      if (isConfirmed) {
+        let response = await groupService.clearMembers(groupData.original._id);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log("Error clearing group members", error)
+    }
+  }
+
   const onSubmit = async (values, actions) => {
     try {
       let response = await groupService.update(groupData.original._id,values);
@@ -196,6 +208,7 @@ const EditGroupModal = ({
                           return null;
                         })}
                     </Select>
+                    {groupData.original.members && groupData.original.members.length > 0 && <Button variant="text" onClick={clearGroupMembers}>Clear Members</Button>}
                   </FormControl>
                 );
               }
