@@ -103,7 +103,7 @@ import {
           <DialogActions sx={{ p: "1.25rem" }}>
             <Button onClick={handleClose}>Cancel</Button>
             <Button color="secondary" type="submit" name="submitForm" variant="contained">
-              {update ? "Save" : "Create New Section"}
+              {update ? "Save" : "Create Section"}
             </Button>
           </DialogActions>
         </form>
