@@ -91,6 +91,22 @@ const groupService = {
     .catch((error) => {
       console.error(error);
     });
+  },
+  clearMembers: async (id) => {
+    return fetch(`/api/group/clear/members/${id}`, {
+      method: "PUT",
+    })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(`Failed to update group: ${errorMessage}`);
+        });
+      }
+      return { success: true, message: "Group updated successfully" };
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
 };
 
