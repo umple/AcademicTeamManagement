@@ -90,6 +90,7 @@ const StudentTable = () => {
   const [editingRow, setEditingRow] = useState(null);
   const [update, setUpdate] = useState(false);
   const [deletionModal, setDeletionModal] = useState(false);
+  const [refreshTrigger,setRefreshTrigger] = useState(false);
   const table = useRef(null);
 
   function handleImportSuccess(success) {
@@ -133,7 +134,7 @@ const StudentTable = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [refreshTrigger]);
 
   const handleDeletion = async (row) => {
     try {
@@ -326,6 +327,7 @@ const StudentTable = () => {
           open={editModalOpen}
           setEditModalOpen={setEditModalOpen}
           setEditingRow={setEditingRow}
+          setRefreshTrigger={setRefreshTrigger}
           studentData={editingRow}
           students={tableData}
         />
