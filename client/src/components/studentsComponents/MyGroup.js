@@ -7,6 +7,9 @@ import Chip from '@mui/material/Chip';
 import MaterialReactTable from 'material-react-table';
 import { fetchData } from "../../services/api";
 import { colorStatus } from "../../helpers/statusColors";
+import { useTranslation } from 'react-i18next';
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
 
 
 const MyGroup = () => {
@@ -15,6 +18,19 @@ const MyGroup = () => {
   const [loading, setIsLoading] = useState(false);
   const [applications, setProjectApplications] = useState({});
   const [showAlert, setShowAlert] = useState(false);
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+
+  useEffect(() => {
+    setTableLocalization(getTableLocalization(currentLanguage));
+  }, [currentLanguage]);
+
 
   useEffect(() => {
     const fetchDataAndSetState = async () => {
@@ -73,15 +89,15 @@ const MyGroup = () => {
   const columns = useMemo(() => [
     {
       accessorKey: 'group_id',
-      header: 'Group',
+      header: t('my-group.group'),
     },
     {
       accessorKey: 'project',
-      header: 'Project',
+      header: t('my-group.project'),
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t('my-group.status'),
       Cell: ({ cell }) => (
         <Chip 
           label = {cell.getValue()}
@@ -91,10 +107,10 @@ const MyGroup = () => {
     },
     {
       accessorKey: 'feedback',
-      header: 'Feedback',
+      header: t('my-group.feedback'),
     },
 
-  ], []);
+  ], [currentLanguage]);
 
   const findNameByStudentID= (orgdefinedid) =>{
     let student = students.find((student)=> {return student.orgdefinedid === orgdefinedid})
@@ -109,7 +125,7 @@ const MyGroup = () => {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert severity="success">
-          User has left the team successfully!
+          {t('my-group.left')}
         </Alert>
       </Snackbar>
       {loading ? (
@@ -119,14 +135,14 @@ const MyGroup = () => {
           <Card sx={{ mt: 10, mb: 4, ml: 4, mr: 4 }}>
             <CardContent>
               <Typography variant="h5" gutterBottom>
-                My Group
+                {t('my-group.my-group')}
               </Typography>
               {Object.keys(group).length !== 0 ? (
                 <Box>
                   <Typography sx={{ fontSize: "18px" }}>
                     <strong>Group ID:</strong> {group.group_id} </Typography>
                   <Typography sx={{ fontSize: "18px" }}>
-                    <strong>Members:</strong>
+                    <strong> {t('my-group.member')}</strong>
                   </Typography>
 
                   {
@@ -135,7 +151,7 @@ const MyGroup = () => {
                   ))}
                   {group.project ? (
                     <Typography sx={{ fontSize: "18px" }}>
-                      <strong>Project:</strong> {group.project}
+                      <strong>{t('my-group.project2')}</strong> {group.project}
                     </Typography>
                   ) : (
                     <Grid
@@ -150,7 +166,7 @@ const MyGroup = () => {
                           style={{ textDecoration: "none" }}
                         >
                           <Button variant="contained" color="primary">
-                            Add Project
+                            {t('my-group.add-project')}
                           </Button>
                         </Link>
                       </Grid>
@@ -160,7 +176,7 @@ const MyGroup = () => {
                           color="error"
                           onClick={handleLeaveGroup}
                         >
-                          Leave Group
+                          {t('my-group.leave-group')}
                         </Button>
                       </Grid>
                     </Grid>
@@ -168,7 +184,7 @@ const MyGroup = () => {
                 </Box>
               ) : (
                 <Typography variant="h6">
-                  You have not joined a group yet.
+                  {t('my-group.no-group')}
                 </Typography>
               )}
             </CardContent>
@@ -186,6 +202,8 @@ const MyGroup = () => {
                 enableGlobalFilter={false}
                 enableFullScreenToggle={false}
                 enableDensityToggle={false}
+                initialState={{ showColumnFilters: true, showGlobalFilter: true }}
+                localization={tableLocalization}
                 keyField="project"
                 customStyles={{
                   rows: {
@@ -198,7 +216,7 @@ const MyGroup = () => {
             </Box>
           ) : (
             <Typography variant="h6">
-              You have no project applications yet.
+              {t('my-group.no-project')}
             </Typography>
           )}
         </>

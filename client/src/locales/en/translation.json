@@ -23,5 +23,19 @@
         "count-students": "Total # of students",
         "count-groups": "Total # of groups",
         "count-sections": "Total # of sections"
+    },
+    "my-group": {
+        "my-group": "My Group",
+        "no-group": "You have not joined a group yet.",
+        "group": "Group",
+        "project": "Project",
+        "status": "Status",
+        "feedback": "Feedback",
+        "left": "User has left the team successfully!",
+        "members": "Members:",
+        "project2": "Project:",
+        "add-project": "Add Project",
+        "leave-group": "Leave Group",
+        "no-project": "You have no project applications yet."
     }
 }
