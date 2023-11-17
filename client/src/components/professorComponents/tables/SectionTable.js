@@ -102,7 +102,7 @@ const SectionTable = () => {
         fontWeight="fontWeightBold"
         sx={{ marginBottom: "0.5rem" }}
       >
-        Sections
+        {t("common.Sections")}
       </Typography>
       <MaterialReactTable
         displayColumnDefOptions={{
@@ -177,7 +177,7 @@ const SectionTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export All Data
+              {t("common.export-data")}
             </Button>
           </Box>
         )}

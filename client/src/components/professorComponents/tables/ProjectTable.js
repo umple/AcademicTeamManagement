@@ -330,7 +330,7 @@ const ProjectTable = () => {
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
             >
-              Create New Project
+              Create Project
             </Button>
             <Button
               color="primary"
@@ -339,7 +339,7 @@ const ProjectTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export All Data
+              Export Data
             </Button>
           </Box>
         )}

@@ -71,7 +71,7 @@ const ProjectForm = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Project</DialogTitle>
+      <DialogTitle textAlign="center">Create Project</DialogTitle>
       <form acceptCharset="Enter" name="project-form" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
@@ -149,7 +149,7 @@ const ProjectForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" name="submitForm" type="submit" variant="contained">
-            Create New Project
+            Create
           </Button>
         </DialogActions>
       </form>

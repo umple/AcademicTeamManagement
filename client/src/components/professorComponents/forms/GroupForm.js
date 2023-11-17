@@ -244,7 +244,7 @@ const GroupForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Create Group
+            Create
           </Button>
         </DialogActions>
       </form>

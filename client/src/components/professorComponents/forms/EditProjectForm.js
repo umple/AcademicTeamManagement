@@ -159,7 +159,7 @@ const EditProjectForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {projectData?.original ? "Save" : "Create Project"}
+            {projectData?.original ? "Save" : "Create"}
           </Button>
         </DialogActions>
       </form>
