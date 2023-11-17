@@ -3,11 +3,19 @@ tasks.register('runBackendLocally', Exec){
 }
 
 tasks.register('runFrontendLocally', Exec){
-    commandLine './scripts/runFrontendLocally.sh'
+    commandLine './scripts/runFrontEndLocally.sh'
 }
 
 tasks.register('runUnitTests', Exec){
     commandLine './scripts/runUnitTests.sh'
+}
+
+tasks.register('runReactUnitTests', Exec){
+    commandLine './scripts/runReactUnitTests.sh'
+}
+
+tasks.register('runEndToEndTests', Exec){
+    commandLine './scripts/runEndToEndTests.sh'
 }
 
 tasks.register("startMongo",Exec){
