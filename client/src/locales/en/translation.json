@@ -3,6 +3,10 @@
         "project": "project",
         "student": "student",
         "group": "group",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save",
         "academic-team-management": "Academic Team Management"
     },
     "header": {
@@ -37,5 +41,15 @@
         "add-project": "Add Project",
         "leave-group": "Leave Group",
         "no-project": "You have no project applications yet."
+    },
+    "section": {
+        "sections": "Sections",
+        "actions": "Actions",
+        "name": "Name",
+        "term": "Term",
+        "year": "Year",
+        "notes": "Notes",
+        "add-section": "Add Section",
+        "edit-section": "Edit Section"
     }
 }

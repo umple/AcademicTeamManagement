@@ -19,32 +19,46 @@ import sectionService from "../../../services/sectionService";
 import SectionForm from "../forms/SectionForm";
 import { useStyles } from "./styles/SectionTableStyles";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
+import { useTranslation } from 'react-i18next';
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
 
 const SectionTable = () => {
+
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+
+  useEffect(() => {
+    setTableLocalization(getTableLocalization(currentLanguage));
+  }, [currentLanguage]);
     // name, term, year, notes
-  const defaultColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         accessorKey: "name",
-        header: "Name",
+        header: t("section.name"),
       },
       {
         accessorKey: "term",
-        header: "Term",
+        header: t("section.term"),
       },
       {
         accessorKey: "year",
-        header: "Year",
+        header: t("section.year"),
       },
       {
         accessorKey: "notes",
-        header: "Notes",
+        header: t("section.notes"),
       },
     ],
-    []
+    [currentLanguage]
   );
   // For the create profile modal
-  const [columns] = useState(defaultColumns);
   const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -115,7 +129,7 @@ const SectionTable = () => {
         // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
-            <Tooltip arrow placement="left" title="Edit">
+            <Tooltip arrow placement="left" title={t("common.edit")}>
               <IconButton
                 onClick={() => {
                   setEditingRow(row.original);
@@ -126,7 +140,7 @@ const SectionTable = () => {
                 <Edit />
               </IconButton>
             </Tooltip>
-            <Tooltip arrow placement="right" title="Delete">
+            <Tooltip arrow placement="right" title={t("common.delete")}>
               <IconButton
                 color="error"
                 name="deleteSection"
@@ -155,7 +169,7 @@ const SectionTable = () => {
               variant="contained"
               name="create-new-section"
             >
-              Create New Section
+              {t("section.add-section")}
             </Button>
             <Button
               color="primary"
