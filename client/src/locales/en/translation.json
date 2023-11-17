@@ -3,7 +3,20 @@
         "project": "project",
         "student": "student",
         "group": "group",
-        "academic-team-management": "Academic Team Management"
+        "academic-team-management": "Academic Team Management",
+        "export-data": "Export All Data",
+        "Delete": "Delete",
+        "Students": "Students"
+    },
+    "table": {
+        "student-id": "Student ID",
+        "username": "Username",
+        "lastname": "Last Name",
+        "firstname": "First Name",
+        "email": "Email",
+        "sections": "Section",
+        "final-grade": "Final Grade",
+        "group": "Group"
     },
     "header": {
         "navbar": {
@@ -37,5 +50,13 @@
         "add-project": "Add Project",
         "leave-group": "Leave Group",
         "no-project": "You have no project applications yet."
+    },
+    "students-table": {
+        "students": "Students",
+        "success": "Success",
+        "success-alert": "Success Alert",
+        "success-import": "successfully imported students!",
+        "create-student": "Create New Student",
+        "import-students": "Import Students"
     }
 }
