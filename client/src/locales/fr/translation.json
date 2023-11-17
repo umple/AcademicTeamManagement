@@ -6,7 +6,10 @@
         "academic-team-management": "Gestion d'équipe académique",
         "export-data": "Exporter toutes les données",
         "Delete": "Supprimer",
-        "Students": "Étudiants"
+        "Students": "Étudiants",
+        "Cancel": "Annuler",
+        "Save": "Sauvegarder",
+        "Create": "Créer"
     },
     "table": {
         "student-id": "Identifiant",
@@ -57,6 +60,7 @@
         "success-alert": "Alerte de Succès",
         "success-import": "Importation des étudiants réussie !",
         "create-student": "Créer un nouvel étudiant",
-        "import-students": "Importer des étudiants"
+        "import-students": "Importer des étudiants",
+        "update-student": "Modifier l'étudiant"
     }    
 }
