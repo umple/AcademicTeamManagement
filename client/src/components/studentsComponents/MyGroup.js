@@ -142,7 +142,7 @@ const MyGroup = () => {
                   <Typography sx={{ fontSize: "18px" }}>
                     <strong>Group ID:</strong> {group.group_id} </Typography>
                   <Typography sx={{ fontSize: "18px" }}>
-                    <strong> {t('my-group.member')}</strong>
+                    <strong> {t('my-group.members')}</strong>
                   </Typography>
 
                   {
