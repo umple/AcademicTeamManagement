@@ -10,45 +10,80 @@ The `Academic Team Management` application is used to automate many of the facil
 6. Exporting the data to Excel sheets
 7. Allowing the professor or TAs to input grades
 
-The application is expected to be open-source and allow other professors from different educational institutions to adapt it as their project management system.
+The application is expected to be open-source and allow other professors from different educational institutions to adopt it as their project management system.
 
 For more information check the [general](./docs/general/README.md) and [design](./docs/design/README.md) documents.
 
 ## Development
 
 ### Prerequisites
+Make sure to have these technologies installed in your system
 
-    1. (Technologies TBD)
-    2. (Technologies TBD)
+    1. Docker
+    2. NodeJs
+    3. Python
 
-### Linting
-
-You can lint the code locally.
-
-```sh
-
-```
 
 ### Building
 
-```sh
+#### Locally
 
+For local development, try to build each service individually
+
+```sh
+# Build the database first
+$ ./gradlew startMongo
+
+# Build the server, make sure to add the password of the DB in the ./scripts/runBackendTests.sh file
+$ ./gradlew runBackendLocally
+
+# Build the frontend
+$ ./gradlew runFrontendLocally
+
+```
+
+#### Production
+
+For prod development, build using all the services using docker-compose
+```sh
+# To start the app
+$ ./gradlew composeUp
+
+# To stop the app
+$ ./gradlew composeDown
 ```
 
 ### Testing
 
-#### Unit Tests
+#### Backend Unit Tests
 
 ```sh
 # Unit tests
 $ ./gradlew runUnitTests
 ```
 
-#### Integration Tests
+#### Frontend Unit Tests
 
 ```sh
+# Unit tests
+$ ./gradlew runReactUnitTests
+```
+
+#### End-To-End Tests
+
+```sh
+# E2E tests
+$ ./gradlew runEndToEndTests
 
 ```
 
+### Linting
+
+You can lint the code locally.
+
+```sh
+# not implemented yet
+```
+
 ### Deployment
-See [DevOps](./docs/devops/README.md) section
+See [DevOps](./docs/devops/README.md) section for more information
