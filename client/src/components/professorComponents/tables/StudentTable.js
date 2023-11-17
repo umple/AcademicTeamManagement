@@ -38,47 +38,67 @@ import { ROLES } from "../../../helpers/Roles";
 import { getUserType } from "../../../helpers/UserType";
 import EditStudentForm from "../forms/EditStudentModal";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTranslation } from 'react-i18next';
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
+
 
 const StudentTable = () => {
-  const defaultColumns = useMemo(
+
+  // Handle translation of the page
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+
+  useEffect(() => {
+    setTableLocalization(getTableLocalization(currentLanguage));
+  }, [currentLanguage]);
+
+  
+  const columns = useMemo(
     () => [
       {
         accessorKey: "orgdefinedid",
-        header: "orgDefinedId",
+        header: t("table.student-id"),
       },
       {
         accessorKey: "username",
-        header: "Username",
+        header: t("table.username"),
       },
       {
         accessorKey: "lastname",
-        header: "Last Name",
+        header: t("table.lastname"),
       },
       {
         accessorKey: "firstname",
-        header: "First Name",
+        header: t("table.firstname"),
       },
       {
         accessorKey: "email",
-        header: "Email",
+        header: t("table.email"),
       },
       {
         accessorKey: "sections",
-        header: "Section",
+        header: t("table.sections"),
       },
       {
         accessorKey: "finalGrade",
-        header: "Final Grade",
+        header: t("table.final-grade"),
       },
       {
         accessorKey: "group",
-        header: "Group",
+        header: t("table.group"),
       },
     ],
-    []
+    [currentLanguage]
   );
+
   // For the create profile modal
-  const [columns] = useState(defaultColumns);
   const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -93,6 +113,7 @@ const StudentTable = () => {
   const [refreshTrigger,setRefreshTrigger] = useState(false);
   const table = useRef(null);
 
+  // Alert message for success
   function handleImportSuccess(success) {
     setImportSuccess(success);
     if (success) {
@@ -175,12 +196,12 @@ const StudentTable = () => {
         fontWeight="fontWeightBold"
         sx={{ marginBottom: "0.5rem" }}
       >
-        Students
+        {t("students-table.students")}
       </Typography>
       {importSuccess && (
         <Alert severity="success">
-          <AlertTitle>Success</AlertTitle>
-          success alert — <strong>successfully imported students!</strong>
+          <AlertTitle>{t("students-table.success")}</AlertTitle>
+          {t("students-table.success-alert")} — <strong>{t("students-table.success-import")}</strong>
         </Alert>
       )}
       <MaterialReactTable
@@ -200,6 +221,7 @@ const StudentTable = () => {
         state={{ rowSelection }}
         editingMode="modal"
         getRowId= {(originalRow) => originalRow._id}
+        localization={tableLocalization}
         enableRowSelection
         enableColumnOrdering
         enableColumnResizing
@@ -252,7 +274,7 @@ const StudentTable = () => {
               variant="contained"
               name="create-new-student"
             >
-              Create New Student
+              {t("students-table.create-student")}
             </Button>
             <Button
               color="primary"
@@ -260,7 +282,7 @@ const StudentTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export All Data
+              {t("common.export-data")}
             </Button>
             <Button
               color="warning"
@@ -268,7 +290,7 @@ const StudentTable = () => {
               startIcon={<FileUploadIcon />}
               variant="contained"
             >
-              Import Students
+              {t("students-table.import-students")}
             </Button>
             {Object.keys(rowSelection).length > 0 ? (
               <Button
@@ -277,7 +299,7 @@ const StudentTable = () => {
                 startIcon={<DeleteIcon />}
                 variant="contained"
               >
-                Delete {Object.keys(rowSelection).length} Students
+                {t("common.Delete")} {Object.keys(rowSelection).length} {t("common.Students")}
               </Button>
             ) : (
               <></>
@@ -291,7 +313,7 @@ const StudentTable = () => {
               onClose={() => setImportModalOpen(false)}
             >
               <DialogTitle className={classes.dialogTitle}>
-                Import Students{" "}
+              {t("students-table.import-students")}{" "}
                 <IconButton
                   className={classes.closeButton}
                   onClick={() => setImportModalOpen(false)}

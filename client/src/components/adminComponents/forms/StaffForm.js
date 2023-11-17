@@ -80,7 +80,7 @@ const StaffForm = ({
   return (
     <Dialog open={open || update}>
       <DialogTitle textAlign="center">
-        {update ? "Edit Staff" : "Create New Staff"}
+        {update ? "Edit Staff" : "Create Staff"}
       </DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
@@ -143,7 +143,7 @@ const StaffForm = ({
         <DialogActions sx={{ p: "1.25rem" }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button color="secondary" type="submit" name="submitForm" variant="contained">
-            {update ? "Save" : "Create Staff"}
+            {update ? "Save" : "Create"}
           </Button>
         </DialogActions>
       </form>

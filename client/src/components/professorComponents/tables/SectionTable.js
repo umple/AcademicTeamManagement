@@ -102,7 +102,7 @@ const SectionTable = () => {
         fontWeight="fontWeightBold"
         sx={{ marginBottom: "0.5rem" }}
       >
-        Sections
+        {t("common.Sections")}
       </Typography>
       <MaterialReactTable
         displayColumnDefOptions={{
@@ -129,7 +129,7 @@ const SectionTable = () => {
         // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
-            <Tooltip arrow placement="left" title={t("common.edit")}>
+            <Tooltip arrow placement="left" title={t("common.Edit")}>
               <IconButton
                 onClick={() => {
                   setEditingRow(row.original);
@@ -140,7 +140,7 @@ const SectionTable = () => {
                 <Edit />
               </IconButton>
             </Tooltip>
-            <Tooltip arrow placement="right" title={t("common.delete")}>
+            <Tooltip arrow placement="right" title={t("common.Delete")}>
               <IconButton
                 color="error"
                 name="deleteSection"
@@ -177,7 +177,7 @@ const SectionTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export All Data
+              {t("common.export-data")}
             </Button>
           </Box>
         )}
