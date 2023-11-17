@@ -6,6 +6,7 @@
         "academic-team-management": "Gestion d'équipe académique",
         "export-data": "Exporter toutes les données",
         "Delete": "Supprimer",
+        "Edit": "Modifier",
         "Students": "Étudiants",
         "Cancel": "Annuler",
         "Save": "Sauvegarder",
@@ -86,5 +87,15 @@
         "delete-staff": "Êtes-vous sûr de vouloir supprimer le personnel ?",
         "delete-bulk-students": "Êtes-vous sûr de vouloir supprimer les étudiants sélectionnés ?",
         "total-students-selected": "Total d'étudiants sélectionnés"
-    }    
+    },    
+    "section": {
+        "sections": "Sections",
+        "actions": "Actions",
+        "name": "Nom",
+        "term": "Terme",
+        "year": "Année",
+        "notes": "Notes",
+        "add-section": "Ajouter une Section",
+        "edit-section": "Modifier une Section"
+    }
 }

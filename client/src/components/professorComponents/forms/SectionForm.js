@@ -12,7 +12,8 @@ import {
   import sectionService from "../../../services/sectionService";
   import Section from "../../../entities/Section";
   import sectionSchema from "../../../schemas/sectionSchema";
-  
+  import { useTranslation } from 'react-i18next';
+
   const SectionForm = ({
     open,
     columns,
@@ -39,6 +40,8 @@ import {
       actions.resetForm();
       handleClose();
     };
+
+    const { t, i18n } = useTranslation();
   
     const handleClose = () => {
       setCreateModalOpen(false);
@@ -71,7 +74,7 @@ import {
     return (
       <Dialog open={open || update}>
         <DialogTitle textAlign="center">
-          {update ? "Edit Section" : "Create New Section"}
+          {update ? t("section.edit-section") : t("section.add-section")}
         </DialogTitle>
         <form acceptCharset="Enter" onSubmit={handleSubmit}>
           <DialogContent>
@@ -101,9 +104,9 @@ import {
             </Stack>
           </DialogContent>
           <DialogActions sx={{ p: "1.25rem" }}>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose}>{t("common.Cancel")}</Button>
             <Button color="secondary" type="submit" name="submitForm" variant="contained">
-              {update ? "Save" : "Create Section"}
+              {update ? t("common.save") : t("section.add-section")}
             </Button>
           </DialogActions>
         </form>

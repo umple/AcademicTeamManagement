@@ -6,6 +6,7 @@
         "academic-team-management": "Academic Team Management",
         "export-data": "Export All Data",
         "Delete": "Delete",
+        "Edit": "Edit",
         "Students": "Students",
         "Cancel": "Cancel",
         "Save": "Save",
@@ -86,5 +87,15 @@
         "delete-staff": "Are you sure you want to delete staff?",
         "delete-bulk-students": "Are you sure you want to delete the selected students?",
         "total-students-selected": "Total students selected"
+    },
+    "section": {
+        "sections": "Sections",
+        "actions": "Actions",
+        "name": "Name",
+        "term": "Term",
+        "year": "Year",
+        "notes": "Notes",
+        "add-section": "Add Section",
+        "edit-section": "Edit Section"
     }
 }
