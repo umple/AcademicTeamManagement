@@ -299,7 +299,7 @@ const StudentTable = () => {
                 startIcon={<DeleteIcon />}
                 variant="contained"
               >
-                {t("common.Delete")} {Object.keys(rowSelection).length} {t("common.DeleStudentste")}
+                {t("common.Delete")} {Object.keys(rowSelection).length} {t("common.Students")}
               </Button>
             ) : (
               <></>
