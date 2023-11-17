@@ -9,7 +9,9 @@
         "Students": "Étudiants",
         "Cancel": "Annuler",
         "Save": "Sauvegarder",
-        "Create": "Créer"
+        "Create": "Créer",
+        "Submit": "Soumettre",
+        "learn-more": "En savoir plus"
     },
     "table": {
         "student-id": "Identifiant",
@@ -61,6 +63,12 @@
         "success-import": "Importation des étudiants réussie !",
         "create-student": "Créer un nouvel étudiant",
         "import-students": "Importer des étudiants",
-        "update-student": "Modifier l'étudiant"
+        "update-student": "Modifier l'étudiant",
+        "imports-instructions": "Sélectionnez la section et importez les étudiants",
+        "expected-template": "Modèle attendu",
+        "creating-list": "Création d'une liste de classe",
+        "drag-drop": "Faites glisser et déposez votre fichier ici",
+        "browse-files": "Parcourir les fichiers",
+        "download-template": "Télécharger le modèle"
     }    
 }

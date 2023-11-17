@@ -9,7 +9,9 @@
         "Students": "Students",
         "Cancel": "Cancel",
         "Save": "Save",
-        "Create": "Create"
+        "Create": "Create",
+        "Submit": "Submit",
+        "learn-more": "Learn More"
     },
     "table": {
         "student-id": "Student ID",
@@ -61,6 +63,12 @@
         "success-import": "successfully imported students!",
         "create-student": "Create New Student",
         "import-students": "Import Students",
-        "update-student": "Update Student"
+        "update-student": "Update Student",
+        "imports-instructions": "Select the Section and Import The Students",
+        "expected-template": "Expected Template",
+        "creating-list": "Creating a Class List",
+        "drag-drop": "Drag and drop your file here",
+        "browse-files": "Browse Files",
+        "download-template": "Download Template"
     }
 }

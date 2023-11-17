@@ -13,6 +13,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import sectionService from "../../services/sectionService";
 import CircularWithValueLabel from "../common/CircularProgressWithLabel";
+import { useTranslation } from 'react-i18next'; 
+
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -69,6 +71,9 @@ const ImportStudents = (props) => {
   const [isDragActive, setIsDragActive] = useState(false); // State to track if a file is being dragged over the drop area
   const [progress, setProgress] = useState(0);
   const [isImporting, setIsImporting] = useState(false);
+
+  // Set the translation
+  const { t, i18n } = useTranslation();
 
   const handleDragEnter = (event) => {
     event.preventDefault();
@@ -175,10 +180,10 @@ const ImportStudents = (props) => {
       }}
     >
       <Typography variant="h6" gutterBottom>
-        Select the Section and Import The Students
+        {t("students-table.imports-instructions")}
       </Typography>
       <FormControl fullWidth>
-        <InputLabel id="section-select-label">Section</InputLabel>
+        <InputLabel id="section-select-label">{t("table.sections")}</InputLabel>
         <Select
           fullWidth
           defaultValue=""
@@ -215,7 +220,7 @@ const ImportStudents = (props) => {
                 color="primary"
                 className={classes.uploadButton}
               >
-                Submit
+                {t("common.Submit")}
               </Button>
             </Box>
           ) : (
@@ -229,7 +234,7 @@ const ImportStudents = (props) => {
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
-              <p style={{ fontWeight: "bold" }}>Expected Template:</p>
+              <p style={{ fontWeight: "bold" }}>{t("students-table.expected-template")}:</p>
               <iframe
                 title="student import"
                 style={{ height: 100, width: "100%" }}
@@ -242,12 +247,12 @@ const ImportStudents = (props) => {
                   target="_blank"
                   rel="noopener"
                 >
-                  Learn More: Creating a Class List
+                  {t("common.learn-more")}: {t("students-table.creating-list")}
                 </Link>
               </Box>
               <Box my={5} className={classes.fileBox}>
                 <CloudUploadIcon sx={{ fontSize: "4rem", color: "#999" }} />
-                <Typography>Drag and drop your file here</Typography>
+                <Typography>{t("students-table.drag-drop")}</Typography>
                 <input
                   accept="*"
                   htmlFor="input-file-upload"
@@ -263,16 +268,17 @@ const ImportStudents = (props) => {
                 className={classes.buttonLabel}
               >
                 <Button variant="contained" color="warning" component="span">
-                  Browse Files
+                  {t("students-table.browse-files")}
                 </Button>
               </label>
+              <br></br>
               <label>
-                <Button color="primary" variant="contained">
+                <Button sx={{ m: 2 }} color="primary" variant="contained">
                   <a
                     style={{ all: "unset" }}
                     href="assets/student_import_template.xlsx"
                   >
-                    Download Template
+                    {t("students-table.download-template")}
                   </a>
                 </Button>
               </label>
