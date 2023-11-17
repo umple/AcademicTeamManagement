@@ -38,6 +38,10 @@ import { ROLES } from "../../../helpers/Roles";
 import { getUserType } from "../../../helpers/UserType";
 import EditStudentForm from "../forms/EditStudentModal";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTranslation } from 'react-i18next';
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
+
 
 const StudentTable = () => {
   const defaultColumns = useMemo(
@@ -92,7 +96,21 @@ const StudentTable = () => {
   const [deletionModal, setDeletionModal] = useState(false);
   const [refreshTrigger,setRefreshTrigger] = useState(false);
   const table = useRef(null);
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
 
+  // Handle translation of the page
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+
+  useEffect(() => {
+    setTableLocalization(getTableLocalization(currentLanguage));
+  }, [currentLanguage]);
+
+  // Alert message for success
   function handleImportSuccess(success) {
     setImportSuccess(success);
     if (success) {
@@ -200,6 +218,7 @@ const StudentTable = () => {
         state={{ rowSelection }}
         editingMode="modal"
         getRowId= {(originalRow) => originalRow._id}
+        localization={tableLocalization}
         enableRowSelection
         enableColumnOrdering
         enableColumnResizing
