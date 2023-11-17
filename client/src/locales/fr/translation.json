@@ -11,7 +11,14 @@
         "Save": "Sauvegarder",
         "Create": "Créer",
         "Submit": "Soumettre",
-        "learn-more": "En savoir plus"
+        "learn-more": "En savoir plus",
+        "Project": "Projet",
+        "Group": "Groupe",
+        "Student": "Étudiant",
+        "Staff": "Personnel",
+        "Section": "Section",
+        "Agree": "Accepter",
+        "Disagree": "Refuser"
     },
     "table": {
         "student-id": "Identifiant",
@@ -70,5 +77,14 @@
         "drag-drop": "Faites glisser et déposez votre fichier ici",
         "browse-files": "Parcourir les fichiers",
         "download-template": "Télécharger le modèle"
+    },
+    "deletion-modal": {
+        "delete-group": "Êtes-vous sûr de vouloir supprimer le groupe ?",
+        "delete-project": "Êtes-vous sûr de vouloir supprimer le projet ?",
+        "delete-student": "Êtes-vous sûr de vouloir supprimer l'étudiant ?",
+        "delete-section": "Êtes-vous sûr de vouloir supprimer la section ?",
+        "delete-staff": "Êtes-vous sûr de vouloir supprimer le personnel ?",
+        "delete-bulk-students": "Êtes-vous sûr de vouloir supprimer les étudiants sélectionnés ?",
+        "total-students-selected": "Total d'étudiants sélectionnés"
     }    
 }

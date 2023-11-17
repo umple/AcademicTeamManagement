@@ -11,7 +11,14 @@
         "Save": "Save",
         "Create": "Create",
         "Submit": "Submit",
-        "learn-more": "Learn More"
+        "learn-more": "Learn More",
+        "Project": "Project",
+        "Group": "Group",
+        "Student": "Student",
+        "Staff": "Staff",
+        "Section": "Section",
+        "Agree": "Agree",
+        "Disagree": "Disagree"
     },
     "table": {
         "student-id": "Student ID",
@@ -70,5 +77,14 @@
         "drag-drop": "Drag and drop your file here",
         "browse-files": "Browse Files",
         "download-template": "Download Template"
+    },
+    "deletion-modal": {
+        "delete-group": "Are you sure you want to delete group?",
+        "delete-project": "Are you sure you want to delete project?",
+        "delete-student": "Are you sure you want to delete student?",
+        "delete-section": "Are you sure you want to delete section?",
+        "delete-staff": "Are you sure you want to delete staff?",
+        "delete-bulk-students": "Are you sure you want to delete the selected students?",
+        "total-students-selected": "Total students selected"
     }
 }
