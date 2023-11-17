@@ -5,6 +5,9 @@ from app_config import CLIENT_ID, CLIENT_SECRET, TENANT_ID
 # Azure AD token endpoint
 token_url = f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token'
 
+# Redirect URL
+REDIRECT_URL = 'https://academic-teams.umple.org/login'
+
 # Define the token request data
 token_data = {
     'grant_type': 'client_credentials',
@@ -34,7 +37,7 @@ def add_user_to_azure(user_obj):
     # Define the external user data
     external_user_data = {
         "invitedUserEmailAddress": email,
-        "inviteRedirectUrl": "https://yourapp.com/redirect",
+        "inviteRedirectUrl": REDIRECT_URL,
         "sendInvitationMessage": True
     }
 
