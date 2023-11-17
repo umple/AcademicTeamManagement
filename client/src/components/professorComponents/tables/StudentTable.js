@@ -96,10 +96,11 @@ const StudentTable = () => {
   const [deletionModal, setDeletionModal] = useState(false);
   const [refreshTrigger,setRefreshTrigger] = useState(false);
   const table = useRef(null);
-  const { t, i18n } = useTranslation();
-  const currentLanguage = i18n.language;
 
   // Handle translation of the page
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  
   const getTableLocalization = (language) => {
     return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
   };
