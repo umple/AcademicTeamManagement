@@ -60,7 +60,7 @@ const StudentTable = () => {
   }, [currentLanguage]);
 
   
-  const defaultColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         accessorKey: "orgdefinedid",
@@ -99,7 +99,6 @@ const StudentTable = () => {
   );
 
   // For the create profile modal
-  const [columns] = useState(defaultColumns);
   const classes = useStyles();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
