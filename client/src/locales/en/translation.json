@@ -3,11 +3,34 @@
         "project": "project",
         "student": "student",
         "group": "group",
-        "cancel": "Cancel",
-        "edit": "Edit",
-        "delete": "Delete",
-        "save": "Save",
-        "academic-team-management": "Academic Team Management"
+        "academic-team-management": "Academic Team Management",
+        "export-data": "Export Data",
+        "Delete": "Delete",
+        "Edit": "Edit",
+        "Students": "Students",
+        "Cancel": "Cancel",
+        "Save": "Save",
+        "Create": "Create",
+        "Submit": "Submit",
+        "learn-more": "Learn More",
+        "Project": "Project",
+        "Group": "Group",
+        "Student": "Student",
+        "Staff": "Staff",
+        "Section": "Section",
+        "Sections": "Sections",
+        "Agree": "Agree",
+        "Disagree": "Disagree"
+    },
+    "table": {
+        "student-id": "Student ID",
+        "username": "Username",
+        "lastname": "Last Name",
+        "firstname": "First Name",
+        "email": "Email",
+        "sections": "Section",
+        "final-grade": "Final Grade",
+        "group": "Group"
     },
     "header": {
         "navbar": {
@@ -42,6 +65,30 @@
         "leave-group": "Leave Group",
         "no-project": "You have no project applications yet."
     },
+    "students-table": {
+        "students": "Students",
+        "success": "Success",
+        "success-alert": "Success Alert",
+        "success-import": "successfully imported students!",
+        "create-student": "Create Student",
+        "import-students": "Import Students",
+        "update-student": "Update Student",
+        "imports-instructions": "Select the Section and Import The Students",
+        "expected-template": "Expected Template",
+        "creating-list": "Creating a Class List",
+        "drag-drop": "Drag and drop your file here",
+        "browse-files": "Browse Files",
+        "download-template": "Download Template"
+    },
+    "deletion-modal": {
+        "delete-group": "Are you sure you want to delete group?",
+        "delete-project": "Are you sure you want to delete project?",
+        "delete-student": "Are you sure you want to delete student?",
+        "delete-section": "Are you sure you want to delete section?",
+        "delete-staff": "Are you sure you want to delete staff?",
+        "delete-bulk-students": "Are you sure you want to delete the selected students?",
+        "total-students-selected": "Total students selected"
+    },
     "section": {
         "sections": "Sections",
         "actions": "Actions",
@@ -49,7 +96,7 @@
         "term": "Term",
         "year": "Year",
         "notes": "Notes",
-        "add-section": "Add Section",
+        "add-section": "Create Section",
         "edit-section": "Edit Section"
     }
 }

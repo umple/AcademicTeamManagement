@@ -104,9 +104,9 @@ import {
             </Stack>
           </DialogContent>
           <DialogActions sx={{ p: "1.25rem" }}>
-            <Button onClick={handleClose}>{t("common.cancel")}</Button>
+            <Button onClick={handleClose}>{t("common.Cancel")}</Button>
             <Button color="secondary" type="submit" name="submitForm" variant="contained">
-              {update ? t("common.save") : t("section.add-section")}
+              {update ? t("common.Save") : t("common.Create")}
             </Button>
           </DialogActions>
         </form>

@@ -20,6 +20,8 @@ import studentService from "../../../services/studentService";
 import Student from "../../../entities/Student";
 import studentSchema from "../../../schemas/studentSchema";
 import sectionService from "../../../services/sectionService";
+import { useTranslation } from 'react-i18next'; 
+
 
 const EditStudentForm = ({
   open,
@@ -33,6 +35,9 @@ const EditStudentForm = ({
   const [initialStudentValues, setInit] = useState(
     new Student(studentData.original)
   );
+
+    // Set the translation
+    const { t, i18n } = useTranslation();
 
     // retrieve the sections
     const [sections, setSections] = useState([]);
@@ -93,7 +98,7 @@ const EditStudentForm = ({
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">
-        {studentData?.original ? "Update Student" : "Create New Student"}
+        {studentData?.original ? t("students-table.update-student") : t("students-table.create-student")}
       </DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
@@ -171,9 +176,9 @@ const EditStudentForm = ({
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>{t("common.Cancel")}</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {studentData?.original ? "Save" : "Create Student"}
+            {studentData?.original ? t("common.Save") : t("common.Create")}
           </Button>
         </DialogActions>
       </form>

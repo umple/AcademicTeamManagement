@@ -159,7 +159,7 @@ const StaffTable = () => {
               variant="contained"
               name="create-new-Staff"
             >
-              Create New Staff
+              Create Staff
             </Button>
             <Button
               color="primary"
@@ -167,7 +167,7 @@ const StaffTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export All Data
+              Export Data
             </Button>
           </Box>
         )}

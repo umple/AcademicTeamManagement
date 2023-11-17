@@ -3,12 +3,35 @@
         "project": "projet",
         "student": "étudiant",
         "group": "groupe",
-        "cancel": "Annuler",
-        "edit": "Modifier",
-        "delete": "Supprimer",
-        "save": "Sauvegarder",
-        "academic-team-management": "Gestion d'équipe académique"
+        "academic-team-management": "Gestion d'équipe académique",
+        "export-data": "Exporter les données",
+        "Delete": "Supprimer",
+        "Edit": "Modifier",
+        "Students": "Étudiants",
+        "Cancel": "Annuler",
+        "Save": "Sauvegarder",
+        "Create": "Créer",
+        "Submit": "Soumettre",
+        "learn-more": "En savoir plus",
+        "Project": "Projet",
+        "Group": "Groupe",
+        "Student": "Étudiant",
+        "Staff": "Personnel",
+        "Section": "Section",
+        "Sections": "Sections",
+        "Agree": "Accepter",
+        "Disagree": "Refuser"
     },
+    "table": {
+        "student-id": "Identifiant",
+        "username": "Username",
+        "lastname": "Nom",
+        "firstname": "Prénom",
+        "email": "Email",
+        "sections": "Section",
+        "final-grade": "Note finale",
+        "group": "Groupe"
+    },    
     "header": {
         "navbar": {
             "home": "Accueil",
@@ -42,6 +65,30 @@
         "leave-group": "Quitter le groupe",
         "no-project": "Vous n'avez pas encore de candidatures à des projets."
     },
+    "students-table": {
+        "students": "Étudiants",
+        "success": "Succès",
+        "success-alert": "Alerte de Succès",
+        "success-import": "Importation des étudiants réussie !",
+        "create-student": "Créer étudiant",
+        "import-students": "Importer des étudiants",
+        "update-student": "Modifier l'étudiant",
+        "imports-instructions": "Sélectionnez la section et importez les étudiants",
+        "expected-template": "Modèle attendu",
+        "creating-list": "Création d'une liste de classe",
+        "drag-drop": "Faites glisser et déposez votre fichier ici",
+        "browse-files": "Parcourir les fichiers",
+        "download-template": "Télécharger le modèle"
+    },
+    "deletion-modal": {
+        "delete-group": "Êtes-vous sûr de vouloir supprimer le groupe ?",
+        "delete-project": "Êtes-vous sûr de vouloir supprimer le projet ?",
+        "delete-student": "Êtes-vous sûr de vouloir supprimer l'étudiant ?",
+        "delete-section": "Êtes-vous sûr de vouloir supprimer la section ?",
+        "delete-staff": "Êtes-vous sûr de vouloir supprimer le personnel ?",
+        "delete-bulk-students": "Êtes-vous sûr de vouloir supprimer les étudiants sélectionnés ?",
+        "total-students-selected": "Total d'étudiants sélectionnés"
+    },    
     "section": {
         "sections": "Sections",
         "actions": "Actions",
@@ -49,7 +96,7 @@
         "term": "Terme",
         "year": "Année",
         "notes": "Notes",
-        "add-section": "Ajouter une Section",
+        "add-section": "Créer Section",
         "edit-section": "Modifier une Section"
     }
 }

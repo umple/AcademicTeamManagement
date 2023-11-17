@@ -6,6 +6,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import { useTranslation } from 'react-i18next'; 
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -18,6 +20,10 @@ const ConfirmDeletionModal = ({
   row,
   type,
 }) => {
+
+  // Set the translation
+  const { t, i18n } = useTranslation();
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -35,45 +41,45 @@ const ConfirmDeletionModal = ({
       >
         <DialogTitle>
           {type === "group" ? (
-            <span>Are you sure you want to delete group?</span>
+            <span>{t("deletion-modal.delete-group")}</span>
           ) : type === "project" ? (
-            <span>Are you sure you want to delete project?</span>
+            <span>{t("deletion-modal.delete-project")}</span>
           ) : type === "student" ? (
-            <span>Are you sure you want to delete student?</span>
+            <span>{t("deletion-modal.delete-student")}</span>
           ) : type === "section" ? (
-            <span>Are you sure you want to delete section?</span>
+            <span>{t("deletion-modal.delete-section")}</span>
           ) :type === "staff" ? (
-            <span>Are you sure you want to delete staff?</span>
+            <span>{t("deletion-modal.delete-staff")}</span>
           ) : type === "bulk" ? (
-            <span>Are you sure you want to delete the selected students? By doing so, they cannot be restored.</span>
+            <span>{t("deletion-modal.delete-bulk-students")}</span>
           ): null}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {type === "group" ? (
-              <span>Group {row.getValue("group_id")}</span>
+              <span>{t("common.Group")}: {row.getValue("group_id")}</span>
             ) : type === "project" ? (
-              <span>Project: {row.getValue("project")}</span>
+              <span>{t("common.Project")}: {row.getValue("project")}</span>
             ) : type === "student" ? (
-              <span>Student: {row.getValue("username")}</span>
+              <span>{t("common.Student")}: {row.getValue("username")}</span>
             ) : type === "staff" ? (
-              <span>Staff: {row.getValue("username")}</span>
+              <span>{t("common.Staff")}: {row.getValue("username")}</span>
             ) : type === "section" ? (
-              <span>Section: {row.getValue("name")}</span>
+              <span>{t("common.Section")}: {row.getValue("name")}</span>
             ) :  type === "bulk" ? (
-              <span>Total students selected: {Object.keys(row).length}</span>
+              <span>{t("deletion-modal.total-students-selected")}: {Object.keys(row).length}</span>
             ): null}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose}>{t("common.Disagree")}</Button>
           <Button
             name="agreeToDelete"
             onClick={() => {
               handleDeletion(row);
             }}
           >
-            Agree
+            {t("common.Agree")}
           </Button>
         </DialogActions>
       </Dialog>

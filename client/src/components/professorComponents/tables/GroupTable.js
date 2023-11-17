@@ -258,7 +258,7 @@ const GroupTable = () => {
               variant="contained"
               name="create-new-group"
             >
-              Create New Group
+              Create Group
             </Button>
             <Button
               color="primary"
@@ -266,7 +266,7 @@ const GroupTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export All Data
+              Export Data
             </Button>
           </Box>
         )}
