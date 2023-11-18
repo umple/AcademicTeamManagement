@@ -140,7 +140,6 @@ const ProjectTable = () => {
         .catch((error) => {
           console.error(error);
         });
-      console.log("DATA", data.projects)
       if (data.projects) {
         if (userType === ROLES.ADMIN) {
           setTableData(data.projects); // show all data if user is an admin

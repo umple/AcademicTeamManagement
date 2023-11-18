@@ -21,10 +21,10 @@ const ViewApplicationModal = ({
     onSubmit,
     setShowAlert,
     project,
-    fetchProjects,
+    fetchApplications,
   }) => {
     const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState("");
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState(data.status ?? "Feedback Provided");
   
     let states = ["Accepted", "Rejected", "Feedback Provided"];
   
@@ -35,6 +35,7 @@ const ViewApplicationModal = ({
     const handleSubmit = (e) => {
       e.preventDefault();
       data.status = status;
+      data.feedback = textFieldFeedback
       fetch("api/application/review", {
         method: "PUT",
         headers: {
@@ -46,8 +47,8 @@ const ViewApplicationModal = ({
           return response.json();
         })
         .then((data) => {
-          fetchProjects();
-          setShowAlert(true);
+          fetchApplications();
+          setShowAlert(true); 
           setTimeout(() => setShowAlert(false), 5000);
         });
       onSubmit();
@@ -90,7 +91,11 @@ const ViewApplicationModal = ({
             <Grid>
               <FormGroup>
                 <InputLabel id="status-label">Status</InputLabel>
-                <Select labelId="status-label" onChange={handleStatusChange}>
+                <Select 
+                    labelId="status-label" 
+                    defaultValue={status}
+                    disabled={data.status == "Accepted"}
+                    onChange={handleStatusChange}>
                   {states.map((state) => (
                     <MenuItem key={state} value={state}>
                       {state}
