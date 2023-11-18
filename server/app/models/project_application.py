@@ -17,7 +17,7 @@ def get_all_project_application():
 def has_project_application(project_name,student_group):
     try:
         result = projectApplicationCollection.count_documents(
-            {"project": project_name, "group_id": student_group, "status": {"$in": ["Pending", "Rejected", "Accepted"]}}
+            {"project": project_name, "group_id": student_group, "status": {"$in": ["Requested", "Rejected", "Accepted"]}}
         )
         print(result)
         if result != 0:
@@ -70,7 +70,8 @@ def create_application(project_name, student_email, group_name):
         "group_id": group_name,
         "submitted_by": student_email,
         "feedback": "",
-        "status": "Pending",
+        "ranking": 0,
+        "status": "Requested",
     }
     result = projectApplicationCollection.insert_one(application)
     return result
@@ -91,9 +92,13 @@ def assign_project_to_group(group_obj):
     except Exception as e:
         return None
 
-def update_application(group_name, feedback, students_needed):
-    application = projectApplicationCollection.find({"group_id": group_name})
-    return application
+def update_project_application_by_id(id, updated_fields):
+    updated_fields.pop("_id", None)
+    result = projectApplicationCollection.update_one(
+        {"_id": ObjectId(id)},
+        {"$set": updated_fields}
+    )
+    return result
 
 def reviewApplication(applicationObject):
     result = True

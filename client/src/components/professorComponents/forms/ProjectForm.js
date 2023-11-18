@@ -1,5 +1,6 @@
 //Modal to create new project
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import {
   Button,
   Dialog,
@@ -23,6 +24,7 @@ import professorProjectSchema from "../../../schemas/professorProjectSchema";
 import statusByValue from "../../common/StatusHelper";
 
 const ProjectForm = ({
+  key,
   open,
   columns,
   projects,
@@ -90,7 +92,7 @@ const ProjectForm = ({
               }
               if (column.accessorKey === "status") {
                 return (
-                  <FormGroup>
+                  <FormGroup key={uuidv4()}>
                     <InputLabel id="status-label">Status</InputLabel>
                     <Select
                       labelId="status-label"
@@ -113,7 +115,7 @@ const ProjectForm = ({
                         onCreateStatus.possibilities.map((option) => {
                           const tmp = statusByValue(option);
                           return (
-                            <MenuItem value={option}>
+                            <MenuItem key={option} value={option}>
                               <Tooltip title={tmp.info} style={{ width: '100%' }} arrow>
                                 {option}
                               </Tooltip>
