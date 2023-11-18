@@ -106,7 +106,14 @@ const ProjectTable = () => {
 
   const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const [currentApplication, setCurrentApplication]  = useState({})
+
+  // Update the application details
+  const handleOpen = async (group_id, project_id) => {
+    const currApp = applications.filter(item => item.project === project_id && item.group_id === group_id)
+    currApp && currApp.length > 0 && setCurrentApplication(currApp[0])
+    setOpen(true)
+  };
   const handleClose = () => setOpen(false);
   const csvExporter = new ExportToCsv(csvOptions("ProjectsFromAcTeams-"));
 
@@ -268,19 +275,20 @@ const ProjectTable = () => {
                               <Button
                                 variant="outlined"
                                 color="secondary"
-                                onClick={handleOpen}
+                                onClick={() => handleOpen(application.group_id, row.original.project)}
                               >
                                 Review Application
                               </Button>
-                              <ViewApplicationModal
+                              {open && 
+                                <ViewApplicationModal
                                 fetchApplications={fetchApplications}
                                 setShowAlert={setShowAlert}
-                                data={application}
-                                project={row.id}
+                                data={currentApplication}
                                 open={open}
                                 onClose={handleClose}
                                 onSubmit={() => setOpen(false)}
                               />
+                              }
                             </TableCell>
                           </TableRow>
                         );

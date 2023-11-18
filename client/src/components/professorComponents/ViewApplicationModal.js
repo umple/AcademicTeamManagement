@@ -22,11 +22,10 @@ const ViewApplicationModal = ({
     onClose,
     onSubmit,
     setShowAlert,
-    project,
     fetchApplications,
   }) => {
     const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState(data.feedback ?? "");
-    const [status, setStatus] = useState(data.status ?? "Feedback Provided");
+    const [status, setStatus] = useState(data.status && data.status !== "Requested" ? data.status : "Feedback Provided");
   
     let states = ["Accepted", "Rejected", "Feedback Provided"];
   
