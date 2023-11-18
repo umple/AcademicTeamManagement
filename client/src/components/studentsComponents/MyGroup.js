@@ -32,35 +32,34 @@ const MyGroup = () => {
     setTableLocalization(getTableLocalization(currentLanguage));
   }, [currentLanguage]);
 
+  const fetchDataAndSetState = async () => {
+
+    // Check if the user has a group or not
+    try {
+      const groupData = await fetchData("api/retrieve/curr/user/group");
+      !groupData.error && setGroup(groupData);
+    } catch (error) {
+      console.error(error)
+      setGroup({});
+    }
+    
+    // Get the student data
+    try {
+      setIsLoading(true)
+      const studentsData = await fetchData("api/students");
+      studentsData && setStudents(studentsData.students);
+
+      const projectApplicationsData = await fetchData("api/retrieve/project/application");
+      projectApplicationsData && setProjectApplications(projectApplicationsData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+
+    }
+  };
 
   useEffect(() => {
-    const fetchDataAndSetState = async () => {
-
-      // Check if the user has a group or not
-      try {
-        const groupData = await fetchData("api/retrieve/curr/user/group");
-        !groupData.error && setGroup(groupData);
-      } catch (error) {
-        console.error(error)
-        setGroup({});
-      }
-      
-      // Get the student data
-      try {
-        setIsLoading(true)
-        const studentsData = await fetchData("api/students");
-        studentsData && setStudents(studentsData.students);
-
-        const projectApplicationsData = await fetchData("api/retrieve/project/application");
-        projectApplicationsData && setProjectApplications(projectApplicationsData);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-
-      }
-    };
-
     fetchDataAndSetState();
   }, []);
 
@@ -70,6 +69,9 @@ const MyGroup = () => {
     rowId["ranking"] = newValue
     try {
       await projectService.updateProjectApplication(rowId["_id"],rowId);
+      // Refresh applications
+      const projectApplicationsData = await fetchData("api/retrieve/project/application");
+      projectApplicationsData && setProjectApplications(projectApplicationsData);
     } catch (error) {
       console.error(error);
     }
