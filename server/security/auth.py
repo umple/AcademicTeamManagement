@@ -27,9 +27,13 @@ def authentication(app):
             user_role = document["role"]
             return redirect(get_redirection_url_for_user(user_role)) 
         
-        # otherwise get the user from Azur
-        user_role = session.get("user")["roles"][0] # get the user role, by default we use the first role
-        return redirect(get_redirection_url_for_user(user_role))
+        # try to get the user from Azur
+        if ("roles" in session.get("user")) and session.get("user")["roles"][0]:
+            user_role = session.get("user")["roles"][0] # get the user role, by default we use the first role
+            return redirect(get_redirection_url_for_user(user_role))
+        
+        # otherwise force the user to go back to the login page
+        return redirect(get_redirection_url_for_user(None))
 
     @app.route("/api/login")
     def login():
