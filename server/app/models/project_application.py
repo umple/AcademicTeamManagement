@@ -92,9 +92,13 @@ def assign_project_to_group(group_obj):
     except Exception as e:
         return None
 
-def update_application(group_name, feedback, students_needed):
-    application = projectApplicationCollection.find({"group_id": group_name})
-    return application
+def update_project_application_by_id(id, updated_fields):
+    updated_fields.pop("_id", None)
+    result = projectApplicationCollection.update_one(
+        {"_id": ObjectId(id)},
+        {"$set": updated_fields}
+    )
+    return result
 
 def reviewApplication(applicationObject):
     result = True
