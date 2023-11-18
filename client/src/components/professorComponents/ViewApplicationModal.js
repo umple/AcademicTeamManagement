@@ -88,6 +88,16 @@ const ViewApplicationModal = ({
                   rows={1}
                 />
               </Box>
+              <Box>
+                <InputLabel id="submitted-by-label">Ranking</InputLabel>
+                <TextField
+                  disabled
+                  fullWidth
+                  name={"ranking"}
+                  value={data.ranking}
+                  rows={1}
+                />
+              </Box>
               <FormGroup>
                 <InputLabel id="status-label">Status</InputLabel>
                 <Select 
