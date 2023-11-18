@@ -93,6 +93,27 @@ const projectService = {
         throw error;
       });
   },
+
+  updateProjectApplication: async (id, values) => {
+    return fetch("/api/project/application/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          throw new Error(`Failed to update project: ${errorMessage}`);
+        });
+      }
+      return { success: true, message: "Project updated successfully" };
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  },
 };
 
 export default projectService;

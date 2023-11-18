@@ -1,6 +1,6 @@
 // MyGroup.js
 import React, { useState, useEffect, useMemo } from "react";
-import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent} from "@mui/material";
+import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent, MenuItem, Select, TableCell} from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link } from "react-router-dom";
 import Chip from '@mui/material/Chip';
@@ -10,6 +10,7 @@ import { colorStatus } from "../../helpers/statusColors";
 import { useTranslation } from 'react-i18next';
 import { MRT_Localization_EN } from 'material-react-table/locales/en';
 import { MRT_Localization_FR } from 'material-react-table/locales/fr';
+import projectService from "../../services/projectService";
 
 
 const MyGroup = () => {
@@ -31,37 +32,50 @@ const MyGroup = () => {
     setTableLocalization(getTableLocalization(currentLanguage));
   }, [currentLanguage]);
 
+  const fetchDataAndSetState = async () => {
+
+    // Check if the user has a group or not
+    try {
+      const groupData = await fetchData("api/retrieve/curr/user/group");
+      !groupData.error && setGroup(groupData);
+    } catch (error) {
+      console.error(error)
+      setGroup({});
+    }
+    
+    // Get the student data
+    try {
+      setIsLoading(true)
+      const studentsData = await fetchData("api/students");
+      studentsData && setStudents(studentsData.students);
+
+      const projectApplicationsData = await fetchData("api/retrieve/project/application");
+      projectApplicationsData && setProjectApplications(projectApplicationsData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+
+    }
+  };
 
   useEffect(() => {
-    const fetchDataAndSetState = async () => {
-
-      // Check if the user has a group or not
-      try {
-        const groupData = await fetchData("api/retrieve/curr/user/group");
-        !groupData.error && setGroup(groupData);
-      } catch (error) {
-        console.error(error)
-        setGroup({});
-      }
-      
-      // Get the student data
-      try {
-        setIsLoading(true)
-        const studentsData = await fetchData("api/students");
-        studentsData && setStudents(studentsData.students);
-
-        const projectApplicationsData = await fetchData("api/retrieve/project/application");
-        projectApplicationsData && setProjectApplications(projectApplicationsData);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-
-      }
-    };
-
     fetchDataAndSetState();
   }, []);
+
+  // Handle changing the rank
+  const rankingsAvailable = [...Array(11).keys()]
+  const handleRankingChange = async (rowId, newValue) => {
+    rowId["ranking"] = newValue
+    try {
+      await projectService.updateProjectApplication(rowId["_id"],rowId);
+      // Refresh applications
+      const projectApplicationsData = await fetchData("api/retrieve/project/application");
+      projectApplicationsData && setProjectApplications(projectApplicationsData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleLeaveGroup = async () => {
     try {
@@ -108,6 +122,28 @@ const MyGroup = () => {
     {
       accessorKey: 'feedback',
       header: t('my-group.feedback'),
+    },
+    {
+      accessorKey: 'ranking',
+      header: t('my-group.ranking'),
+      Cell: ({ row, cell }) => (
+        <TableCell>
+          {columns.find((col) => col.accessorKey === 'ranking') ? (
+            <Select
+              value={cell.getValue()}
+              onChange={(e) => handleRankingChange(row.original, e.target.value)}
+            >
+              {rankingsAvailable.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          ) : (
+            cell.render('Cell')
+          )}
+        </TableCell>
+      ),
     },
 
   ], [currentLanguage]);

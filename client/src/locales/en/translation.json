@@ -58,6 +58,7 @@
         "project": "Project",
         "status": "Status",
         "feedback": "Feedback",
+        "ranking": "Ranking",
         "left": "User has left the team successfully!",
         "members": "Members:",
         "project2": "Project:",
