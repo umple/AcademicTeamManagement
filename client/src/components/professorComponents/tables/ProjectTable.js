@@ -270,7 +270,7 @@ const ProjectTable = () => {
                                 color="secondary"
                                 onClick={handleOpen}
                               >
-                                View Application
+                                Review Application
                               </Button>
                               <ViewApplicationModal
                                 fetchApplications={fetchApplications}

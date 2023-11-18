@@ -11,7 +11,9 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  TextareaAutosize
+  TextareaAutosize,
+  Stack,
+  TextField
 } from "@mui/material";
 
 const ViewApplicationModal = ({
@@ -23,7 +25,7 @@ const ViewApplicationModal = ({
     project,
     fetchApplications,
   }) => {
-    const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState("");
+    const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState(data.feedback ?? "");
     const [status, setStatus] = useState(data.status ?? "Feedback Provided");
   
     let states = ["Accepted", "Rejected", "Feedback Provided"];
@@ -57,38 +59,36 @@ const ViewApplicationModal = ({
   
     return (
       <Dialog open={open}>
-        <DialogTitle>Project Application: </DialogTitle>
+        <DialogTitle textAlign="center">Project Application</DialogTitle>
         <form acceptCharset="Enter" onSubmit={handleSubmit}>
           <DialogContent>
-            <Grid container alignItems="center" spacing={2}>
-              <Grid item>
-                <FormLabel component="legend">
-                  <Typography variant="body1" gutterBottom>
-                    <Box fontWeight="fontWeightMedium" display="inline">
-                      Group:{" "}
-                    </Box>
-                  </Typography>
-                  <Typography variant="body1" gutterBottom>
-                    <Box display="center">{data.group_id}</Box>
-                  </Typography>
-                </FormLabel>
-              </Grid>
-            </Grid>
-            <Grid container alignItems="center" spacing={2}>
-              <Grid item>
-                <FormLabel component="legend">
-                  <Typography variant="body1" gutterBottom>
-                    <Box fontWeight="fontWeightMedium" display="inline">
-                      submitted_by:{" "}
-                    </Box>
-                  </Typography>
-                  <Typography variant="body1" gutterBottom>
-                    <Box display="center">{data.submitted_by} </Box>
-                  </Typography>
-                </FormLabel>
-              </Grid>
-            </Grid>
-            <Grid>
+            <Stack
+              sx={{
+                width: "100%",
+                minWidth: { xs: "300px", sm: "360px", md: "400px" },
+                gap: "1.5rem",
+              }}
+            >
+              <Box>
+                <InputLabel id="group-label">Group</InputLabel>
+                <TextField
+                  disabled
+                  fullWidth
+                  name={"group_id"}
+                  value={data.group_id}
+                  rows={1}
+                />
+              </Box>
+              <Box>
+                <InputLabel id="submitted-by-label">Submitted By</InputLabel>
+                <TextField
+                  disabled
+                  fullWidth
+                  name={"submitted_by"}
+                  value={data.submitted_by}
+                  rows={1}
+                />
+              </Box>
               <FormGroup>
                 <InputLabel id="status-label">Status</InputLabel>
                 <Select 
@@ -103,26 +103,22 @@ const ViewApplicationModal = ({
                   ))}
                 </Select>
               </FormGroup>
-            </Grid>
-            <FormLabel component="legend" sx={{ mt: 1 }}>
-              <Box fontWeight="fontWeightMedium" display="inline">
-                Feedback:{" "}
+              <Box>
+                <InputLabel id="feedback-label">Feedback</InputLabel>
+                <TextField
+                  name={"feedback"}
+                  multiline
+                  fullWidth
+                  rows={5}
+                  placeholder="Insert Feedback Here"
+                  defaultValue={textFieldFeedback}
+                  value={textFieldFeedback}
+                  onChange={(e) => {
+                    setTextFieldtextFieldFeedback(e.target.value);
+                  }}
+                />
               </Box>
-            </FormLabel>
-            <FormGroup row>
-              <TextareaAutosize
-                style={{
-                  height: "calc(1.5em + 100px)",
-                  width: "calc(1.5em + 250px)",
-                }}
-                name="feedback"
-                multiline={4}
-                value={textFieldFeedback}
-                onChange={(e) => {
-                  setTextFieldtextFieldFeedback(e.target.value);
-                }}
-              />
-            </FormGroup>
+            </Stack>
           </DialogContent>
           <DialogActions sx={{ p: "1.25rem" }}>
             <Button onClick={onClose}>Cancel</Button>
@@ -132,7 +128,7 @@ const ViewApplicationModal = ({
               onClick={handleSubmit}
               variant="contained"
             >
-              Review Application
+              Save
             </Button>
           </DialogActions>
         </form>
