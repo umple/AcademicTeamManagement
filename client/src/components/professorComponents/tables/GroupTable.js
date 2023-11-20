@@ -265,7 +265,7 @@ const GroupTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact'  }}
+        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact' ,pagination: {pageSize:1000}}}
         localization={tableLocalization}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }} id={`row-${row.original.group_id}`}>
