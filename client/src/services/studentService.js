@@ -109,7 +109,30 @@ const studentService = {
     .catch((error) => {
       console.error(error);
     });
-  }
+  },
+  updateGroupBulkStudents: async (rows, newGroup) => {
+    const  students = Object.fromEntries(
+      Object.entries(rows).map(([key, value]) => [String(key), value])
+    );
+    const formData = {
+      "group": newGroup,
+      "students": students
+    }
+
+    return fetch("api/student/update/group/bulk", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData)
+    })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
 
 };
 
