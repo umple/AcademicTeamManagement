@@ -119,7 +119,7 @@ import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
                 value={newGroup}
                 onChange={(e) => setNewGroup(e.target.value)}
                 >
-                <MenuItem key={"no-group"} value={'null'}>(Remove From Groups)</MenuItem>
+                <MenuItem key={"no-group"} value={'null'}>({t("students-table.remove-from-groups")})</MenuItem>
                 {groupsData.map((option) => (
                     <MenuItem key={option.group_id} value={option.group_id}>
                     {option.group_id}

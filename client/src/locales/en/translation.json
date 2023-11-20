@@ -74,6 +74,7 @@
         "create-student": "Create Student",
         "move-students": "Move Students To Group",
         "change-group": "Change Group of ",
+        "remove-from-groups": "Remove From Groups",
         "import-students": "Import Students",
         "update-student": "Update Student",
         "imports-instructions": "Select the Section and Import The Students",
