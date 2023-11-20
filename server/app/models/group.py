@@ -56,6 +56,22 @@ def add_student_to_group(student_email, group_id):
     
     return False
 
+def add_student_to_group_by_group_id(student_email, group_id):
+    student_obj = student.get_student_by_email(student_email)
+    group_obj = get_group_by_group_name(group_id)
+
+    if student_obj["orgdefinedid"] in group_obj['members']:
+        return False
+    
+    result = groupCollection.update_one(
+        {"group_id": group_id},
+        {"$push": {"members": str(student_obj["orgdefinedid"])}})
+    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"])
+    if result.modified_count > 0:
+        return True
+    
+    return False
+
 def remove_student_from_group_by_email(group_id, email):
     group = get_group_by_group_name(group_id)
     student_obj = student.get_student_by_email(email)
@@ -68,9 +84,13 @@ def remove_student_from_group_by_email(group_id, email):
 
 def remove_student_from_group(group_id , orgdefinedid):
     group = get_group_by_group_name(group_id)
-    group["members"].remove(orgdefinedid)
-    result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
-    return result
+    if orgdefinedid in group["members"]:
+        group["members"].remove(orgdefinedid)
+        print(group)
+        result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
+        return result
+    
+    return False
 
 def get_user_group(user_email):
     student_obj = student.get_student_by_email(user_email)
