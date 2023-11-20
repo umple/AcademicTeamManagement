@@ -8,15 +8,18 @@ import {
   Container,
   Alert,
   Snackbar,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
-import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
+import IconButton from "@mui/material/IconButton";
+import InfoIcon from "@mui/icons-material/Info";
 import { getUserEmail } from "../../helpers/UserEmail";
 import AddProjectModal from "./forms/AddProjectModal";
 import projectService from "../../services/projectService";
 import studentService from "../../services/studentService";
 import ProjectCard from "./ProjectCard";
+import AddIcon from "@mui/icons-material/Add";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 
 function StudentProjects() {
   const [projects, setProjects] = useState([]);
@@ -51,7 +54,10 @@ function StudentProjects() {
     try {
       let projectsData = await projectService.get();
       if (projectsData.count > 0) {
-        const projectsFiltered = projectsData.projects.filter((project) => project.status !== "Completed" || project.status != "Cancelled");
+        const projectsFiltered = projectsData.projects.filter(
+          (project) =>
+            project.status !== "Completed" || project.status != "Cancelled"
+        );
         setProjects(projectsData.projects);
         setFilteredProjects(projectsFiltered);
       }
@@ -65,7 +71,9 @@ function StudentProjects() {
       let studentsData = await studentService.get();
       let Email = await getUserEmail();
       if (studentsData.count && studentsData.count > 0) {
-        let currStudent = studentsData.students.filter((student) => student.email === Email);
+        let currStudent = studentsData.students.filter(
+          (student) => student.email === Email
+        );
         setCurrentStudent(currStudent[0]);
         setCurrGroup(currStudent[0].group);
       }
@@ -95,50 +103,66 @@ function StudentProjects() {
       >
         <Alert severity="success">Project Request Sent</Alert>
       </Snackbar>
-      <Typography variant="h2" align="center" fontWeight="fontWeightBold">
-        Student Projects
-      </Typography>
+
+
       <Box>
-        <Grid
-          container
-          spacing={1}
-          justifyContent="center"
-          alignItems="center"
-          style={{ display: "block" }}
-        >
-          <Grid item container md={9} sm={12} xs={12} align="center" justify="center" alignItems="center" style={{ marginTop: "3rem" }}>
+        <Typography variant="h2" align="center" fontWeight="fontWeightBold">
+          Student Projects
+        </Typography>
+      </Box>
+      <Box mt={4}>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Grid item md={4}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpen}
+              disabled={!group}
+              style={{width:'80%'}}
+              startIcon={<AddIcon />}
+            >
+              Add Project
+            </Button>
+
+            <Tooltip
+              title="Make sure to join a group before adding a project"
+              arrow
+            >
+              <IconButton>
+                <InfoIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid item md={4}>
             <TextField
               id="search"
               label="Search by project name"
               variant="outlined"
-              size="small"
+              style={{ width: "100%" }}
               onChange={handleSearch}
-              style={{ width: "50%" }}
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon
+                    sx={{
+                      color: "action.active",
+                      mr: 1,
+                      pointerEvents: "none",
+                    }}
+                  />
+                ),
+              }}
             />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleOpen}
-                disabled={!group}
-                style={{ width: "30%", marginLeft: "1rem" }}
-              >
-                Add Project
-              </Button>
-              <Tooltip title="Make sure to join a group before adding a project" arrow>
-                <IconButton>
-                  <InfoIcon />
-                </IconButton>
-              </Tooltip>
-            {group && currentStudent && (
-              <AddProjectModal
-                open={open}
-                projects={projects}
-                onClose={handleClose}
-                professorEmail={currentStudent.professorEmail}
-                group={group}
-              />
-            )}
           </Grid>
+
+          {group && currentStudent && (
+            <AddProjectModal
+              open={open}
+              projects={projects}
+              onClose={handleClose}
+              professorEmail={currentStudent.professorEmail}
+              group={group}
+            />
+          )}
           {Array.isArray(projects) && projects.length !== 0
             ? filteredProjects.map((project, key) => (
                 <ProjectCard
