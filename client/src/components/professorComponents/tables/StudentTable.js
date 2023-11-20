@@ -38,9 +38,11 @@ import { ROLES } from "../../../helpers/Roles";
 import { getUserType } from "../../../helpers/UserType";
 import EditStudentForm from "../forms/EditStudentModal";
 import DeleteIcon from "@mui/icons-material/Delete";
+import GroupIcon from '@mui/icons-material/Group';
 import { useTranslation } from 'react-i18next';
 import { MRT_Localization_EN } from 'material-react-table/locales/en';
 import { MRT_Localization_FR } from 'material-react-table/locales/fr';
+import MoveStudentsModal from "../forms/MoveStudentsModal";
 
 
 const StudentTable = () => {
@@ -110,6 +112,7 @@ const StudentTable = () => {
   const [editingRow, setEditingRow] = useState(null);
   const [update, setUpdate] = useState(false);
   const [deletionModal, setDeletionModal] = useState(false);
+  const [moveStudentsModalOpen, setMoveStudentsModalOpen] = useState(false);
   const [refreshTrigger,setRefreshTrigger] = useState(false);
   const table = useRef(null);
 
@@ -305,6 +308,19 @@ const StudentTable = () => {
               <></>
             )}
 
+            {Object.keys(rowSelection).length > 0 ? (
+              <Button
+                color="info"
+                onClick={() => setMoveStudentsModalOpen(true)}
+                startIcon={<GroupIcon />}
+                variant="contained"
+              >
+                {t("students-table.change-group")} {Object.keys(rowSelection).length} {t("common.Students")}
+              </Button>
+            ) : (
+              <></>
+            )}
+
             <Dialog
               PaperComponent={Paper}
               PaperProps={{ className: classes.dialogPaper }}
@@ -338,6 +354,17 @@ const StudentTable = () => {
                 row={rowSelection}
                 type={"bulk"}
               ></ConfirmDeletionModal>
+            )}
+
+            {moveStudentsModalOpen && (
+              <MoveStudentsModal 
+                columns={columns}
+                open={moveStudentsModalOpen}
+                setMoveStudentsModalOpen={setMoveStudentsModalOpen}
+                studentsSelected={rowSelection}
+                fetchStudents={fetchStudents}
+                setRowSelection={setRowSelection}
+              />
             )}
           </Box>
         )}

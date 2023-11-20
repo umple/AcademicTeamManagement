@@ -93,6 +93,35 @@ def remove_student_from_group(orgdefinedid):
     )
     return result
 
+def bulk_group_update_students_by_ids(student_ids, new_group):
+    try:
+        updated_count = 0
+        
+        for student_id in student_ids:
+            student = get_student_by_id(student_id)
+            orgdefinedid = student["orgdefinedid"]
+            student_old_group = student["group"]
+            student_email = student["email"]
+            
+            # remove the student from the group, if it exists
+            if student_old_group != '' and student_old_group != None:
+                group.remove_student_from_group(student_old_group, orgdefinedid)
+                        
+            if new_group != 'null':
+                # add the student to the new groupgroup_id
+                group.add_student_to_group_by_group_id(student_email, new_group)
+            else:
+                # set the group to null for the students
+                remove_student_from_group(orgdefinedid)
+            
+            updated_count += 1
+        
+        return updated_count
+    
+    except Exception as e:
+        raise e
+    
+
 def delete_students_by_ids(student_ids):
     try:
         deleted_count = 0

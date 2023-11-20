@@ -121,6 +121,29 @@ def delete_bulk_students():
         return {"message": str(ve)}, 400  # Bad Request
     except Exception as e:
         return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
+    
+@student_bp.route("/student/update/group/bulk", methods=["PUT"])
+def update_group_bulk_students():
+    try:
+        # Load JSON data from the request body      
+        data = request.get_json()
+        
+        # Get the data from the form
+        new_group = data["group"]
+        students = data["students"]
+                
+        # Extract student IDs from the keys of the dictionary
+        student_ids = list(students.keys())
+               
+        # Perform bulk update to the groups
+        update_count = student.bulk_group_update_students_by_ids(student_ids, new_group)
+
+        return jsonify({"message": f"Students updated successfully.", "update_count": update_count}), 200
+
+    except ValueError as ve:
+        return {"message": str(ve)}, 400  # Bad Request
+    except Exception as e:
+        return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
 
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
