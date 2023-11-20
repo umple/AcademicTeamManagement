@@ -24,11 +24,30 @@ const ResponsiveAppBar = () => {
 
   // code for internationalization
   const { t, i18n } = useTranslation();
-  let [switchLanguage, setSwitchLanguage] = useState(false)
+  const defaultLanguage = 'en'
+  let [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem('preferredLanguage') ?? defaultLanguage)
 
-  const changeLanguage = (switchLanguage) => {
-      switchLanguage ? i18n.changeLanguage('en') : i18n.changeLanguage('fr');
-      setSwitchLanguage(!switchLanguage)
+
+  useEffect(() => {
+    const newLang = localStorage.getItem('preferredLanguage');
+
+    if (newLang) {
+      i18n.changeLanguage(newLang);
+    } else {
+      i18n.changeLanguage(defaultLanguage)
+    }
+  }, []);
+
+  const changeLanguage = () => {
+      if(currentLanguage == 'en'){
+        setCurrentLanguage('fr')
+        i18n.changeLanguage('fr');
+        localStorage.setItem('preferredLanguage', 'fr');
+       } else { 
+        setCurrentLanguage('en')
+        i18n.changeLanguage('en');
+        localStorage.setItem('preferredLanguage', 'en');
+       }
   }
 
   // Nav elements to display for the students
@@ -212,7 +231,7 @@ const adminPages = {
                 ))}
             </Box>
             <Button
-              onClick={() => changeLanguage(switchLanguage)}
+              onClick={changeLanguage}
               endIcon={<LanguageIcon style={{ fontSize: 35 }}/>}
               sx={{ mr:2, color: 'white', borderColor: 'white'}}
             ></Button>
