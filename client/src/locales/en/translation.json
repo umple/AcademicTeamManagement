@@ -72,6 +72,8 @@
         "success-alert": "Success Alert",
         "success-import": "successfully imported students!",
         "create-student": "Create Student",
+        "move-students": "Move Students To Group",
+        "change-group": "Change Group of ",
         "import-students": "Import Students",
         "update-student": "Update Student",
         "imports-instructions": "Select the Section and Import The Students",
