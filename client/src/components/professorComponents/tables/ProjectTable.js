@@ -290,7 +290,7 @@ const ProjectTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: "compact",pagination: {pageSize:1000}}}
+        initialState={{ showColumnFilters: false, density: "compact",pagination: {pageSize:200} }}
         renderDetailPanel={({ row, index }) => {
           return (
             <Grid container spacing={2}>
