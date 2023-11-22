@@ -33,7 +33,10 @@ import GroupForm from "../forms/GroupForm";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import EditGroupModal from "../forms/EditGroupModal";
 import { ROLES } from "../../../helpers/Roles";
-import { getUserType } from "../../../helpers/UserType"
+import { getUserType } from "../../../helpers/UserType";
+import { useTranslation } from 'react-i18next';
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
 
 const GroupTable = () => {
   // For the create profile modal
@@ -50,16 +53,27 @@ const GroupTable = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+
+  useEffect(() => {
+    setTableLocalization(getTableLocalization(currentLanguage));
+  }, [currentLanguage]);
 
   const columns = useMemo(
     () => [
       {
         accessorKey: "group_id",
-        header: "Group",
+        header: t('common.Group'),
       },
       {
         accessorKey: "members",
-        header: "Members",
+        header: t('common.Members'),
         Cell: ({ cell }) => {
           if (
             Array.isArray(cell.getValue("members")) &&
@@ -98,14 +112,14 @@ const GroupTable = () => {
       },
       {
         accessorKey: "project",
-        header: "Project",
+        header: t('common.Project'),
       },
       {
         accessorKey: "notes",
-        header: "Notes",
+        header: t('section.notes'),
       },
     ],
-    [students]
+    [students,currentLanguage]
   );
 
   
@@ -198,7 +212,7 @@ const GroupTable = () => {
         fontWeight="fontWeightBold"
         sx={{ marginBottom: "0.5rem" }}
       >
-        Groups
+        {t('header.navbar.groups')}
       </Typography>
       {message === "" ? "" : <Alert severity="warning">{message}</Alert>}
       <MaterialReactTable
@@ -221,7 +235,8 @@ const GroupTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: "compact" }}
+        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact'  }}
+        localization={tableLocalization}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
             <Tooltip arrow placement="left" title="Edit">
@@ -258,7 +273,7 @@ const GroupTable = () => {
               variant="contained"
               name="create-new-group"
             >
-              Create Group
+              {t('group-table.create-group')}
             </Button>
             <Button
               color="primary"
@@ -266,7 +281,7 @@ const GroupTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export Data
+              {t('common.export-data')}
             </Button>
           </Box>
         )}

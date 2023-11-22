@@ -20,7 +20,11 @@
         "Section": "Section",
         "Sections": "Sections",
         "Agree": "Accepter",
-        "Disagree": "Refuser"
+        "Disagree": "Refuser",
+        "Members": "Membres",
+        "current-project": "Projet actuel",
+        "interested-projects":"Projets d'intérêt",
+        "export-data":"Exporter données"
     },
     "table": {
         "student-id": "Identifiant",
@@ -102,5 +106,12 @@
         "notes": "Notes",
         "add-section": "Créer Section",
         "edit-section": "Modifier une Section"
+    },
+    "group-table":{
+        "student-groups":"Groupes d'étudiants",
+        "create-group":"Créer groupe",
+        "member-added":"Membre du groupe ajouté !",
+        "join":"Joindre",
+        "confirmation":"Êtes-vous sûr de vouloir quitter votre groupe actuel et rejoindre celui-ci ?"
     }
 }

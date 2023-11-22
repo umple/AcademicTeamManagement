@@ -17,6 +17,9 @@ import groupService from "../../../services/groupService";
 import { getUserType } from "../../../helpers/UserType"
 import { ROLES } from "../../../helpers/Roles";
 import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
+import { useTranslation } from 'react-i18next';
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
 
 const StudentGroupTable = () => {
 
@@ -34,6 +37,17 @@ const StudentGroupTable = () => {
   const [update, setUpdate] = useState(false);
   const [editingRow, setEditingRow] = useState({});
   const [projects, setProjects] = useState([]);
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+
+  useEffect(() => {
+    setTableLocalization(getTableLocalization(currentLanguage));
+  }, [currentLanguage]);
 
 
 
@@ -49,11 +63,11 @@ const StudentGroupTable = () => {
     () => [
       {
         accessorKey: 'group_id',
-        header: 'Group',
+        header: t('common.Group'),
       },
       {
         accessorKey: 'members',
-        header: 'Members',
+        header: t('common.Members'),
         Cell: ({ cell }) => {
 
           if (Array.isArray(cell.getValue("members")) && cell.getValue("members").length > 0) {
@@ -80,18 +94,18 @@ const StudentGroupTable = () => {
       },
       {
         accessorKey: 'project',
-        header: 'Current Project',
+        header: t('common.current-project'),
       },
       {
         accessorKey: 'interest',
-        header: 'Interested projects',
+        header: t('common.interested-projects'),
       },
       {
         accessorKey: 'notes',
-        header: 'Notes'
+        header: t('section.notes')
       },
     ],
-    [students],
+    [students,currentLanguage],
   );
 
   const fetchProjects = async () => {
@@ -175,14 +189,14 @@ const StudentGroupTable = () => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>Student Groups</Typography>
+      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>{t('group-table.student-groups')}</Typography>
       <Button
         variant="contained"
         color="primary"
         onClick={openCreateStudentGroupModal}  // Open the create student group modal when the button is clicked
         sx={{ marginBottom: '1rem' }}
       >
-        Create Group
+        {t('group-table.create-group')}
       </Button>
       {(update || createModalOpen) && (
         <StudentGroupForm
@@ -203,7 +217,7 @@ const StudentGroupTable = () => {
 
       <Snackbar open={showJoinedTeam} onClose={() => setShowJoinedTeam(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="success">
-          Group Member Added!
+        {t('group-table.member-added')}
         </Alert>
       </Snackbar>
       {loading ? (
@@ -231,7 +245,8 @@ const StudentGroupTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: 'compact' }}
+        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact'  }}
+        localization={tableLocalization}
         renderRowActions={({ row, table }) => {
           const joinGroup = () => {
             fetch('api/add/group/member', {
@@ -288,7 +303,7 @@ const StudentGroupTable = () => {
 
           return (
             <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-              <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original.group_id === group || row.original.members.length >= 5}>Join</Button>
+              <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original.group_id === group || row.original.members.length >= 5}>{t('group-table.join')}</Button>
               {row.original.group_id === group && <Button color= "error" onClick={() => handleLeaveGroup()}> Leave </Button>}
               <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert
@@ -297,15 +312,15 @@ const StudentGroupTable = () => {
                   action={
                     <>
                       <Button color="inherit" onClick={() => setShowAlert(false)}>
-                        Cancel
+                        {t('common.Cancel')}
                       </Button>
                       <Button color="inherit" onClick={joinGroup}>
-                        Join
+                        {t('group-table.join')}
                       </Button>
                     </>
                   }
                 >
-                  Are you sure you want to leave your current group and join this one?
+                  {t('group-table.confirmation')}
                 </Alert>
               </Snackbar>
             </Box>

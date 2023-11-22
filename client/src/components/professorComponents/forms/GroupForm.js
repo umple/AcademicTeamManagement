@@ -22,6 +22,7 @@ import React, { useState } from "react";
 import Group from "../../../entities/Group";
 import groupService from "../../../services/groupService";
 import createGroupSchema from "../../../schemas/createGroupSchema";
+import { useTranslation } from 'react-i18next';
 
 const GroupForm = ({
   open,
@@ -46,6 +47,7 @@ const GroupForm = ({
       },
     },
   };
+  const { t, i18n } = useTranslation();
 
   function getStyles(name, members, theme) {
     return {
@@ -102,7 +104,7 @@ const GroupForm = ({
 
   return (
     <Dialog open={open || update}>
-      <DialogTitle textAlign="center">Create Group</DialogTitle>
+      <DialogTitle textAlign="center">{t('group-table.create-group')}</DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
@@ -117,7 +119,7 @@ const GroupForm = ({
                 return (
                   <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel id="demo-multiple-chip-label">
-                      Members
+                      {t('common.Members')}
                     </InputLabel>
                     <Select
                       labelId="demo-multiple-chip-label"
@@ -195,7 +197,7 @@ const GroupForm = ({
               if (column.accessorKey === "project") {
                 return (
                   <FormControl>
-                    <InputLabel id="project-label">Project</InputLabel>
+                    <InputLabel id="project-label">{t('common.Project')}</InputLabel>
                     <Select
                       labelId="project-label"
                       key={column.accessorKey}
@@ -242,9 +244,9 @@ const GroupForm = ({
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>{t('common.Cancel')}</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Create
+            {t('common.Create')}
           </Button>
         </DialogActions>
       </form>
