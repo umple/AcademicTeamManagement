@@ -34,6 +34,8 @@ import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import EditGroupModal from "../forms/EditGroupModal";
 import { ROLES } from "../../../helpers/Roles";
 import { getUserType } from "../../../helpers/UserType"
+import { DEFAULT_PAGE_SIZE } from "../../../helpers/Constants"
+
 
 const GroupTable = () => {
   // For the create profile modal
@@ -50,6 +52,15 @@ const GroupTable = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
+
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [showAllRows, setShowAllRows] = useState(false);
+
+  // Expand the table to include rows for all table data
+  const handleExpandTable = () => {
+    setShowAllRows(true)
+    setPageSize(tableData.length)
+  };
 
   const columns = useMemo(
     () => [
@@ -212,7 +223,7 @@ const GroupTable = () => {
         }}
         enablePagination={false}
         columns={columns}
-        data={tableData}
+        data={showAllRows ? tableData : tableData.slice(0, pageSize)}
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
@@ -221,7 +232,7 @@ const GroupTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: "compact",pagination: {pageSize:200}}}
+        initialState={{ showColumnFilters: false, density: "compact"}}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
             <Tooltip arrow placement="left" title="Edit">
@@ -281,6 +292,19 @@ const GroupTable = () => {
         students={students}
         groups={tableData}
       />
+
+      {pageSize === DEFAULT_PAGE_SIZE 
+        && pageSize < tableData.length
+        && (
+        <Button 
+          sx={{m: 2}}
+          style={{ position: 'absolute', right: '1rem' }}
+          color="secondary"
+          variant="contained"
+          onClick={handleExpandTable}>
+          Display all {tableData.length} rows
+        </Button>
+      )}
 
       {deletion && (
         <ConfirmDeletionModal
