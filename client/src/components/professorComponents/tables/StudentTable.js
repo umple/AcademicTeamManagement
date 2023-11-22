@@ -388,7 +388,7 @@ const StudentTable = () => {
           color="secondary"
           variant="contained"
           onClick={handleExpandTable}>
-          Display all {tableData.length} rows
+          {t("common.display-all")} {tableData.length} {t("common.rows")}
         </Button>
       )}
 
