@@ -245,7 +245,8 @@ const StudentGroupTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: 'compact',pagination: {pageSize:200} }}
+        localization={tableLocalization}
+        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact' }}
         renderRowActions={({ row, table }) => {
           const joinGroup = () => {
             fetch('api/add/group/member', {

@@ -265,7 +265,8 @@ const GroupTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: "compact"}}
+        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact'  }}
+        localization={tableLocalization}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }} id={`row-${row.original.group_id}`}>
             <Tooltip arrow placement="left" title="Edit">
