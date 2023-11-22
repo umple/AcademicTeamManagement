@@ -20,7 +20,9 @@
         "Section": "Section",
         "Sections": "Sections",
         "Agree": "Accepter",
-        "Disagree": "Refuser"
+        "Disagree": "Refuser",
+        "display-all": "Afficher les",
+        "rows": "Lignes"
     },
     "table": {
         "student-id": "Identifiant",
