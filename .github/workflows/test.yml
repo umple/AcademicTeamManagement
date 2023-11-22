@@ -41,7 +41,7 @@ jobs:
         run: npm install --force
         working-directory: ./client
       - name: Run End-to-End Tests
-        run: npm run cypress:run
+        run: npm run cypress:headless
         working-directory: ./client
       - name: Upload Screenshot of failed tests
         if: failure()
