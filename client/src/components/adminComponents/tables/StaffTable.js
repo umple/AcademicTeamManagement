@@ -114,7 +114,7 @@ const StaffTable = () => {
         }}
         enablePagination={false}
         columns={columns}
-        data={showAllRows ? tableData : tableData.slice(0, pageSize)}
+        data={(showAllRows && tableData) ? tableData : tableData.slice(0, pageSize)}
         editingMode="modal"
         enableColumnOrdering
         enableColumnResizing
