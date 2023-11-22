@@ -25,6 +25,8 @@
         "current-project": "Current project",
         "interested-projects": "Interested projects",
         "export-data":"Export Data"
+        "display-all": "Display all",
+        "rows": "Rows"
     },
     "table": {
         "student-id": "Student ID",

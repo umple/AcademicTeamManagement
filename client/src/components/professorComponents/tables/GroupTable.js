@@ -37,6 +37,9 @@ import { getUserType } from "../../../helpers/UserType";
 import { useTranslation } from 'react-i18next';
 import { MRT_Localization_EN } from 'material-react-table/locales/en';
 import { MRT_Localization_FR } from 'material-react-table/locales/fr';
+import { getUserType } from "../../../helpers/UserType"
+import { DEFAULT_PAGE_SIZE } from "../../../helpers/Constants"
+
 
 const GroupTable = () => {
   // For the create profile modal
@@ -64,6 +67,15 @@ const GroupTable = () => {
   useEffect(() => {
     setTableLocalization(getTableLocalization(currentLanguage));
   }, [currentLanguage]);
+
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [showAllRows, setShowAllRows] = useState(false);
+
+  // Expand the table to include rows for all table data
+  const handleExpandTable = () => {
+    setShowAllRows(true)
+    setPageSize(tableData.length)
+  };
 
   const columns = useMemo(
     () => [
@@ -226,7 +238,7 @@ const GroupTable = () => {
         }}
         enablePagination={false}
         columns={columns}
-        data={tableData}
+        data={showAllRows ? tableData : tableData.slice(0, pageSize)}
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
@@ -296,6 +308,19 @@ const GroupTable = () => {
         students={students}
         groups={tableData}
       />
+
+      {pageSize === DEFAULT_PAGE_SIZE 
+        && pageSize < tableData.length
+        && (
+        <Button 
+          sx={{m: 2}}
+          style={{ position: 'absolute', right: '1rem' }}
+          color="secondary"
+          variant="contained"
+          onClick={handleExpandTable}>
+          Display all {tableData.length} rows
+        </Button>
+      )}
 
       {deletion && (
         <ConfirmDeletionModal

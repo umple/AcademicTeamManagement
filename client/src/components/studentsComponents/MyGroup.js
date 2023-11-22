@@ -238,7 +238,7 @@ const MyGroup = () => {
                 enableGlobalFilter={false}
                 enableFullScreenToggle={false}
                 enableDensityToggle={false}
-                initialState={{ showColumnFilters: true, showGlobalFilter: true }}
+                initialState={{ showColumnFilters: true, showGlobalFilter: true,pagination: {pageSize:200} }}
                 localization={tableLocalization}
                 keyField="project"
                 customStyles={{

@@ -19,6 +19,7 @@ import staffService from "../../../services/staffService";
 import StaffForm from "../forms/StaffForm";
 import { useStyles } from "./styles/StaffTableStyles";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
+import { DEFAULT_PAGE_SIZE } from "../../../helpers/Constants"
 
 const StaffTable = () => {
     // name, term, year, notes
@@ -58,6 +59,14 @@ const StaffTable = () => {
   const [editingRow, setEditingRow] = useState({});
   const [update, setUpdate] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [showAllRows, setShowAllRows] = useState(false);
+
+  // Expand the table to include rows for all table data
+  const handleExpandTable = () => {
+    setShowAllRows(true)
+    setPageSize(tableData.length)
+  };
 
   const fetchStaffs = async () => {
     try {
@@ -103,9 +112,9 @@ const StaffTable = () => {
             size: 120,
           },
         }}
-        enablePagination={true}
+        enablePagination={false}
         columns={columns}
-        data={tableData}
+        data={showAllRows ? tableData : tableData.slice(0, pageSize)}
         editingMode="modal"
         enableColumnOrdering
         enableColumnResizing
@@ -172,6 +181,19 @@ const StaffTable = () => {
           </Box>
         )}
       />
+
+      {pageSize === DEFAULT_PAGE_SIZE 
+        && pageSize < tableData.length
+        && (
+        <Button 
+          sx={{m: 2}}
+          style={{ position: 'absolute', right: '1rem' }}
+          color="secondary"
+          variant="contained"
+          onClick={handleExpandTable}>
+          Display all {tableData.length} rows
+        </Button>
+      )}
 
       {(update || createModalOpen) && (
         <StaffForm
