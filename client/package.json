@@ -37,7 +37,8 @@
     "test": "jest --coverage",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run --headed --browser chrome"
+    "cypress:run": "cypress run --headed --browser chrome",
+    "cypress:headless": "cypress run --headless"
   },
   "jest": {
     "transform": {
