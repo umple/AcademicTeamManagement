@@ -234,7 +234,7 @@ const StudentTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: "compact" }}
+        initialState={{ showColumnFilters: false, density: "compact",pagination: {pageSize:200} }}
         // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
