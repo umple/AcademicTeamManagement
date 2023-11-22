@@ -246,7 +246,7 @@ const StudentGroupTable = () => {
         }}
         enableEditing
         localization={tableLocalization}
-        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact',pagination: {pageSize:200} }}
+        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact' }}
         renderRowActions={({ row, table }) => {
           const joinGroup = () => {
             fetch('api/add/group/member', {
