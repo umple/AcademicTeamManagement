@@ -41,6 +41,8 @@ import EditProjectForm from "../forms/EditProjectForm";
 import ViewApplicationModal from "../ViewApplicationModal";
 import { ROLES } from "../../../helpers/Roles";
 import { getUserType } from "../../../helpers/UserType";
+import { DEFAULT_PAGE_SIZE } from "../../../helpers/Constants"
+
 
 const ProjectTable = () => {
   const columns = useMemo(
@@ -133,6 +135,15 @@ const ProjectTable = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [applications, setApplications] = useState([]);
+
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [showAllRows, setShowAllRows] = useState(false);
+
+  // Expand the table to include rows for all table data
+  const handleExpandTable = () => {
+    setShowAllRows(true)
+    setPageSize(tableData.length)
+  };
 
   const fetchProjects = async () => {
     try {
@@ -229,7 +240,7 @@ const ProjectTable = () => {
         }}
         enablePagination={false}
         columns={columns}
-        data={tableData}
+        data={showAllRows ? tableData : tableData.slice(0, pageSize)}
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
@@ -238,7 +249,7 @@ const ProjectTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: "compact",pagination: {pageSize:200} }}
+        initialState={{ showColumnFilters: false, density: "compact"}}
         renderDetailPanel={({ row, index }) => {
           return (
             <Grid container spacing={2}>
@@ -351,6 +362,19 @@ const ProjectTable = () => {
           </Box>
         )}
       />
+      { pageSize === DEFAULT_PAGE_SIZE 
+        && pageSize < tableData.length
+        && (
+        <Button 
+          sx={{m: 2}}
+          style={{ position: 'absolute', right: '1rem' }}
+          color="secondary"
+          variant="contained"
+          onClick={handleExpandTable}>
+          Display all {tableData.length} rows
+        </Button>
+      )}
+
       {editingRow && (
         <EditProjectForm
           columns={columns}
