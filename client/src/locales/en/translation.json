@@ -21,6 +21,10 @@
         "Sections": "Sections",
         "Agree": "Agree",
         "Disagree": "Disagree",
+        "Members": "Members",
+        "current-project": "Current project",
+        "interested-projects": "Interested projects",
+        "export-data":"Export Data",
         "display-all": "Display all",
         "rows": "Rows"
     },
@@ -122,5 +126,12 @@
         "Accepted":"Accepted",
         "Rejected":"Rejected",
         "Feedback Provided":"Feedback Provided"
+    },
+    "group-table":{
+        "student-groups":"Student Groups",
+        "create-group":"Create Group",
+        "member-added":"Group Member Added!",
+        "join":"Join",
+        "confirmation":"Are you sure you want to leave your current group and join this one?"
     }
 }

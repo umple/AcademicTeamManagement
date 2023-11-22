@@ -21,6 +21,10 @@
         "Sections": "Sections",
         "Agree": "Accepter",
         "Disagree": "Refuser",
+        "Members": "Membres",
+        "current-project": "Projet actuel",
+        "interested-projects":"Projets d'intérêt",
+        "export-data":"Exporter données",
         "display-all": "Afficher les",
         "rows": "Lignes"
     },
@@ -122,5 +126,12 @@
         "Accepted":"Accepté",
         "Rejected":"Rejeté",
         "Feedback Provided":"Rétroaction fournie"
+    },
+    "group-table":{
+        "student-groups":"Groupes d'étudiants",
+        "create-group":"Créer groupe",
+        "member-added":"Membre du groupe ajouté !",
+        "join":"Joindre",
+        "confirmation":"Êtes-vous sûr de vouloir quitter votre groupe actuel et rejoindre celui-ci ?"
     }
 }
