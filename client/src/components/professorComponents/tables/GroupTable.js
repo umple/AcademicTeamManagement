@@ -33,7 +33,6 @@ import GroupForm from "../forms/GroupForm";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import EditGroupModal from "../forms/EditGroupModal";
 import { ROLES } from "../../../helpers/Roles";
-import { getUserType } from "../../../helpers/UserType";
 import { useTranslation } from 'react-i18next';
 import { MRT_Localization_EN } from 'material-react-table/locales/en';
 import { MRT_Localization_FR } from 'material-react-table/locales/fr';
