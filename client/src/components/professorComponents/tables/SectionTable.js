@@ -22,6 +22,7 @@ import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import { useTranslation } from 'react-i18next';
 import { MRT_Localization_EN } from 'material-react-table/locales/en';
 import { MRT_Localization_FR } from 'material-react-table/locales/fr';
+import { DEFAULT_PAGE_SIZE } from "../../../helpers/Constants"
 
 const SectionTable = () => {
 
@@ -68,6 +69,14 @@ const SectionTable = () => {
   const [editingRow, setEditingRow] = useState({});
   const [update, setUpdate] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [showAllRows, setShowAllRows] = useState(false);
+
+  // Expand the table to include rows for all table data
+  const handleExpandTable = () => {
+    setShowAllRows(true)
+    setPageSize(tableData.length)
+  };
 
   const fetchSections = async () => {
     try {
@@ -113,9 +122,9 @@ const SectionTable = () => {
             size: 120,
           },
         }}
-        enablePagination={true}
+        enablePagination={false}
         columns={columns}
-        data={tableData}
+        data={showAllRows ? tableData : tableData.slice(0, pageSize)}
         editingMode="modal"
         enableColumnOrdering
         enableColumnResizing
@@ -125,7 +134,7 @@ const SectionTable = () => {
           size: 150, //default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: "compact",pagination: {pageSize:200} }}
+        initialState={{ showColumnFilters: false, density: "compact"}}
         // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
@@ -182,6 +191,19 @@ const SectionTable = () => {
           </Box>
         )}
       />
+
+      {pageSize === DEFAULT_PAGE_SIZE 
+        && pageSize < tableData.length
+        && (
+        <Button 
+          sx={{m: 2}}
+          style={{ position: 'absolute', right: '1rem' }}
+          color="secondary"
+          variant="contained"
+          onClick={handleExpandTable}>
+          Display all {tableData.length} rows
+        </Button>
+      )}
 
       {(update || createModalOpen) && (
         <SectionForm
