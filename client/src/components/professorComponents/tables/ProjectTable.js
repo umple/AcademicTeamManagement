@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import MaterialReactTable from "material-react-table";
 import {
   Box,
@@ -61,6 +62,9 @@ const ProjectTable = () => {
     setTableLocalization(getTableLocalization(currentLanguage));
   }, [currentLanguage]);
 
+  
+  const [userType, setUserType] = useState("");
+
   const columns = useMemo(
     () => [
       {
@@ -113,6 +117,26 @@ const ProjectTable = () => {
       {
         accessorKey: "group",
         header: t("project.group"),
+        Cell: ({ cell }) => {
+          console.log(cell.row.original.group);
+          if (userType === ROLES.PROFESSOR) {
+            return (
+              <Link 
+                style={{ textDecoration: 'none' }}
+                to={`/GroupView?group_id=${cell.row.original.group}`}>
+                {cell.getValue()}
+              </Link>
+            )
+          } else {
+            return (
+              <Link 
+                style={{ textDecoration: 'none' }}
+                to={`/AdminGroupView?group_id=${cell.row.original.group}`}>
+                {cell.getValue()}
+              </Link>
+            )
+          }
+        }
       },
       {
         accessorKey: "notes",
@@ -174,6 +198,7 @@ const ProjectTable = () => {
         .catch((error) => {
           console.error(error);
         });
+      setUserType(userType)
       if (data.projects) {
         if (userType === ROLES.ADMIN) {
           setTableData(data.projects); // show all data if user is an admin
