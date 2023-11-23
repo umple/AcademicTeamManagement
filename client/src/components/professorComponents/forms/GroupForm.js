@@ -71,6 +71,7 @@ const GroupForm = ({
 
   const onSubmit = async (values, actions) => {
     try {
+      values["group_id"] = values["group_id"].trim()
       let response = await groupService.add(values);
 
       handleClose();
