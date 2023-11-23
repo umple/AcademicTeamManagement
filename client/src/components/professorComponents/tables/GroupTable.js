@@ -38,6 +38,7 @@ import { MRT_Localization_EN } from 'material-react-table/locales/en';
 import { MRT_Localization_FR } from 'material-react-table/locales/fr';
 import { getUserType } from "../../../helpers/UserType"
 import { DEFAULT_PAGE_SIZE } from "../../../helpers/Constants"
+import { useLocation } from 'react-router-dom';
 
 
 const GroupTable = () => {
@@ -55,6 +56,7 @@ const GroupTable = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
+  const location = useLocation();
   const { t, i18n } = useTranslation();
   const currentLanguage = i18n.language;
   const getTableLocalization = (language) => {
@@ -75,6 +77,23 @@ const GroupTable = () => {
     setShowAllRows(true)
     setPageSize(tableData.length)
   };
+
+  // handle scrolling to the row selected
+  const scrollToRow = useCallback((rowId) => {
+    const targetRow = document.getElementById(`row-${rowId}`);
+    if (targetRow) {
+      targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [tableData]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const groupId = params.get('group_id');
+
+    if (groupId && tableData.length > 0) {
+      scrollToRow(groupId);
+    }
+  }, [location.search, tableData]);
 
   const columns = useMemo(
     () => [
@@ -249,7 +268,7 @@ const GroupTable = () => {
         initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact'  }}
         localization={tableLocalization}
         renderRowActions={({ row, table }) => (
-          <Box sx={{ display: "flex", gap: "1rem" }}>
+          <Box sx={{ display: "flex", gap: "1rem" }} id={`row-${row.original.group_id}`}>
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={(e) => {
