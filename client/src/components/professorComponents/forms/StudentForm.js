@@ -10,6 +10,7 @@ import {
   MenuItem,
   InputLabel,
   Select,
+  CircularProgress,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -34,6 +35,7 @@ const StudentForm = ({
 
   // retrieve the sections
   const [sections, setSections] = useState([]);
+  const [isloading, setIsLoading] = useState(false);
   const fetchSections = async () => {
     try {
       let sections = await sectionService.get();
@@ -49,14 +51,17 @@ const StudentForm = ({
 
   const onSubmit = async (values, actions) => {
     try {
+      setIsLoading(true)
       let response;
       response = await studentService.add(values);
       fetchStudents();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false)
+      actions.resetForm();
+      handleClose();
     }
-    actions.resetForm();
-    handleClose();
   };
 
   const handleClose = () => {
@@ -86,6 +91,7 @@ const StudentForm = ({
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">{t("students-table.create-student")}</DialogTitle>
+      {isloading ? <CircularProgress size={100}></CircularProgress> :
       <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
@@ -156,7 +162,7 @@ const StudentForm = ({
             {t("common.Create")}
           </Button>
         </DialogActions>
-      </form>
+      </form> }
     </Dialog>
   );
 };
