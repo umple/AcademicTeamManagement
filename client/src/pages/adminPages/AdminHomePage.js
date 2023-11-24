@@ -17,6 +17,7 @@ import groupService from "../../services/groupService";
 import studentService from "../../services/studentService";
 import sectionService from "../../services/sectionService";
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,9 +75,6 @@ const AdminHomePage = () => {
             <Typography variant="h3" className={classes.title} gutterBottom>
               {t('common.academic-team-management')}
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              {t('home.welcome')}
-            </Typography>
           </Grid>
           <Grid item sm={3} className={classes.column2}>
             <Card
@@ -126,6 +124,11 @@ const DashBoardInfo = () => {
     "&:hover": {
       boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.2)", // Add box shadow on hover
     },
+    cursor: 'pointer', // Add pointer cursor for better UX
+    transition: 'transform 0.3s', // Add transition for smooth hover effect
+    '&:hover': {
+      transform: 'scale(1.05)', // Scale up on hover
+    },
   };
 
   const titleStyle = {
@@ -149,7 +152,7 @@ const DashBoardInfo = () => {
     width: "5rem",
     height: "5rem",
     borderRadius: "50%",
-    border: "1px solid #00e5ff", // Add border and set the color
+    border: "3px solid #575757", // Add border and set the color
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -162,7 +165,7 @@ const DashBoardInfo = () => {
   };
 
   return (
-    <Container style={{ marginBottom: "20px" }}>
+    <Container style={{ marginBottom: "20px", marginTop: "20px"}}>
       <Box
         sx={{
           flexGrow: 1,
@@ -172,160 +175,168 @@ const DashBoardInfo = () => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <Card style={cardStyle}>
-              <CardContent>
-                <Typography variant="h6" style={titleStyle}>
-                  {t('header.navbar.projects')}
-                </Typography>
-                <div style={contentStyle}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4em",
-                    }}
-                  >
-                    <div style={{ float: "left" }}>
-                      <DesignServicesSharpIcon style={iconStyle} />
-                    </div>
-
+          <Grid item xs={12} md={6}>
+            <Link to="/AdminProjects" style={{ textDecoration: 'none' }}>
+              <Card style={cardStyle}>
+                <CardContent>
+                  <Typography variant="h6" style={titleStyle}>
+                    {t('header.navbar.projects')}
+                  </Typography>
+                  <div style={contentStyle}>
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "4em",
                       }}
                     >
-                      <div style={{ textAlign: "center" }}>
-                        <Typography>{t('home.count-projects')}</Typography>
+                      <div style={{ float: "left" }}>
+                        <DesignServicesSharpIcon style={iconStyle} />
                       </div>
 
-                      <div style={badgeStyle}>
-                        <Typography style={badgeTextStyle}>
-                          {projectsCount}
-                        </Typography>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <div style={{ textAlign: "center" }}>
+                          <Typography>{t('home.count-projects')}</Typography>
+                        </div>
+
+                        <div style={badgeStyle}>
+                          <Typography style={badgeTextStyle}>
+                            {projectsCount}
+                          </Typography>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           </Grid>
-          <Grid item xs={4}>
-            <Card style={cardStyle}>
-              <CardContent>
-                <Typography variant="h6" style={titleStyle}>
-                  {t('header.navbar.groups')}
-                </Typography>
-                <div style={contentStyle}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4em",
-                    }}
-                  >
-                    <div style={{ float: "left" }}>
-                      <GroupsSharpIcon style={iconStyle} />
-                    </div>
+          <Grid item xs={12} md={6}>
+            <Link to="/AdminGroupView" style={{ textDecoration: 'none' }}>
+              <Card style={cardStyle}>
+                <CardContent>
+                  <Typography variant="h6" style={titleStyle}>
+                    {t('header.navbar.groups')}
+                  </Typography>
+                  <div style={contentStyle}>
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "4em",
                       }}
                     >
-                      <div style={{ textAlign: "center" }}>
-                        <Typography>{t('home.count-groups')}</Typography>
+                      <div style={{ float: "left" }}>
+                        <GroupsSharpIcon style={iconStyle} />
                       </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <div style={{ textAlign: "center" }}>
+                          <Typography>{t('home.count-groups')}</Typography>
+                        </div>
 
-                      <div style={badgeStyle}>
-                        <Typography style={badgeTextStyle}>
-                          {groupsCount}
-                        </Typography>
+                        <div style={badgeStyle}>
+                          <Typography style={badgeTextStyle}>
+                            {groupsCount}
+                          </Typography>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           </Grid>
-          <Grid item xs={4}>
-            <Card style={cardStyle}>
-              <CardContent>
-                <Typography variant="h6" style={titleStyle}>
-                  {t('header.navbar.students')}
-                </Typography>
-                <div style={contentStyle}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4em",
-                    }}
-                  >
-                    <div style={{ float: "left" }}>
-                      <PersonIcon style={iconStyle} />
-                    </div>
-
+          <Grid item xs={12} md={6}>
+            <Link to="/AdminStudents" style={{ textDecoration: 'none' }}>
+              <Card style={cardStyle}>
+                <CardContent>
+                  <Typography variant="h6" style={titleStyle}>
+                    {t('header.navbar.students')}
+                  </Typography>
+                  <div style={contentStyle}>
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "4em",
                       }}
                     >
-                      <div style={{ textAlign: "center" }}>
-                        <Typography>{t('home.count-students')}</Typography>
+                      <div style={{ float: "left" }}>
+                        <PersonIcon style={iconStyle} />
                       </div>
 
-                      <div style={badgeStyle}>
-                        <Typography style={badgeTextStyle}>
-                          {studentsCount}
-                        </Typography>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <div style={{ textAlign: "center" }}>
+                          <Typography>{t('home.count-students')}</Typography>
+                        </div>
+
+                        <div style={badgeStyle}>
+                          <Typography style={badgeTextStyle}>
+                            {studentsCount}
+                          </Typography>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           </Grid>
-          <Grid item xs={4}>
-            <Card style={cardStyle}>
-              <CardContent>
-                <Typography variant="h6" style={titleStyle}>
-                  {t('header.navbar.sections')}
-                </Typography>
-                <div style={contentStyle}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4em",
-                    }}
-                  >
-                    <div style={{ float: "left" }}>
-                      <ClassIcon style={iconStyle} />
-                    </div>
-
+          <Grid item xs={12} md={6}>
+            <Link to="/AdminSections" style={{ textDecoration: 'none' }}>
+              <Card style={cardStyle}>
+                <CardContent>
+                  <Typography variant="h6" style={titleStyle}>
+                    {t('header.navbar.sections')}
+                  </Typography>
+                  <div style={contentStyle}>
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "4em",
                       }}
                     >
-                      <div style={{ textAlign: "center" }}>
-                        <Typography>{t('home.count-sections')}</Typography>
+                      <div style={{ float: "left" }}>
+                        <ClassIcon style={iconStyle} />
                       </div>
 
-                      <div style={badgeStyle}>
-                        <Typography style={badgeTextStyle}>
-                          {sectionsCount}
-                        </Typography>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <div style={{ textAlign: "center" }}>
+                          <Typography>{t('home.count-sections')}</Typography>
+                        </div>
+
+                        <div style={badgeStyle}>
+                          <Typography style={badgeTextStyle}>
+                            {sectionsCount}
+                          </Typography>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           </Grid>
         </Grid>
       </Box>
