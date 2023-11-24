@@ -61,7 +61,6 @@ const ProjectTable = () => {
   useEffect(() => {
     setTableLocalization(getTableLocalization(currentLanguage));
   }, [currentLanguage]);
-
   
   const [userType, setUserType] = useState("");
 
