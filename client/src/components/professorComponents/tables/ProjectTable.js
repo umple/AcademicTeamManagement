@@ -257,7 +257,7 @@ const ProjectTable = () => {
         fontWeight="fontWeightBold"
         sx={{ marginBottom: "0.5rem" }}
       >
-        {t("project.project-name")}
+        {t("common.projects")}
       </Typography>
 
       <Snackbar
