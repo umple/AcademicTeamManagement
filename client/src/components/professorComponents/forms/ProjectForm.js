@@ -23,6 +23,9 @@ import { useFormik } from "formik";
 import projectService from "../../../services/projectService";
 import professorProjectSchema from "../../../schemas/professorProjectSchema";
 import statusByValue from "../../common/StatusHelper";
+import { useTranslation } from 'react-i18next';
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
 
 const ProjectForm = ({
   key,
@@ -32,6 +35,13 @@ const ProjectForm = ({
   setCreateModalOpen,
   setRefreshTrigger,
 }) => {
+
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
   const [initialProjectValues] = useState(
     new Project({
       professorEmail: JSON.parse(localStorage.getItem("userEmail")),
@@ -76,7 +86,7 @@ const ProjectForm = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Create Project</DialogTitle>
+      <DialogTitle textAlign="center">{t("project.create-project")}</DialogTitle>
       {isloading ? (
         <CircularProgress size={100}></CircularProgress>
       ) : (
@@ -99,7 +109,7 @@ const ProjectForm = ({
                 if (column.accessorKey === "status") {
                   return (
                     <FormGroup key={uuidv4()}>
-                      <InputLabel id="status-label">Status</InputLabel>
+                      <InputLabel id="status-label">{t("project.status")}</InputLabel>
                       <Select
                         labelId="status-label"
                         key={column.accessorKey}
@@ -157,14 +167,14 @@ const ProjectForm = ({
             </Stack>
           </DialogContent>
           <DialogActions sx={{ p: "1.25rem" }}>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose}>{t("common.Cancel")}</Button>
             <Button
               color="secondary"
               name="submitForm"
               type="submit"
               variant="contained"
             >
-              Create
+              {t("common.Create")}
             </Button>
           </DialogActions>
         </form>
