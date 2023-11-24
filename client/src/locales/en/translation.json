@@ -102,5 +102,23 @@
         "notes": "Notes",
         "add-section": "Create Section",
         "edit-section": "Edit Section"
+    },
+    "project": {
+        "project-name":"Project Name",
+        "description":"Description",
+        "client-full-name":"Client's Full Name",
+        "client-email":"Client's Email Address",
+        "status":"Status",
+        "group":"Group",
+        "notes":"Notes",
+        "projects":"Projects",
+        "project-applications":"Project Applications",
+        "review-application":"Review Application",
+        "create-project":"Create Project"
+    },
+    "status": {
+        "Accepted":"Accepted",
+        "Rejected":"Rejected",
+        "Feedback Provided":"Feedback Provided"
     }
 }

@@ -41,30 +41,46 @@ import EditProjectForm from "../forms/EditProjectForm";
 import ViewApplicationModal from "../ViewApplicationModal";
 import { ROLES } from "../../../helpers/Roles";
 import { getUserType } from "../../../helpers/UserType";
+import { useTranslation } from 'react-i18next';
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
 
 const ProjectTable = () => {
+
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+
+  useEffect(() => {
+    setTableLocalization(getTableLocalization(currentLanguage));
+  }, [currentLanguage]);
+
   const columns = useMemo(
     () => [
       {
         accessorKey: "project",
-        header: "Project name",
+        header: t("project.project-name"),
       },
       {
         accessorKey: "description",
-        header: "Description",
+        header: t("project.description"),
       },
       {
         accessorKey: "clientName",
-        header: "Client's Full Name",
+        header: t("project.client-full-name"),
       },
 
       {
         accessorKey: "clientEmail",
-        header: "Client's Email Address",
+        header: t("project.client-email"),
       },
       {
         accessorKey: "status",
-        header: "Status",
+        header: t("project.status"),
         //custom conditional format and styling
         Cell: ({ cell }) => (
           <Box
@@ -94,14 +110,14 @@ const ProjectTable = () => {
       },
       {
         accessorKey: "group",
-        header: "Group",
+        header: t("project.group"),
       },
       {
         accessorKey: "notes",
-        header: "Notes",
+        header: t("project.notes"),
       },
     ],
-    []
+    [currentLanguage]
   );
 
   const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
@@ -206,7 +222,7 @@ const ProjectTable = () => {
         fontWeight="fontWeightBold"
         sx={{ marginBottom: "0.5rem" }}
       >
-        Projects
+        {t("project.project-name")}
       </Typography>
 
       <Snackbar
@@ -247,14 +263,14 @@ const ProjectTable = () => {
                   <Table sx={{}} size="small" aria-label="a dense table">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Project Applications</TableCell>
+                        <TableCell>{t("project.project-applications")}</TableCell>
                         <TableCell></TableCell>
                       </TableRow>
                     </TableHead>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Group</TableCell>
-                        <TableCell>Status</TableCell>
+                        <TableCell>{t("common.Group")}</TableCell>
+                        <TableCell>{t("project.status")}</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -277,7 +293,7 @@ const ProjectTable = () => {
                                 color="secondary"
                                 onClick={() => handleOpen(application.group_id, row.original.project)}
                               >
-                                Review Application
+                                {t("project.review-application")}
                               </Button>
                               {open && 
                                 <ViewApplicationModal
@@ -302,7 +318,7 @@ const ProjectTable = () => {
         }}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: "flex", gap: "1rem" }}>
-            <Tooltip arrow placement="left" title="Edit">
+            <Tooltip arrow placement="left" title={t("common.Edit")}>
               <IconButton
                 onClick={() => {
                   setEditModalOpen(true);
@@ -313,7 +329,7 @@ const ProjectTable = () => {
               </IconButton>
             </Tooltip>
             {/* onClick={() => handleDeleteRow(row)}> */}
-            <Tooltip arrow placement="right" title="Delete">
+            <Tooltip arrow placement="right" title={t("common.Delete")}>
               <IconButton
                 color="error"
                 name="deleteProject"
@@ -337,7 +353,7 @@ const ProjectTable = () => {
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
             >
-              Create Project
+              {t("project.create-project")}
             </Button>
             <Button
               color="primary"
@@ -346,7 +362,7 @@ const ProjectTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export Data
+              {t("common.export-data")}
             </Button>
           </Box>
         )}
