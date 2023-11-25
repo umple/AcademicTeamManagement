@@ -1,4 +1,4 @@
-# Nov 6 - Nov 12
+# Nov 17 - Nov 24
 
 ### Caroline
 - **What did I do last week?** translate group pages: https://github.com/umple/AcademicTeamManagement/pull/295
