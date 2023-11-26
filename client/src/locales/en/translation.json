@@ -25,9 +25,10 @@
         "Members": "Members",
         "current-project": "Current project",
         "interested-projects": "Interested projects",
-        "export-data":"Export Data",
         "display-all": "Display all",
-        "rows": "Rows"
+        "rows": "Rows",
+        "log-out": "Log Out",
+        "log-in": "Log In"
     },
     "table": {
         "student-id": "Student ID",

@@ -25,9 +25,10 @@
         "Members": "Membres",
         "current-project": "Projet actuel",
         "interested-projects":"Projets d'intérêt",
-        "export-data":"Exporter données",
         "display-all": "Afficher les",
-        "rows": "Lignes"
+        "rows": "Lignes",
+        "log-out": "Déconnecter",
+        "log-in": "Connecter"
     },
     "table": {
         "student-id": "Identifiant",
