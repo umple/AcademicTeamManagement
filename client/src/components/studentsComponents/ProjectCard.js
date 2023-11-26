@@ -10,13 +10,19 @@ import {
   Button,
 } from "@mui/material";
 import projectService from "../../services/projectService";
+import { useTranslation } from 'react-i18next';
+
+
 const ProjectCard = ({
   project,
   setShowAlert,
   group,
   setErrorShowAlert,
 }) => {
+
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
+
   const handleProjectApplication = async (event) => {
     event.preventDefault();
 
@@ -60,15 +66,15 @@ const ProjectCard = ({
               component="p"
               style={{ marginTop: "1rem" }}
             >
-              <span className={classes.bold}>Client Name:</span>{" "}
+              <span className={classes.bold}>{t("project.client-full-name")}:</span>{" "}
               {project.clientName}
             </Typography>
             <Typography variant="body2" component="p">
-              <span className={classes.bold}>Client Email:</span>{" "}
+              <span className={classes.bold}>{t("project.client-email")}:</span>{" "}
               {project.clientEmail}
             </Typography>
             <Typography variant="body2" component="p">
-              <span className={classes.bold}>Status:</span>{" "}
+              <span className={classes.bold}>{t("project.status")}:</span>{" "}
               <Box
                 component="span"
                 className={`${classes.status} ${
@@ -89,7 +95,7 @@ const ProjectCard = ({
               </Box>
             </Typography>
             <Typography variant="body2" component="p">
-              <span className={classes.bold}>Group:</span> {project.group}
+              <span className={classes.bold}>{t("common.Group")}:</span> {project.group}
             </Typography>
             <Button
               variant="text"
@@ -101,7 +107,7 @@ const ProjectCard = ({
               className={classes.button}
               style={{ marginTop: "1rem" }}
             >
-              REQUEST
+              {t("project.request")}
             </Button>
           </CardContent>
         </Card>

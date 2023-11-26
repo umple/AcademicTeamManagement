@@ -22,6 +22,8 @@ import React, { useState } from "react";
 import Group from "../../../entities/Group";
 import groupService from "../../../services/groupService";
 import createGroupSchema from "../../../schemas/createGroupSchema";
+import { useTranslation } from 'react-i18next';
+
 
 const StudentGroupForm = ({
   open,
@@ -59,6 +61,7 @@ const StudentGroupForm = ({
 
   const theme = useTheme();
   const [members, setMembers] = useState([]);
+  const { t, i18n } = useTranslation();
 
   const [initialGroupValues] = useState(
     update ?   new Group(editingRow):
@@ -110,7 +113,7 @@ const StudentGroupForm = ({
 
   return (
     <Dialog open={open || update}>
-      <DialogTitle textAlign="center">{update ? "Edit" : "Create"} Group</DialogTitle>
+      <DialogTitle textAlign="center">{update ? t("common.Edit"): t("common.Create")} {t("common.Group")}</DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
@@ -125,7 +128,7 @@ const StudentGroupForm = ({
                 return (
                   <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel id="demo-multiple-chip-label">
-                      Members
+                      {t("common.Members")}
                     </InputLabel>
                     <Select
                       labelId="demo-multiple-chip-label"
@@ -203,7 +206,7 @@ const StudentGroupForm = ({
               if (column.accessorKey === "project") {
                 return (
                   <FormControl>
-                    <InputLabel id="project-label">Project</InputLabel>
+                    <InputLabel id="project-label">{t("common.Project")}</InputLabel>
                     <Select
                       labelId="project-label"
                       key={column.accessorKey}
@@ -250,9 +253,9 @@ const StudentGroupForm = ({
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>{t("common.Cancel")}</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {update ? "Save" : "Create"}
+            {update ? t("common.Save") : t("common.Create")}
           </Button>
         </DialogActions>
       </form>

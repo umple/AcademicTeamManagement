@@ -25,9 +25,11 @@
         "Members": "Membres",
         "current-project": "Projet actuel",
         "interested-projects":"Projets d'intérêt",
-        "export-data":"Exporter données",
         "display-all": "Afficher les",
-        "rows": "Lignes"
+        "rows": "Lignes",
+        "log-out": "Déconnecter",
+        "log-in": "Connecter",
+        "Leave": "Quitter"
     },
     "table": {
         "student-id": "Identifiant",
@@ -108,10 +110,18 @@
         "year": "Année",
         "notes": "Notes",
         "add-section": "Créer Section",
-        "edit-section": "Modifier une Section"
+        "edit-section": "Modifier Section"
+    },
+    "staff": {
+        "staff": "Personnel",
+        "add-staff": "Créer Personnel",
+        "edit-staff": "Modifier Personnel",
+        "role": "Rôle"
     },
     "project": {
         "project-name":"Nom du Projet",
+        "add-project": "Créer Projet",
+        "edit-project": "Modifier Projet",
         "description":"Description",
         "client-full-name":"Nom du Client",
         "client-email":"Email du Client",
@@ -120,8 +130,19 @@
         "notes":"Notes",
         "projects":"Projets",
         "project-applications":"Applications de Projet",
-        "review-application":"Review Application",
-        "create-project":"Créer un Projet"
+        "review-application":"Examiner l'Application",
+        "create-project":"Créer un Projet",
+        "feedback-sent": "Commentaires Envoyés !",
+        "feedback": "Commentaires",
+        "ranking": "Classement",
+        "submitted-by": "Proposé par",
+        "request": "DEMANDER",
+        "student-projects": "Projets d'Étudiants",
+        "student-add-project": "Ajouter un Projet",
+        "request-sent": "Demande de Projet Envoyée",
+        "request-already-sent": "Demande de Projet Déjà Envoyée",
+        "make-sure-join-group": "Assurez-vous de rejoindre un groupe avant d'ajouter un projet",
+        "search-by-project": "Recherchez par nom de projet"
     },
     "status": {
         "Accepted":"Accepté",
@@ -130,7 +151,8 @@
     },
     "group-table":{
         "student-groups":"Groupes d'étudiants",
-        "create-group":"Créer groupe",
+        "create-group":"Créer Groupe",
+        "edit-group":"Modifier Groupe",
         "member-added":"Membre du groupe ajouté !",
         "join":"Joindre",
         "confirmation":"Êtes-vous sûr de vouloir quitter votre groupe actuel et rejoindre celui-ci ?"

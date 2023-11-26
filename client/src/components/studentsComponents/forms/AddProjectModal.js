@@ -14,9 +14,13 @@ import Project from "../../../entities/Project";
 import projectSchema from "../../../schemas/projectSchema";
 import projectService from "../../../services/projectService";
 import { useStyles } from "../styles/AddProjectModalStyles";
+import { useTranslation } from 'react-i18next';
 
 function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
+
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
+
   const [confirmationMessage, setConfirmationMessage] = useState(""); // State for the confirmation message
   const [error, setError] = useState(""); // State for the confirmation message
   let obj = {
@@ -68,7 +72,7 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
       <DialogTitle
         sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center" }}
       >
-        Add Project
+        {t("project.student-add-project")}
       </DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
@@ -81,7 +85,7 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
           >
             <TextField
               fullWidth
-              label="Project Title"
+              label={t("project.project-name")}
               name="project"
               onBlur={handleBlur}
               value={values.project}
@@ -94,7 +98,7 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
             <TextField
               fullWidth
               name="description"
-              label="Description"
+              label={t("project.description")}
               value={values.description}
               error={Boolean(touched.description && errors.description)}
               helperText={touched.description && errors.description}
@@ -108,7 +112,7 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
             <TextField
               fullWidth
               name="clientName"
-              label="Client Full Name"
+              label={t("project.client-full-name")}
               value={values.clientName}
               onBlur={handleBlur}
               onChange={handleChange}
@@ -121,7 +125,7 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
             <TextField
               fullWidth
               name="clientEmail"
-              label="Client Email"
+              label={t("project.client-email")}
               value={values.clientEmail}
               onBlur={handleBlur}
               onChange={handleChange}
@@ -133,9 +137,9 @@ function AddProjectModal({ open, onClose, professorEmail, group, projects }) {
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>{t("common.Cancel")}</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Create
+            {t("common.Create")}
           </Button>
         </DialogActions>
       </form>

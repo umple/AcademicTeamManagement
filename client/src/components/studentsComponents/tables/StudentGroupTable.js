@@ -304,7 +304,7 @@ const StudentGroupTable = () => {
           return (
             <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
               <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original.group_id === group || row.original.members.length >= 5}>{t('group-table.join')}</Button>
-              {row.original.group_id === group && <Button color= "error" onClick={() => handleLeaveGroup()}> Leave </Button>}
+              {row.original.group_id === group && <Button color= "error" onClick={() => handleLeaveGroup()}> {t("common.Leave")} </Button>}
               <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert
                   onClose={handleAlertClose}

@@ -37,6 +37,7 @@ const SectionTable = () => {
   useEffect(() => {
     setTableLocalization(getTableLocalization(currentLanguage));
   }, [currentLanguage]);
+
     // name, term, year, notes
   const columns = useMemo(
     () => [
@@ -126,6 +127,7 @@ const SectionTable = () => {
         columns={columns}
         data={showAllRows ? tableData : tableData.slice(0, pageSize)}
         editingMode="modal"
+        localization={tableLocalization}
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
