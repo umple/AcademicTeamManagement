@@ -5,16 +5,16 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, Typography,
-  Grid, FormLabel,
+  DialogTitle,
   FormGroup,
   Select,
   MenuItem,
   InputLabel,
-  TextareaAutosize,
   Stack,
   TextField
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
+
 
 const ViewApplicationModal = ({
     open,
@@ -26,6 +26,7 @@ const ViewApplicationModal = ({
   }) => {
     const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState(data.feedback ?? "");
     const [status, setStatus] = useState(data.status && data.status !== "Requested" ? data.status : "Feedback Provided");
+    const { t, i18n } = useTranslation();
   
     let states = ["Accepted", "Rejected", "Feedback Provided"];
   
@@ -58,7 +59,7 @@ const ViewApplicationModal = ({
   
     return (
       <Dialog open={open}>
-        <DialogTitle textAlign="center">Project Application</DialogTitle>
+        <DialogTitle textAlign="center">{t("project.project-applications")}</DialogTitle>
         <form acceptCharset="Enter" onSubmit={handleSubmit}>
           <DialogContent>
             <Stack
@@ -69,7 +70,7 @@ const ViewApplicationModal = ({
               }}
             >
               <Box>
-                <InputLabel id="group-label">Group</InputLabel>
+                <InputLabel id="group-label">{t("common.Group")}</InputLabel>
                 <TextField
                   disabled
                   fullWidth
@@ -79,7 +80,7 @@ const ViewApplicationModal = ({
                 />
               </Box>
               <Box>
-                <InputLabel id="submitted-by-label">Submitted By</InputLabel>
+                <InputLabel id="submitted-by-label">{t("project.submitted-by")}</InputLabel>
                 <TextField
                   disabled
                   fullWidth
@@ -89,7 +90,7 @@ const ViewApplicationModal = ({
                 />
               </Box>
               <Box>
-                <InputLabel id="submitted-by-label">Ranking</InputLabel>
+                <InputLabel id="submitted-by-label">{t("project.ranking")}</InputLabel>
                 <TextField
                   disabled
                   fullWidth
@@ -99,7 +100,7 @@ const ViewApplicationModal = ({
                 />
               </Box>
               <FormGroup>
-                <InputLabel id="status-label">Status</InputLabel>
+                <InputLabel id="status-label">{t("project.status")}</InputLabel>
                 <Select 
                     labelId="status-label" 
                     defaultValue={status}
@@ -113,7 +114,7 @@ const ViewApplicationModal = ({
                 </Select>
               </FormGroup>
               <Box>
-                <InputLabel id="feedback-label">Feedback</InputLabel>
+                <InputLabel id="feedback-label">{t("project.feedback")}</InputLabel>
                 <TextField
                   name={"feedback"}
                   multiline
@@ -130,14 +131,14 @@ const ViewApplicationModal = ({
             </Stack>
           </DialogContent>
           <DialogActions sx={{ p: "1.25rem" }}>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onClose}>{t("common.Cancel")}</Button>
             <Button
               color="secondary"
               type="submit"
               onClick={handleSubmit}
               variant="contained"
             >
-              Save
+              {t("common.Save")}
             </Button>
           </DialogActions>
         </form>

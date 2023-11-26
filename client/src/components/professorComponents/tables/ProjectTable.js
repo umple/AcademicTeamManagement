@@ -265,7 +265,7 @@ const ProjectTable = () => {
         onClose={() => setShowAlert(false)}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity="success">Feedback Sent!</Alert>
+        <Alert severity="success">{t("project.feedback-sent")}</Alert>
       </Snackbar>
 
       <MaterialReactTable

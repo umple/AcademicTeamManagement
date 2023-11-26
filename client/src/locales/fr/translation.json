@@ -127,8 +127,12 @@
         "notes":"Notes",
         "projects":"Projets",
         "project-applications":"Applications de Projet",
-        "review-application":"Review Application",
-        "create-project":"Créer un Projet"
+        "review-application":"Examiner l'Application",
+        "create-project":"Créer un Projet",
+        "feedback-sent": "Commentaires Envoyés !",
+        "feedback": "Commentaires",
+        "ranking": "Classement",
+        "submitted-by": "Proposé par"
     },
     "status": {
         "Accepted":"Accepté",
