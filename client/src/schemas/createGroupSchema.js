@@ -5,6 +5,7 @@ const createGroupSchema = (groups,_id) => {
   const groupSchema = Yup.object().shape({
     group_id: Yup.string()
       .required("Group ID is required")
+      .transform((value) => value.trim())
       .test("is-unique", "Group ID already exists", function (value) {
           if (groups && groups.length > 0) {
             const group = groups.find(

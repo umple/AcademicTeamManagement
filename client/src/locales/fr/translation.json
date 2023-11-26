@@ -14,6 +14,7 @@
         "Submit": "Soumettre",
         "learn-more": "En savoir plus",
         "Project": "Projet",
+        "projects": "Projets",
         "Group": "Groupe",
         "Student": "Étudiant",
         "Staff": "Personnel",
@@ -108,6 +109,24 @@
         "notes": "Notes",
         "add-section": "Créer Section",
         "edit-section": "Modifier une Section"
+    },
+    "project": {
+        "project-name":"Nom du Projet",
+        "description":"Description",
+        "client-full-name":"Nom du Client",
+        "client-email":"Email du Client",
+        "status":"Statut",
+        "group":"Group",
+        "notes":"Notes",
+        "projects":"Projets",
+        "project-applications":"Applications de Projet",
+        "review-application":"Review Application",
+        "create-project":"Créer un Projet"
+    },
+    "status": {
+        "Accepted":"Accepté",
+        "Rejected":"Rejeté",
+        "Feedback Provided":"Rétroaction fournie"
     },
     "group-table":{
         "student-groups":"Groupes d'étudiants",
