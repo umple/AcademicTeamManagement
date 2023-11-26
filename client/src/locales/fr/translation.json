@@ -109,7 +109,13 @@
         "year": "Année",
         "notes": "Notes",
         "add-section": "Créer Section",
-        "edit-section": "Modifier une Section"
+        "edit-section": "Modifier Section"
+    },
+    "staff": {
+        "staff": "Personnel",
+        "add-staff": "Créer Personnel",
+        "edit-staff": "Modifier Personnel",
+        "role": "Rôle"
     },
     "project": {
         "project-name":"Nom du Projet",

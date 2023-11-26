@@ -111,6 +111,12 @@
         "add-section": "Create Section",
         "edit-section": "Edit Section"
     },
+    "staff": {
+        "staff": "Staff",
+        "add-staff": "Create Staff",
+        "edit-staff": "Edit Staff",
+        "role": "Role"
+    },
     "project": {
         "project-name":"Project Name",
         "description":"Description",

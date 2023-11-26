@@ -20,30 +20,48 @@ import StaffForm from "../forms/StaffForm";
 import { useStyles } from "./styles/StaffTableStyles";
 import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
 import { DEFAULT_PAGE_SIZE } from "../../../helpers/Constants"
+import { useTranslation } from "react-i18next";
+import { MRT_Localization_EN } from 'material-react-table/locales/en';
+import { MRT_Localization_FR } from 'material-react-table/locales/fr';
+
 
 const StaffTable = () => {
-    // name, term, year, notes
+
+  // Staff table localization
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const getTableLocalization = (language) => {
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
+  };
+
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+
+  useEffect(() => {
+    setTableLocalization(getTableLocalization(currentLanguage));
+  }, [currentLanguage]);
+
   const defaultColumns = useMemo(
     () => [
       {
         accessorKey: "email",
-        header: "Email",
+        header: t("table.email"),
       },
       {
         accessorKey: "username",
-        header: "Username",
+        header: t("table.username"),
       },
       {
         accessorKey: "lastname",
-        header: "Last Name",
+        header: t("table.lastname"),
       },
       {
         accessorKey: "firstname",
-        header: "First Name",
+        header: t("table.firstname"),
       },
       {
         accessorKey: "role",
-        header: "Role",
+        header: t("staff.role"),
       },
     ],
     []
@@ -101,7 +119,7 @@ const StaffTable = () => {
         fontWeight="fontWeightBold"
         sx={{ marginBottom: "0.5rem" }}
       >
-        Staff
+        {t("staff.staff")}
       </Typography>
       <MaterialReactTable
         displayColumnDefOptions={{
@@ -116,6 +134,7 @@ const StaffTable = () => {
         columns={columns}
         data={showAllRows ? tableData : tableData.slice(0, pageSize)}
         editingMode="modal"
+        localization={tableLocalization}
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
@@ -168,7 +187,7 @@ const StaffTable = () => {
               variant="contained"
               name="create-new-Staff"
             >
-              Create Staff
+              {t("staff.add-staff")}
             </Button>
             <Button
               color="primary"
@@ -176,7 +195,7 @@ const StaffTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              Export Data
+              {t("common.export-data")}
             </Button>
           </Box>
         )}
@@ -191,7 +210,7 @@ const StaffTable = () => {
           color="secondary"
           variant="contained"
           onClick={handleExpandTable}>
-          Display all {tableData.length} rows
+          {t("common.display-all")} {tableData.length} {t("common.rows")}
         </Button>
       )}
 
