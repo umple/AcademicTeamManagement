@@ -105,7 +105,7 @@ const StudentForm = ({
               if (column.accessorKey === "sections") {
                 return (
                   <FormControl fullWidth>
-                    <InputLabel id="section-label">Section</InputLabel>
+                    <InputLabel id="section-label">{t("common.Section")}</InputLabel>
                     <Select
                       fullWidth
                       labelId="section-label"

@@ -119,6 +119,8 @@
     },
     "project": {
         "project-name":"Project Name",
+        "add-project": "Create Project",
+        "edit-project": "Edit Project",
         "description":"Description",
         "client-full-name":"Client's Full Name",
         "client-email":"Client's Email Address",
@@ -142,6 +144,7 @@
     "group-table":{
         "student-groups":"Student Groups",
         "create-group":"Create Group",
+        "edit-group":"Edit Group",
         "member-added":"Group Member Added!",
         "join":"Join",
         "confirmation":"Are you sure you want to leave your current group and join this one?"

@@ -106,7 +106,7 @@ import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
               }}
             >
             <FormControl fullWidth>
-                <InputLabel id="group-label">Group</InputLabel>
+                <InputLabel id="group-label">{t("common.Group")}</InputLabel>
                 <Select
                 fullWidth
                 labelId="group-label"

@@ -20,6 +20,7 @@ import { useFormik } from "formik";
 import projectService from "../../../services/projectService";
 import professorProjectSchema from "../../../schemas/professorProjectSchema";
 import statusByValue from "../../common/StatusHelper";
+import { useTranslation } from 'react-i18next'; 
 
 const EditProjectForm = ({
   open,
@@ -30,6 +31,9 @@ const EditProjectForm = ({
   setEditModalOpen,
   setRefreshTrigger,
 }) => {
+
+  // Set the translation
+  const { t, i18n } = useTranslation();
 
   const [initialProjectValues, setInit] = useState(
     new Project(projectData.original)
@@ -80,7 +84,7 @@ const EditProjectForm = ({
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">
-        {projectData?.original ? "Update Project" : "Create New Project"}
+        {projectData?.original ? t("project.edit-project") : t("project.add-project")}
       </DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
@@ -101,7 +105,7 @@ const EditProjectForm = ({
               if (column.accessorKey === "status") {
                 return (
                   <FormGroup>
-                    <InputLabel id="status-label">Status</InputLabel>
+                    <InputLabel id="status-label">{t("project.status")}</InputLabel>
                     <Select
                       labelId="status-label"
                       key={column.accessorKey}
@@ -157,9 +161,9 @@ const EditProjectForm = ({
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>{t("common.Cancel")}</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {projectData?.original ? "Save" : "Create"}
+            {projectData?.original ? t("common.Save") : t("common.Create")}
           </Button>
         </DialogActions>
       </form>
