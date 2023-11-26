@@ -281,6 +281,7 @@ const ProjectTable = () => {
         enablePagination={false}
         columns={columns}
         data={showAllRows ? tableData : tableData.slice(0, pageSize)}
+        localization={tableLocalization}
         enableColumnOrdering
         enableColumnResizing
         columnResizeMode="onChange" //default is "onEnd"
@@ -411,7 +412,7 @@ const ProjectTable = () => {
           color="secondary"
           variant="contained"
           onClick={handleExpandTable}>
-          Display all {tableData.length} rows
+          {t("common.display-all")} {tableData.length} {t("common.rows")}
         </Button>
       )}
 
