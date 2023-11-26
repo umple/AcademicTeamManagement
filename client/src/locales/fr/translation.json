@@ -28,7 +28,8 @@
         "display-all": "Afficher les",
         "rows": "Lignes",
         "log-out": "Déconnecter",
-        "log-in": "Connecter"
+        "log-in": "Connecter",
+        "Leave": "Quitter"
     },
     "table": {
         "student-id": "Identifiant",
@@ -134,7 +135,14 @@
         "feedback-sent": "Commentaires Envoyés !",
         "feedback": "Commentaires",
         "ranking": "Classement",
-        "submitted-by": "Proposé par"
+        "submitted-by": "Proposé par",
+        "request": "DEMANDER",
+        "student-projects": "Projets d'Étudiants",
+        "student-add-project": "Ajouter un Projet",
+        "request-sent": "Demande de Projet Envoyée",
+        "request-already-sent": "Demande de Projet Déjà Envoyée",
+        "make-sure-join-group": "Assurez-vous de rejoindre un groupe avant d'ajouter un projet",
+        "search-by-project": "Recherchez par nom de projet"
     },
     "status": {
         "Accepted":"Accepté",

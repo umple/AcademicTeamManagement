@@ -28,7 +28,8 @@
         "display-all": "Display all",
         "rows": "Rows",
         "log-out": "Log Out",
-        "log-in": "Log In"
+        "log-in": "Log In",
+        "Leave": "Leave"
     },
     "table": {
         "student-id": "Student ID",
@@ -134,7 +135,14 @@
         "feedback-sent": "Feedback Sent!",
         "feedback": "Feedback",
         "ranking": "Ranking",
-        "submitted-by": "Submitted By"
+        "submitted-by": "Submitted By",
+        "request": "REQUEST",
+        "student-projects": "Student Projects",
+        "student-add-project": "Add Project",
+        "request-sent": "Project Request Sent",
+        "request-already-sent": "Project Application Already Sent",
+        "make-sure-join-group": "Make sure to join a group before adding a project",
+        "search-by-project": "Search by project name"
     },
     "status": {
         "Accepted":"Accepted",
