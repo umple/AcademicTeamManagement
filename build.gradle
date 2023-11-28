@@ -14,6 +14,10 @@ tasks.register('runReactUnitTests', Exec){
     commandLine './scripts/runReactUnitTests.sh'
 }
 
+tasks.register('runReactLint', Exec){
+    commandLine './scripts/runReactLint.sh'
+}
+
 tasks.register('runEndToEndTests', Exec){
     commandLine './scripts/runEndToEndTests.sh'
 }

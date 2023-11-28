@@ -82,7 +82,7 @@ $ ./gradlew runEndToEndTests
 You can lint the code locally.
 
 ```sh
-# not implemented yet
+$ ./gradlew runReactLint
 ```
 
 ### Deployment
