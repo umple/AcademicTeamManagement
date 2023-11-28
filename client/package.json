@@ -35,6 +35,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest --coverage",
+    "lint": "eslint src",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --headed --browser chrome",
@@ -68,6 +69,13 @@
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
     "babel-jest": "^29.7.0",
-    "cypress": "^13.3.0"
+    "cypress": "^13.3.0",
+    "eslint": "^8.54.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-n": "^16.3.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.33.2"
   }
 }
