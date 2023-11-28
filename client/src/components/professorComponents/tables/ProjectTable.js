@@ -301,7 +301,7 @@ const ProjectTable = () => {
                     <TableBody>
                       {applications.map((application) => {
                         if (row.original.project !== application.project) {
-                          return
+                          return null
                         }
                         return (
                           <TableRow key={row.id}>

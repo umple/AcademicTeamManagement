@@ -114,6 +114,7 @@ const GroupTable = () => {
                     </div>
                   )
                 }
+                return null
               })
             }
           } else {

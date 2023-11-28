@@ -80,6 +80,7 @@ const StudentGroupTable = () => {
                   </div>
                   )
                 }
+                return null
               })
             }
           } else {
@@ -213,114 +214,115 @@ const StudentGroupTable = () => {
         {t('group-table.member-added')}
         </Alert>
       </Snackbar>
-      {
-        loading ? (
-          <CircularProgress />
-        ) : (
-        <MaterialReactTable
-          displayColumnDefOptions={{
-            'mrt-row-actions': {
-              muiTableHeadCellProps: {
-                align: 'center'
-              },
-              size: 120
-            }
-          }}
-
-        enablePagination={false}
-        columns={columns}
-        data={tableData}
-        editingMode="modal"
-        enableColumnOrdering
-        enableColumnResizing
-        columnResizeMode="onChange" // default is "onEnd"
-        defaultColumn={{
-          minSize: 100,
-          size: 150 // default size is usually 180
-        }}
-        enableEditing
-        localization={tableLocalization}
-        initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact' }}
-        renderRowActions={({ row, table }) => {
-          const joinGroup = () => {
-            fetch('api/add/group/member', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(row)
-            })
-              .then((response) => {
-                if (!response.ok) {
-                  throw new Error('Something happened')
-                }
-                return response.json()
-              })
-              .then((data) => {
-                fetchData()
-                setShowAlert(false)
-                setShowJoinedTeam(true)
-              })
-              .catch((error) => {
-                console.error('Error:', error)
-              })
-          }
-
-          const handleLeaveGroup = () => {
-            fetch(`api/remove/group/member/${group}`, {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            })
-              .then((response) => {
-                return response.json()
-              })
-              .then((data) => {
-                fetchData()
-                setGroup({})
-                setisCurrentUserInGroup(false)
-              })
-              .catch((error) => console.error(error))
-          }
-
-          const handleAlertClose = (event, reason) => {
-            if (reason === 'clickaway') {
-              return
-            }
-            setShowAlert(false)
-          }
-
-          const handleJoinClick = async () => {
-            joinGroup()
-          }
-
-          return (
-            <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-              <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || typeof group !== 'undefined' && row.original.group_id === group || row.original.members.length >= 5}>{t('group-table.join')}</Button>
-              {row.original.group_id === group && <Button color= "error" onClick={() => handleLeaveGroup()}> {t('common.Leave')} </Button>}
-              <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-                <Alert
-                  onClose={handleAlertClose}
-                  severity="warning"
-                  action={
-                    <>
-                      <Button color="inherit" onClick={() => setShowAlert(false)}>
-                        {t('common.Cancel')}
-                      </Button>
-                      <Button color="inherit" onClick={joinGroup}>
-                        {t('group-table.join')}
-                      </Button>
-                    </>
-                  }
-                >
-                  {t('group-table.confirmation')}
-                </Alert>
-              </Snackbar>
-            </Box>
+      {loading
+        ? (
+            <CircularProgress />
           )
-        }}
-      />)}
+        : (
+            <MaterialReactTable
+              displayColumnDefOptions={{
+                'mrt-row-actions': {
+                  muiTableHeadCellProps: {
+                    align: 'center'
+                  },
+                  size: 120
+                }
+              }}
+
+              enablePagination={false}
+              columns={columns}
+              data={tableData}
+              editingMode="modal"
+              enableColumnOrdering
+              enableColumnResizing
+              columnResizeMode="onChange" // default is "onEnd"
+              defaultColumn={{
+                minSize: 100,
+                size: 150 // default size is usually 180
+              }}
+              enableEditing
+              localization={tableLocalization}
+              initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact' }}
+              renderRowActions={({ row, table }) => {
+                const joinGroup = () => {
+                  fetch('api/add/group/member', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(row)
+                  })
+                    .then((response) => {
+                      if (!response.ok) {
+                        throw new Error('Something happened')
+                      }
+                      return response.json()
+                    })
+                    .then((data) => {
+                      fetchData()
+                      setShowAlert(false)
+                      setShowJoinedTeam(true)
+                    })
+                    .catch((error) => {
+                      console.error('Error:', error)
+                    })
+                }
+
+                const handleLeaveGroup = () => {
+                  fetch(`api/remove/group/member/${group}`, {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }
+                  })
+                    .then((response) => {
+                      return response.json()
+                    })
+                    .then((data) => {
+                      fetchData()
+                      setGroup({})
+                      setisCurrentUserInGroup(false)
+                    })
+                    .catch((error) => console.error(error))
+                }
+
+                const handleAlertClose = (event, reason) => {
+                  if (reason === 'clickaway') {
+                    return
+                  }
+                  setShowAlert(false)
+                }
+
+                const handleJoinClick = async () => {
+                  joinGroup()
+                }
+
+                return (
+                  <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
+                    <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || (typeof group !== 'undefined' && row.original.group_id === group) || row.original.members.length >= 5}>{t('group-table.join')}</Button>
+                    {row.original.group_id === group && <Button color= "error" onClick={() => handleLeaveGroup()}> {t('common.Leave')} </Button>}
+                    <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                      <Alert
+                        onClose={handleAlertClose}
+                        severity="warning"
+                        action={
+                          <>
+                            <Button color="inherit" onClick={() => setShowAlert(false)}>
+                              {t('common.Cancel')}
+                            </Button>
+                            <Button color="inherit" onClick={joinGroup}>
+                              {t('group-table.join')}
+                            </Button>
+                          </>
+                        }
+                      >
+                        {t('group-table.confirmation')}
+                      </Alert>
+                    </Snackbar>
+                  </Box>
+                )
+              }}
+            />)}
     </Box>
   )
 }
