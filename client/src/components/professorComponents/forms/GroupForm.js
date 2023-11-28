@@ -1,6 +1,5 @@
 import { FormControl } from '@material-ui/core'
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
@@ -17,7 +16,7 @@ import {
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/styles'
-import { useFormik, Formik } from 'formik'
+import { useFormik } from 'formik'
 
 import React, { useState } from 'react'
 import Group from '../../../entities/Group'
@@ -34,9 +33,7 @@ const GroupForm = ({
   groups,
   setCreateModalOpen,
   update,
-  setUpdate,
-  editingRow,
-  setEditingRow
+  editingRow
 }) => {
   const ITEM_HEIGHT = 48
   const ITEM_PADDING_TOP = 8
@@ -48,7 +45,7 @@ const GroupForm = ({
       }
     }
   }
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   function getStyles (name, members, theme) {
     return {
@@ -60,7 +57,7 @@ const GroupForm = ({
   }
 
   const theme = useTheme()
-  const [members, setMembers] = useState([])
+  const [members] = useState([])
   const [isloading, setIsLoading] = useState(false)
 
   const [initialGroupValues] = useState(
@@ -75,7 +72,7 @@ const GroupForm = ({
     try {
       setIsLoading(true)
       values.group_id = values.group_id.trim()
-      const response = await groupService.add(values)
+      await groupService.add(values)
 
       fetchData()
     } catch (error) {
@@ -93,9 +90,7 @@ const GroupForm = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    handleSubmit
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
     validationSchema: createGroupSchema(groups),

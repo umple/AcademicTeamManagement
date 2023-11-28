@@ -20,10 +20,8 @@ import AlertTitle from '@mui/material/AlertTitle'
 import { ExportToCsv } from 'export-to-csv'
 import MaterialReactTable from 'material-react-table'
 import React, {
-  useCallback,
   useEffect,
   useMemo,
-  useReducer,
   useState,
   useRef
 } from 'react'
@@ -102,13 +100,11 @@ const StudentTable = () => {
   const classes = useStyles()
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState([])
-  const [validationErrors, setValidationErrors] = useState({})
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [importSuccess, setImportSuccess] = useState(false)
   const [deletion, setOpenDeletion] = useState(false)
   const [row, setDeleteRow] = useState()
   const [editingRow, setEditingRow] = useState(null)
-  const [update, setUpdate] = useState(false)
   const [deletionModal, setDeletionModal] = useState(false)
   const [moveStudentsModalOpen, setMoveStudentsModalOpen] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(false)

@@ -4,10 +4,6 @@ import MaterialReactTable from 'material-react-table'
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
   Tooltip,
   Typography,
@@ -19,12 +15,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  FormLabel,
-  FormGroup,
-  Select,
-  MenuItem,
-  InputLabel,
-  TextareaAutosize,
   Alert,
   Snackbar
 } from '@mui/material'
@@ -226,6 +216,7 @@ const ProjectTable = () => {
       .catch((error) => {
         setApplications({})
         setTimeout(() => setIsLoading(false), 1000)
+        console.log(error)
       })
   }
 

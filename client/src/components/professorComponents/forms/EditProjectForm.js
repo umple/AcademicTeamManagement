@@ -32,9 +32,9 @@ const EditProjectForm = ({
   setRefreshTrigger
 }) => {
   // Set the translation
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
-  const [initialProjectValues, setInit] = useState(
+  const [initialProjectValues] = useState(
     new Project(projectData.original)
   )
   const onUpdateStatus = statusByValue(initialProjectValues.status)
@@ -64,8 +64,7 @@ const EditProjectForm = ({
     handleBlur,
     handleChange,
     handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    setFieldValue
   } = useFormik({
     initialValues: initialProjectValues.toProfessorRequestBody(),
     validationSchema: professorProjectSchema(projects, projectData.original._id),

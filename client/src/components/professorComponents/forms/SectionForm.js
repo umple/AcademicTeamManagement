@@ -48,7 +48,7 @@ const SectionForm = ({
     }
   }
 
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const handleClose = () => {
     setCreateModalOpen(false)
@@ -70,9 +70,7 @@ const SectionForm = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    handleSubmit
   } = useFormik({
     initialValues: initialSectionValues.toRequestJSON(),
     validationSchema: sectionSchema(sections, editingRow?._id),

@@ -1,6 +1,5 @@
 import { FormControl } from '@material-ui/core'
 import {
-  Alert,
   Box,
   Button,
   Dialog,
@@ -16,7 +15,7 @@ import {
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/styles'
-import { useFormik, Formik } from 'formik'
+import { useFormik } from 'formik'
 
 import React, { useEffect, useState } from 'react'
 import Group from '../../../entities/Group'
@@ -27,17 +26,12 @@ import { useTranslation } from 'react-i18next'
 const EditGroupModal = ({
   open,
   columns,
-  fetchData,
   projects,
   students,
   groups,
   setEditModalOpen,
-  setCreateModalOpen,
-  update,
-  setUpdate,
   groupData,
   setRefreshTrigger,
-  editingRow,
   setEditingRow
 }) => {
   const ITEM_HEIGHT = 48
@@ -61,14 +55,14 @@ const EditGroupModal = ({
   }
 
   const theme = useTheme()
-  const [members, setMembers] = useState([])
+  const [members] = useState([])
 
-  const [initialGroupValues, setInit] = useState(
+  const [initialGroupValues] = useState(
     new Group(groupData.original)
   )
 
   // Set the translation
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const handleClose = () => {
     setEditingRow(null)
@@ -80,7 +74,7 @@ const EditGroupModal = ({
     try {
       const isConfirmed = window.confirm('Are you sure you want to delete all group members?')
       if (isConfirmed) {
-        const response = await groupService.clearMembers(groupData.original._id)
+        await groupService.clearMembers(groupData.original._id)
         window.location.reload()
       }
     } catch (error) {
@@ -90,7 +84,7 @@ const EditGroupModal = ({
 
   const onSubmit = async (values, actions) => {
     try {
-      const response = await groupService.update(groupData.original._id, values)
+      await groupService.update(groupData.original._id, values)
       setRefreshTrigger((prevState) => !prevState)
     } catch (error) {
       console.log('error', error)
@@ -107,8 +101,7 @@ const EditGroupModal = ({
     handleBlur,
     handleChange,
     handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    setFieldValue
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
     validationSchema: createGroupSchema(groups, groupData.original._id),

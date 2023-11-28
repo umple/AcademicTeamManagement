@@ -8,11 +8,9 @@ import {
   DialogTitle,
   Stack,
   TextField,
-  FormGroup,
   Select,
   MenuItem,
   InputLabel,
-  Alert,
   FormControl
 } from '@mui/material'
 import { useFormik } from 'formik'
@@ -31,12 +29,12 @@ const EditStudentForm = ({
   setRefreshTrigger,
   students
 }) => {
-  const [initialStudentValues, setInit] = useState(
+  const [initialStudentValues] = useState(
     new Student(studentData.original)
   )
 
   // Set the translation
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   // retrieve the sections
   const [sections, setSections] = useState([])

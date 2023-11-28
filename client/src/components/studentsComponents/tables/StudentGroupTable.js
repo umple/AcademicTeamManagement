@@ -14,8 +14,6 @@ import StudentGroupForm from '../forms/StudentGroupForm'
 import projectService from '../../../services/projectService'
 import studentService from '../../../services/studentService'
 import groupService from '../../../services/groupService'
-import { getUserType } from '../../../helpers/UserType'
-import { ROLES } from '../../../helpers/Roles'
 import { FilterDataByProfessor } from '../../../helpers/FilterDataByProfessor'
 import { useTranslation } from 'react-i18next'
 import { MRT_Localization_EN } from 'material-react-table/locales/en'
@@ -23,19 +21,20 @@ import { MRT_Localization_FR } from 'material-react-table/locales/fr'
 
 const StudentGroupTable = () => {
   // For the create profile modal
-  const [refreshTrigger, setRefreshTrigger] = useState(false)
+  const [refreshTrigger] = useState(false)
   const [tableData, setTableData] = useState({})
   const [students, setStudents] = useState([])
   const [group, setGroup] = useState()
-  const [currStudent, setCurrStudent] = useState({})
   const [professorEmail, setProfessorEmail] = useState('')
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [showJoinedTeam, setShowJoinedTeam] = useState(false)
-  const [loading, setIsLoading] = useState(false)
+  const [loading] = useState(false)
   const [update, setUpdate] = useState(false)
   const [editingRow, setEditingRow] = useState({})
   const [projects, setProjects] = useState([])
+
+  // handle translation
   const { t, i18n } = useTranslation()
   const currentLanguage = i18n.language
   const getTableLocalization = (language) => {
@@ -135,7 +134,6 @@ const StudentGroupTable = () => {
     try {
       const groups = await groupService.get()
       const student = await studentService.getByEmail(JSON.parse(localStorage.getItem('userEmail')))
-      student && setCurrStudent(student)
 
       if (groups.groups && groups.message !== 'Group list is empty.') {
         const professorEmail = student?.professorEmail

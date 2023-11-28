@@ -1,5 +1,5 @@
 // Modal to create new project
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import {
   Button,
@@ -14,32 +14,23 @@ import {
   MenuItem,
   InputLabel,
   Tooltip,
-  Alert,
   CircularProgress
 } from '@mui/material'
-import InfoIcon from '@mui/icons-material/Info'
 import Project from '../../../entities/Project'
 import { useFormik } from 'formik'
 import projectService from '../../../services/projectService'
 import professorProjectSchema from '../../../schemas/professorProjectSchema'
 import statusByValue from '../../common/StatusHelper'
 import { useTranslation } from 'react-i18next'
-import { MRT_Localization_EN } from 'material-react-table/locales/en'
-import { MRT_Localization_FR } from 'material-react-table/locales/fr'
 
 const ProjectForm = ({
-  key,
   open,
   columns,
   projects,
   setCreateModalOpen,
   setRefreshTrigger
 }) => {
-  const { t, i18n } = useTranslation()
-  const currentLanguage = i18n.language
-  const getTableLocalization = (language) => {
-    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN
-  }
+  const { t } = useTranslation()
 
   const [initialProjectValues] = useState(
     new Project({
@@ -74,9 +65,7 @@ const ProjectForm = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    handleSubmit
   } = useFormik({
     initialValues: initialProjectValues.toProfessorRequestBody(),
     validationSchema: professorProjectSchema(projects),

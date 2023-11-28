@@ -19,7 +19,7 @@ const ProjectCard = ({
   setErrorShowAlert
 }) => {
   const classes = useStyles()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const handleProjectApplication = async (event) => {
     event.preventDefault()

@@ -59,8 +59,8 @@ const StudentGroupForm = ({
   }
 
   const theme = useTheme()
-  const [members, setMembers] = useState([])
-  const { t, i18n } = useTranslation()
+  const [members] = useState([])
+  const { t } = useTranslation()
 
   const [initialGroupValues] = useState(
     update
@@ -94,9 +94,7 @@ const StudentGroupForm = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    handleSubmit
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
     validationSchema: createGroupSchema(groups, editingRow?._id),

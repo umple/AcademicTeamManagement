@@ -25,11 +25,10 @@ const StudentForm = ({
   columns,
   setCreateModalOpen,
   fetchStudents,
-  editingRow,
   students
 }) => {
   // Set the translation
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   // retrieve the sections
   const [sections, setSections] = useState([])
@@ -78,9 +77,7 @@ const StudentForm = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    handleSubmit
   } = useFormik({
     initialValues: initialStudentValues.toRequestJSON(),
     validationSchema: studentSchema(students),

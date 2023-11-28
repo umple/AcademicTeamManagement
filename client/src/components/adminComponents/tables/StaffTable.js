@@ -1,7 +1,6 @@
 import {
   Delete,
-  Edit,
-  FileUpload as FileUploadIcon
+  Edit
 } from '@mui/icons-material'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import {

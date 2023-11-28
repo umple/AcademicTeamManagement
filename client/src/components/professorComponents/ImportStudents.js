@@ -65,14 +65,13 @@ const useStyles = makeStyles((theme) => ({
 const ImportStudents = (props) => {
   const classes = useStyles()
   const [file, setFile] = useState(null)
-  const [error, setError] = useState(null)
   const [section, setSection] = useState('')
   const [isDragActive, setIsDragActive] = useState(false) // State to track if a file is being dragged over the drop area
   const [progress, setProgress] = useState(0)
   const [isImporting, setIsImporting] = useState(false)
 
   // Set the translation
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const handleDragEnter = (event) => {
     event.preventDefault()
@@ -98,7 +97,6 @@ const ImportStudents = (props) => {
     event.preventDefault()
     setIsImporting(true)
     if (!file) {
-      setError('Please select a file.')
       return
     }
 
@@ -119,7 +117,6 @@ const ImportStudents = (props) => {
           }
         })
         .catch((error) => {
-          setError(error.message)
           clearInterval(pollInterval) // Stop polling on error
         })
     }, 500) // Poll every 1 second (adjust as needed)
@@ -146,7 +143,6 @@ const ImportStudents = (props) => {
         setIsImporting(false)
       })
       .catch((error) => {
-        setError(error.message)
         clearInterval(pollInterval)
         setIsImporting(false)
       })

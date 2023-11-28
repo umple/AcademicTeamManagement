@@ -1,7 +1,6 @@
 import {
   Delete,
-  Edit,
-  FileUpload as FileUploadIcon
+  Edit
 } from '@mui/icons-material'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import {
@@ -60,10 +59,8 @@ const SectionTable = () => {
     [currentLanguage]
   )
   // For the create profile modal
-  const classes = useStyles()
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState([])
-  const [validationErrors, setValidationErrors] = useState({})
   const [deletion, setOpenDeletion] = useState(false)
   const [row, setDeleteRow] = useState()
   const [editingRow, setEditingRow] = useState({})

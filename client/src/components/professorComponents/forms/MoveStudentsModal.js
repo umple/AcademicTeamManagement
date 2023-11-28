@@ -27,7 +27,7 @@ const MoveStudentsModal = ({
   setRowSelection
 }) => {
   // Set the translation
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   // set new group data
   const [newGroup, setNewGroup] = useState('')
@@ -76,7 +76,7 @@ const MoveStudentsModal = ({
     event.preventDefault()
     try {
       console.log(studentsSelected)
-      const response = await studentService.updateGroupBulkStudents(studentsSelected, newGroup)
+      await studentService.updateGroupBulkStudents(studentsSelected, newGroup)
       setMoveStudentsModalOpen(false)
       setRowSelection({})
       fetchStudents()

@@ -25,7 +25,7 @@ const ViewApplicationModal = ({
 }) => {
   const [textFieldFeedback, setTextFieldtextFieldFeedback] = useState(data.feedback ?? '')
   const [status, setStatus] = useState(data.status && data.status !== 'Requested' ? data.status : 'Feedback Provided')
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const states = ['Accepted', 'Rejected', 'Feedback Provided']
 
@@ -47,7 +47,7 @@ const ViewApplicationModal = ({
       .then((response) => {
         return response.json()
       })
-      .then((data) => {
+      .then(() => {
         fetchApplications()
         setShowAlert(true)
         setTimeout(() => setShowAlert(false), 5000)

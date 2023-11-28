@@ -18,7 +18,6 @@ import projectService from '../../services/projectService'
 import studentService from '../../services/studentService'
 import ProjectCard from './ProjectCard'
 import AddIcon from '@mui/icons-material/Add'
-import InputBase from '@mui/material/InputBase'
 import SearchIcon from '@mui/icons-material/Search'
 import { useTranslation } from 'react-i18next'
 
@@ -30,7 +29,7 @@ function StudentProjects () {
   const [showErrorAlert, setErrorShowAlert] = useState(false)
   const [group, setCurrGroup] = useState(null)
   const [currentStudent, setCurrentStudent] = useState({})
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const handleSearch = (event) => {
     const searchTerm = event.target.value.toLowerCase().trim()

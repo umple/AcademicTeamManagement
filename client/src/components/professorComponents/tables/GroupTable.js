@@ -5,22 +5,11 @@ import {
   Alert,
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Stack,
-  TextField,
   Tooltip,
   Typography
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
-import { useTheme } from '@mui/material/styles'
 import { ExportToCsv } from 'export-to-csv' // or use your library of choice here
 import MaterialReactTable from 'material-react-table'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -43,18 +32,19 @@ import { useLocation } from 'react-router-dom'
 const GroupTable = () => {
   // For the create profile modal
   const [createModalOpen, setCreateModalOpen] = useState(false)
-  const [update, setUpdate] = useState(false)
 
   const [tableData, setTableData] = useState([])
   const [projects, setProjects] = useState([])
   const [students, setStudents] = useState([])
-  const [message, setMessage] = useState('')
+  const [message] = useState('')
   const [deletion, setDeletion] = useState(false)
   const [row, setDeleteRow] = useState()
   const [refreshTrigger, setRefreshTrigger] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingRow, setEditingRow] = useState(null)
   const location = useLocation()
+
+  // handle translation
   const { t, i18n } = useTranslation()
   const currentLanguage = i18n.language
   const getTableLocalization = (language) => {
