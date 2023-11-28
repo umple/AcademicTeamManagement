@@ -36,6 +36,7 @@
     "build": "react-scripts build",
     "test": "jest --coverage",
     "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --headed --browser chrome",
