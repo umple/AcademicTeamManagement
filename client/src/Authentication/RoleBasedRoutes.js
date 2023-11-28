@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
-import { getUserType } from '../helpers/UserType';
+import { getUserType } from '../helpers/UserType'
 
 const RoleBasedRoutes = ({ allowedRole }) => {
-
   // Set the role variable based on the returned value of /getusertype
-  const [role, setRole] = useState(true);
+  const [role, setRole] = useState(true)
 
   useEffect(() => {
     getUserType()
@@ -14,12 +13,12 @@ const RoleBasedRoutes = ({ allowedRole }) => {
       })
       .catch((error) => {
         setRole(false)
-        console.error(error);
-      });
-  }, [role]);
+        console.error(error)
+      })
+  }, [role])
 
-  return(
-      role ? <Outlet/> : <Navigate to="/NotFound"/>
+  return (
+    role ? <Outlet/> : <Navigate to="/NotFound"/>
   )
 }
 

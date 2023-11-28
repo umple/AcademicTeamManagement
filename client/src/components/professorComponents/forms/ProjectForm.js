@@ -1,6 +1,6 @@
-//Modal to create new project
-import React, { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+// Modal to create new project
+import React, { useState, useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import {
   Button,
   Dialog,
@@ -15,17 +15,17 @@ import {
   InputLabel,
   Tooltip,
   Alert,
-  CircularProgress,
-} from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
-import Project from "../../../entities/Project";
-import { useFormik } from "formik";
-import projectService from "../../../services/projectService";
-import professorProjectSchema from "../../../schemas/professorProjectSchema";
-import statusByValue from "../../common/StatusHelper";
-import { useTranslation } from 'react-i18next';
-import { MRT_Localization_EN } from 'material-react-table/locales/en';
-import { MRT_Localization_FR } from 'material-react-table/locales/fr';
+  CircularProgress
+} from '@mui/material'
+import InfoIcon from '@mui/icons-material/Info'
+import Project from '../../../entities/Project'
+import { useFormik } from 'formik'
+import projectService from '../../../services/projectService'
+import professorProjectSchema from '../../../schemas/professorProjectSchema'
+import statusByValue from '../../common/StatusHelper'
+import { useTranslation } from 'react-i18next'
+import { MRT_Localization_EN } from 'material-react-table/locales/en'
+import { MRT_Localization_FR } from 'material-react-table/locales/fr'
 
 const ProjectForm = ({
   key,
@@ -33,41 +33,40 @@ const ProjectForm = ({
   columns,
   projects,
   setCreateModalOpen,
-  setRefreshTrigger,
+  setRefreshTrigger
 }) => {
-
-  const { t, i18n } = useTranslation();
-  const currentLanguage = i18n.language;
+  const { t, i18n } = useTranslation()
+  const currentLanguage = i18n.language
   const getTableLocalization = (language) => {
-    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
-  };
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN
+  }
 
   const [initialProjectValues] = useState(
     new Project({
-      professorEmail: JSON.parse(localStorage.getItem("userEmail")),
+      professorEmail: JSON.parse(localStorage.getItem('userEmail'))
     })
-  );
+  )
 
-  const onCreateStatus = statusByValue("RAW");
-  const [isloading, setIsLoading] = useState(false);
+  const onCreateStatus = statusByValue('RAW')
+  const [isloading, setIsLoading] = useState(false)
 
   const handleClose = () => {
-    setCreateModalOpen(false);
-  };
+    setCreateModalOpen(false)
+  }
 
   const onSubmit = async (values, actions) => {
     try {
-      setIsLoading(true);
-      await projectService.add(values);
-      setRefreshTrigger((prevState) => !prevState);
+      setIsLoading(true)
+      await projectService.add(values)
+      setRefreshTrigger((prevState) => !prevState)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     } finally {
-      setIsLoading(false);
-      handleClose();
-      actions.resetForm();
+      setIsLoading(false)
+      handleClose()
+      actions.resetForm()
     }
-  };
+  }
 
   const {
     values,
@@ -77,39 +76,41 @@ const ProjectForm = ({
     handleChange,
     handleSubmit,
     setFieldValue,
-    setFieldTouched,
+    setFieldTouched
   } = useFormik({
     initialValues: initialProjectValues.toProfessorRequestBody(),
     validationSchema: professorProjectSchema(projects),
-    onSubmit,
-  });
+    onSubmit
+  })
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">{t("project.create-project")}</DialogTitle>
-      {isloading ? (
+      <DialogTitle textAlign="center">{t('project.create-project')}</DialogTitle>
+      {isloading
+        ? (
         <CircularProgress size={100}></CircularProgress>
-      ) : (
+          )
+        : (
         <form acceptCharset="Enter" name="project-form" onSubmit={handleSubmit}>
           <DialogContent>
             <Stack
               sx={{
-                width: "100%",
-                minWidth: { xs: "300px", sm: "360px", md: "400px" },
-                gap: "1.5rem",
+                width: '100%',
+                minWidth: { xs: '300px', sm: '360px', md: '400px' },
+                gap: '1.5rem'
               }}
             >
               {columns.map((column) => {
                 if (
-                  column.accessorKey === "interested groups" ||
-                  column.accessorKey === "group"
+                  column.accessorKey === 'interested groups' ||
+                  column.accessorKey === 'group'
                 ) {
-                  return null;
+                  return null
                 }
-                if (column.accessorKey === "status") {
+                if (column.accessorKey === 'status') {
                   return (
                     <FormGroup key={uuidv4()}>
-                      <InputLabel id="status-label">{t("project.status")}</InputLabel>
+                      <InputLabel id="status-label">{t('project.status')}</InputLabel>
                       <Select
                         labelId="status-label"
                         key={column.accessorKey}
@@ -128,22 +129,22 @@ const ProjectForm = ({
                         }
                       >
                         {onCreateStatus.possibilities.map((option) => {
-                          const tmp = statusByValue(option);
+                          const tmp = statusByValue(option)
                           return (
                             <MenuItem key={option} value={option}>
                               <Tooltip
                                 title={tmp.info}
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                                 arrow
                               >
                                 {option}
                               </Tooltip>
                             </MenuItem>
-                          );
+                          )
                         })}
                       </Select>
                     </FormGroup>
-                  );
+                  )
                 }
                 return (
                   <TextField
@@ -159,28 +160,28 @@ const ProjectForm = ({
                     helperText={
                       touched[column.accessorKey] && errors[column.accessorKey]
                     }
-                    multiline={column.accessorKey === "description"}
-                    rows={column.accessorKey === "description" ? 5 : 1}
+                    multiline={column.accessorKey === 'description'}
+                    rows={column.accessorKey === 'description' ? 5 : 1}
                   />
-                );
+                )
               })}
             </Stack>
           </DialogContent>
-          <DialogActions sx={{ p: "1.25rem" }}>
-            <Button onClick={handleClose}>{t("common.Cancel")}</Button>
+          <DialogActions sx={{ p: '1.25rem' }}>
+            <Button onClick={handleClose}>{t('common.Cancel')}</Button>
             <Button
               color="secondary"
               name="submitForm"
               type="submit"
               variant="contained"
             >
-              {t("common.Create")}
+              {t('common.Create')}
             </Button>
           </DialogActions>
         </form>
-      )}
+          )}
     </Dialog>
-  );
-};
+  )
+}
 
-export default ProjectForm;
+export default ProjectForm

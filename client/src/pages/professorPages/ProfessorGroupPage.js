@@ -1,10 +1,10 @@
-import GroupTable from "../../components/professorComponents/tables/GroupTable";
+import GroupTable from '../../components/professorComponents/tables/GroupTable'
 
-const ProfessorGroupPage = () =>{
-    return (
+const ProfessorGroupPage = () => {
+  return (
         <>
          <GroupTable></GroupTable>
         </>
-    )
+  )
 }
-export default ProfessorGroupPage;
+export default ProfessorGroupPage

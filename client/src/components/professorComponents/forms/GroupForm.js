@@ -1,4 +1,4 @@
-import { FormControl } from "@material-ui/core";
+import { FormControl } from '@material-ui/core'
 import {
   Alert,
   Box,
@@ -13,17 +13,17 @@ import {
   OutlinedInput,
   Select,
   Stack,
-  TextField,
-} from "@mui/material";
-import Chip from "@mui/material/Chip";
-import { useTheme } from "@mui/material/styles";
-import { useFormik } from "formik";
-import { Formik } from "formik";
-import React, { useState } from "react";
-import Group from "../../../entities/Group";
-import groupService from "../../../services/groupService";
-import createGroupSchema from "../../../schemas/createGroupSchema";
-import { useTranslation } from "react-i18next";
+  TextField
+} from '@mui/material'
+import Chip from '@mui/material/Chip'
+import { useTheme } from '@mui/material/styles'
+import { useFormik, Formik } from 'formik'
+
+import React, { useState } from 'react'
+import Group from '../../../entities/Group'
+import groupService from '../../../services/groupService'
+import createGroupSchema from '../../../schemas/createGroupSchema'
+import { useTranslation } from 'react-i18next'
 
 const GroupForm = ({
   open,
@@ -36,56 +36,56 @@ const GroupForm = ({
   update,
   setUpdate,
   editingRow,
-  setEditingRow,
+  setEditingRow
 }) => {
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
+  const ITEM_HEIGHT = 48
+  const ITEM_PADDING_TOP = 8
   const MenuProps = {
     PaperProps: {
       style: {
         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
-  const { t, i18n } = useTranslation();
+        width: 250
+      }
+    }
+  }
+  const { t, i18n } = useTranslation()
 
-  function getStyles(name, members, theme) {
+  function getStyles (name, members, theme) {
     return {
       fontWeight:
         members.indexOf(name) === -1
           ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
+          : theme.typography.fontWeightMedium
+    }
   }
 
-  const theme = useTheme();
-  const [members, setMembers] = useState([]);
-  const [isloading, setIsLoading] = useState(false);
+  const theme = useTheme()
+  const [members, setMembers] = useState([])
+  const [isloading, setIsLoading] = useState(false)
 
   const [initialGroupValues] = useState(
     update
       ? new Group(editingRow)
       : new Group({
-          professorEmail: JSON.parse(localStorage.getItem("userEmail")),
-        })
-  );
+        professorEmail: JSON.parse(localStorage.getItem('userEmail'))
+      })
+  )
 
   const onSubmit = async (values, actions) => {
     try {
-      setIsLoading(true);
-      values["group_id"] = values["group_id"].trim();
-      let response = await groupService.add(values);
+      setIsLoading(true)
+      values.group_id = values.group_id.trim()
+      const response = await groupService.add(values)
 
-      fetchData();
+      fetchData()
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error)
     } finally {
-      setIsLoading(false);
-      handleClose();
-      actions.resetForm();
+      setIsLoading(false)
+      handleClose()
+      actions.resetForm()
     }
-  };
+  }
 
   const {
     values,
@@ -95,40 +95,42 @@ const GroupForm = ({
     handleChange,
     handleSubmit,
     setFieldValue,
-    setFieldTouched,
+    setFieldTouched
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
     validationSchema: createGroupSchema(groups),
-    onSubmit,
-  });
+    onSubmit
+  })
 
   const handleClose = () => {
-    setCreateModalOpen(false);
-  };
+    setCreateModalOpen(false)
+  }
 
   return (
     <Dialog open={open || update}>
       <DialogTitle textAlign="center">
-        {t("group-table.create-group")}
+        {t('group-table.create-group')}
       </DialogTitle>
-      {isloading ? (
+      {isloading
+        ? (
         <CircularProgress size={100}></CircularProgress>
-      ) : (
+          )
+        : (
         <form acceptCharset="Enter" onSubmit={handleSubmit}>
           <DialogContent>
             <Stack
               sx={{
-                width: "100%",
-                minWidth: { xs: "300px", sm: "360px", md: "400px" },
-                gap: "1.5rem",
+                width: '100%',
+                minWidth: { xs: '300px', sm: '360px', md: '400px' },
+                gap: '1.5rem'
               }}
             >
               {columns.map((column) => {
-                if (column.accessorKey === "members") {
+                if (column.accessorKey === 'members') {
                   return (
                     <FormControl sx={{ m: 1, width: 300 }}>
                       <InputLabel id="demo-multiple-chip-label">
-                        {t("common.Members")}
+                        {t('common.Members')}
                       </InputLabel>
                       <Select
                         labelId="demo-multiple-chip-label"
@@ -154,25 +156,25 @@ const GroupForm = ({
                         }
                         renderValue={(selected) => (
                           <Box
-                            sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                            sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
                           >
                             {selected.map((value) => {
-                              let student = students.find(
+                              const student = students.find(
                                 (student) => student.orgdefinedid === value
-                              );
-                              let display =
+                              )
+                              const display =
                                 student.orgdefinedid +
-                                " - " +
+                                ' - ' +
                                 student.firstname +
-                                " " +
-                                student.lastname;
+                                ' ' +
+                                student.lastname
                               return (
                                 <Chip
                                   color="primary"
                                   key={value}
                                   label={display}
                                 />
-                              );
+                              )
                             })}
                           </Box>
                         )}
@@ -182,7 +184,7 @@ const GroupForm = ({
                           students.map((student) => {
                             if (
                               student.group === null ||
-                              student.group === ""
+                              student.group === ''
                             ) {
                               return (
                                 <MenuItem
@@ -195,25 +197,25 @@ const GroupForm = ({
                                   )}
                                 >
                                   {student.orgdefinedid +
-                                    " - " +
+                                    ' - ' +
                                     student.firstname +
-                                    " " +
+                                    ' ' +
                                     student.lastname}
                                 </MenuItem>
-                              );
+                              )
                             }
-                            return null;
+                            return null
                           })}
                       </Select>
                     </FormControl>
-                  );
+                  )
                 }
 
-                if (column.accessorKey === "project") {
+                if (column.accessorKey === 'project') {
                   return (
                     <FormControl>
                       <InputLabel id="project-label">
-                        {t("common.Project")}
+                        {t('common.Project')}
                       </InputLabel>
                       <Select
                         labelId="project-label"
@@ -238,7 +240,7 @@ const GroupForm = ({
                         ))}
                       </Select>
                     </FormControl>
-                  );
+                  )
                 }
 
                 return (
@@ -256,20 +258,20 @@ const GroupForm = ({
                       touched[column.accessorKey] && errors[column.accessorKey]
                     }
                   />
-                );
+                )
               })}
             </Stack>
           </DialogContent>
-          <DialogActions sx={{ p: "1.25rem" }}>
-            <Button onClick={handleClose}>{t("common.Cancel")}</Button>
+          <DialogActions sx={{ p: '1.25rem' }}>
+            <Button onClick={handleClose}>{t('common.Cancel')}</Button>
             <Button color="secondary" type="submit" variant="contained">
-              {t("common.Create")}
+              {t('common.Create')}
             </Button>
           </DialogActions>
         </form>
-      )}
+          )}
     </Dialog>
-  );
-};
+  )
+}
 
-export default GroupForm;
+export default GroupForm

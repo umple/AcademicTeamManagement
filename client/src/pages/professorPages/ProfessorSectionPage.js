@@ -1,10 +1,10 @@
-import SectionTable from "../../components/professorComponents/tables/SectionTable";
+import SectionTable from '../../components/professorComponents/tables/SectionTable'
 
 const ProfessorSectionPage = () => {
   return (
     <>
       <SectionTable></SectionTable>
     </>
-  );
-};
-export default ProfessorSectionPage;
+  )
+}
+export default ProfessorSectionPage

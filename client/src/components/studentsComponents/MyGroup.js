@@ -1,119 +1,116 @@
 // MyGroup.js
-import React, { useState, useEffect, useMemo } from "react";
-import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent, MenuItem, Select, TableCell} from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
-import { Link } from "react-router-dom";
-import Chip from '@mui/material/Chip';
-import MaterialReactTable from 'material-react-table';
-import { fetchData } from "../../services/api";
-import { colorStatus } from "../../helpers/statusColors";
-import { useTranslation } from 'react-i18next';
-import { MRT_Localization_EN } from 'material-react-table/locales/en';
-import { MRT_Localization_FR } from 'material-react-table/locales/fr';
-import projectService from "../../services/projectService";
-
+import React, { useState, useEffect, useMemo } from 'react'
+import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent, MenuItem, Select, TableCell } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
+import { Link } from 'react-router-dom'
+import Chip from '@mui/material/Chip'
+import MaterialReactTable from 'material-react-table'
+import { fetchData } from '../../services/api'
+import { colorStatus } from '../../helpers/statusColors'
+import { useTranslation } from 'react-i18next'
+import { MRT_Localization_EN } from 'material-react-table/locales/en'
+import { MRT_Localization_FR } from 'material-react-table/locales/fr'
+import projectService from '../../services/projectService'
 
 const MyGroup = () => {
-  const [group, setGroup] = useState({});
+  const [group, setGroup] = useState({})
   const [students, setStudents] = useState()
-  const [loading, setIsLoading] = useState(false);
-  const [applications, setProjectApplications] = useState({});
-  const [showAlert, setShowAlert] = useState(false);
-  const { t, i18n } = useTranslation();
-  const currentLanguage = i18n.language;
+  const [loading, setIsLoading] = useState(false)
+  const [applications, setProjectApplications] = useState({})
+  const [showAlert, setShowAlert] = useState(false)
+  const { t, i18n } = useTranslation()
+  const currentLanguage = i18n.language
 
   const getTableLocalization = (language) => {
-    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
-  };
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN
+  }
 
-  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage))
 
   useEffect(() => {
-    setTableLocalization(getTableLocalization(currentLanguage));
-  }, [currentLanguage]);
+    setTableLocalization(getTableLocalization(currentLanguage))
+  }, [currentLanguage])
 
   const fetchDataAndSetState = async () => {
-
     // Check if the user has a group or not
     try {
-      const groupData = await fetchData("api/retrieve/curr/user/group");
-      !groupData.error && setGroup(groupData);
+      const groupData = await fetchData('api/retrieve/curr/user/group')
+      !groupData.error && setGroup(groupData)
     } catch (error) {
       console.error(error)
-      setGroup({});
+      setGroup({})
     }
-    
+
     // Get the student data
     try {
       setIsLoading(true)
-      const studentsData = await fetchData("api/students");
-      studentsData && setStudents(studentsData.students);
+      const studentsData = await fetchData('api/students')
+      studentsData && setStudents(studentsData.students)
 
-      const projectApplicationsData = await fetchData("api/retrieve/project/application");
-      projectApplicationsData && setProjectApplications(projectApplicationsData);
+      const projectApplicationsData = await fetchData('api/retrieve/project/application')
+      projectApplicationsData && setProjectApplications(projectApplicationsData)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     } finally {
-      setIsLoading(false);
-
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchDataAndSetState();
-  }, []);
+    fetchDataAndSetState()
+  }, [])
 
   // Handle changing the rank
   const rankingsAvailable = [...Array(11).keys()]
   const handleRankingChange = async (rowId, newValue) => {
-    rowId["ranking"] = newValue
+    rowId.ranking = newValue
     try {
-      await projectService.updateProjectApplication(rowId["_id"],rowId);
+      await projectService.updateProjectApplication(rowId._id, rowId)
       // Refresh applications
-      const projectApplicationsData = await fetchData("api/retrieve/project/application");
-      projectApplicationsData && setProjectApplications(projectApplicationsData);
+      const projectApplicationsData = await fetchData('api/retrieve/project/application')
+      projectApplicationsData && setProjectApplications(projectApplicationsData)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const handleLeaveGroup = async () => {
     try {
       const response = await fetch(`api/remove/group/member/${group.group_id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      );
+      }
+      )
 
       if (!response.ok) {
-        throw new Error("Request failed");
+        throw new Error('Request failed')
       }
 
-      const data = await response.json();
-      setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 4000);
-      setGroup({});
+      const data = await response.json()
+      setShowAlert(true)
+      setTimeout(() => setShowAlert(false), 4000)
+      setGroup({})
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const columns = useMemo(() => [
     {
       accessorKey: 'group_id',
-      header: t('my-group.group'),
+      header: t('my-group.group')
     },
     {
       accessorKey: 'project',
-      header: t('my-group.project'),
+      header: t('my-group.project')
     },
     {
-      accessorKey: "status",
+      accessorKey: 'status',
       header: t('my-group.status'),
       Cell: ({ cell }) => (
-        <Chip 
+        <Chip
           label = {cell.getValue()}
           color = {colorStatus(cell.getValue())}
           />
@@ -121,14 +118,15 @@ const MyGroup = () => {
     },
     {
       accessorKey: 'feedback',
-      header: t('my-group.feedback'),
+      header: t('my-group.feedback')
     },
     {
       accessorKey: 'ranking',
       header: t('my-group.ranking'),
       Cell: ({ row, cell }) => (
         <TableCell>
-          {columns.find((col) => col.accessorKey === 'ranking') ? (
+          {columns.find((col) => col.accessorKey === 'ranking')
+            ? (
             <Select
               value={cell.getValue()}
               onChange={(e) => handleRankingChange(row.original, e.target.value)}
@@ -139,18 +137,19 @@ const MyGroup = () => {
                 </MenuItem>
               ))}
             </Select>
-          ) : (
-            cell.render('Cell')
-          )}
+              )
+            : (
+                cell.render('Cell')
+              )}
         </TableCell>
-      ),
-    },
+      )
+    }
 
-  ], [currentLanguage]);
+  ], [currentLanguage])
 
-  const findNameByStudentID= (orgdefinedid) =>{
-    let student = students.find((student)=> {return student.orgdefinedid === orgdefinedid})
-    return student.firstname + " " + student.lastname
+  const findNameByStudentID = (orgdefinedid) => {
+    const student = students.find((student) => { return student.orgdefinedid === orgdefinedid })
+    return student.firstname + ' ' + student.lastname
   }
 
   return (
@@ -158,38 +157,43 @@ const MyGroup = () => {
       <Snackbar
         open={showAlert}
         onClose={() => setShowAlert(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="success">
           {t('my-group.left')}
         </Alert>
       </Snackbar>
-      {loading ? (
+      {loading
+        ? (
         <CircularProgress />
-      ) : (
+          )
+        : (
         <>
           <Card sx={{ mt: 10, mb: 4, ml: 4, mr: 4 }}>
             <CardContent>
               <Typography variant="h5" gutterBottom>
                 {t('my-group.my-group')}
               </Typography>
-              {Object.keys(group).length !== 0 ? (
+              {Object.keys(group).length !== 0
+                ? (
                 <Box>
-                  <Typography sx={{ fontSize: "18px" }}>
+                  <Typography sx={{ fontSize: '18px' }}>
                     <strong>Group ID:</strong> {group.group_id} </Typography>
-                  <Typography sx={{ fontSize: "18px" }}>
+                  <Typography sx={{ fontSize: '18px' }}>
                     <strong> {t('my-group.members')}</strong>
                   </Typography>
 
                   {
                   group.members.map((element, index) => (
-                    <Chip sx = {{"m": "2px"}} key={index} label={findNameByStudentID(element)} color="secondary"></Chip>
+                    <Chip sx = {{ m: '2px' }} key={index} label={findNameByStudentID(element)} color="secondary"></Chip>
                   ))}
-                  {group.project ? (
-                    <Typography sx={{ fontSize: "18px" }}>
+                  {group.project
+                    ? (
+                    <Typography sx={{ fontSize: '18px' }}>
                       <strong>{t('my-group.project2')}</strong> {group.project}
                     </Typography>
-                  ) : (
+                      )
+                    : (
                     <Grid
                       container
                       spacing={2}
@@ -199,7 +203,7 @@ const MyGroup = () => {
                       <Grid item>
                         <Link
                           to="/StudentProjects"
-                          style={{ textDecoration: "none" }}
+                          style={{ textDecoration: 'none' }}
                         >
                           <Button variant="contained" color="primary">
                             {t('my-group.add-project')}
@@ -216,16 +220,18 @@ const MyGroup = () => {
                         </Button>
                       </Grid>
                     </Grid>
-                  )}
+                      )}
                 </Box>
-              ) : (
+                  )
+                : (
                 <Typography variant="h6">
                   {t('my-group.no-group')}
                 </Typography>
-              )}
+                  )}
             </CardContent>
           </Card>
-          {typeof applications !== "undefined" || applications ? (
+          {typeof applications !== 'undefined' || applications
+            ? (
             <Box sx={{ mt: 2, ml: 4, mr: 4 }}>
               <MaterialReactTable
                 columns={columns}
@@ -238,27 +244,28 @@ const MyGroup = () => {
                 enableGlobalFilter={false}
                 enableFullScreenToggle={false}
                 enableDensityToggle={false}
-                initialState={{ showColumnFilters: true, showGlobalFilter: true,pagination: {pageSize:200} }}
+                initialState={{ showColumnFilters: true, showGlobalFilter: true, pagination: { pageSize: 200 } }}
                 localization={tableLocalization}
                 keyField="project"
                 customStyles={{
                   rows: {
                     style: {
-                      '&:last-child td': { border: 0 },
-                    },
-                  },
+                      '&:last-child td': { border: 0 }
+                    }
+                  }
                 }}
               />
             </Box>
-          ) : (
+              )
+            : (
             <Typography variant="h6">
               {t('my-group.no-project')}
             </Typography>
-          )}
+              )}
         </>
-      )}
+          )}
     </Box>
-  );
-};
+  )
+}
 
-export default MyGroup;
+export default MyGroup

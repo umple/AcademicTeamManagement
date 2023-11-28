@@ -1,11 +1,11 @@
-import { Paper } from "@material-ui/core";
+import { Paper } from '@material-ui/core'
 import {
   Delete,
   Edit,
-  FileUpload as FileUploadIcon,
-} from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
+  FileUpload as FileUploadIcon
+} from '@mui/icons-material'
+import CloseIcon from '@mui/icons-material/Close'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import {
   Box,
   Button,
@@ -13,192 +13,187 @@ import {
   DialogTitle,
   IconButton,
   Tooltip,
-  Typography,
-} from "@mui/material";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import { ExportToCsv } from "export-to-csv";
-import MaterialReactTable from "material-react-table";
+  Typography
+} from '@mui/material'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import { ExportToCsv } from 'export-to-csv'
+import MaterialReactTable from 'material-react-table'
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useReducer,
   useState,
-  useRef,
-} from "react";
-import { FilterDataByProfessor } from "../../../helpers/FilterDataByProfessor";
-import { csvOptions, handleExportData } from "../../../helpers/exportData";
-import studentService from "../../../services/studentService";
-import ImportStudents from "../ImportStudents";
-import StudentForm from "../forms/StudentForm";
-import { useStyles } from "./styles/StudentTableStyles";
-import ConfirmDeletionModal from "../../common/ConfirmDeletionModal";
-import { ROLES } from "../../../helpers/Roles";
-import { getUserType } from "../../../helpers/UserType";
-import EditStudentForm from "../forms/EditStudentModal";
-import DeleteIcon from "@mui/icons-material/Delete";
-import GroupIcon from '@mui/icons-material/Group';
-import { useTranslation } from 'react-i18next';
-import { MRT_Localization_EN } from 'material-react-table/locales/en';
-import { MRT_Localization_FR } from 'material-react-table/locales/fr';
-import MoveStudentsModal from "../forms/MoveStudentsModal";
-import { DEFAULT_PAGE_SIZE } from "../../../helpers/Constants"
-
+  useRef
+} from 'react'
+import { FilterDataByProfessor } from '../../../helpers/FilterDataByProfessor'
+import { csvOptions, handleExportData } from '../../../helpers/exportData'
+import studentService from '../../../services/studentService'
+import ImportStudents from '../ImportStudents'
+import StudentForm from '../forms/StudentForm'
+import { useStyles } from './styles/StudentTableStyles'
+import ConfirmDeletionModal from '../../common/ConfirmDeletionModal'
+import { ROLES } from '../../../helpers/Roles'
+import { getUserType } from '../../../helpers/UserType'
+import EditStudentForm from '../forms/EditStudentModal'
+import DeleteIcon from '@mui/icons-material/Delete'
+import GroupIcon from '@mui/icons-material/Group'
+import { useTranslation } from 'react-i18next'
+import { MRT_Localization_EN } from 'material-react-table/locales/en'
+import { MRT_Localization_FR } from 'material-react-table/locales/fr'
+import MoveStudentsModal from '../forms/MoveStudentsModal'
+import { DEFAULT_PAGE_SIZE } from '../../../helpers/Constants'
 
 const StudentTable = () => {
-
   // Handle translation of the page
-  const { t, i18n } = useTranslation();
-  const currentLanguage = i18n.language;
+  const { t, i18n } = useTranslation()
+  const currentLanguage = i18n.language
 
   const getTableLocalization = (language) => {
-    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN;
-  };
+    return language === 'fr' ? MRT_Localization_FR : MRT_Localization_EN
+  }
 
-  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage));
+  const [tableLocalization, setTableLocalization] = useState(getTableLocalization(currentLanguage))
 
   useEffect(() => {
-    setTableLocalization(getTableLocalization(currentLanguage));
-  }, [currentLanguage]);
+    setTableLocalization(getTableLocalization(currentLanguage))
+  }, [currentLanguage])
 
-  
   const columns = useMemo(
     () => [
       {
-        accessorKey: "orgdefinedid",
-        header: t("table.student-id"),
+        accessorKey: 'orgdefinedid',
+        header: t('table.student-id')
       },
       {
-        accessorKey: "username",
-        header: t("table.username"),
+        accessorKey: 'username',
+        header: t('table.username')
       },
       {
-        accessorKey: "lastname",
-        header: t("table.lastname"),
+        accessorKey: 'lastname',
+        header: t('table.lastname')
       },
       {
-        accessorKey: "firstname",
-        header: t("table.firstname"),
+        accessorKey: 'firstname',
+        header: t('table.firstname')
       },
       {
-        accessorKey: "email",
-        header: t("table.email"),
+        accessorKey: 'email',
+        header: t('table.email')
       },
       {
-        accessorKey: "sections",
-        header: t("table.sections"),
+        accessorKey: 'sections',
+        header: t('table.sections')
       },
       {
-        accessorKey: "finalGrade",
-        header: t("table.final-grade"),
+        accessorKey: 'finalGrade',
+        header: t('table.final-grade')
       },
       {
-        accessorKey: "group",
-        header: t("table.group"),
-      },
+        accessorKey: 'group',
+        header: t('table.group')
+      }
     ],
     [currentLanguage]
-  );
+  )
 
   // For the create profile modal
-  const classes = useStyles();
-  const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState([]);
-  const [validationErrors, setValidationErrors] = useState({});
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [importSuccess, setImportSuccess] = useState(false);
-  const [deletion, setOpenDeletion] = useState(false);
-  const [row, setDeleteRow] = useState();
-  const [editingRow, setEditingRow] = useState(null);
-  const [update, setUpdate] = useState(false);
-  const [deletionModal, setDeletionModal] = useState(false);
-  const [moveStudentsModalOpen, setMoveStudentsModalOpen] = useState(false);
-  const [refreshTrigger,setRefreshTrigger] = useState(false);
-  const table = useRef(null);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
-  const [showAllRows, setShowAllRows] = useState(false);
+  const classes = useStyles()
+  const [createModalOpen, setCreateModalOpen] = useState(false)
+  const [tableData, setTableData] = useState([])
+  const [validationErrors, setValidationErrors] = useState({})
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [importSuccess, setImportSuccess] = useState(false)
+  const [deletion, setOpenDeletion] = useState(false)
+  const [row, setDeleteRow] = useState()
+  const [editingRow, setEditingRow] = useState(null)
+  const [update, setUpdate] = useState(false)
+  const [deletionModal, setDeletionModal] = useState(false)
+  const [moveStudentsModalOpen, setMoveStudentsModalOpen] = useState(false)
+  const [refreshTrigger, setRefreshTrigger] = useState(false)
+  const table = useRef(null)
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
+  const [showAllRows, setShowAllRows] = useState(false)
 
   // Expand the table to include rows for all table data
   const handleExpandTable = () => {
     setShowAllRows(true)
     setPageSize(tableData.length)
-  };
+  }
 
   // Alert message for success
-  function handleImportSuccess(success) {
-    setImportSuccess(success);
+  function handleImportSuccess (success) {
+    setImportSuccess(success)
     if (success) {
-      setTimeout(() => setImportSuccess(false), 4000); // 5 seconds delay
+      setTimeout(() => setImportSuccess(false), 4000) // 5 seconds delay
     }
   }
 
   const fetchStudents = async () => {
     try {
-      let userType = "";
-      let students = await studentService.get();
+      let userType = ''
+      const students = await studentService.get()
 
       await getUserType()
         .then((type) => {
-          userType = type;
+          userType = type
         })
         .catch((error) => {
-          console.error(error);
-        });
+          console.error(error)
+        })
 
       if (students.students) {
         if (userType == ROLES.ADMIN) {
-          setTableData(students.students); // show all data if user is an admin
+          setTableData(students.students) // show all data if user is an admin
         } else {
-          const professorEmail = JSON.parse(localStorage.getItem("userEmail")); // get the cached value of the professor's email
+          const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
           const filteredStudentsTableData = FilterDataByProfessor(
             students.students,
             professorEmail
-          ); // keep only the data that contains the professor's email
-          setTableData(filteredStudentsTableData);
+          ) // keep only the data that contains the professor's email
+          setTableData(filteredStudentsTableData)
         }
       } else {
         setTableData([])
       }
     } catch (error) {
-      console.error("There was a problem with the network request:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchStudents();
-  }, [refreshTrigger]);
-
-  const handleDeletion = async (row) => {
-    try {
-      await studentService.delete(row.original._id);
-      setOpenDeletion(false);
-      fetchStudents();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-
-  const handleBulkDeletion = async (rows) => {
-    try {
-      await studentService.deleteBulkStudents(rows);
-      setDeletionModal(false);
-      setRowSelection({})
-      fetchStudents();
-    } catch (error) {
-      console.log(error);
+      console.error('There was a problem with the network request:', error)
     }
   }
 
-  const csvExporter = new ExportToCsv(csvOptions("StudentsFromAcTeams-"));
-  const [isImportModalOpen, setImportModalOpen] = useState(false);
-  const [rowSelection, setRowSelection] = useState({});
+  useEffect(() => {
+    fetchStudents()
+  }, [refreshTrigger])
 
+  const handleDeletion = async (row) => {
+    try {
+      await studentService.delete(row.original._id)
+      setOpenDeletion(false)
+      fetchStudents()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleBulkDeletion = async (rows) => {
+    try {
+      await studentService.deleteBulkStudents(rows)
+      setDeletionModal(false)
+      setRowSelection({})
+      fetchStudents()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const csvExporter = new ExportToCsv(csvOptions('StudentsFromAcTeams-'))
+  const [isImportModalOpen, setImportModalOpen] = useState(false)
+  const [rowSelection, setRowSelection] = useState({})
 
   const closeModal = () => {
-    setImportModalOpen(false);
-  };
+    setImportModalOpen(false)
+  }
 
   return (
     <Box sx={{ p: 2 }}>
@@ -206,24 +201,24 @@ const StudentTable = () => {
         variant="h2"
         align="center"
         fontWeight="fontWeightBold"
-        sx={{ marginBottom: "0.5rem" }}
+        sx={{ marginBottom: '0.5rem' }}
       >
-        {t("students-table.students")}
+        {t('students-table.students')}
       </Typography>
       {importSuccess && (
         <Alert severity="success">
-          <AlertTitle>{t("students-table.success")}</AlertTitle>
-          {t("students-table.success-alert")} — <strong>{t("students-table.success-import")}</strong>
+          <AlertTitle>{t('students-table.success')}</AlertTitle>
+          {t('students-table.success-alert')} — <strong>{t('students-table.success-import')}</strong>
         </Alert>
       )}
       <MaterialReactTable
         displayColumnDefOptions={{
-          "mrt-row-actions": {
+          'mrt-row-actions': {
             muiTableHeadCellProps: {
-              align: "center",
+              align: 'center'
             },
-            size: 120,
-          },
+            size: 120
+          }
         }}
         enablePagination={false}
         columns={columns}
@@ -237,21 +232,21 @@ const StudentTable = () => {
         enableRowSelection
         enableColumnOrdering
         enableColumnResizing
-        columnResizeMode="onChange" //default is "onEnd"
+        columnResizeMode="onChange" // default is "onEnd"
         defaultColumn={{
           minSize: 100,
-          size: 150, //default size is usually 180
+          size: 150 // default size is usually 180
         }}
         enableEditing
-        initialState={{ showColumnFilters: false, density: "compact"}}
+        initialState={{ showColumnFilters: false, density: 'compact' }}
         // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
-          <Box sx={{ display: "flex", gap: "1rem" }}>
+          <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip arrow placement="left" title="Edit">
               <IconButton
                 onClick={() => {
-                  setEditingRow(row);
-                  setEditModalOpen(true);
+                  setEditingRow(row)
+                  setEditModalOpen(true)
                 }}
               >
                 <Edit />
@@ -262,8 +257,8 @@ const StudentTable = () => {
                 color="error"
                 name="deleteStudent"
                 onClick={() => {
-                  setOpenDeletion(true);
-                  setDeleteRow(row);
+                  setOpenDeletion(true)
+                  setDeleteRow(row)
                 }}
               >
                 <Delete />
@@ -274,10 +269,10 @@ const StudentTable = () => {
         renderTopToolbarCustomActions={() => (
           <Box
             sx={{
-              display: "flex",
-              gap: "1rem",
-              p: "0.5rem",
-              flexDirection: "row",
+              display: 'flex',
+              gap: '1rem',
+              p: '0.5rem',
+              flexDirection: 'row'
             }}
           >
             <Button
@@ -286,7 +281,7 @@ const StudentTable = () => {
               variant="contained"
               name="create-new-student"
             >
-              {t("students-table.create-student")}
+              {t('students-table.create-student')}
             </Button>
             <Button
               color="primary"
@@ -294,7 +289,7 @@ const StudentTable = () => {
               startIcon={<FileDownloadIcon />}
               variant="contained"
             >
-              {t("common.export-data")}
+              {t('common.export-data')}
             </Button>
             <Button
               color="warning"
@@ -302,33 +297,37 @@ const StudentTable = () => {
               startIcon={<FileUploadIcon />}
               variant="contained"
             >
-              {t("students-table.import-students")}
+              {t('students-table.import-students')}
             </Button>
-            {Object.keys(rowSelection).length > 0 ? (
+            {Object.keys(rowSelection).length > 0
+              ? (
               <Button
                 color="error"
                 onClick={() => setDeletionModal(true)}
                 startIcon={<DeleteIcon />}
                 variant="contained"
               >
-                {t("common.Delete")} {Object.keys(rowSelection).length} {t("common.Students")}
+                {t('common.Delete')} {Object.keys(rowSelection).length} {t('common.Students')}
               </Button>
-            ) : (
+                )
+              : (
               <></>
-            )}
+                )}
 
-            {Object.keys(rowSelection).length > 0 ? (
+            {Object.keys(rowSelection).length > 0
+              ? (
               <Button
                 color="info"
                 onClick={() => setMoveStudentsModalOpen(true)}
                 startIcon={<GroupIcon />}
                 variant="contained"
               >
-                {t("students-table.change-group")} {Object.keys(rowSelection).length} {t("common.Students")}
+                {t('students-table.change-group')} {Object.keys(rowSelection).length} {t('common.Students')}
               </Button>
-            ) : (
+                )
+              : (
               <></>
-            )}
+                )}
 
             <Dialog
               PaperComponent={Paper}
@@ -338,7 +337,7 @@ const StudentTable = () => {
               onClose={() => setImportModalOpen(false)}
             >
               <DialogTitle className={classes.dialogTitle}>
-              {t("students-table.import-students")}{" "}
+              {t('students-table.import-students')}{' '}
                 <IconButton
                   className={classes.closeButton}
                   onClick={() => setImportModalOpen(false)}
@@ -361,12 +360,12 @@ const StudentTable = () => {
                 open={deletionModal}
                 handleDeletion={handleBulkDeletion}
                 row={rowSelection}
-                type={"bulk"}
+                type={'bulk'}
               ></ConfirmDeletionModal>
             )}
 
             {moveStudentsModalOpen && (
-              <MoveStudentsModal 
+              <MoveStudentsModal
                 columns={columns}
                 open={moveStudentsModalOpen}
                 setMoveStudentsModalOpen={setMoveStudentsModalOpen}
@@ -379,18 +378,18 @@ const StudentTable = () => {
         )}
       />
 
-      {pageSize === DEFAULT_PAGE_SIZE 
-        && pageSize < tableData.length
-        && (
-        <Button 
-          sx={{m: 2}}
+      {pageSize === DEFAULT_PAGE_SIZE &&
+        pageSize < tableData.length &&
+        (
+        <Button
+          sx={{ m: 2 }}
           style={{ position: 'absolute', right: '1rem' }}
           color="secondary"
           variant="contained"
           onClick={handleExpandTable}>
-          {t("common.display-all")} {tableData.length} {t("common.rows")}
+          {t('common.display-all')} {tableData.length} {t('common.rows')}
         </Button>
-      )}
+        )}
 
       {editingRow && (
         <EditStudentForm
@@ -418,11 +417,11 @@ const StudentTable = () => {
           open={deletion}
           handleDeletion={handleDeletion}
           row={row}
-          type={"student"}
+          type={'student'}
         ></ConfirmDeletionModal>
       )}
     </Box>
-  );
-};
+  )
+}
 
-export default StudentTable;
+export default StudentTable

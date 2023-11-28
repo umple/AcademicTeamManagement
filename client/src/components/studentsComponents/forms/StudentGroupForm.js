@@ -1,4 +1,4 @@
-import { FormControl } from "@material-ui/core";
+import { FormControl } from '@material-ui/core'
 import {
   Alert,
   Box,
@@ -12,18 +12,17 @@ import {
   OutlinedInput,
   Select,
   Stack,
-  TextField,
-} from "@mui/material";
-import Chip from "@mui/material/Chip";
-import { useTheme } from "@mui/material/styles";
-import { useFormik } from "formik";
-import { Formik } from "formik";
-import React, { useState } from "react";
-import Group from "../../../entities/Group";
-import groupService from "../../../services/groupService";
-import createGroupSchema from "../../../schemas/createGroupSchema";
-import { useTranslation } from 'react-i18next';
+  TextField
+} from '@mui/material'
+import Chip from '@mui/material/Chip'
+import { useTheme } from '@mui/material/styles'
+import { useFormik, Formik } from 'formik'
 
+import React, { useState } from 'react'
+import Group from '../../../entities/Group'
+import groupService from '../../../services/groupService'
+import createGroupSchema from '../../../schemas/createGroupSchema'
+import { useTranslation } from 'react-i18next'
 
 const StudentGroupForm = ({
   open,
@@ -39,56 +38,55 @@ const StudentGroupForm = ({
   setEditingRow,
   professorEmail
 }) => {
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
+  const ITEM_HEIGHT = 48
+  const ITEM_PADDING_TOP = 8
   const MenuProps = {
     PaperProps: {
       style: {
         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
+        width: 250
+      }
+    }
+  }
 
-  function getStyles(name, members, theme) {
+  function getStyles (name, members, theme) {
     return {
       fontWeight:
         members.indexOf(name) === -1
           ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
+          : theme.typography.fontWeightMedium
+    }
   }
 
-  const theme = useTheme();
-  const [members, setMembers] = useState([]);
-  const { t, i18n } = useTranslation();
+  const theme = useTheme()
+  const [members, setMembers] = useState([])
+  const { t, i18n } = useTranslation()
 
   const [initialGroupValues] = useState(
-    update ?   new Group(editingRow):
-    new Group({
-      professorEmail: professorEmail,
-    })
-  );
-
+    update
+      ? new Group(editingRow)
+      : new Group({
+        professorEmail
+      })
+  )
 
   const onSubmit = async (values, actions) => {
     try {
-      let response;
-      if (update){
-        response = await groupService.update(editingRow._id,values);
+      let response
+      if (update) {
+        response = await groupService.update(editingRow._id, values)
       } else {
-        response = await groupService.add(values);
-
+        response = await groupService.add(values)
       }
-      handleClose();
-      fetchData();
-      actions.resetForm();
+      handleClose()
+      fetchData()
+      actions.resetForm()
     } catch (error) {
-      console.log("error", error)
+      console.log('error', error)
     } finally {
-      
+
     }
-  };
+  }
 
   const {
     values,
@@ -98,37 +96,37 @@ const StudentGroupForm = ({
     handleChange,
     handleSubmit,
     setFieldValue,
-    setFieldTouched,
+    setFieldTouched
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
-    validationSchema: createGroupSchema(groups,editingRow?._id),
-    onSubmit,
-  });
-  
+    validationSchema: createGroupSchema(groups, editingRow?._id),
+    onSubmit
+  })
+
   const handleClose = () => {
-    setCreateModalOpen(false);
-    setUpdate(false);
-    setEditingRow({});
-  };
+    setCreateModalOpen(false)
+    setUpdate(false)
+    setEditingRow({})
+  }
 
   return (
     <Dialog open={open || update}>
-      <DialogTitle textAlign="center">{update ? t("common.Edit"): t("common.Create")} {t("common.Group")}</DialogTitle>
+      <DialogTitle textAlign="center">{update ? t('common.Edit') : t('common.Create')} {t('common.Group')}</DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
             sx={{
-              width: "100%",
-              minWidth: { xs: "300px", sm: "360px", md: "400px" },
-              gap: "1.5rem",
+              width: '100%',
+              minWidth: { xs: '300px', sm: '360px', md: '400px' },
+              gap: '1.5rem'
             }}
           >
             {columns.map((column) => {
-              if (column.accessorKey === "members") {
+              if (column.accessorKey === 'members') {
                 return (
                   <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel id="demo-multiple-chip-label">
-                      {t("common.Members")}
+                      {t('common.Members')}
                     </InputLabel>
                     <Select
                       labelId="demo-multiple-chip-label"
@@ -151,25 +149,25 @@ const StudentGroupForm = ({
                       }
                       renderValue={(selected) => (
                         <Box
-                          sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                          sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
                         >
                           {selected.map((value) => {
-                            let student = students.find(
+                            const student = students.find(
                               (student) => student.orgdefinedid === value
-                            );
-                            let display =
+                            )
+                            const display =
                               student.orgdefinedid +
-                              " - " +
+                              ' - ' +
                               student.firstname +
-                              " " +
-                              student.lastname;
+                              ' ' +
+                              student.lastname
                             return (
                               <Chip
                                 color="primary"
                                 key={value}
                                 label={display}
                               />
-                            );
+                            )
                           })}
                         </Box>
                       )}
@@ -177,7 +175,7 @@ const StudentGroupForm = ({
                     >
                       {students.length > 0 &&
                         students.map((student) => {
-                          if (student.group === null || student.group === "") {
+                          if (student.group === null || student.group === '') {
                             return (
                               <MenuItem
                                 key={student.orgdefinedid}
@@ -189,24 +187,24 @@ const StudentGroupForm = ({
                                 )}
                               >
                                 {student.orgdefinedid +
-                                  " - " +
+                                  ' - ' +
                                   student.firstname +
-                                  " " +
+                                  ' ' +
                                   student.lastname}
                               </MenuItem>
-                            );
+                            )
                           }
-                          return null;
+                          return null
                         })}
                     </Select>
                   </FormControl>
-                );
+                )
               }
 
-              if (column.accessorKey === "project") {
+              if (column.accessorKey === 'project') {
                 return (
                   <FormControl>
-                    <InputLabel id="project-label">{t("common.Project")}</InputLabel>
+                    <InputLabel id="project-label">{t('common.Project')}</InputLabel>
                     <Select
                       labelId="project-label"
                       key={column.accessorKey}
@@ -230,7 +228,7 @@ const StudentGroupForm = ({
                       ))}
                     </Select>
                   </FormControl>
-                );
+                )
               }
 
               return (
@@ -248,19 +246,19 @@ const StudentGroupForm = ({
                     touched[column.accessorKey] && errors[column.accessorKey]
                   }
                 />
-              );
+              )
             })}
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={handleClose}>{t("common.Cancel")}</Button>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={handleClose}>{t('common.Cancel')}</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {update ? t("common.Save") : t("common.Create")}
+            {update ? t('common.Save') : t('common.Create')}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
-  );
-};
+  )
+}
 
-export default StudentGroupForm;
+export default StudentGroupForm
