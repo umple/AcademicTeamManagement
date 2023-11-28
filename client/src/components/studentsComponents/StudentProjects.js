@@ -58,7 +58,7 @@ function StudentProjects () {
       if (projectsData.count > 0) {
         const projectsFiltered = projectsData.projects.filter(
           (project) =>
-            project.status !== 'Completed' || project.status != 'Cancelled'
+            project.status !== 'Completed' || project.status !== 'Cancelled'
         )
         setProjects(projectsData.projects)
         setFilteredProjects(projectsFiltered)

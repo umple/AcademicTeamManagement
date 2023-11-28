@@ -5,7 +5,7 @@ const sectionSchema = (sections, _id) => {
     name: Yup.string().required('Name is required').test('is-unique', 'Name already exists', function (value) {
       if (sections && sections.length > 0) {
         const section = sections.find(
-          (section) => section._id != _id && section.name === value
+          (section) => section._id !== _id && section.name === value
         )
         return typeof section === 'undefined'
       } else {

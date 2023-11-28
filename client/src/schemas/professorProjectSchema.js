@@ -6,7 +6,7 @@ const professorProjectSchema = (projects, _id) => {
     project: Yup.string().required('Project Title is required').test('is-unique', 'Project Title already exists', function (value) {
       if (projects && projects.length > 0) {
         const project = projects.find(
-          (project) => project._id != _id && project.project === value
+          (project) => project._id !== _id && project.project === value
         )
         return typeof project === 'undefined'
       } else {

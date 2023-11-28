@@ -9,7 +9,7 @@ const createGroupSchema = (groups, _id) => {
       .test('is-unique', 'Group ID already exists', function (value) {
         if (groups && groups.length > 0) {
           const group = groups.find(
-            (group) => group._id != _id && group.group_id.toLowerCase() === value.toLowerCase()
+            (group) => group._id !== _id && group.group_id.toLowerCase() === value.toLowerCase()
           )
           return typeof group === 'undefined'
         } else {

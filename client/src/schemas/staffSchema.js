@@ -5,7 +5,7 @@ const staffSchema = (staffs, _id) => {
     email: Yup.string().required('Email is required').email('Invalid email address').test('is-unique', 'Email already exists', function (value) {
       if (staffs && staffs.length > 0) {
         const staff = staffs.find(
-          (staff) => staff._id != _id && staff.email === value
+          (staff) => staff._id !== _id && staff.email === value
         )
         return typeof staff === 'undefined'
       } else {

@@ -5,7 +5,7 @@ const studentSchema = (students, _id) => {
     orgdefinedid: Yup.string().required('Org Defined ID is required').matches(/^\d{6,9}$/, 'Org Defined ID must be a 6-9-digit number').test('is-unique', 'Student ID already exists', function (value) {
       if (students && students.length > 0) {
         const group = students.find(
-          (student) => student._id != _id && student.orgdefinedid === value
+          (student) => student._id !== _id && student.orgdefinedid === value
         )
         return typeof group === 'undefined'
       } else {
@@ -21,7 +21,7 @@ const studentSchema = (students, _id) => {
       .test('is-unique', 'Email already exists', function (value) {
         if (students && students.length > 0) {
           const group = students.find(
-            (student) => student._id != _id && student.email === value
+            (student) => student._id !== _id && student.email === value
           )
           return typeof group === 'undefined'
         } else {
