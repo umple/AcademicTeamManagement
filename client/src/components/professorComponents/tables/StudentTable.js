@@ -140,7 +140,7 @@ const StudentTable = () => {
         })
 
       if (students.students) {
-        if (userType == ROLES.ADMIN) {
+        if (userType === ROLES.ADMIN) {
           setTableData(students.students) // show all data if user is an admin
         } else {
           const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email

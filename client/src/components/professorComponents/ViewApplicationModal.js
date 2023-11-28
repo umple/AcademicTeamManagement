@@ -103,7 +103,7 @@ const ViewApplicationModal = ({
                 <Select
                     labelId="status-label"
                     defaultValue={status}
-                    disabled={data.status == 'Accepted'}
+                    disabled={data.status === 'Accepted'}
                     onChange={handleStatusChange}>
                   {states.map((state) => (
                     <MenuItem key={state} value={state}>

@@ -16,7 +16,6 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { csvOptions, handleExportData } from '../../../helpers/exportData'
 import staffService from '../../../services/staffService'
 import StaffForm from '../forms/StaffForm'
-import { useStyles } from './styles/StaffTableStyles'
 import ConfirmDeletionModal from '../../common/ConfirmDeletionModal'
 import { DEFAULT_PAGE_SIZE } from '../../../helpers/Constants'
 import { useTranslation } from 'react-i18next'
@@ -65,10 +64,8 @@ const StaffTable = () => {
   )
   // For the create profile modal
   const [columns] = useState(defaultColumns)
-  const classes = useStyles()
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState([])
-  const [validationErrors, setValidationErrors] = useState({})
   const [deletion, setOpenDeletion] = useState(false)
   const [row, setDeleteRow] = useState()
   const [editingRow, setEditingRow] = useState({})

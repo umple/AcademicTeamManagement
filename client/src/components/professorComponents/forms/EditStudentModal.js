@@ -76,8 +76,7 @@ const EditStudentForm = ({
     handleBlur,
     handleChange,
     handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    setFieldValue
   } = useFormik({
     initialValues: initialStudentValues.toRequestJSON(),
     validationSchema: studentSchema(students, studentData.original._id),

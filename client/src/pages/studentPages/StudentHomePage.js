@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 // StudentHomePage Component
 function StudentHomePage () {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const classes = useStyles()
   const [userName, setUserName] = useState('')
   const [studentEmail, setStudentEmail] = useState(null)

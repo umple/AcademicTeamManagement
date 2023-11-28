@@ -213,18 +213,19 @@ const StudentGroupTable = () => {
         {t('group-table.member-added')}
         </Alert>
       </Snackbar>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-      <MaterialReactTable
-        displayColumnDefOptions={{
-          'mrt-row-actions': {
-            muiTableHeadCellProps: {
-              align: 'center'
-            },
-            size: 120
-          }
-        }}
+      {
+        loading ? (
+          <CircularProgress />
+        ) : (
+        <MaterialReactTable
+          displayColumnDefOptions={{
+            'mrt-row-actions': {
+              muiTableHeadCellProps: {
+                align: 'center'
+              },
+              size: 120
+            }
+          }}
 
         enablePagination={false}
         columns={columns}

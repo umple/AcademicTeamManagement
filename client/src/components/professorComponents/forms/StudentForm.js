@@ -49,8 +49,7 @@ const StudentForm = ({
   const onSubmit = async (values, actions) => {
     try {
       setIsLoading(true)
-      let response
-      response = await studentService.add(values)
+      await studentService.add(values)
       fetchStudents()
     } catch (error) {
       console.log(error)

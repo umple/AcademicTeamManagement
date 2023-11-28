@@ -8,7 +8,7 @@ import {
   FormControl,
   Link
 } from '@mui/material'
-import { Button, Typography, TextField } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import CloudDoneIcon from '@mui/icons-material/CloudDone'
 import sectionService from '../../services/sectionService'
@@ -116,7 +116,7 @@ const ImportStudents = (props) => {
             clearInterval(0) // Stop polling
           }
         })
-        .catch((error) => {
+        .catch(() => {
           clearInterval(pollInterval) // Stop polling on error
         })
     }, 500) // Poll every 1 second (adjust as needed)
@@ -135,14 +135,14 @@ const ImportStudents = (props) => {
         }
         return response.json()
       })
-      .then((data) => {
+      .then(() => {
         props.fetchStudents()
         props.handleImportSuccess(true)
         props.closeModal()
         clearInterval(pollInterval)
         setIsImporting(false)
       })
-      .catch((error) => {
+      .catch(() => {
         clearInterval(pollInterval)
         setIsImporting(false)
       })
@@ -262,7 +262,6 @@ const ImportStudents = (props) => {
                 />
               </Box>
               <label
-                sx={{ m: '10rem' }}
                 htmlFor="contained-button-file"
                 className={classes.buttonLabel}
               >

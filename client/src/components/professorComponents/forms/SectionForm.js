@@ -32,11 +32,10 @@ const SectionForm = ({
   const onSubmit = async (values, actions) => {
     setIsLoading(true)
     try {
-      let response
       if (update) {
-        response = await sectionService.update(editingRow._id, values)
+        await sectionService.update(editingRow._id, values)
       } else {
-        response = await sectionService.add(values)
+        await sectionService.add(values)
       }
       fetchSections()
     } catch (error) {

@@ -88,7 +88,7 @@ const MyGroup = () => {
         throw new Error('Request failed')
       }
 
-      const data = await response.json()
+      await response.json()
       setShowAlert(true)
       setTimeout(() => setShowAlert(false), 4000)
       setGroup({})

@@ -20,7 +20,7 @@ const ConfirmDeletionModal = ({
   type
 }) => {
   // Set the translation
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const handleClose = () => {
     setOpen(false)

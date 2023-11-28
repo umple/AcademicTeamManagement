@@ -35,16 +35,15 @@ const StaffForm = ({
     { value: 'professor', label: 'secondary' }
   ]
   const [isloading, setIsLoading] = useState(false)
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const onSubmit = async (values, actions) => {
     try {
       setIsLoading(true)
-      let response
       if (update) {
-        response = await staffService.update(editingRow._id, values)
+        await staffService.update(editingRow._id, values)
       } else {
-        response = await staffService.add(values)
+        await staffService.add(values)
       }
       fetchStaffs()
     } catch (error) {
@@ -76,9 +75,7 @@ const StaffForm = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    handleSubmit
   } = useFormik({
     initialValues: initialStaffValues.toRequestJSON(),
     validationSchema: staffSchema(staffs, editingRow?._id),

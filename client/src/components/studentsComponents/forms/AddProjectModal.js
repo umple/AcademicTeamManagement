@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 
 function AddProjectModal ({ open, onClose, professorEmail, group, projects }) {
   const classes = useStyles()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const [confirmationMessage, setConfirmationMessage] = useState('') // State for the confirmation message
   const [error, setError] = useState('') // State for the confirmation message
@@ -55,9 +55,7 @@ function AddProjectModal ({ open, onClose, professorEmail, group, projects }) {
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched
+    handleSubmit
   } = useFormik({
     initialValues: project.toRequestBody(),
     validationSchema: projectSchema(projects),

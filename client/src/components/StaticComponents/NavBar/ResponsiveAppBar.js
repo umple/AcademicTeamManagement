@@ -36,7 +36,7 @@ const ResponsiveAppBar = () => {
   }, [])
 
   const changeLanguage = () => {
-    if (currentLanguage == 'en') {
+    if (currentLanguage === 'en') {
       setCurrentLanguage('fr')
       i18n.changeLanguage('fr')
       localStorage.setItem('preferredLanguage', 'fr')

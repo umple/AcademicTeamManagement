@@ -4,9 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardMedia from '@material-ui/core/CardMedia'
 import { getUserEmail } from '../../helpers/UserEmail'
-import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import { CardContent } from '@mui/material'
 import GroupsSharpIcon from '@mui/icons-material/GroupsSharp'
 import ClassIcon from '@mui/icons-material/Class'
@@ -43,16 +41,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary
-}))
-
 const HomePage = () => {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const classes = useStyles()
   const [professorEmail, setProfessorEmail] = useState(null)
 
@@ -100,7 +90,7 @@ const DashBoardInfo = () => {
   const [groupsCount, setGroupCount] = useState(0)
   const [projectsCount, setProjectCount] = useState(0)
   const [sectionsCount, setSectionsCount] = useState(0)
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   useEffect(() => {
     studentService.get().then((data) => {
@@ -122,13 +112,10 @@ const DashBoardInfo = () => {
     borderRadius: '10px', // Add rounded edges
     transition: 'box-shadow 0.3s', // Add transition for smooth hover effect
     '&:hover': {
-      boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)' // Add box shadow on hover
-    },
-    cursor: 'pointer', // Add pointer cursor for better UX
-    transition: 'transform 0.3s', // Add transition for smooth hover effect
-    '&:hover': {
+      boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)', // Add box shadow on hover
       transform: 'scale(1.05)' // Scale up on hover
-    }
+    },
+    cursor: 'pointer' // Add pointer cursor for better UX
   }
 
   const titleStyle = {

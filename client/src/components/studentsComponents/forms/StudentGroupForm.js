@@ -1,6 +1,5 @@
 import { FormControl } from '@material-ui/core'
 import {
-  Alert,
   Box,
   Button,
   Dialog,
@@ -16,7 +15,7 @@ import {
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/styles'
-import { useFormik, Formik } from 'formik'
+import { useFormik } from 'formik'
 
 import React, { useState } from 'react'
 import Group from '../../../entities/Group'
@@ -72,19 +71,16 @@ const StudentGroupForm = ({
 
   const onSubmit = async (values, actions) => {
     try {
-      let response
       if (update) {
-        response = await groupService.update(editingRow._id, values)
+        await groupService.update(editingRow._id, values)
       } else {
-        response = await groupService.add(values)
+        await groupService.add(values)
       }
       handleClose()
       fetchData()
       actions.resetForm()
     } catch (error) {
       console.log('error', error)
-    } finally {
-
     }
   }
 

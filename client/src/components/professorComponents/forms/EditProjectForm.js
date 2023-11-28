@@ -12,8 +12,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Tooltip,
-  Alert
+  Tooltip
 } from '@mui/material'
 import Project from '../../../entities/Project'
 import { useFormik } from 'formik'

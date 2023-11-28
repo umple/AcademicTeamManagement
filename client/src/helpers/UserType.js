@@ -20,7 +20,7 @@ export const getUserType = async () => {
       credentials: 'include' // include cookies in the request
     })
 
-    if (response.status == 200) {
+    if (response.status === 200) {
       const data = await response.json()
       cachedUserType = data // Cache the user type
       localStorage.setItem(CACHE_KEY, JSON.stringify(cachedUserType)) // Store in local storage
