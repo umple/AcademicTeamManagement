@@ -214,7 +214,7 @@ const adminPages = {
                 textTransform: 'none'
               }}
             >
-              LOGO
+              ATM
             </Typography>
 
 
@@ -243,7 +243,7 @@ const adminPages = {
                   variant="outlined"
                   endIcon={<LogoutIcon/>}
                   sx={{ my: 2, color: 'white', borderColor: 'white' }}
-                  >Log out
+                  >{t("common.log-out")}
                 </Button> 
                 : 
                 <Button
@@ -251,7 +251,7 @@ const adminPages = {
                   variant="outlined"
                   endIcon={<LoginIcon/>}
                   sx={{ my: 2, color: 'white', borderColor: 'white' }}
-                  >Log In
+                  >{t("common.log-in")}
                 </Button> 
             }
           </Toolbar>

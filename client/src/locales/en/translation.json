@@ -25,9 +25,11 @@
         "Members": "Members",
         "current-project": "Current project",
         "interested-projects": "Interested projects",
-        "export-data":"Export Data",
         "display-all": "Display all",
-        "rows": "Rows"
+        "rows": "Rows",
+        "log-out": "Log Out",
+        "log-in": "Log In",
+        "Leave": "Leave"
     },
     "table": {
         "student-id": "Student ID",
@@ -110,8 +112,16 @@
         "add-section": "Create Section",
         "edit-section": "Edit Section"
     },
+    "staff": {
+        "staff": "Staff",
+        "add-staff": "Create Staff",
+        "edit-staff": "Edit Staff",
+        "role": "Role"
+    },
     "project": {
         "project-name":"Project Name",
+        "add-project": "Create Project",
+        "edit-project": "Edit Project",
         "description":"Description",
         "client-full-name":"Client's Full Name",
         "client-email":"Client's Email Address",
@@ -121,7 +131,18 @@
         "projects":"Projects",
         "project-applications":"Project Applications",
         "review-application":"Review Application",
-        "create-project":"Create Project"
+        "create-project":"Create Project",
+        "feedback-sent": "Feedback Sent!",
+        "feedback": "Feedback",
+        "ranking": "Ranking",
+        "submitted-by": "Submitted By",
+        "request": "REQUEST",
+        "student-projects": "Student Projects",
+        "student-add-project": "Add Project",
+        "request-sent": "Project Request Sent",
+        "request-already-sent": "Project Application Already Sent",
+        "make-sure-join-group": "Make sure to join a group before adding a project",
+        "search-by-project": "Search by project name"
     },
     "status": {
         "Accepted":"Accepted",
@@ -131,6 +152,7 @@
     "group-table":{
         "student-groups":"Student Groups",
         "create-group":"Create Group",
+        "edit-group":"Edit Group",
         "member-added":"Group Member Added!",
         "join":"Join",
         "confirmation":"Are you sure you want to leave your current group and join this one?"

@@ -17,6 +17,8 @@ import { useFormik } from "formik";
 import staffService from "../../../services/staffService";
 import Staff from "../../../entities/Staff";
 import staffSchema from "../../../schemas/staffSchema";
+import { useTranslation } from "react-i18next";
+
 
 const StaffForm = ({
   open,
@@ -34,6 +36,7 @@ const StaffForm = ({
     { value: "professor", label: "secondary" },
   ];
   const [isloading, setIsLoading] = useState(false);
+  const { t, i18n } = useTranslation();
 
   const onSubmit = async (values, actions) => {
     try {
@@ -85,7 +88,7 @@ const StaffForm = ({
   return (
     <Dialog open={open || update}>
       <DialogTitle textAlign="center">
-        {update ? "Edit Staff" : "Create Staff"}
+        {update ? t("staff.edit-staff") : t("staff.add-staff")}
       </DialogTitle>
       {isloading ? (
         <CircularProgress size={100}></CircularProgress>
@@ -103,7 +106,7 @@ const StaffForm = ({
                 if (column.accessorKey === "role") {
                   return (
                     <FormGroup>
-                      <InputLabel id="role-label">Role</InputLabel>
+                      <InputLabel id="role-label">{t("staff.role")}</InputLabel>
                       <Select
                         labelId="role-label"
                         key={column.accessorKey}
@@ -150,14 +153,14 @@ const StaffForm = ({
             </Stack>
           </DialogContent>
           <DialogActions sx={{ p: "1.25rem" }}>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose}>{t("common.Cancel")}</Button>
             <Button
               color="secondary"
               type="submit"
               name="submitForm"
               variant="contained"
             >
-              {update ? "Save" : "Create"}
+              {update ? t("common.Save") : t("common.Create")}
             </Button>
           </DialogActions>
         </form>

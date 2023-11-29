@@ -22,6 +22,7 @@ import React, { useEffect, useState } from "react";
 import Group from "../../../entities/Group";
 import groupService from "../../../services/groupService";
 import createGroupSchema from "../../../schemas/createGroupSchema";
+import { useTranslation } from 'react-i18next'; 
 
 const EditGroupModal = ({
   open,
@@ -65,6 +66,9 @@ const EditGroupModal = ({
   const [initialGroupValues, setInit] = useState(
     new Group(groupData.original)
   );
+
+  // Set the translation
+  const { t, i18n } = useTranslation();
 
   const handleClose = () => {
     setEditingRow(null);
@@ -122,7 +126,7 @@ const EditGroupModal = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Edit Group</DialogTitle>
+      <DialogTitle textAlign="center">{t("group-table.edit-group")}</DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit} >
         <DialogContent>
           <Stack
@@ -137,7 +141,7 @@ const EditGroupModal = ({
                 return (
                   <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel id="demo-multiple-chip-label">
-                      Members
+                    {t("common.Members")}
                     </InputLabel>
                     <Select
                       labelId="demo-multiple-chip-label"
@@ -216,7 +220,7 @@ const EditGroupModal = ({
               if (column.accessorKey === "project") {
                 return (
                   <FormControl>
-                    <InputLabel id="project-label">Project</InputLabel>
+                    <InputLabel id="project-label">{t("common.Project")}</InputLabel>
                     <Select
                       labelId="project-label"
                       key={column.accessorKey}
@@ -263,9 +267,9 @@ const EditGroupModal = ({
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>{t("common.Cancel")}</Button>
           <Button color="secondary" type="submit" variant="contained">
-            Save
+            {t("common.Save")}
           </Button>
         </DialogActions>
       </form>

@@ -20,6 +20,7 @@ import ProjectCard from "./ProjectCard";
 import AddIcon from "@mui/icons-material/Add";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { useTranslation } from 'react-i18next';
 
 function StudentProjects() {
   const [projects, setProjects] = useState([]);
@@ -29,6 +30,7 @@ function StudentProjects() {
   const [showErrorAlert, setErrorShowAlert] = useState(false);
   const [group, setCurrGroup] = useState(null);
   const [currentStudent, setCurrentStudent] = useState({});
+  const { t, i18n } = useTranslation();
 
   const handleSearch = (event) => {
     const searchTerm = event.target.value.toLowerCase().trim();
@@ -94,20 +96,20 @@ function StudentProjects() {
         onClose={() => setErrorShowAlert(false)}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity="error">Project Application Already Sent</Alert>
+        <Alert severity="error">{t("project.request-already-sent")}</Alert>
       </Snackbar>
       <Snackbar
         open={showAlert}
         onClose={() => setShowAlert(false)}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity="success">Project Request Sent</Alert>
+        <Alert severity="success">{t("project.request-sent")}</Alert>
       </Snackbar>
 
 
       <Box>
         <Typography variant="h2" align="center" fontWeight="fontWeightBold">
-          Student Projects
+          {t("project.student-projects")}
         </Typography>
       </Box>
       <Box mt={4}>
@@ -121,11 +123,11 @@ function StudentProjects() {
               style={{width:'80%'}}
               startIcon={<AddIcon />}
             >
-              Add Project
+              {t("project.student-add-project")}
             </Button>
 
             <Tooltip
-              title="Make sure to join a group before adding a project"
+              title={t("project.make-sure-join-group")}
               arrow
             >
               <IconButton>
@@ -136,7 +138,7 @@ function StudentProjects() {
           <Grid item md={4}>
             <TextField
               id="search"
-              label="Search by project name"
+              label={t("project.search-by-project")}
               variant="outlined"
               style={{ width: "100%" }}
               onChange={handleSearch}
