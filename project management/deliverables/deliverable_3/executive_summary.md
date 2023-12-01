@@ -4,8 +4,8 @@ Throughout the past 5 weeks, we worked on implementing an internationalization f
 ## Weekly Meeting Minutes
 https://github.com/umple/AcademicTeamManagement/tree/main/project%20management/deliverables/deliverable_3/weekly_minutes
 
-## Scope Map
+## Scope Maps
 https://github.com/umple/AcademicTeamManagement/tree/main/project%20management/deliverables/deliverable_3/scope_maps
 
-## Hill Chart
+## Hill Charts
 https://github.com/umple/AcademicTeamManagement/tree/main/project%20management/deliverables/deliverable_3/hill_charts
