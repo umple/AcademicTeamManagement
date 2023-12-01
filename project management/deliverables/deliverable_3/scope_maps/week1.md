@@ -1,4 +1,4 @@
 # Oct 20 - Nov 5
 
-## Hill Chart
+## Scope Map
 ![Alt text](image.png)
