@@ -185,11 +185,31 @@ const GroupTable = () => {
 
   const fetchStudents = async () => {
     try {
-      const students = await studentService.get()
+      let userType = ''
+      const students = await studentService.get() 
 
-      if (students.message !== 'Student list is empty.') {
-        students.students && setStudents(students.students)
+      await getUserType()
+      .then((type) => {
+        userType = type
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+
+    if (students.students) {
+      if (userType === ROLES.ADMIN) {
+        setStudents(students.students) // show all data if user is an admin
+      } else {
+        const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+        const filteredStudentsTableData = FilterDataByProfessor(
+          students.students,
+          professorEmail
+        ) // keep only the data that contains the professor's email
+        setStudents(filteredStudentsTableData)
       }
+    } else {
+      setStudents([])
+    }
     } catch (error) {
       console.error('Error fetching students:', error)
     }
