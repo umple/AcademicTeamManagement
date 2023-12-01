@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { Button, Link, Box, Container, CssBaseline } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import styled from 'styled-components';
+import * as React from 'react'
+import { Button, Link, Box, Container, CssBaseline } from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import styled from 'styled-components'
 
-const theme = createTheme();
+const theme = createTheme()
 
 const Logo = styled.img`
   width: 100%;
   max-width: 200px;
   margin-bottom: 16px;
-`;
+`
 
 const Background = styled.div`
   background-image: url('https://www.uottawa.ca/study/sites/g/files/bhrskd296/files/2021-10/20170905-BF-CAMPUS-SCENIC-001.jpg');
@@ -25,16 +25,16 @@ const Background = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+`
 
 const WhiteContainer = styled.div`
   background-color: white;
   padding: 40px;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
+`
 
-export default function LoginPage() {
+export default function LoginPage () {
   return (
     <ThemeProvider theme={theme}>
       <Background>
@@ -45,7 +45,7 @@ export default function LoginPage() {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
+                alignItems: 'center'
               }}
             >
               <Logo src="https://www.uottawa.ca/brand/sites/www.uottawa.ca.brand/files/4_2_0_horizontal_logo.png" alt="Company Logo" />
@@ -67,5 +67,5 @@ export default function LoginPage() {
         </Container>
       </Background>
     </ThemeProvider>
-  );
+  )
 }

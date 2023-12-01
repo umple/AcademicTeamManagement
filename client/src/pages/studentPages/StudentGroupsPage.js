@@ -1,12 +1,11 @@
 import StudentGroupTable from '../../components/studentsComponents/tables/StudentGroupTable'
 
 const StudentGroupsPage = () => {
-
-    return (
+  return (
         <>
             <StudentGroupTable></StudentGroupTable>
         </>
-)
+  )
 }
 
 export default StudentGroupsPage

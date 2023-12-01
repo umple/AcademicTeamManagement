@@ -5,15 +5,15 @@ import {
   DialogContent,
   Stack,
   TextField,
-  DialogActions,
-} from "@mui/material";
-import React, { useState } from "react";
-import { useFormik } from "formik";
-import sectionService from "../../../services/sectionService";
-import Section from "../../../entities/Section";
-import sectionSchema from "../../../schemas/sectionSchema";
-import { useTranslation } from "react-i18next";
-import { CircularProgress } from "@material-ui/core";
+  DialogActions
+} from '@mui/material'
+import React, { useState } from 'react'
+import { useFormik } from 'formik'
+import sectionService from '../../../services/sectionService'
+import Section from '../../../entities/Section'
+import sectionSchema from '../../../schemas/sectionSchema'
+import { useTranslation } from 'react-i18next'
+import { CircularProgress } from '@material-ui/core'
 
 const SectionForm = ({
   open,
@@ -24,45 +24,44 @@ const SectionForm = ({
   setUpdate,
   editingRow,
   sections,
-  setEditingRow,
+  setEditingRow
 }) => {
   // This use state is to show loading icon when pressing submit on the form to make sure it doesnt hang
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = async (values, actions) => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      let response;
       if (update) {
-        response = await sectionService.update(editingRow._id, values);
+        await sectionService.update(editingRow._id, values)
       } else {
-        response = await sectionService.add(values);
+        await sectionService.add(values)
       }
-      fetchSections();
+      fetchSections()
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      setIsLoading(false);
-      actions.resetForm();
-      handleClose();
+      setIsLoading(false)
+      actions.resetForm()
+      handleClose()
     }
-  };
+  }
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation()
 
   const handleClose = () => {
-    setCreateModalOpen(false);
-    setUpdate(false);
-    setEditingRow({});
-  };
+    setCreateModalOpen(false)
+    setUpdate(false)
+    setEditingRow({})
+  }
 
   const [initialSectionValues] = useState(
     update
       ? new Section(editingRow)
       : new Section({
-          professorEmail: JSON.parse(localStorage.getItem("userEmail")),
-        })
-  );
+        professorEmail: JSON.parse(localStorage.getItem('userEmail'))
+      })
+  )
 
   const {
     values,
@@ -70,29 +69,29 @@ const SectionForm = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched,
+    handleSubmit
   } = useFormik({
     initialValues: initialSectionValues.toRequestJSON(),
     validationSchema: sectionSchema(sections, editingRow?._id),
-    onSubmit,
-  });
+    onSubmit
+  })
   return (
     <Dialog open={open || update}>
       <DialogTitle textAlign="center">
-        {update ? t("section.edit-section") : t("section.add-section")}
+        {update ? t('section.edit-section') : t('section.add-section')}
       </DialogTitle>
-      {isLoading ? (
+      {isLoading
+        ? (
         <CircularProgress size={100} />
-      ) : (
+          )
+        : (
         <form acceptCharset="Enter" onSubmit={handleSubmit}>
           <DialogContent>
             <Stack
               sx={{
-                width: "100%",
-                minWidth: { xs: "300px", sm: "360px", md: "400px" },
-                gap: "1.5rem",
+                width: '100%',
+                minWidth: { xs: '300px', sm: '360px', md: '400px' },
+                gap: '1.5rem'
               }}
             >
               {columns.map((column) => (
@@ -113,20 +112,20 @@ const SectionForm = ({
               ))}
             </Stack>
           </DialogContent>
-          <DialogActions sx={{ p: "1.25rem" }}>
-            <Button onClick={handleClose}>{t("common.Cancel")}</Button>
+          <DialogActions sx={{ p: '1.25rem' }}>
+            <Button onClick={handleClose}>{t('common.Cancel')}</Button>
             <Button
               color="secondary"
               type="submit"
               name="submitForm"
               variant="contained"
             >
-              {update ? t("common.Save") : t("common.Create")}
+              {update ? t('common.Save') : t('common.Create')}
             </Button>
           </DialogActions>
         </form>
-      )}
+          )}
     </Dialog>
-  );
-};
-export default SectionForm;
+  )
+}
+export default SectionForm

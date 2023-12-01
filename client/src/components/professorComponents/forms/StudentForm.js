@@ -10,69 +10,65 @@ import {
   MenuItem,
   InputLabel,
   Select,
-  CircularProgress,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import studentService from "../../../services/studentService";
-import Student from "../../../entities/Student";
-import studentSchema from "../../../schemas/studentSchema";
-import sectionService from "../../../services/sectionService";
-import { useTranslation } from 'react-i18next'; 
-
+  CircularProgress
+} from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { useFormik } from 'formik'
+import studentService from '../../../services/studentService'
+import Student from '../../../entities/Student'
+import studentSchema from '../../../schemas/studentSchema'
+import sectionService from '../../../services/sectionService'
+import { useTranslation } from 'react-i18next'
 
 const StudentForm = ({
   open,
   columns,
   setCreateModalOpen,
   fetchStudents,
-  editingRow,
-  students,
+  students
 }) => {
-
   // Set the translation
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation()
 
   // retrieve the sections
-  const [sections, setSections] = useState([]);
-  const [isloading, setIsLoading] = useState(false);
+  const [sections, setSections] = useState([])
+  const [isloading, setIsLoading] = useState(false)
   const fetchSections = async () => {
     try {
-      let sections = await sectionService.get();
-      sections.sections && setSections(sections.sections);
+      const sections = await sectionService.get()
+      sections.sections && setSections(sections.sections)
     } catch (error) {
-      console.error("Error fetching sections:", error);
+      console.error('Error fetching sections:', error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchSections();
-  }, []);
+    fetchSections()
+  }, [])
 
   const onSubmit = async (values, actions) => {
     try {
       setIsLoading(true)
-      let response;
-      response = await studentService.add(values);
-      fetchStudents();
+      await studentService.add(values)
+      fetchStudents()
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
       setIsLoading(false)
-      actions.resetForm();
-      handleClose();
+      actions.resetForm()
+      handleClose()
     }
-  };
+  }
 
   const handleClose = () => {
-    setCreateModalOpen(false);
-  };
+    setCreateModalOpen(false)
+  }
 
   const [initialStudentValues] = useState(
     new Student({
-        professorEmail: JSON.parse(localStorage.getItem("userEmail")),
+      professorEmail: JSON.parse(localStorage.getItem('userEmail'))
     })
-  );
+  )
 
   const {
     values,
@@ -80,32 +76,31 @@ const StudentForm = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
-    setFieldValue,
-    setFieldTouched,
+    handleSubmit
   } = useFormik({
     initialValues: initialStudentValues.toRequestJSON(),
     validationSchema: studentSchema(students),
-    onSubmit,
-  });
+    onSubmit
+  })
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">{t("students-table.create-student")}</DialogTitle>
-      {isloading ? <CircularProgress size={100}></CircularProgress> :
-      <form acceptCharset="Enter" onSubmit={handleSubmit}>
+      <DialogTitle textAlign="center">{t('students-table.create-student')}</DialogTitle>
+      {isloading
+        ? <CircularProgress size={100}></CircularProgress>
+        : <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{
-              width: "100%",
-              minWidth: { xs: "300px", sm: "360px", md: "400px" },
-              gap: "1.5rem",
+              width: '100%',
+              minWidth: { xs: '300px', sm: '360px', md: '400px' },
+              gap: '1.5rem'
             }}
           >
             {columns.map((column) => {
-              if (column.accessorKey === "sections") {
+              if (column.accessorKey === 'sections') {
                 return (
                   <FormControl fullWidth>
-                    <InputLabel id="section-label">{t("common.Section")}</InputLabel>
+                    <InputLabel id="section-label">{t('common.Section')}</InputLabel>
                     <Select
                       fullWidth
                       labelId="section-label"
@@ -133,9 +128,9 @@ const StudentForm = ({
                       ))}
                     </Select>
                   </FormControl>
-                );
+                )
               }
-              if (column.accessorKey === "group") {
+              if (column.accessorKey === 'group') {
                 return null
               }
               return (
@@ -153,17 +148,18 @@ const StudentForm = ({
                   touched[column.accessorKey] && errors[column.accessorKey]
                 }
               />
-            )})}
+              )
+            })}
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={handleClose}>{t("common.Cancel")}</Button>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={handleClose}>{t('common.Cancel')}</Button>
           <Button color="secondary" type="submit" name="submitForm" variant="contained">
-            {t("common.Create")}
+            {t('common.Create')}
           </Button>
         </DialogActions>
       </form> }
     </Dialog>
-  );
-};
-export default StudentForm;
+  )
+}
+export default StudentForm
