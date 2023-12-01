@@ -6,6 +6,7 @@ class GroupEntity:
         self._project = group_data.get('project', '')
         self._professorEmail = group_data.get('professorEmail', '')
         self._members = group_data.get('members', [])
+        self._interest = group_data.get('interest', [])
         self._notes = group_data.get('notes', '')
     
     def to_json(self):
@@ -14,6 +15,7 @@ class GroupEntity:
             'project': self._project,
             'professorEmail': self._professorEmail,
             'members': self._members,
+            'interest': self._interest,
             'notes': self._notes,
         }
 
@@ -48,6 +50,14 @@ class GroupEntity:
     @members.setter
     def members(self, value):
         self._members = value
+        
+    @property
+    def interest(self):
+        return self._interest
+
+    @members.setter
+    def interest(self, value):
+        self._interest = value
 
     @property
     def notes(self):

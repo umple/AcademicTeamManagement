@@ -177,21 +177,68 @@ const MyGroup = () => {
               {Object.keys(group).length !== 0
                 ? (
                 <Box>
-                  <Typography sx={{ fontSize: '18px' }}>
-                    <strong>Group ID:</strong> {group.group_id} </Typography>
-                  <Typography sx={{ fontSize: '18px' }}>
+                  <Typography mt={2} sx={{ fontSize: '18px' }}>
+                    <strong>Group ID:</strong>
+                  </Typography>
+                  <Chip sx = {{ m: '2px' }} key={'group_id'} label={group.group_id} color="warning"></Chip>
+
+                  <Typography mt={2} sx={{ fontSize: '18px' }}>
                     <strong> {t('my-group.members')}</strong>
                   </Typography>
-
                   {
                   group.members.map((element, index) => (
                     <Chip sx = {{ m: '2px' }} key={index} label={findNameByStudentID(element)} color="secondary"></Chip>
                   ))}
+
+                  {
+                  group.interest > 0 && group.interest.map((element, index) => (
+                    <Chip sx = {{ m: '2px' }} key={index} label={element} color="primary"></Chip>
+                  ))}
+
+                  {
+                    (group.interest && group.interest.length > 0)
+                      ? (
+                      <>
+                      <Typography mt={2} sx={{ fontSize: '18px' }}>
+                      <strong> {t('common.interested-projects')}</strong>
+                      </Typography>
+
+                       { group.interest.map((element, index) => (
+                          <Chip sx = {{ m: '2px' }} key={index} label={element} color="info"></Chip>
+                       ))
+                      }
+                      </>
+                        )
+                      : (
+                      <></>
+                        )
+                  }
+
                   {group.project
                     ? (
-                    <Typography sx={{ fontSize: '18px' }}>
-                      <strong>{t('my-group.project2')}</strong> {group.project}
-                    </Typography>
+                    <>
+                      <Typography mt={2} sx={{ fontSize: '18px' }}>
+                        <strong>{t('my-group.project2')}</strong>
+                      </Typography>
+                      <Chip sx = {{ m: '2px' }} key={'project_id'} label={group.project} color="success"></Chip>
+
+                      <Grid
+                      container
+                      spacing={2}
+                      alignItems="center"
+                      sx={{ mt: 2 }}
+                    >
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={handleLeaveGroup}
+                        >
+                          {t('my-group.leave-group')}
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    </>
                       )
                     : (
                     <Grid
