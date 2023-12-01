@@ -16,6 +16,7 @@ import studentService from '../../services/studentService'
 import sectionService from '../../services/sectionService'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { FilterDataByProfessor } from '../../helpers/FilterDataByProfessor'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,17 +92,64 @@ const DashBoardInfo = () => {
   const [projectsCount, setProjectCount] = useState(0)
   const [sectionsCount, setSectionsCount] = useState(0)
   const { t } = useTranslation()
+  const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+
+  // get students
+  const fetchStudents = async () => {
+    try {
+      const students = await studentService.get()
+
+      if (students.students) {
+        const filteredStudentsTableData = FilterDataByProfessor(
+          students.students,
+          professorEmail
+        ) // keep only the data that contains the professor's email
+        setStudentCount(filteredStudentsTableData.length ?? 0)
+      }
+    } catch (error) {
+      console.error('There was a problem with the network request:', error)
+    }
+  }
+
+  // get projects
+  const fetchProjects = async () => {
+    try {
+      const projects = await projectService.get()
+
+      if (projects.projects) {
+        const filteredProjectsTableData = FilterDataByProfessor(
+          projects.projects,
+          professorEmail
+        ) // keep only the data that contains the professor's email
+        setProjectCount(filteredProjectsTableData.length ?? 0)
+      }
+    } catch (error) {
+      console.error('There was a problem with the network request:', error)
+    }
+  }
+
+  // get groups
+  const fetchGroups = async () => {
+    try {
+      const groups = await groupService.get()
+
+      if (groups.groups) {
+        const filteredGroupsTableData = FilterDataByProfessor(
+          groups.groups,
+          professorEmail
+        ) // keep only the data that contains the professor's email
+        setGroupCount(filteredGroupsTableData.length ?? 0)
+      }
+    } catch (error) {
+      console.error('There was a problem with the network request:', error)
+    }
+  }
 
   useEffect(() => {
-    studentService.get().then((data) => {
-      data.count && setStudentCount(data.count ?? 0)
-    })
-    groupService.get().then((data) => {
-      data.count && setGroupCount(data.count ?? 0)
-    })
-    projectService.get().then((data) => {
-      data.count && setProjectCount(data.count ?? 0)
-    })
+    fetchStudents()
+    fetchGroups()
+    fetchProjects()
+
     sectionService.get().then((data) => {
       data.count && setSectionsCount(data.count ?? 0)
     })
