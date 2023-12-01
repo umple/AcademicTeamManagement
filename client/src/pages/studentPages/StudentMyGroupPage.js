@@ -1,13 +1,11 @@
-import MyGroup from "../../components/studentsComponents/MyGroup"
-
+import MyGroup from '../../components/studentsComponents/MyGroup'
 
 const StudentMyGroupPage = () => {
-
-    return (
+  return (
         <>
             <MyGroup></MyGroup>
         </>
-    )
+  )
 }
 
 export default StudentMyGroupPage

@@ -1,47 +1,46 @@
-import { getDate } from "./dateHelper";
+import { getDate } from './dateHelper'
 
 export const csvOptions = (name) => ({
-  filename: `${name}`+"-" + getDate(),
-  fieldSeparator: ",",
+  filename: `${name}` + '-' + getDate(),
+  fieldSeparator: ',',
   quoteStrings: '"',
-  decimalSeparator: ".",
+  decimalSeparator: '.',
   showLabels: true,
   useBom: true,
-  useKeysAsHeaders: true,
-});
-
+  useKeysAsHeaders: true
+})
 
 export const handleExportData = (tableData, columns, csvExporter) => {
   // clean up and organize data to be exported
-  if (tableData.length === 0){
-    return;
+  if (tableData.length === 0) {
+    return
   }
-  const keyToRemove = "_id";
+  const keyToRemove = '_id'
   const updatedJsonList = tableData.map((jsonObj) => {
-    let updatedJsonObject = jsonObj;
+    let updatedJsonObject = jsonObj
     // remove the _id as that should not be in the json
     if (keyToRemove in jsonObj) {
-      const { [keyToRemove]: deletedKey, ...rest } = jsonObj; // use destructuring to remove the key
-      updatedJsonObject = rest; // return the updated JSON object without the deleted key
+      const { [keyToRemove]: deletedKey, ...rest } = jsonObj // use destructuring to remove the key
+      updatedJsonObject = rest // return the updated JSON object without the deleted key
     }
 
     // sort the keys as they appear in the columns
-    const orderedKeys = columns.map((key) => key.accessorKey);
+    const orderedKeys = columns.map((key) => key.accessorKey)
     updatedJsonObject = Object.keys(updatedJsonObject)
       .sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b)) // sort keys in the order of the updated keys
-      .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}); // create a new object with sorted keys
+      .reduce((acc, key) => ({ ...acc, [key]: updatedJsonObject[key] }), {}) // create a new object with sorted keys
 
     // replace the accessor key by the header
     for (let i = 0; i < columns.length; i++) {
-      const { accessorKey, header } = columns[i];
+      const { accessorKey, header } = columns[i]
       if (accessorKey in updatedJsonObject) {
-        const { [accessorKey]: renamedKey, ...rest } = updatedJsonObject; // use destructuring to rename the key
-        updatedJsonObject = { ...rest, [header]: renamedKey }; // update the JSON object with the renamed key
+        const { [accessorKey]: renamedKey, ...rest } = updatedJsonObject // use destructuring to rename the key
+        updatedJsonObject = { ...rest, [header]: renamedKey } // update the JSON object with the renamed key
       }
     }
 
-    return updatedJsonObject; // return the original JSON object if the key is not found
-  });
+    return updatedJsonObject // return the original JSON object if the key is not found
+  })
 
-  csvExporter.generateCsv(updatedJsonList);
-};
+  csvExporter.generateCsv(updatedJsonList)
+}

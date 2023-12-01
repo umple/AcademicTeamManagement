@@ -1,71 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { Container, Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import { getUserEmail } from "../../helpers/UserEmail";
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import { CardContent } from "@mui/material";
-import GroupsSharpIcon from "@mui/icons-material/GroupsSharp";
-import ClassIcon from '@mui/icons-material/Class';
-import PersonIcon from "@mui/icons-material/Person";
-import DesignServicesSharpIcon from "@mui/icons-material/DesignServicesSharp";
-import projectService from "../../services/projectService";
-import groupService from "../../services/groupService";
-import studentService from "../../services/studentService";
-import sectionService from "../../services/sectionService";
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { Container, Grid, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardMedia from '@material-ui/core/CardMedia'
+import { getUserEmail } from '../../helpers/UserEmail'
+import Box from '@mui/material/Box'
+import { CardContent } from '@mui/material'
+import GroupsSharpIcon from '@mui/icons-material/GroupsSharp'
+import ClassIcon from '@mui/icons-material/Class'
+import PersonIcon from '@mui/icons-material/Person'
+import DesignServicesSharpIcon from '@mui/icons-material/DesignServicesSharp'
+import projectService from '../../services/projectService'
+import groupService from '../../services/groupService'
+import studentService from '../../services/studentService'
+import sectionService from '../../services/sectionService'
+import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(4),
+    padding: theme.spacing(4)
   },
   title: {
-    fontSize: "4rem",
-    fontWeight: 700,
+    fontSize: '4rem',
+    fontWeight: 700
   },
   column1: {
-    paddingLeft: 50,
+    paddingLeft: 50
   },
   column2: {
-    paddingLeft: theme.spacing(2),
+    paddingLeft: theme.spacing(2)
   },
   card: {
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadius
   },
   media: {
     height: 0,
-    paddingTop: "75%", // 16:9 aspect ratio
-  },
-}));
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
+    paddingTop: '75%' // 16:9 aspect ratio
+  }
+}))
 
 const AdminHomePage = () => {
-  const classes = useStyles();
-  const [adminEmail, setAdminEmail] = useState(null);
-  const { t, i18n } = useTranslation();
+  const classes = useStyles()
+  const [adminEmail, setAdminEmail] = useState(null)
+  const { t } = useTranslation()
 
   // Cache the value of the professor's email
   useEffect(() => {
     getUserEmail()
       .then((email) => {
-        setAdminEmail(email);
+        setAdminEmail(email)
       })
       .catch((error) => {
-        console.error(error);
-      });
-  }, [adminEmail]);
+        console.error(error)
+      })
+  }, [adminEmail])
 
   return (
     <div className={classes.root}>
@@ -79,7 +69,7 @@ const AdminHomePage = () => {
           <Grid item sm={3} className={classes.column2}>
             <Card
               className={classes.card}
-              style={{ boxShadow: "0px 3px 5px rgba(0,0,0,0.2)" }}
+              style={{ boxShadow: '0px 3px 5px rgba(0,0,0,0.2)' }}
             >
               <CardMedia
                 className={classes.media}
@@ -92,86 +82,83 @@ const AdminHomePage = () => {
       </Container>
       <DashBoardInfo></DashBoardInfo>
     </div>
-  );
-};
+  )
+}
 
 const DashBoardInfo = () => {
-  const [studentsCount, setStudentCount] = useState(0);
-  const [groupsCount, setGroupCount] = useState(0);
-  const [projectsCount, setProjectCount] = useState(0);
-  const [sectionsCount, setSectionsCount] = useState(0);
-  const { t, i18n } = useTranslation();
+  const [studentsCount, setStudentCount] = useState(0)
+  const [groupsCount, setGroupCount] = useState(0)
+  const [projectsCount, setProjectCount] = useState(0)
+  const [sectionsCount, setSectionsCount] = useState(0)
+  const { t } = useTranslation()
 
   useEffect(() => {
     studentService.get().then((data) => {
-      data.count && setStudentCount(data.count ?? 0);
-    });
+      data.count && setStudentCount(data.count ?? 0)
+    })
     groupService.get().then((data) => {
-      data.count && setGroupCount(data.count ?? 0);
-    });
+      data.count && setGroupCount(data.count ?? 0)
+    })
     projectService.get().then((data) => {
-      data.count && setProjectCount(data.count ?? 0);
-    });
+      data.count && setProjectCount(data.count ?? 0)
+    })
     sectionService.get().then((data) => {
-      data.count && setSectionsCount(data.count ?? 0);
-    });
-  }, []);
+      data.count && setSectionsCount(data.count ?? 0)
+    })
+  }, [])
 
   const cardStyle = {
-    height: "200px", // Set the desired height
-    borderRadius: "10px", // Add rounded edges
-    transition: "box-shadow 0.3s", // Add transition for smooth hover effect
-    "&:hover": {
-      boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.2)", // Add box shadow on hover
-    },
-    cursor: 'pointer', // Add pointer cursor for better UX
-    transition: 'transform 0.3s', // Add transition for smooth hover effect
+    height: '200px', // Set the desired height
+    borderRadius: '10px', // Add rounded edges
+    transition: 'box-shadow 0.3s', // Add transition for smooth hover effect
     '&:hover': {
-      transform: 'scale(1.05)', // Scale up on hover
+      boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)', // Add box shadow on hover
+      transform: 'scale(1.05)' // Scale up on hover
     },
-  };
+    cursor: 'pointer' // Add pointer cursor for better UX
+  }
 
   const titleStyle = {
-    textAlign: "left", // Align the text to the center
-  };
+    textAlign: 'left' // Align the text to the center
+  }
 
   const iconStyle = {
-    fontSize: "120px", // Set the icon size to 120
-    marginBottom: "1rem", // Add spacing between the icon and badge
-  };
+    fontSize: '120px', // Set the icon size to 120
+    marginBottom: '1rem' // Add spacing between the icon and badge
+  }
 
   const contentStyle = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
-  };
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%'
+  }
 
   const badgeStyle = {
-    width: "5rem",
-    height: "5rem",
-    borderRadius: "50%",
-    border: "3px solid #575757", // Add border and set the color
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "auto",
-    marginBottom: "0.5rem", // Add spacing between the badge and text
-  };
+    width: '5rem',
+    height: '5rem',
+    borderRadius: '50%',
+    border: '3px solid #575757', // Add border and set the color
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 'auto',
+    marginBottom: '0.5rem' // Add spacing between the badge and text
+  }
 
   const badgeTextStyle = {
-    fontWeight: "bold",
-  };
+    fontWeight: 'bold'
+  }
 
   return (
-    <Container style={{ marginBottom: "20px", marginTop: "20px"}}>
+    <Container style={{ marginBottom: '20px', marginTop: '20px' }}>
       <Box
         sx={{
           flexGrow: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          display: "flex",
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex'
         }}
       >
         <Grid container spacing={2}>
@@ -185,22 +172,22 @@ const DashBoardInfo = () => {
                   <div style={contentStyle}>
                     <div
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4em",
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4em'
                       }}
                     >
-                      <div style={{ float: "left" }}>
+                      <div style={{ float: 'left' }}>
                         <DesignServicesSharpIcon style={iconStyle} />
                       </div>
 
                       <div
                         style={{
-                          display: "flex",
-                          flexDirection: "column",
+                          display: 'flex',
+                          flexDirection: 'column'
                         }}
                       >
-                        <div style={{ textAlign: "center" }}>
+                        <div style={{ textAlign: 'center' }}>
                           <Typography>{t('home.count-projects')}</Typography>
                         </div>
 
@@ -226,21 +213,21 @@ const DashBoardInfo = () => {
                   <div style={contentStyle}>
                     <div
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4em",
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4em'
                       }}
                     >
-                      <div style={{ float: "left" }}>
+                      <div style={{ float: 'left' }}>
                         <GroupsSharpIcon style={iconStyle} />
                       </div>
                       <div
                         style={{
-                          display: "flex",
-                          flexDirection: "column",
+                          display: 'flex',
+                          flexDirection: 'column'
                         }}
                       >
-                        <div style={{ textAlign: "center" }}>
+                        <div style={{ textAlign: 'center' }}>
                           <Typography>{t('home.count-groups')}</Typography>
                         </div>
 
@@ -266,22 +253,22 @@ const DashBoardInfo = () => {
                   <div style={contentStyle}>
                     <div
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4em",
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4em'
                       }}
                     >
-                      <div style={{ float: "left" }}>
+                      <div style={{ float: 'left' }}>
                         <PersonIcon style={iconStyle} />
                       </div>
 
                       <div
                         style={{
-                          display: "flex",
-                          flexDirection: "column",
+                          display: 'flex',
+                          flexDirection: 'column'
                         }}
                       >
-                        <div style={{ textAlign: "center" }}>
+                        <div style={{ textAlign: 'center' }}>
                           <Typography>{t('home.count-students')}</Typography>
                         </div>
 
@@ -307,22 +294,22 @@ const DashBoardInfo = () => {
                   <div style={contentStyle}>
                     <div
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4em",
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4em'
                       }}
                     >
-                      <div style={{ float: "left" }}>
+                      <div style={{ float: 'left' }}>
                         <ClassIcon style={iconStyle} />
                       </div>
 
                       <div
                         style={{
-                          display: "flex",
-                          flexDirection: "column",
+                          display: 'flex',
+                          flexDirection: 'column'
                         }}
                       >
-                        <div style={{ textAlign: "center" }}>
+                        <div style={{ textAlign: 'center' }}>
                           <Typography>{t('home.count-sections')}</Typography>
                         </div>
 
@@ -341,7 +328,7 @@ const DashBoardInfo = () => {
         </Grid>
       </Box>
     </Container>
-  );
-};
+  )
+}
 
-export default AdminHomePage;
+export default AdminHomePage

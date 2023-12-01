@@ -1,5 +1,5 @@
-//Modal to create new project
-import React, { useState, useEffect } from "react";
+// Modal to create new project
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Dialog,
@@ -12,15 +12,14 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Tooltip,
-  Alert,
-} from "@mui/material";
-import Project from "../../../entities/Project";
-import { useFormik } from "formik";
-import projectService from "../../../services/projectService";
-import professorProjectSchema from "../../../schemas/professorProjectSchema";
-import statusByValue from "../../common/StatusHelper";
-import { useTranslation } from 'react-i18next'; 
+  Tooltip
+} from '@mui/material'
+import Project from '../../../entities/Project'
+import { useFormik } from 'formik'
+import projectService from '../../../services/projectService'
+import professorProjectSchema from '../../../schemas/professorProjectSchema'
+import statusByValue from '../../common/StatusHelper'
+import { useTranslation } from 'react-i18next'
 
 const EditProjectForm = ({
   open,
@@ -29,34 +28,33 @@ const EditProjectForm = ({
   projectData,
   setEditingRow,
   setEditModalOpen,
-  setRefreshTrigger,
+  setRefreshTrigger
 }) => {
-
   // Set the translation
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation()
 
-  const [initialProjectValues, setInit] = useState(
+  const [initialProjectValues] = useState(
     new Project(projectData.original)
-  );
+  )
   const onUpdateStatus = statusByValue(initialProjectValues.status)
 
   const handleClose = () => {
-    setEditingRow(null);
-    setEditModalOpen(false);
-    setFieldValue({}); // Clear the form values when closing the form
-  };
+    setEditingRow(null)
+    setEditModalOpen(false)
+    setFieldValue({}) // Clear the form values when closing the form
+  }
 
   const onSubmit = async (values, actions) => {
     try {
-      await projectService.update(projectData.original._id,values);
-      setRefreshTrigger((prevState) => !prevState);
+      await projectService.update(projectData.original._id, values)
+      setRefreshTrigger((prevState) => !prevState)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     } finally {
-      handleClose();
-      actions.resetForm();
+      handleClose()
+      actions.resetForm()
     }
-  };
+  }
 
   const {
     values,
@@ -65,47 +63,46 @@ const EditProjectForm = ({
     handleBlur,
     handleChange,
     handleSubmit,
-    setFieldValue,
-    setFieldTouched,
+    setFieldValue
   } = useFormik({
     initialValues: initialProjectValues.toProfessorRequestBody(),
     validationSchema: professorProjectSchema(projects, projectData.original._id),
-    onSubmit,
-  });
+    onSubmit
+  })
 
   useEffect(() => {
     if (projectData) {
       Object.keys(projectData.original).forEach((field) => {
-        setFieldValue(field, projectData.original[field]);
-      });
+        setFieldValue(field, projectData.original[field])
+      })
     }
-  }, [projectData]);
+  }, [projectData])
 
   return (
     <Dialog open={open}>
       <DialogTitle textAlign="center">
-        {projectData?.original ? t("project.edit-project") : t("project.add-project")}
+        {projectData?.original ? t('project.edit-project') : t('project.add-project')}
       </DialogTitle>
       <form acceptCharset="Enter" onSubmit={handleSubmit}>
         <DialogContent>
           <Stack
             sx={{
-              width: "100%",
-              minWidth: { xs: "300px", sm: "360px", md: "400px" },
-              gap: "1.5rem",
+              width: '100%',
+              minWidth: { xs: '300px', sm: '360px', md: '400px' },
+              gap: '1.5rem'
             }}
           >
             {columns.map((column) => {
               if (
-                column.accessorKey === "interested groups" ||
-                column.accessorKey === "group"
+                column.accessorKey === 'interested groups' ||
+                column.accessorKey === 'group'
               ) {
-                return null;
+                return null
               }
-              if (column.accessorKey === "status") {
+              if (column.accessorKey === 'status') {
                 return (
                   <FormGroup>
-                    <InputLabel id="status-label">{t("project.status")}</InputLabel>
+                    <InputLabel id="status-label">{t('project.status')}</InputLabel>
                     <Select
                       labelId="status-label"
                       key={column.accessorKey}
@@ -125,19 +122,19 @@ const EditProjectForm = ({
                     >
                       {
                         onUpdateStatus.possibilities.map((option) => {
-                          const tmp = statusByValue(option);
+                          const tmp = statusByValue(option)
                           return (
                             <MenuItem value={option}>
                               <Tooltip title={tmp.info} style={{ width: '100%' }} arrow>
                                 {option}
                               </Tooltip>
                             </MenuItem>
-                          );
+                          )
                         })
                       }
                     </Select>
                   </FormGroup>
-                );
+                )
               }
               return (
                 <TextField
@@ -153,22 +150,22 @@ const EditProjectForm = ({
                   helperText={
                     touched[column.accessorKey] && errors[column.accessorKey]
                   }
-                  multiline={column.accessorKey === "description"}
-                  rows={column.accessorKey === "description" ? 5 : 1}
+                  multiline={column.accessorKey === 'description'}
+                  rows={column.accessorKey === 'description' ? 5 : 1}
                 />
-              );
+              )
             })}
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ p: "1.25rem" }}>
-          <Button onClick={handleClose}>{t("common.Cancel")}</Button>
+        <DialogActions sx={{ p: '1.25rem' }}>
+          <Button onClick={handleClose}>{t('common.Cancel')}</Button>
           <Button color="secondary" type="submit" variant="contained">
-            {projectData?.original ? t("common.Save") : t("common.Create")}
+            {projectData?.original ? t('common.Save') : t('common.Create')}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
-  );
-};
+  )
+}
 
-export default EditProjectForm;
+export default EditProjectForm
