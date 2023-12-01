@@ -4,6 +4,7 @@ class Group {
     this.project = groupData.project || ''
     this.professorEmail = groupData.professorEmail || ''
     this.members = groupData.members || []
+    this.interest = groupData.interest || []
     this.notes = groupData.notes || ''
   }
 
@@ -39,6 +40,14 @@ class Group {
     this._members = value
   }
 
+  get interest () {
+    return this._interest
+  }
+
+  set interest (value) {
+    this._interest = value
+  }
+
   get notes () {
     return this._notes
   }
@@ -53,6 +62,7 @@ class Group {
       project: this.project,
       professorEmail: this.professorEmail,
       members: this.members,
+      interest: this.interest,
       notes: this.notes
     }
   }
