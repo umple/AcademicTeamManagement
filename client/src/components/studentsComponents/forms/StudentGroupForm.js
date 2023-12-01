@@ -196,11 +196,16 @@ const StudentGroupForm = ({
               }
 
               if (column.accessorKey === 'project') {
+                return null
+              }
+
+              if (column.accessorKey === 'interest') {
                 return (
                   <FormControl>
-                    <InputLabel id="project-label">{t('common.Project')}</InputLabel>
+                    <InputLabel id="project-label">{t('common.interested-projects')}</InputLabel>
                     <Select
-                      labelId="project-label"
+                      labelId="interested-label"
+                      multiple
                       key={column.accessorKey}
                       name={column.accessorKey}
                       value={values[column.accessorKey]}
