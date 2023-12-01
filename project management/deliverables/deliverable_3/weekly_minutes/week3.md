@@ -1,4 +1,4 @@
-# Nov 6 - Nov 12
+# Nov 13 - Nov 19
 
 ### Caroline
 - **What did I do last week?** 
