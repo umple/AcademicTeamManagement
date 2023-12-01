@@ -149,7 +149,7 @@ const DashBoardInfo = () => {
     fetchStudents()
     fetchGroups()
     fetchProjects()
-    
+
     sectionService.get().then((data) => {
       data.count && setSectionsCount(data.count ?? 0)
     })
