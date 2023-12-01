@@ -2,7 +2,7 @@
 
 ### Caroline
 - **What did I do last week?** translate group pages: https://github.com/umple/AcademicTeamManagement/pull/295
-- **What will I do this week?** e2e tests for the i18n: https://github.com/orgs/umple/projects/2?pane=issue&itemId=43573042
+- **What will I do this week?** e2e tests for the i18n: https://github.com/umple/AcademicTeamManagement/issues/243
 - **Do I have any blockers?** no
 
 ### Laith
