@@ -14,6 +14,7 @@ import StudentGroupForm from '../forms/StudentGroupForm'
 import projectService from '../../../services/projectService'
 import studentService from '../../../services/studentService'
 import groupService from '../../../services/groupService'
+import { getUserEmail } from '../../../helpers/UserEmail'
 import { FilterDataByProfessor } from '../../../helpers/FilterDataByProfessor'
 import { useTranslation } from 'react-i18next'
 import { MRT_Localization_EN } from 'material-react-table/locales/en'
@@ -27,6 +28,7 @@ const StudentGroupTable = () => {
   const [group, setGroup] = useState()
   const [professorEmail, setProfessorEmail] = useState('')
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
+  const [currentStudent, setCurrentStudent] = useState({})
   const [showAlert, setShowAlert] = useState(false)
   const [showJoinedTeam, setShowJoinedTeam] = useState(false)
   const [loading] = useState(false)
@@ -150,6 +152,15 @@ const StudentGroupTable = () => {
       if (students.message !== 'Student list is empty.' && students.students) {
         setStudents(students.students)
       }
+
+      const Email = await getUserEmail()
+      if (students.count && students.count > 0) {
+        const currStudent = students.students.filter(
+          (student) => student.email === Email
+        )
+        setCurrentStudent(currStudent[0])
+      }
+
     } catch (error) {
       console.error('Error fetching students:', error)
     }
@@ -231,6 +242,7 @@ const StudentGroupTable = () => {
           setEditingRow={setEditingRow}
           editingRow={editingRow}
           professorEmail={professorEmail}
+          currentStudent={currentStudent}
         />
       )}
 

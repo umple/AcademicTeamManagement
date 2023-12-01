@@ -35,7 +35,8 @@ const StudentGroupForm = ({
   setUpdate,
   editingRow,
   setEditingRow,
-  professorEmail
+  professorEmail,
+  currentStudent
 }) => {
   const ITEM_HEIGHT = 48
   const ITEM_PADDING_TOP = 8
@@ -74,6 +75,7 @@ const StudentGroupForm = ({
       if (update) {
         await groupService.update(editingRow._id, values)
       } else {
+        values.members.push(currentStudent.orgdefinedid)
         await groupService.add(values)
       }
       handleClose()
@@ -117,82 +119,15 @@ const StudentGroupForm = ({
           >
             {columns.map((column) => {
               if (column.accessorKey === 'members') {
-                return (
-                  <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel id="demo-multiple-chip-label">
-                      {t('common.Members')}
-                    </InputLabel>
-                    <Select
-                      labelId="demo-multiple-chip-label"
-                      id="demo-multiple-chip"
-                      multiple
-                      name={column.accessorKey}
-                      value={values[column.accessorKey]}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={Boolean(
-                        touched[column.accessorKey] &&
-                          errors[column.accessorKey]
-                      )}
-                      helperText={
-                        touched[column.accessorKey] &&
-                        errors[column.accessorKey]
-                      }
-                      input={
-                        <OutlinedInput id="select-multiple-chip" label="Chip" />
-                      }
-                      renderValue={(selected) => (
-                        <Box
-                          sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
-                        >
-                          {selected.map((value) => {
-                            const student = students.find(
-                              (student) => student.orgdefinedid === value
-                            )
-                            const display =
-                              student.orgdefinedid +
-                              ' - ' +
-                              student.firstname +
-                              ' ' +
-                              student.lastname
-                            return (
-                              <Chip
-                                color="primary"
-                                key={value}
-                                label={display}
-                              />
-                            )
-                          })}
-                        </Box>
-                      )}
-                      MenuProps={MenuProps}
-                    >
-                      {students.length > 0 &&
-                        students.map((student) => {
-                          if (student.group === null || student.group === '') {
-                            return (
-                              <MenuItem
-                                key={student.orgdefinedid}
-                                value={student.orgdefinedid}
-                                style={getStyles(
-                                  student.firstname,
-                                  members,
-                                  theme
-                                )}
-                              >
-                                {student.orgdefinedid +
-                                  ' - ' +
-                                  student.firstname +
-                                  ' ' +
-                                  student.lastname}
-                              </MenuItem>
-                            )
-                          }
-                          return null
-                        })}
-                    </Select>
-                  </FormControl>
-                )
+                    if (currentStudent) {
+                      const display = currentStudent.firstname + ' ' + currentStudent.lastname
+                      return (
+                      <div>
+                        <InputLabel id="project-label">{t('common.Members')}</InputLabel>
+                        <Chip sx = {{ marginBottom: '5px' }} color="success" label={display} />
+                      </div>
+                      )
+                    }
               }
 
               if (column.accessorKey === 'project') {
