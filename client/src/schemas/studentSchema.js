@@ -28,7 +28,7 @@ const studentSchema = (students, _id) => {
           return true
         }
       }),
-    sections: Yup.string(),
+    sections: Yup.string().required('Section is required'),
     group: Yup.string(),
     professorEmail: Yup.string()
   })
