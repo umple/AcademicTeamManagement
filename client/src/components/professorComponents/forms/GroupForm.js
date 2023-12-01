@@ -238,6 +238,10 @@ const GroupForm = ({
                   )
                 }
 
+                if (column.accessorKey === 'interest') {
+                  return null
+                }
+
                 return (
                   <TextField
                     key={column.accessorKey}
