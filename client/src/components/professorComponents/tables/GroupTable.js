@@ -137,7 +137,7 @@ const GroupTable = () => {
               <div>
                 <Chip sx = {{ marginBottom: '5px' }} color="secondary" label={cell.getValue('project')}/>
               </div>
-              )
+            )
           } else {
             return null
           }
@@ -148,13 +148,13 @@ const GroupTable = () => {
         header: t('common.interested-projects'),
         Cell: ({ cell }) => {
           if (Array.isArray(cell.getValue('interest')) && cell.getValue('interest').length > 0) {
-              return cell.getValue('interest').map((value, index) => {
-                return (
+            return cell.getValue('interest').map((value, index) => {
+              return (
                   <div>
                     <Chip sx = {{ marginBottom: '5px' }} color="primary" label={value}/>
                   </div>
-                  )
-              })
+              )
+            })
           } else {
             return null
           }
@@ -186,30 +186,30 @@ const GroupTable = () => {
   const fetchStudents = async () => {
     try {
       let userType = ''
-      const students = await studentService.get() 
+      const students = await studentService.get()
 
       await getUserType()
-      .then((type) => {
-        userType = type
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+        .then((type) => {
+          userType = type
+        })
+        .catch((error) => {
+          console.error(error)
+        })
 
-    if (students.students) {
-      if (userType === ROLES.ADMIN) {
-        setStudents(students.students) // show all data if user is an admin
+      if (students.students) {
+        if (userType === ROLES.ADMIN) {
+          setStudents(students.students) // show all data if user is an admin
+        } else {
+          const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
+          const filteredStudentsTableData = FilterDataByProfessor(
+            students.students,
+            professorEmail
+          ) // keep only the data that contains the professor's email
+          setStudents(filteredStudentsTableData)
+        }
       } else {
-        const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
-        const filteredStudentsTableData = FilterDataByProfessor(
-          students.students,
-          professorEmail
-        ) // keep only the data that contains the professor's email
-        setStudents(filteredStudentsTableData)
+        setStudents([])
       }
-    } else {
-      setStudents([])
-    }
     } catch (error) {
       console.error('Error fetching students:', error)
     }

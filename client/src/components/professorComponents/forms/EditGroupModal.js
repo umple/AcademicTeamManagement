@@ -230,10 +230,10 @@ const EditGroupModal = ({
                       }
                     >
                       {
-                        groupData.original.project && 
+                        groupData.original.project &&
                         <MenuItem key={'no-project'} value={''}>({t('students-table.remove-project-from-groups')})</MenuItem>
                       }
-                      
+
                       {projects.map((option) => (
                         <MenuItem key={option.project} value={option.project}>
                           {option.project}

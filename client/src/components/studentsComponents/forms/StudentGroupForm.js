@@ -1,6 +1,5 @@
 import { FormControl } from '@material-ui/core'
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -8,13 +7,11 @@ import {
   DialogTitle,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   Stack,
   TextField
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
-import { useTheme } from '@mui/material/styles'
 import { useFormik } from 'formik'
 
 import React, { useState } from 'react'
@@ -28,7 +25,6 @@ const StudentGroupForm = ({
   columns,
   fetchData,
   projects,
-  students,
   groups,
   setCreateModalOpen,
   update,
@@ -38,28 +34,7 @@ const StudentGroupForm = ({
   professorEmail,
   currentStudent
 }) => {
-  const ITEM_HEIGHT = 48
-  const ITEM_PADDING_TOP = 8
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250
-      }
-    }
-  }
-
-  function getStyles (name, members, theme) {
-    return {
-      fontWeight:
-        members.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium
-    }
-  }
-
-  const theme = useTheme()
-  const [members] = useState([])
+  // add internationalization
   const { t } = useTranslation()
 
   const [initialGroupValues] = useState(
@@ -119,15 +94,15 @@ const StudentGroupForm = ({
           >
             {columns.map((column) => {
               if (column.accessorKey === 'members') {
-                    if (currentStudent) {
-                      const display = currentStudent.firstname + ' ' + currentStudent.lastname
-                      return (
+                if (currentStudent) {
+                  const display = currentStudent.firstname + ' ' + currentStudent.lastname
+                  return (
                       <div>
                         <InputLabel id="project-label">{t('common.Members')}</InputLabel>
                         <Chip sx = {{ marginBottom: '5px' }} color="success" label={display} />
                       </div>
-                      )
-                    }
+                  )
+                }
               }
 
               if (column.accessorKey === 'project') {

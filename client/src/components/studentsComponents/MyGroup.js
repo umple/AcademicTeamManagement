@@ -178,7 +178,7 @@ const MyGroup = () => {
                 ? (
                 <Box>
                   <Typography mt={2} sx={{ fontSize: '18px' }}>
-                    <strong>Group ID:</strong> 
+                    <strong>Group ID:</strong>
                   </Typography>
                   <Chip sx = {{ m: '2px' }} key={'group_id'} label={group.group_id} color="warning"></Chip>
 
@@ -190,16 +190,14 @@ const MyGroup = () => {
                     <Chip sx = {{ m: '2px' }} key={index} label={findNameByStudentID(element)} color="secondary"></Chip>
                   ))}
 
-                  
-
                   {
                   group.interest > 0 && group.interest.map((element, index) => (
                     <Chip sx = {{ m: '2px' }} key={index} label={element} color="primary"></Chip>
                   ))}
-                  
+
                   {
                     (group.interest && group.interest.length > 0)
-                    ? (
+                      ? (
                       <>
                       <Typography mt={2} sx={{ fontSize: '18px' }}>
                       <strong> {t('common.interested-projects')}</strong>
@@ -207,13 +205,13 @@ const MyGroup = () => {
 
                        { group.interest.map((element, index) => (
                           <Chip sx = {{ m: '2px' }} key={index} label={element} color="info"></Chip>
-                        ))
+                       ))
                       }
                       </>
-                    ) 
-                    : (
+                        )
+                      : (
                       <></>
-                    )
+                        )
                   }
 
                   {group.project
