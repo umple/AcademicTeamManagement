@@ -84,6 +84,7 @@
         "move-students": "Déplacer les étudiants dans un Groupe",
         "change-group": "Changer le Groupe de ",
         "remove-from-groups": "Supprimer du Groupes",
+        "remove-project-from-groups": "Supprimer le Projet",
         "import-students": "Importer des étudiants",
         "update-student": "Modifier l'étudiant",
         "imports-instructions": "Sélectionnez la section et importez les étudiants",

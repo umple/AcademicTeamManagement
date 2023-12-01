@@ -220,13 +220,15 @@ const MyGroup = () => {
                     ? (
                     <>
                       <Typography mt={2} sx={{ fontSize: '18px' }}>
-                        <strong>{t('my-group.project2')}</strong> {group.project}
+                        <strong>{t('my-group.project2')}</strong>
                       </Typography>
+                      <Chip sx = {{ m: '2px' }} key={'project_id'} label={group.project} color="success"></Chip>
+
                       <Grid
                       container
                       spacing={2}
                       alignItems="center"
-                      sx={{ mt: 1 }}
+                      sx={{ mt: 2 }}
                     >
                       <Grid item>
                         <Button
