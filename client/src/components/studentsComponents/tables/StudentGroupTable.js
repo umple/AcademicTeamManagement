@@ -90,11 +90,35 @@ const StudentGroupTable = () => {
       },
       {
         accessorKey: 'project',
-        header: t('common.current-project')
+        header: t('common.Project'),
+        Cell: ({ cell }) => {
+          if (cell.getValue('project').length > 0) {
+            return (
+              <div>
+                <Chip sx = {{ marginBottom: '5px' }} color="secondary" label={cell.getValue('project')}/>
+              </div>
+              )
+          } else {
+            return null
+          }
+        }
       },
       {
         accessorKey: 'interest',
-        header: t('common.interested-projects')
+        header: t('common.interested-projects'),
+        Cell: ({ cell }) => {
+          if (Array.isArray(cell.getValue('interest')) && cell.getValue('interest').length > 0) {
+              return cell.getValue('interest').map((value, index) => {
+                return (
+                  <div>
+                    <Chip sx = {{ marginBottom: '5px' }} color="primary" label={value}/>
+                  </div>
+                  )
+              })
+          } else {
+            return null
+          }
+        }
       },
       {
         accessorKey: 'notes',
@@ -187,6 +211,7 @@ const StudentGroupTable = () => {
       <Button
         variant="contained"
         color="primary"
+        disabled={isCurrentUserInGroup}
         onClick={openCreateStudentGroupModal} // Open the create student group modal when the button is clicked
         sx={{ marginBottom: '1rem' }}
       >
