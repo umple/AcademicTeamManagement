@@ -211,12 +211,12 @@ const MyGroup = () => {
                 ? (
                 <Box>
                   <Typography mt={2} sx={{ fontSize: '18px' }}>
-                    <strong>Group ID:</strong>
+                    <strong>{t('common.Group')} ID:</strong>
                   </Typography>
                   <Chip sx = {{ m: '2px' }} key={'group_id'} label={group.group_id} color="warning"></Chip>
 
               <Typography sx={{ mt: 1 }} gutterBottom>
-                Control who can join your group
+                {t('my-group.lock-group-message')}
               </Typography>
               <Grid
                 container
@@ -230,7 +230,7 @@ const MyGroup = () => {
                     disabled={isGroupProfessorLocked || isGroupStudentLocked}
                     onClick={handleLockingGroup}
                   >
-                    <LockIcon /> Lock
+                    <LockIcon />{t('common.lock')}
                   </Button>
                 </Grid>
                 <Grid item>
@@ -240,7 +240,7 @@ const MyGroup = () => {
                     disabled={isGroupProfessorLocked || !isGroupStudentLocked}
                     onClick={handleUnlockingGroup}
                   >
-                    <LockOpenIcon /> Unlock
+                    <LockOpenIcon />{t('common.unlock')}
                   </Button>
                 </Grid>
               </Grid>
