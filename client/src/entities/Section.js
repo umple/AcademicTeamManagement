@@ -4,6 +4,7 @@ class Section {
     this._term = props.term || ''
     this._year = props.year || ''
     this._notes = props.notes || ''
+    this._lock = props.lock || false
   }
 
   // Getter methods
@@ -23,6 +24,10 @@ class Section {
     return this._notes
   }
 
+  get lock () {
+    return this._lock
+  }
+
   // Setter methods
   set name (name) {
     this._name = name
@@ -40,12 +45,17 @@ class Section {
     this._notes = notes
   }
 
+  set lock (lock) {
+    this._lock = lock
+  }
+
   toRequestBody () {
     return {
       name: this._name,
       term: this._term,
       year: this._year,
-      notes: this._notes
+      notes: this._notes,
+      lock: this._lock
     }
   }
 
@@ -54,7 +64,8 @@ class Section {
       name: this._name,
       term: this._term,
       year: this._year,
-      notes: this._notes
+      notes: this._notes,
+      lock: this._lock
     }
   }
 }
