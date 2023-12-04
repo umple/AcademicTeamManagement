@@ -22,6 +22,7 @@ const MyGroup = () => {
   const [applications, setProjectApplications] = useState({})
   const [showAlert, setShowAlert] = useState(false)
   const [isGroupStudentLocked, setIsGroupStudentLocked] = useState(false)
+  const [isGroupProfessorLocked, setIsGroupProfessorLocked] = useState(false)
   const { t, i18n } = useTranslation()
   const currentLanguage = i18n.language
 
@@ -42,6 +43,9 @@ const MyGroup = () => {
       !groupData.error && setGroup(groupData)
       if (groupData.studentLock) {
         setIsGroupStudentLocked(groupData.studentLock)
+      }
+      if (groupData.professorLock) {
+        setIsGroupProfessorLocked(groupData.professorLock)
       }
     } catch (error) {
       console.error(error)
@@ -223,7 +227,7 @@ const MyGroup = () => {
                   <Button
                     variant="contained"
                     color="info"
-                    disabled={isGroupStudentLocked}
+                    disabled={isGroupProfessorLocked || isGroupStudentLocked}
                     onClick={handleLockingGroup}
                   >
                     <LockIcon /> Lock
@@ -233,7 +237,7 @@ const MyGroup = () => {
                   <Button
                     variant="contained"
                     color="success"
-                    disabled={!isGroupStudentLocked}
+                    disabled={isGroupProfessorLocked || !isGroupStudentLocked}
                     onClick={handleUnlockingGroup}
                   >
                     <LockOpenIcon /> Unlock
