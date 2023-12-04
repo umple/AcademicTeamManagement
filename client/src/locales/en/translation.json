@@ -29,7 +29,9 @@
         "rows": "Rows",
         "log-out": "Log Out",
         "log-in": "Log In",
-        "Leave": "Leave"
+        "Leave": "Leave",
+        "lock-groups": "Lock Groups",
+        "status": "Status"
     },
     "table": {
         "student-id": "Student ID",

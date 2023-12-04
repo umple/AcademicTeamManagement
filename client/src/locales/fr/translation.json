@@ -29,7 +29,9 @@
         "rows": "Lignes",
         "log-out": "Déconnecter",
         "log-in": "Connecter",
-        "Leave": "Quitter"
+        "Leave": "Quitter",
+        "lock-groups": "Verrouiller les Groupes",
+        "status": "Statut"
     },
     "table": {
         "student-id": "Identifiant",
