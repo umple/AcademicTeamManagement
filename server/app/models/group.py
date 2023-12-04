@@ -2,6 +2,7 @@ from .__init__ import db
 from bson import ObjectId
 import app.models.student as student
 import app.models.project as project
+import app.models.section as section
 
 groupCollection = db["groups"]
 
@@ -35,6 +36,13 @@ def get_group(id):
 
 def get_group_by_group_name(name):
     result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
+    if result:
+        return result
+    else:
+        return None
+    
+def get_groups_by_section(section):
+    result = groupCollection.find({"sections": str(section)})
     if result:
         return result
     else:
@@ -134,6 +142,10 @@ def update_group_by_id(id, group_obj):
         if original_group["group_id"] != group_obj["group_id"]:
             for orgdefinedId in group_obj["members"]:
                 result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
+                
+        # Update the group lock if the section has changed
+        if original_group["sections"] != group_obj["sections"]:
+            group_obj["professorLock"] = _update_group_lock_for_new_section(group_obj["sections"])
         
         # Update old project if the group's project has been changed
         if original_group["project"] != group_obj["project"]:
@@ -145,6 +157,27 @@ def update_group_by_id(id, group_obj):
         project.change_status(group_obj["project"], "Underway")
         
         result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": group_obj})
+        
+        return result.modified_count > 0
+    
+    except Exception as e:
+        return str(e)
+
+def professor_group_lock_status_by_id(id, group_obj, lock_status): 
+    try:
+        original_group = get_group(id)
+        group_obj.pop("_id", None)
+        
+        if not original_group:
+            return "Group not found"
+        
+        result = groupCollection.update_one(
+            {"_id": ObjectId(id)}, 
+            {"$set" : {
+                "professorLock": lock_status
+                }
+            }
+        )
         
         return result.modified_count > 0
     
@@ -230,3 +263,11 @@ def remove_project_from_group(projectName):
         if not result:
             return result
     return True
+
+def _update_group_lock_for_new_section(new_section_name):
+    new_section = section.get_section_by_name(new_section_name)
+    if "lock" in new_section:
+        return new_section["lock"]
+    return False
+    
+    
