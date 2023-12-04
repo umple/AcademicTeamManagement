@@ -17,7 +17,7 @@ import { useFormik } from 'formik'
 import React, { useState } from 'react'
 import Group from '../../../entities/Group'
 import groupService from '../../../services/groupService'
-import createGroupSchema from '../../../schemas/createGroupSchema'
+import studentCreateGroupSchema from '../../../schemas/studentCreateGroupSchema'
 import { useTranslation } from 'react-i18next'
 
 const StudentGroupForm = ({
@@ -51,6 +51,9 @@ const StudentGroupForm = ({
         await groupService.update(editingRow._id, values)
       } else {
         values.members.push(currentStudent.orgdefinedid)
+        if (currentStudent.sections) {
+          values.sections = currentStudent.sections
+        }
         await groupService.add(values)
       }
       handleClose()
@@ -70,7 +73,7 @@ const StudentGroupForm = ({
     handleSubmit
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
-    validationSchema: createGroupSchema(groups, editingRow?._id),
+    validationSchema: studentCreateGroupSchema(groups, editingRow?._id),
     onSubmit
   })
 
