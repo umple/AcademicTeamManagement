@@ -79,6 +79,11 @@ def remove_student_from_group_by_email(group_id, email):
         return False
     group["members"].remove(student_obj["orgdefinedid"])
     student.remove_student_from_group(student_obj["orgdefinedid"])
+    
+    # unlock the group again
+    if "studentLock" in group and group["studentLock"]:
+        group["studentLock"] = False
+    
     result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
     return result
 
@@ -140,6 +145,48 @@ def update_group_by_id(id, group_obj):
         project.change_status(group_obj["project"], "Underway")
         
         result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": group_obj})
+        
+        return result.modified_count > 0
+    
+    except Exception as e:
+        return str(e)
+
+def student_lock_group_by_id(id, group_obj): 
+    try:
+        original_group = get_group(id)
+        group_obj.pop("_id", None)
+        
+        if not original_group:
+            return "Group not found"
+        
+        result = groupCollection.update_one(
+            {"_id": ObjectId(id)}, 
+            {"$set" : {
+                "studentLock": True
+                }
+            }
+        )
+        
+        return result.modified_count > 0
+    
+    except Exception as e:
+        return str(e)
+    
+def student_unlock_group_by_id(id, group_obj): 
+    try:
+        original_group = get_group(id)
+        group_obj.pop("_id", None)
+        
+        if not original_group:
+            return "Group not found"
+        
+        result = groupCollection.update_one(
+            {"_id": ObjectId(id)}, 
+            {"$set" : {
+                "studentLock": False
+                }
+            }
+        )
         
         return result.modified_count > 0
     
