@@ -43,6 +43,9 @@ const StaffForm = ({
       if (update) {
         await staffService.update(editingRow._id, values)
       } else {
+        if (values.email) {
+          values.email = values.email.toLowerCase()
+        }
         await staffService.add(values)
       }
       fetchStaffs()
@@ -101,6 +104,25 @@ const StaffForm = ({
               }}
             >
               {columns.map((column) => {
+                if (update && column.accessorKey === 'email') {
+                  return (
+                    <TextField
+                      key={column.accessorKey}
+                      disabled={true}
+                      label={column.header}
+                      name={column.accessorKey}
+                      value={values[column.accessorKey]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={Boolean(
+                        touched[column.accessorKey] && errors[column.accessorKey]
+                      )}
+                      helperText={
+                        touched[column.accessorKey] && errors[column.accessorKey]
+                      }
+                    />
+                  )
+                }
                 if (column.accessorKey === 'role') {
                   return (
                     <FormGroup>

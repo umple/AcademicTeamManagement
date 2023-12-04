@@ -166,6 +166,7 @@ def import_students():
             if student.get_student_by_username(res["username"]) is None:
                 res["sections"] = students_sections  # override the section
                 res["group"] = ''
+                res["email"] = res["email"].lower()
                 res["professorEmail"] = session.get("user")["preferred_username"]
                 student_id = ObjectId()
                 student_entity = StudentEntity(student_id, res)
