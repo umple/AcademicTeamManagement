@@ -6,13 +6,15 @@ class SectionEntity:
         self._term = Section_data.get('term', '')
         self._year = Section_data.get('year', '')
         self._notes = Section_data.get('notes', '')
+        self._lock = Section_data.get('lock', False)
         
     def to_json(self):
         return {
             'name': self._name,
             'term': self._term,
             'year': self._year,
-            'notes': self._notes
+            'notes': self._notes,
+            'lock': self._lock
         }
 
     @property
@@ -46,3 +48,11 @@ class SectionEntity:
     @notes.setter
     def notes(self, notes):
         self._notes = notes
+        
+    @property
+    def lock(self):
+        return self._lock
+    
+    @lock.setter
+    def lock(self, lock):
+        self._lock = lock
