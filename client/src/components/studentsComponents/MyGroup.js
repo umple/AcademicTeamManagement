@@ -5,12 +5,15 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { Link } from 'react-router-dom'
 import Chip from '@mui/material/Chip'
 import MaterialReactTable from 'material-react-table'
+import LockIcon from '@mui/icons-material/Lock'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
 import { fetchData } from '../../services/api'
 import { colorStatus } from '../../helpers/statusColors'
 import { useTranslation } from 'react-i18next'
 import { MRT_Localization_EN } from 'material-react-table/locales/en'
 import { MRT_Localization_FR } from 'material-react-table/locales/fr'
 import projectService from '../../services/projectService'
+import groupService from '../../services/groupService'
 
 const MyGroup = () => {
   const [group, setGroup] = useState({})
@@ -18,6 +21,7 @@ const MyGroup = () => {
   const [loading, setIsLoading] = useState(false)
   const [applications, setProjectApplications] = useState({})
   const [showAlert, setShowAlert] = useState(false)
+  const [isGroupStudentLocked, setIsGroupStudentLocked] = useState(false)
   const { t, i18n } = useTranslation()
   const currentLanguage = i18n.language
 
@@ -36,6 +40,9 @@ const MyGroup = () => {
     try {
       const groupData = await fetchData('api/retrieve/curr/user/group')
       !groupData.error && setGroup(groupData)
+      if (groupData.studentLock) {
+        setIsGroupStudentLocked(groupData.studentLock)
+      }
     } catch (error) {
       console.error(error)
       setGroup({})
@@ -71,6 +78,28 @@ const MyGroup = () => {
       projectApplicationsData && setProjectApplications(projectApplicationsData)
     } catch (error) {
       console.error(error)
+    }
+  }
+
+  const handleUnlockingGroup = async () => {
+    try {
+      const res = await groupService.studentUnlockGroup(group)
+      if (res.success) {
+        setIsGroupStudentLocked(false)
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const handleLockingGroup = async () => {
+    try {
+      const res = await groupService.studentLockGroup(group)
+      if (res.success) {
+        setIsGroupStudentLocked(true)
+      }
+    } catch (error) {
+      console.log('error', error)
     }
   }
 
@@ -181,6 +210,36 @@ const MyGroup = () => {
                     <strong>Group ID:</strong>
                   </Typography>
                   <Chip sx = {{ m: '2px' }} key={'group_id'} label={group.group_id} color="warning"></Chip>
+
+              <Typography sx={{ mt: 1 }} gutterBottom>
+                Control who can join your group
+              </Typography>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+              >
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    disabled={isGroupStudentLocked}
+                    onClick={handleLockingGroup}
+                  >
+                    <LockIcon /> Lock
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    disabled={!isGroupStudentLocked}
+                    onClick={handleUnlockingGroup}
+                  >
+                    <LockOpenIcon /> Unlock
+                  </Button>
+                </Grid>
+              </Grid>
 
                   <Typography mt={2} sx={{ fontSize: '18px' }}>
                     <strong> {t('my-group.members')}</strong>
