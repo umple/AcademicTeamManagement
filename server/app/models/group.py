@@ -144,7 +144,7 @@ def update_group_by_id(id, group_obj):
                 result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
                 
         # Update the group lock if the section has changed
-        if original_group["sections"] != group_obj["sections"]:
+        if "sections" not in original_group or original_group["sections"] != group_obj["sections"]:
             group_obj["professorLock"] = _update_group_lock_for_new_section(group_obj["sections"])
         
         # Update old project if the group's project has been changed
