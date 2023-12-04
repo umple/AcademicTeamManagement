@@ -5,7 +5,10 @@ class Group {
     this.professorEmail = groupData.professorEmail || ''
     this.members = groupData.members || []
     this.interest = groupData.interest || []
+    this.sections = groupData.sections || ''
     this.notes = groupData.notes || ''
+    this.studentLock = groupData.studentLock || false
+    this.professorLock = groupData.professorLock || false
   }
 
   get group_id () {
@@ -63,7 +66,10 @@ class Group {
       professorEmail: this.professorEmail,
       members: this.members,
       interest: this.interest,
-      notes: this.notes
+      sections: this.sections,
+      notes: this.notes,
+      studentLock: this.studentLock,
+      professorLock: this.professorLock
     }
   }
 }
