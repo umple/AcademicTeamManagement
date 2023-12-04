@@ -322,6 +322,7 @@ const MyGroup = () => {
                       </Grid>
                       <Grid item>
                         <Button
+                          disabled={isGroupProfessorLocked}
                           variant="contained"
                           color="error"
                           onClick={handleLeaveGroup}
