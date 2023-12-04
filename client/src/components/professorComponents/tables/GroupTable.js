@@ -17,6 +17,7 @@ import { csvOptions, handleExportData } from '../../../helpers/exportData'
 import groupService from '../../../services/groupService'
 import projectService from '../../../services/projectService'
 import studentService from '../../../services/studentService'
+import sectionService from '../../../services/sectionService'
 import GroupForm from '../forms/GroupForm'
 import ConfirmDeletionModal from '../../common/ConfirmDeletionModal'
 import EditGroupModal from '../forms/EditGroupModal'
@@ -35,6 +36,7 @@ const GroupTable = () => {
   const [tableData, setTableData] = useState([])
   const [projects, setProjects] = useState([])
   const [students, setStudents] = useState([])
+  const [sections, setSections] = useState([])
   const [message] = useState('')
   const [deletion, setDeletion] = useState(false)
   const [row, setDeleteRow] = useState()
@@ -161,6 +163,10 @@ const GroupTable = () => {
         }
       },
       {
+        accessorKey: 'sections',
+        header: t('common.Section')
+      },
+      {
         accessorKey: 'notes',
         header: t('section.notes')
       }
@@ -180,6 +186,18 @@ const GroupTable = () => {
       }
     } catch (error) {
       console.error('Error fetching projects:', error)
+    }
+  }
+
+  const fetchSections = async () => {
+    try {
+      const sections = await sectionService.get()
+
+      if (sections.sections && sections.message !== 'Sections list is empty.') {
+        setSections(sections.sections)
+      }
+    } catch (error) {
+      console.error('Error fetching sections:', error)
     }
   }
 
@@ -251,6 +269,7 @@ const GroupTable = () => {
     await fetchProjects()
     await fetchStudents()
     await fetchGroups()
+    await fetchSections()
   }
 
   useEffect(() => {
@@ -359,6 +378,7 @@ const GroupTable = () => {
         fetchData={fetchData}
         projects={projects}
         students={students}
+        sections={sections}
         groups={tableData}
       />
 
@@ -397,6 +417,7 @@ const GroupTable = () => {
           groupData={editingRow}
           projects={[...projects, editingRow.original]}
           students={students}
+          sections={sections}
           groups={tableData}
         />
       )}

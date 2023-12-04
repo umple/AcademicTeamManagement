@@ -28,6 +28,7 @@ const EditGroupModal = ({
   columns,
   projects,
   students,
+  sections,
   groups,
   setEditModalOpen,
   groupData,
@@ -237,6 +238,36 @@ const EditGroupModal = ({
                       {projects.map((option) => (
                         <MenuItem key={option.project} value={option.project}>
                           {option.project}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )
+              }
+
+              if (column.accessorKey === 'sections') {
+                return (
+                  <FormControl>
+                    <InputLabel id="section-label">{t('common.Section')}</InputLabel>
+                    <Select
+                      labelId="section-label"
+                      key={column.accessorKey}
+                      name={column.accessorKey}
+                      defaultValue={groupData.original.sections}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={Boolean(
+                        touched[column.accessorKey] &&
+                          errors[column.accessorKey]
+                      )}
+                      helperText={
+                        touched[column.accessorKey] &&
+                        errors[column.accessorKey]
+                      }
+                    >
+                      {sections.map((option) => (
+                        <MenuItem key={option.name} value={option.name}>
+                          {option.name}
                         </MenuItem>
                       ))}
                     </Select>
