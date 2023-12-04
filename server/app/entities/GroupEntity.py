@@ -7,7 +7,10 @@ class GroupEntity:
         self._professorEmail = group_data.get('professorEmail', '')
         self._members = group_data.get('members', [])
         self._interest = group_data.get('interest', [])
+        self._sections = group_data.get('sections', '')
         self._notes = group_data.get('notes', '')
+        self._studentLock = group_data.get('studentLock', False)
+        self._professorLock = group_data.get('professorLock', False)
     
     def to_json(self):
         return {
@@ -16,7 +19,10 @@ class GroupEntity:
             'professorEmail': self._professorEmail,
             'members': self._members,
             'interest': self._interest,
+            'sections': self._sections,
             'notes': self._notes,
+            'studentLock': self._studentLock,
+            'professorLock': self._professorLock
         }
 
     @property
