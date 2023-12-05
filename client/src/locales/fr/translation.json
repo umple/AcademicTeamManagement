@@ -29,7 +29,11 @@
         "rows": "Lignes",
         "log-out": "Déconnecter",
         "log-in": "Connecter",
-        "Leave": "Quitter"
+        "Leave": "Quitter",
+        "lock-groups": "Verrouiller les Groupes",
+        "status": "Statut",
+        "lock": "Verrouiller",
+        "unlock": "Déverrouiller"
     },
     "table": {
         "student-id": "Identifiant",
@@ -73,7 +77,8 @@
         "project2": "Project :",
         "add-project": "Ajouter un projet",
         "leave-group": "Quitter le groupe",
-        "no-project": "Vous n'avez pas encore de candidatures à des projets."
+        "no-project": "Vous n'avez pas encore de candidatures à des projets.",
+        "lock-group-message": "Contrôlez qui peut rejoindre votre groupe"
     },
     "students-table": {
         "students": "Étudiants",

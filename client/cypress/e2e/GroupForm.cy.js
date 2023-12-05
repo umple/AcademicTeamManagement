@@ -19,6 +19,7 @@ const student = [
 describe("Submit Group Form", () => {
   let body_id; // Declare a variable to store body_id
   let project_id; // Declare a variable to store project_id
+  let section_id;
   beforeEach(() => {
     cy.visit("http://localhost:3000");
 
@@ -89,6 +90,25 @@ describe("Submit Group Form", () => {
       project_id = response.body;
       expect(response.status).to.equal(200);
     });
+
+    // Add a section
+    cy.request({
+      method: "POST",
+      url: "/api/section", // Replace with the correct URL for the student endpoint
+      body: {
+        name: "Fall 2023 Test",
+        term: "Fall",
+        year: "2023",
+        note: "new section",
+      }, // Adjust the request body as needed
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      section_id = response.body;
+      expect(response.status).to.equal(201);
+    });
+
     // Define the group data
     const groupData = {
       group_id: "your-group-id", // Replace with your desired group ID
@@ -112,6 +132,10 @@ describe("Submit Group Form", () => {
       .contains("300111311 - username1 Lastname1") // Find the element with the specified text
       .click();
     cy.get("body").click();
+
+    // Select the section
+    cy.get('[name="sections"]').parent().click();
+    cy.get('[role="option"]').contains('Fall 2023 Test').click();
 
     cy.get('div[aria-labelledby="project-label mui-component-select-project"]') // Select the <div> element by its aria-labelledby attribute
       .click(); // Click the element
@@ -153,6 +177,13 @@ describe("Submit Group Form", () => {
     cy.request({
       method: "DELETE",
       url: `/api/project/delete/${project_id}`,
+    }).then((response) => {
+      expect(response.status).to.equal(200);
+    });
+
+    cy.request({
+      method: "DELETE",
+      url: `/api/section/delete/${section_id}`,
     }).then((response) => {
       expect(response.status).to.equal(200);
     });

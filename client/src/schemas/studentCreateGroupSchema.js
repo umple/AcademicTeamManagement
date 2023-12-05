@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 
 // Define the Yup schema for validation
-const createGroupSchema = (groups, _id) => {
+const studentCreateGroupSchema = (groups, _id) => {
   const groupSchema = Yup.object().shape({
     group_id: Yup.string()
       .required('Group ID is required')
@@ -16,11 +16,8 @@ const createGroupSchema = (groups, _id) => {
           return true
         }
       }),
-    // project: Yup.string().required("Project name is required"),
-    // members: Yup.array().min(1, "At least one member is required"),
-    sections: Yup.string().required('Section is required'),
     notes: Yup.string()
   })
   return groupSchema
 }
-export default createGroupSchema
+export default studentCreateGroupSchema

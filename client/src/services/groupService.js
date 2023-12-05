@@ -107,6 +107,46 @@ const groupService = {
       .catch((error) => {
         console.error(error)
       })
+  },
+  studentLockGroup: async (group) => {
+    return fetch('/api/group/update/student/lock', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(group)
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorMessage) => {
+            throw new Error(`Failed to lock group: ${errorMessage}`)
+          })
+        }
+        return { success: true, message: 'Group locked successfully' }
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  },
+  studentUnlockGroup: async (group) => {
+    return fetch('/api/group/update/student/unlock', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(group)
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorMessage) => {
+            throw new Error(`Failed to unlock group: ${errorMessage}`)
+          })
+        }
+        return { success: true, message: 'Group unlocked successfully' }
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 }
 

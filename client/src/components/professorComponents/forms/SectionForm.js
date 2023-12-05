@@ -5,7 +5,9 @@ import {
   DialogContent,
   Stack,
   TextField,
-  DialogActions
+  DialogActions,
+  Switch,
+  FormControl
 } from '@mui/material'
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
@@ -13,7 +15,7 @@ import sectionService from '../../../services/sectionService'
 import Section from '../../../entities/Section'
 import sectionSchema from '../../../schemas/sectionSchema'
 import { useTranslation } from 'react-i18next'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress, InputLabel } from '@material-ui/core'
 
 const SectionForm = ({
   open,
@@ -28,11 +30,13 @@ const SectionForm = ({
 }) => {
   // This use state is to show loading icon when pressing submit on the form to make sure it doesnt hang
   const [isLoading, setIsLoading] = useState(false)
+  const [lockSwitch, setLockSwitch] = useState(editingRow.lock ?? false)
 
   const onSubmit = async (values, actions) => {
     setIsLoading(true)
     try {
       if (update) {
+        values.lock = lockSwitch
         await sectionService.update(editingRow._id, values)
       } else {
         await sectionService.add(values)
@@ -94,8 +98,21 @@ const SectionForm = ({
                 gap: '1.5rem'
               }}
             >
-              {columns.map((column) => (
-                <TextField
+              {columns.map((column) => {
+                if (update && column.accessorKey === 'lock') {
+                  return (
+                    <FormControl>
+                      <InputLabel id="section-label">{t('common.lock-groups')}</InputLabel>
+                      <Switch
+                        checked={lockSwitch}
+                        onChange={() => setLockSwitch(!lockSwitch)}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                    </FormControl>
+                  )
+                }
+                return (
+                  <TextField
                   key={column.accessorKey}
                   label={column.header}
                   name={column.accessorKey}
@@ -109,7 +126,8 @@ const SectionForm = ({
                     touched[column.accessorKey] && errors[column.accessorKey]
                   }
                 />
-              ))}
+                )
+              })}
             </Stack>
           </DialogContent>
           <DialogActions sx={{ p: '1.25rem' }}>

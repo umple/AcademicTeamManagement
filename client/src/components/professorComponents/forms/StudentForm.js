@@ -49,6 +49,9 @@ const StudentForm = ({
   const onSubmit = async (values, actions) => {
     try {
       setIsLoading(true)
+      if (values.email) {
+        values.email = values.email.toLowerCase()
+      }
       await studentService.add(values)
       fetchStudents()
     } catch (error) {

@@ -6,6 +6,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import {
   Box,
   Button,
+  Chip,
   IconButton,
   Tooltip,
   Typography
@@ -53,6 +54,21 @@ const SectionTable = () => {
       {
         accessorKey: 'notes',
         header: t('section.notes')
+      },
+      {
+        accessorKey: 'lock',
+        header: t('common.status'),
+        Cell: ({ cell }) => {
+          if (cell.getValue('lock') === true) {
+            return (
+              <div>
+                <Chip sx = {{ marginBottom: '5px' }} color="error" label={'Locked'}/>
+              </div>
+            )
+          } else {
+            return null
+          }
+        }
       }
     ],
     [currentLanguage]

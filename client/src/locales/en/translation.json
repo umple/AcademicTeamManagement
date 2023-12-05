@@ -29,7 +29,11 @@
         "rows": "Rows",
         "log-out": "Log Out",
         "log-in": "Log In",
-        "Leave": "Leave"
+        "Leave": "Leave",
+        "lock-groups": "Lock Groups",
+        "status": "Status",
+        "lock": "Lock",
+        "unlock": "Unlock"
     },
     "table": {
         "student-id": "Student ID",
@@ -73,7 +77,8 @@
         "project2": "Project:",
         "add-project": "Add Project",
         "leave-group": "Leave Group",
-        "no-project": "You have no project applications yet."
+        "no-project": "You have no project applications yet.",
+        "lock-group-message": "Control who can join your group"
     },
     "students-table": {
         "students": "Students",

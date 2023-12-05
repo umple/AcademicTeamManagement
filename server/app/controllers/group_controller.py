@@ -3,7 +3,6 @@ from app.entities.GroupEntity import GroupEntity
 from app.models import group
 from bson import ObjectId, json_util
 from pymongo.errors import WriteError
-import pandas as pd
 import json
 from . import group_bp
  
@@ -38,7 +37,7 @@ def add_group():
         error_message = str(e)  # Get the error message as a string
         return {"message": error_message}, 500
 
-# PUT Request to update a student info
+# PUT Request to update a group info
 @group_bp.route("/group/update", methods=["PUT"])    
 def update_group_by_id():
     try:
@@ -51,6 +50,50 @@ def update_group_by_id():
             return {"message": "Invalid JSON data in the request body."}, 400
 
         result = group.update_group_by_id(group_id, group_obj)
+        if result:
+            return jsonify({"message": "Group updated successfully."}), 200
+        else:
+            return {"message": "Group not found or update failed."}, 404
+    except WriteError as e:
+        return {"message": "An error occurred while updating the group." + str(e)}, 500
+    except Exception as e:
+        return {"message": "An error occurred: " + str(e)}, 500
+    
+# PUT Request to update a group info
+@group_bp.route("/group/update/student/lock", methods=["PUT"])    
+def student_lock_group_by_id():
+    try:
+        group_obj = request.json       
+        group_id = group_obj["_id"]['$oid']
+        if not ObjectId.is_valid(group_id):
+            return {"message": "Invalid group ID."}, 400
+
+        if not group_obj:
+            return {"message": "Invalid JSON data in the request body."}, 400
+
+        result = group.student_lock_group_by_id(group_id, group_obj)
+        if result:
+            return jsonify({"message": "Group updated successfully."}), 200
+        else:
+            return {"message": "Group not found or update failed."}, 404
+    except WriteError as e:
+        return {"message": "An error occurred while updating the group." + str(e)}, 500
+    except Exception as e:
+        return {"message": "An error occurred: " + str(e)}, 500
+    
+# PUT Request to update a group info
+@group_bp.route("/group/update/student/unlock", methods=["PUT"])    
+def student_unlock_group_by_id():
+    try:
+        group_obj = request.json
+        group_id = group_obj["_id"]['$oid']  
+        if not ObjectId.is_valid(group_id):
+            return {"message": "Invalid group ID."}, 400
+
+        if not group_obj:
+            return {"message": "Invalid JSON data in the request body."}, 400
+
+        result = group.student_unlock_group_by_id(group_id, group_obj)
         if result:
             return jsonify({"message": "Group updated successfully."}), 200
         else:
@@ -101,7 +144,6 @@ def add_student_to_group():
 @group_bp.route("/remove/group/member/<id>", methods=["DELETE"])
 def remove_student_from_group(id):
     curr_user_email = session.get("user")["preferred_username"]
-    print(curr_user_email)
     if group.remove_student_from_group_by_email(id ,curr_user_email):
         return jsonify({"message": f"Removed {curr_user_email} to group "})
     else:
