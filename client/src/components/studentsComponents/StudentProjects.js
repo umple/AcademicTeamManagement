@@ -110,35 +110,49 @@ function StudentProjects () {
           {t('project.student-projects')}
         </Typography>
       </Box>
-      <Box mt={4}>
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item md={4}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpen}
-              disabled={!group}
-              style={{ width: '80%' }}
-              startIcon={<AddIcon />}
+      <Box mt={5}>
+        <Grid
+          container
+          spacing={1}
+          justifyContent="center"
+          alignItems="center"
+          style={{ display: 'block' }}
+          >
+          <Grid
+            item container
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: 1,
+              px: 3
+            }}
             >
-              {t('project.student-add-project')}
-            </Button>
-
-            <Tooltip
-              title={t('project.make-sure-join-group')}
-              arrow
-            >
-              <IconButton>
-                <InfoIcon />
-              </IconButton>
-            </Tooltip>
-          </Grid>
-          <Grid item md={4}>
+            <Box>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOpen}
+                disabled={!group}
+                style={{ marginLeft: '1rem' }}
+                startIcon={<AddIcon />}
+              >
+                {t('project.student-add-project')}
+              </Button>
+              <Tooltip
+                title={t('project.make-sure-join-group')}
+                arrow
+              >
+                <IconButton>
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
             <TextField
               id="search"
               label={t('project.search-by-project')}
               variant="outlined"
-              style={{ width: '100%' }}
+              size='small'
+              style={{ width: '50%' }}
               onChange={handleSearch}
               InputProps={{
                 startAdornment: (

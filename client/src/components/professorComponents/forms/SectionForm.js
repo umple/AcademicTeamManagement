@@ -111,6 +111,11 @@ const SectionForm = ({
                     </FormControl>
                   )
                 }
+
+                if (!update && column.accessorKey === 'lock') {
+                  return null
+                }
+
                 return (
                   <TextField
                   key={column.accessorKey}
