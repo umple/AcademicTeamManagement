@@ -51,6 +51,30 @@ def get_project_applications(student_email):
         return None
     return project_applications
 
+def get_project_applications_by_group_id(group_id):
+    try:
+        project_applications = []
+        project_applications_for_group = projectApplicationCollection.find({"group_id": group_id})
+        for document in project_applications_for_group:
+            document["_id"] = str(document["_id"])
+            project_applications.append(document)
+        return project_applications
+    except Exception as e:
+        print(f"An error occurred while updating project : {e}")
+        return None
+    
+def get_project_applications_by_project(project):
+    try:
+        project_applications = []
+        project_applications_for_group = projectApplicationCollection.find({"project": project})
+        for document in project_applications_for_group:
+            document["_id"] = str(document["_id"])
+            project_applications.append(document)
+        return project_applications
+    except Exception as e:
+        print(f"An error occurred while updating project : {e}")
+        return None
+
 
 def request_project_application(project_name, student_email, group_id):
     try:
