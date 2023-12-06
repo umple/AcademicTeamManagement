@@ -147,6 +147,14 @@ def reviewApplication(applicationObject):
     result = projectApplicationCollection.update_one({"_id": id}, {"$set" : applicationObject})
     return result, 200
 
+def delete_application_by_id(id):
+    try:
+        result = projectApplicationCollection.delete_one({"_id": ObjectId(id)})
+        return result
+    except Exception as e:
+        print(e)
+        return None
+
 def _reject_other_applications(accepted_project_id, project_name):
     try:
         project_applications = projectApplicationCollection.find({"project": project_name})
