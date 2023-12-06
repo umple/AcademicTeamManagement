@@ -33,6 +33,25 @@ const ViewApplicationModal = ({
     setStatus(e.target.value)
   }
 
+  const handleDeleteApplication = (e) => {
+    e.preventDefault()
+    fetch(`api/application/delete/${data._id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then(() => {
+        fetchApplications()
+        setShowAlert(true)
+        setTimeout(() => setShowAlert(false), 5000)
+      })
+    onClose()
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     data.status = status
@@ -129,16 +148,25 @@ const ViewApplicationModal = ({
               </Box>
             </Stack>
           </DialogContent>
-          <DialogActions sx={{ p: '1.25rem' }}>
-            <Button onClick={onClose}>{t('common.Cancel')}</Button>
+          <DialogActions sx={{ p: '1.25rem', justifyContent: 'space-between' }}>
             <Button
-              color="secondary"
-              type="submit"
-              onClick={handleSubmit}
-              variant="contained"
+              color="error"
+              sx={{ marginLeft: '0' }}
+              onClick={handleDeleteApplication}
             >
-              {t('common.Save')}
+              {t('common.Delete')}
             </Button>
+            <Box>
+              <Button onClick={onClose}>{t('common.Cancel')}</Button>
+              <Button
+                color="secondary"
+                type="submit"
+                onClick={handleSubmit}
+                variant="contained"
+              >
+                {t('common.Save')}
+              </Button>
+            </Box>
           </DialogActions>
         </form>
       </Dialog>
