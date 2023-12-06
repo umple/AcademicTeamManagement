@@ -107,8 +107,16 @@ const MyGroup = () => {
     }
   }
 
+  const isLastStudentInGroup = () => {
+    return !(group && group.members && group.members.length > 1)
+  }
+
   const handleLeaveGroup = async () => {
     try {
+      if (isLastStudentInGroup()) {
+        alert('There should be at least one member in the group')
+        return
+      }
       const response = await fetch(`api/remove/group/member/${group.group_id}`, {
         method: 'DELETE',
         headers: {
@@ -125,6 +133,7 @@ const MyGroup = () => {
       setShowAlert(true)
       setTimeout(() => setShowAlert(false), 4000)
       setGroup({})
+      setProjectApplications({})
     } catch (error) {
       console.error(error)
     }
