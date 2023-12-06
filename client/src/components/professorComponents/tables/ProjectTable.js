@@ -105,7 +105,6 @@ const ProjectTable = () => {
         accessorKey: 'group',
         header: t('project.group'),
         Cell: ({ cell }) => {
-          console.log(cell.row.original.group)
           if (userType === ROLES.PROFESSOR) {
             return (
               <Link
