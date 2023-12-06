@@ -2,6 +2,7 @@ from .__init__ import db
 from bson import ObjectId
 import app.models.student as student
 import app.models.project as project
+import app.models.project_application as project_application
 import app.models.section as section
 
 groupCollection = db["groups"]
@@ -139,7 +140,10 @@ def update_group_by_id(id, group_obj):
         else:
             group_obj["members"] = []
 
-        if original_group["group_id"] != group_obj["group_id"]:
+        if original_group["group_id"] != group_obj["group_id"]:          
+            # update the project applications related to have the group name
+            _update_group_name_to_project_applications(original_group["group_id"], group_obj["group_id"])
+            
             for orgdefinedId in group_obj["members"]:
                 result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
                 
@@ -268,6 +272,11 @@ def _update_group_lock_for_new_section(new_section_name):
     new_section = section.get_section_by_name(new_section_name)
     if "lock" in new_section:
         return new_section["lock"]
-    return False
-    
-    
+    return False  
+
+# update the project applications related to have the group name
+def _update_group_name_to_project_applications(old_grpoup_name, new_group_name):
+    project_application_list = project_application.get_project_applications_by_group_id(old_grpoup_name)
+    for project_app in project_application_list:
+        project_app["group_id"] = new_group_name
+        _ = project_application.update_project_application_by_id(project_app["_id"], project_app)
