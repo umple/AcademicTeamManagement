@@ -237,6 +237,7 @@ def delete_group_by_id(id):
     result = groupCollection.delete_one({"_id": ObjectId(id)})
     project.change_status(originalGroup["project"], "Available")
     project.remove_group_from_project(originalGroup["project"])
+    project_application.remove_applications_of_group(originalGroup["group_id"])
 
     return result
 

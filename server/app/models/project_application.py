@@ -86,6 +86,14 @@ def request_project_application(project_name, student_email, group_id):
         print(e)
         return e, 500
 
+def remove_applications_of_group(group_id):
+    try:
+        result = projectApplicationCollection.delete_many({"group_id": group_id})
+        return result, 200
+    except Exception as e:
+        print(e)
+        return e, 500
+    
 
 
 def create_application(project_name, student_email, group_name):
