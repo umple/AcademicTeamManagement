@@ -303,7 +303,7 @@ const ProjectTable = () => {
                           return null
                         }
                         return (
-                          <TableRow key={row.id}>
+                          <TableRow key={row.id + application.group_id}>
                             <TableCell>{application.group_id}</TableCell>
                             <TableCell align="right">
                               <Chip
