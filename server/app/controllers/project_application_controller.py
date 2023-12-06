@@ -44,6 +44,17 @@ def review_application():
         print(e)
         return {"message": "Internal server error."}, 500
     
+@project_application_bp.route("/application/delete/<id>", methods=["DELETE"])
+def delete_application(id):
+    try:
+        result = projectApplication.delete_application_by_id(id)
+        if result:
+            return jsonify(str(result.deleted_count)), 200
+        else:
+            return {"message": "Could not delete Project application."}, 404
+    except:
+        return {"message": "Internal server error."}, 503
+    
 
 @project_application_bp.route("/assign/project/to/group", methods=["POST"])
 def assign_project_to_group():
