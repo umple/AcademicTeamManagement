@@ -140,8 +140,24 @@ def reviewApplication(applicationObject):
             return False, 400
         group.add_project_to_group(applicationObject["group_id"], applicationObject["project"])
         project.change_status(applicationObject["project"], "Underway")
+        _reject_other_applications(applicationObject["_id"], applicationObject["project"])
     # x = applicationObject.pop(applicationObject["_id"], None)
     id = ObjectId(applicationObject["_id"])
     applicationObject.pop("_id", None)
     result = projectApplicationCollection.update_one({"_id": id}, {"$set" : applicationObject})
     return result, 200
+
+def _reject_other_applications(accepted_project_id, project_name):
+    try:
+        project_applications = projectApplicationCollection.find({"project": project_name})
+        for document in project_applications:
+            if str(document["_id"]) == accepted_project_id:
+                continue
+            
+            _ = projectApplicationCollection.update_one(
+                {"_id": document["_id"]},
+                {"$set": {"status": "Rejected"}}
+            )
+    except Exception as e:
+        print(e)
+    
