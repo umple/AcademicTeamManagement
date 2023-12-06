@@ -31,8 +31,9 @@ const ProjectCard = ({
 
     try {
       const response = await projectService.requestToJoinProject(body)
-      if (response.success) {
+      if (response === 'Application Sent!') {
         setShowAlert(true)
+        setTimeout(() => setShowAlert(false), 3000)
       }
     } catch (error) {
       setErrorShowAlert(true)
