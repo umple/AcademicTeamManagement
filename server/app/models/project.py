@@ -47,7 +47,12 @@ def add_project(project_obj):
         return None
 
 def update_project_by_id(id, updated_fields):
+    original_project = get_project(id)   
     updated_fields.pop("_id", None)
+
+    if original_project and (original_project["project"] != updated_fields["project"]):          
+        # update the project applications related to have the new project name
+        _update_project_name_to_project_applications(original_project["project"], updated_fields["project"])
 
     result = projectCollection.update_one(
         {"_id": ObjectId(id)},
@@ -100,3 +105,9 @@ def add_interested_group_to_project(project_name, group_id):
             {"$push": {"interested groups": group_id}}
         ) 
     return result
+
+def _update_project_name_to_project_applications(old_project_name, new_project_name):
+    project_application_list = project_application.get_project_applications_by_project(old_project_name)
+    for project_app in project_application_list:
+        project_app["project"] = new_project_name
+        _ = project_application.update_project_application_by_id(project_app["_id"], project_app)

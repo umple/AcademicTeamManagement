@@ -148,7 +148,8 @@
         "request-sent": "Demande de Projet Envoyée",
         "request-already-sent": "Demande de Projet Déjà Envoyée",
         "make-sure-join-group": "Assurez-vous de rejoindre un groupe avant d'ajouter un projet",
-        "search-by-project": "Recherchez par nom de projet"
+        "search-by-project": "Recherchez par nom de projet",
+        "show-new-requests": "Afficher les nouvelles demandes"
     },
     "status": {
         "Accepted":"Accepté",

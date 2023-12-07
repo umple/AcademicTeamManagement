@@ -26,6 +26,7 @@ const StudentGroupTable = () => {
   const [tableData, setTableData] = useState({})
   const [students, setStudents] = useState([])
   const [group, setGroup] = useState()
+  const [groupMembers, setGroupMembers] = useState([])
   const [professorEmail, setProfessorEmail] = useState('')
   const [isCurrentUserInGroup, setisCurrentUserInGroup] = useState(false)
   const [currentStudent, setCurrentStudent] = useState({})
@@ -192,6 +193,7 @@ const StudentGroupTable = () => {
       const groupData = await groupService.getCurrGroup()
       if (!groupData.error) {
         groupData && setGroup(groupData?.group_id)
+        groupData && setGroupMembers(groupData?.members)
         setisCurrentUserInGroup(true)
       }
     } catch (error) {
@@ -304,7 +306,15 @@ const StudentGroupTable = () => {
                     })
                 }
 
+                const isLastStudentInGroup = () => {
+                  return !(group && groupMembers.length > 1)
+                }
+
                 const handleLeaveGroup = () => {
+                  if (isLastStudentInGroup()) {
+                    alert('There should be at least one member in the group')
+                    return
+                  }
                   fetch(`api/remove/group/member/${group}`, {
                     method: 'DELETE',
                     headers: {

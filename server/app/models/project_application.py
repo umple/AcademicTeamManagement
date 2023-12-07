@@ -51,6 +51,30 @@ def get_project_applications(student_email):
         return None
     return project_applications
 
+def get_project_applications_by_group_id(group_id):
+    try:
+        project_applications = []
+        project_applications_for_group = projectApplicationCollection.find({"group_id": group_id})
+        for document in project_applications_for_group:
+            document["_id"] = str(document["_id"])
+            project_applications.append(document)
+        return project_applications
+    except Exception as e:
+        print(f"An error occurred while updating project : {e}")
+        return None
+    
+def get_project_applications_by_project(project):
+    try:
+        project_applications = []
+        project_applications_for_group = projectApplicationCollection.find({"project": project})
+        for document in project_applications_for_group:
+            document["_id"] = str(document["_id"])
+            project_applications.append(document)
+        return project_applications
+    except Exception as e:
+        print(f"An error occurred while updating project : {e}")
+        return None
+
 
 def request_project_application(project_name, student_email, group_id):
     try:
@@ -62,6 +86,14 @@ def request_project_application(project_name, student_email, group_id):
         print(e)
         return e, 500
 
+def remove_applications_of_group(group_id):
+    try:
+        result = projectApplicationCollection.delete_many({"group_id": group_id})
+        return result, 200
+    except Exception as e:
+        print(e)
+        return e, 500
+    
 
 
 def create_application(project_name, student_email, group_name):
@@ -108,8 +140,32 @@ def reviewApplication(applicationObject):
             return False, 400
         group.add_project_to_group(applicationObject["group_id"], applicationObject["project"])
         project.change_status(applicationObject["project"], "Underway")
+        _reject_other_applications(applicationObject["_id"], applicationObject["project"])
     # x = applicationObject.pop(applicationObject["_id"], None)
     id = ObjectId(applicationObject["_id"])
     applicationObject.pop("_id", None)
     result = projectApplicationCollection.update_one({"_id": id}, {"$set" : applicationObject})
     return result, 200
+
+def delete_application_by_id(id):
+    try:
+        result = projectApplicationCollection.delete_one({"_id": ObjectId(id)})
+        return result
+    except Exception as e:
+        print(e)
+        return None
+
+def _reject_other_applications(accepted_project_id, project_name):
+    try:
+        project_applications = projectApplicationCollection.find({"project": project_name})
+        for document in project_applications:
+            if str(document["_id"]) == accepted_project_id:
+                continue
+            
+            _ = projectApplicationCollection.update_one(
+                {"_id": document["_id"]},
+                {"$set": {"status": "Rejected"}}
+            )
+    except Exception as e:
+        print(e)
+    

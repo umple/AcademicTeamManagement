@@ -148,7 +148,8 @@
         "request-sent": "Project Request Sent",
         "request-already-sent": "Project Application Already Sent",
         "make-sure-join-group": "Make sure to join a group before adding a project",
-        "search-by-project": "Search by project name"
+        "search-by-project": "Search by project name",
+        "show-new-requests": "Show New Requests"
     },
     "status": {
         "Accepted":"Accepted",

@@ -104,7 +104,7 @@ def student_unlock_group_by_id():
         return {"message": "An error occurred: " + str(e)}, 500
 
 
-# DELETE Request to remove a student from the collection
+# DELETE Request to remove a group from the collection
 @group_bp.route("/group/delete/<id>", methods=["DELETE"])
 def delete_group_by_id(id):
     try:

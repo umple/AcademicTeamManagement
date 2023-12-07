@@ -19,6 +19,7 @@ import {
   Snackbar
 } from '@mui/material'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { ExportToCsv } from 'export-to-csv'
 import { Delete, Edit } from '@mui/icons-material'
 import Chip from '@mui/material/Chip'
@@ -105,7 +106,6 @@ const ProjectTable = () => {
         accessorKey: 'group',
         header: t('project.group'),
         Cell: ({ cell }) => {
-          console.log(cell.row.original.group)
           if (userType === ROLES.PROFESSOR) {
             return (
               <Link
@@ -153,6 +153,7 @@ const ProjectTable = () => {
   const [editModalOpen, setEditModalOpen] = useState(false)
 
   const [refreshTrigger, setRefreshTrigger] = useState(false)
+  const [isShowApplicationsEnabled, setIsShowApplicationsEnabled] = useState(true)
 
   const [editingRow, setEditingRow] = useState(null)
 
@@ -220,6 +221,11 @@ const ProjectTable = () => {
       })
   }
 
+  const handleShowNewApplications = () => {
+    setIsShowApplicationsEnabled(false)
+    setTimeout(() => setIsShowApplicationsEnabled(true), 100)
+  }
+
   const handleDeletion = async (row) => {
     try {
       await projectService.delete(row.original._id)
@@ -268,6 +274,7 @@ const ProjectTable = () => {
           }
         }}
         enablePagination={false}
+        enableExpandAll={isShowApplicationsEnabled}
         columns={columns}
         data={showAllRows ? tableData : tableData.slice(0, pageSize)}
         localization={tableLocalization}
@@ -303,8 +310,11 @@ const ProjectTable = () => {
                         if (row.original.project !== application.project) {
                           return null
                         }
+                        if (application.status === 'Requested') {
+                          row.original.highlighted = true
+                        }
                         return (
-                          <TableRow key={row.id}>
+                          <TableRow key={row.id + application.group_id}>
                             <TableCell>{application.group_id}</TableCell>
                             <TableCell align="right">
                               <Chip
@@ -389,8 +399,23 @@ const ProjectTable = () => {
             >
               {t('common.export-data')}
             </Button>
+            <Button
+              color="warning"
+              onClick={() => handleShowNewApplications()}
+              startIcon={<VisibilityIcon />}
+              variant="contained"
+            >
+              {t('project.show-new-requests')}
+            </Button>
           </Box>
         )}
+        muiTableBodyRowProps={({ row }) => {
+          return {
+            sx: {
+              backgroundColor: row.original && row.original.highlighted ? '#ffcccb' : 'inherit'
+            }
+          }
+        }}
       />
       { pageSize === DEFAULT_PAGE_SIZE &&
         pageSize < tableData.length &&
