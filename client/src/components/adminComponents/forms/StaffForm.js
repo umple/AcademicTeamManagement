@@ -68,6 +68,15 @@ const StaffForm = ({
     }
   }
 
+  // collect the staff (either admin of professor) emails
+  const staffEmails = (staffData) => {
+    const staffEmailsArray = staffData
+      ?.filter(member => member.role !== 'TA') // Exclude members with role 'TA'
+      .map(member => member.email)
+      .filter(email => email) || []
+    return staffEmailsArray
+  }
+
   const handleClose = () => {
     setCreateModalOpen(false)
     setUpdate(false)
@@ -166,7 +175,10 @@ const StaffForm = ({
 
                 if ((column.accessorKey === 'linked_professor') && (values.role === ROLES.TA)) {
                   return (
-                    <TextField
+                    <FormGroup>
+                    <InputLabel id="linked-professor-label">{t('staff.professor-assigned')}</InputLabel>
+                    <Select
+                      labelId="linked-professor-label"
                       key={column.accessorKey}
                       label={column.header}
                       name={column.accessorKey}
@@ -174,12 +186,21 @@ const StaffForm = ({
                       onChange={handleChange}
                       onBlur={handleBlur}
                       error={Boolean(
-                        touched[column.accessorKey] && errors[column.accessorKey]
+                        touched[column.accessorKey] &&
+                          errors[column.accessorKey]
                       )}
                       helperText={
-                        touched[column.accessorKey] && errors[column.accessorKey]
+                        touched[column.accessorKey] &&
+                        errors[column.accessorKey]
                       }
-                    />
+                    >
+                      {staffEmails(staffs).map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormGroup>
                   )
                 }
 
