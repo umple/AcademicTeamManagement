@@ -250,14 +250,6 @@ const GroupTable = () => {
         if (userType === ROLES.ADMIN) {
           setTableData(groups.groups) // show all data for admin users
         } else {
-          const professorEmail = () => {
-            const userType = JSON.parse(localStorage.getItem('userType'))
-            if (userType === 'TA') {
-              return JSON.parse(localStorage.getItem('userLinkedProfessor'))
-            } else {
-              return JSON.parse(localStorage.getItem('userEmail'))
-            }
-          }
           const filteredGroupTableData = FilterDataByProfessor(
             groups.groups,
             professorEmail()
