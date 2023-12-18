@@ -84,7 +84,7 @@ const SectionTable = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false)
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
   const [showAllRows, setShowAllRows] = useState(false)
-  const [isUserTA, setIsUserTA] = useState(false)
+  const [isUserTA, setIsUserTA] = useState(null)
 
   // Expand the table to include rows for all table data
   const handleExpandTable = () => {
@@ -133,6 +133,7 @@ const SectionTable = () => {
       >
         {t('common.Sections')}
       </Typography>
+      { isUserTA && (
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -154,7 +155,7 @@ const SectionTable = () => {
           minSize: 100,
           size: 150 // default size is usually 180
         }}
-        enableEditing
+        enableEditing={!isUserTA}
         initialState={{ showColumnFilters: false, density: 'compact' }}
         // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
@@ -213,6 +214,7 @@ const SectionTable = () => {
           </Box>
         )}
       />
+      )}
 
       {pageSize === DEFAULT_PAGE_SIZE &&
         pageSize < tableData.length &&
