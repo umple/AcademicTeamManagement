@@ -19,9 +19,15 @@ def add_group(group_obj):
         if group_obj.members:
             for org in group_obj.members:
                 student.assign_group_to_student(org, groupName=group_obj.group_id)
+                
+        # Create project applications if students are interested in projects
+        _create_project_applications_for_interested_projects(group_obj)
 
-        project.add_group_to_project(group_obj.project, group_obj.group_id)
-        project.change_status(group_obj.project, "Underway")
+        # add project to group if it exists
+        if group_obj.project and group_obj.project != '':
+            project.add_group_to_project(group_obj.project, group_obj.group_id)
+            project.change_status(group_obj.project, "Underway")
+        
         result = groupCollection.insert_one(group_obj.to_json())
         return result
     except Exception as e:
@@ -281,3 +287,15 @@ def _update_group_name_to_project_applications(old_grpoup_name, new_group_name):
     for project_app in project_application_list:
         project_app["group_id"] = new_group_name
         _ = project_application.update_project_application_by_id(project_app["_id"], project_app)
+        
+# Create project applications if students are interested in projects
+def _create_project_applications_for_interested_projects(group_obj):
+    if group_obj.interest and len(group_obj.interest) > 0:
+        # get the email of the student who submitted the group application
+        # if exists, or just assign the group id to it
+        student_email = group_obj.group_id
+        if group_obj.members and len(group_obj.members) > 0:
+            student_email = student.get_student_email_by_orgdefinedid(group_obj.members[0])
+            
+        for project_name in group_obj.interest:
+            project_application.create_application(project_name, student_email, group_obj.group_id)
