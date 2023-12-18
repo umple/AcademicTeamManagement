@@ -35,8 +35,6 @@ export const getUserLinkedProfessor = async () => {
 }
 
 export const clearCachedUserLinkedProfessor = () => {
-  if (cachedUserLinkedProfessor) {
-    cachedUserLinkedProfessor = null // Clear the cached value from memory
-    localStorage.removeItem(CACHE_KEY) // Remove the cached value from local storage
-  }
+  cachedUserLinkedProfessor = null // Clear the cached value from memory
+  localStorage.removeItem(CACHE_KEY) // Remove the cached value from local storage
 }

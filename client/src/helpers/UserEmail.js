@@ -29,8 +29,6 @@ export const getUserEmail = async () => {
 }
 
 export const clearCachedUserEmail = () => {
-  if (cachedUserEmail) {
-    cachedUserEmail = null // Clear the cached value from memory
-    localStorage.removeItem(CACHE_KEY) // Remove the cached value from local storage
-  }
+  cachedUserEmail = null // Clear the cached value from memory
+  localStorage.removeItem(CACHE_KEY) // Remove the cached value from local storage
 }

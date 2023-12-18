@@ -19,7 +19,6 @@ import sectionService from '../../services/sectionService'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { FilterDataByProfessor } from '../../helpers/FilterDataByProfessor'
-import { professorEmail } from '../../helpers/GetProfessorEmail'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,12 +93,14 @@ const HomePage = () => {
           </Grid>
         </Grid>
       </Container>
-      <DashBoardInfo></DashBoardInfo>
+      { professorEmail && (
+        <DashBoardInfo professorEmail={professorEmail}></DashBoardInfo>
+      )}
     </div>
   )
 }
 
-const DashBoardInfo = () => {
+const DashBoardInfo = ({ professorEmail }) => {
   const [studentsCount, setStudentCount] = useState(0)
   const [groupsCount, setGroupCount] = useState(0)
   const [projectsCount, setProjectCount] = useState(0)
@@ -114,7 +115,7 @@ const DashBoardInfo = () => {
       if (students.students) {
         const filteredStudentsTableData = FilterDataByProfessor(
           students.students,
-          professorEmail()
+          professorEmail
         ) // keep only the data that contains the professor's email
         setStudentCount(filteredStudentsTableData.length ?? 0)
       }
@@ -131,7 +132,7 @@ const DashBoardInfo = () => {
       if (projects.projects) {
         const filteredProjectsTableData = FilterDataByProfessor(
           projects.projects,
-          professorEmail()
+          professorEmail
         ) // keep only the data that contains the professor's email
         setProjectCount(filteredProjectsTableData.length ?? 0)
       }
@@ -148,7 +149,7 @@ const DashBoardInfo = () => {
       if (groups.groups) {
         const filteredGroupsTableData = FilterDataByProfessor(
           groups.groups,
-          professorEmail()
+          professorEmail
         ) // keep only the data that contains the professor's email
         setGroupCount(filteredGroupsTableData.length ?? 0)
       }
