@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
+import { getUserEmail } from '../../../helpers/UserEmail'
 import staffService from '../../../services/staffService'
 import Staff from '../../../entities/Staff'
 import staffSchema from '../../../schemas/staffSchema'
@@ -32,7 +33,8 @@ const StaffForm = ({
 }) => {
   const cellValueMap = [
     { value: 'admin', label: 'primary' },
-    { value: 'professor', label: 'secondary' }
+    { value: 'professor', label: 'secondary' },
+    { value: 'TA', label: 'secondary' }
   ]
   const [isloading, setIsLoading] = useState(false)
   const { t } = useTranslation()
@@ -40,6 +42,11 @@ const StaffForm = ({
   const onSubmit = async (values, actions) => {
     try {
       setIsLoading(true)
+      // check if the staff is a TA
+      if (values.role === 'TA') {
+        const Linked_professor_Email = await getUserEmail()
+        values.linked_professor = Linked_professor_Email ?? ''
+      }
       if (update) {
         await staffService.update(editingRow._id, values)
       } else {
