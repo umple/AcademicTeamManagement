@@ -64,6 +64,15 @@ const ResponsiveAppBar = () => {
     page5: { key: t('header.navbar.sections'), value: '/Sections' }
   }
 
+  // Nav elements to display for the professor
+  const TAPages = {
+    page1: { key: t('header.navbar.home'), value: '/HomeTA' },
+    page2: { key: t('header.navbar.projects'), value: '/ProjectsTA' },
+    page3: { key: t('header.navbar.groups'), value: '/GroupViewTA' },
+    page4: { key: t('header.navbar.students'), value: '/StudentsTA' },
+    page5: { key: t('header.navbar.sections'), value: '/SectionsTA' }
+  }
+
   // Nav elements to display for the admin
   const adminPages = {
     page1: { key: t('header.navbar.home'), value: '/AdminHome' },
@@ -98,6 +107,10 @@ const ResponsiveAppBar = () => {
 
     case 'professor':
       pages = professorPages
+      break
+
+    case 'TA':
+      pages = TAPages
       break
 
     case 'admin':
