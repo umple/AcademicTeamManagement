@@ -5,6 +5,7 @@ class Staff {
     this._firstname = props.firstname || ''
     this._role = props.role || ''
     this._email = props.email || ''
+    this._linked_professor = props.linked_professor || ''
   }
 
   // Getter methods
@@ -28,6 +29,10 @@ class Staff {
     return this._email
   }
 
+  get linked_professor () {
+    return this._linked_professor
+  }
+
   // Setter methods
   set username (username) {
     this._username = username
@@ -49,11 +54,16 @@ class Staff {
     this._email = email
   }
 
+  set linked_professor (linked_professor) {
+    this._linked_professor = linked_professor
+  }
+
   toRequestBody () {
     return {
       firstname: this._firstname,
       lastname: this._lastname,
       email: this._email,
+      linked_professor: this._linked_professor,
       role: this._role,
       username: this._username
     }
@@ -64,6 +74,7 @@ class Staff {
       firstname: this._firstname,
       lastname: this._lastname,
       email: this._email,
+      linked_professor: this._linked_professor,
       role: this._role,
       username: this._username
     }

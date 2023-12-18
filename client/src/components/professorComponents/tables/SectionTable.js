@@ -15,6 +15,7 @@ import { ExportToCsv } from 'export-to-csv'
 import MaterialReactTable from 'material-react-table'
 import React, { useEffect, useMemo, useState } from 'react'
 import { csvOptions, handleExportData } from '../../../helpers/exportData'
+import { getUserType } from '../../../helpers/UserType'
 import sectionService from '../../../services/sectionService'
 import SectionForm from '../forms/SectionForm'
 import ConfirmDeletionModal from '../../common/ConfirmDeletionModal'
@@ -83,11 +84,17 @@ const SectionTable = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false)
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
   const [showAllRows, setShowAllRows] = useState(false)
+  const [isUserTA, setIsUserTA] = useState(null)
 
   // Expand the table to include rows for all table data
   const handleExpandTable = () => {
     setShowAllRows(true)
     setPageSize(tableData.length)
+  }
+
+  const fetchUserRole = async () => {
+    const userType = await getUserType()
+    setIsUserTA(userType === 'TA')
   }
 
   const fetchSections = async () => {
@@ -100,6 +107,7 @@ const SectionTable = () => {
   }
 
   useEffect(() => {
+    fetchUserRole()
     fetchSections()
   }, [refreshTrigger])
 
@@ -125,6 +133,7 @@ const SectionTable = () => {
       >
         {t('common.Sections')}
       </Typography>
+      { (isUserTA !== null) && (
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
@@ -146,7 +155,7 @@ const SectionTable = () => {
           minSize: 100,
           size: 150 // default size is usually 180
         }}
-        enableEditing
+        enableEditing={!isUserTA}
         initialState={{ showColumnFilters: false, density: 'compact' }}
         // onEditingRowSave={handleSaveRowEdits}
         renderRowActions={({ row, table }) => (
@@ -190,6 +199,7 @@ const SectionTable = () => {
               onClick={() => setCreateModalOpen(true)}
               variant="contained"
               name="create-new-section"
+              disabled={isUserTA}
             >
               {t('section.add-section')}
             </Button>
@@ -204,6 +214,7 @@ const SectionTable = () => {
           </Box>
         )}
       />
+      )}
 
       {pageSize === DEFAULT_PAGE_SIZE &&
         pageSize < tableData.length &&

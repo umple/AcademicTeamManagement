@@ -14,10 +14,12 @@ import {
 } from '@mui/material'
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
+import { getUserEmail } from '../../../helpers/UserEmail'
 import staffService from '../../../services/staffService'
 import Staff from '../../../entities/Staff'
 import staffSchema from '../../../schemas/staffSchema'
 import { useTranslation } from 'react-i18next'
+import { ROLES } from '../../../helpers/Roles'
 
 const StaffForm = ({
   open,
@@ -31,8 +33,9 @@ const StaffForm = ({
   setEditingRow
 }) => {
   const cellValueMap = [
-    { value: 'admin', label: 'primary' },
-    { value: 'professor', label: 'secondary' }
+    { value: ROLES.ADMIN, label: 'primary' },
+    { value: ROLES.PROFESSOR, label: 'secondary' },
+    { value: ROLES.TA, label: 'secondary' }
   ]
   const [isloading, setIsLoading] = useState(false)
   const { t } = useTranslation()
@@ -40,6 +43,13 @@ const StaffForm = ({
   const onSubmit = async (values, actions) => {
     try {
       setIsLoading(true)
+      // check if the staff is a TA
+      if (values.role === ROLES.TA && values.linked_professor === '') {
+        const Linked_professor_Email = await getUserEmail()
+        values.linked_professor = Linked_professor_Email ?? ''
+      } else if (update && values.role !== ROLES.TA) {
+        values.linked_professor = ''
+      }
       if (update) {
         await staffService.update(editingRow._id, values)
       } else {
@@ -56,6 +66,15 @@ const StaffForm = ({
       actions.resetForm()
       handleClose()
     }
+  }
+
+  // collect the staff (either admin of professor) emails
+  const staffEmails = (staffData) => {
+    const staffEmailsArray = staffData
+      ?.filter(member => member.role !== 'TA') // Exclude members with role 'TA'
+      .map(member => member.email)
+      .filter(email => email) || []
+    return staffEmailsArray
   }
 
   const handleClose = () => {
@@ -153,6 +172,42 @@ const StaffForm = ({
                     </FormGroup>
                   )
                 }
+
+                if ((column.accessorKey === 'linked_professor') && (values.role === ROLES.TA)) {
+                  return (
+                    <FormGroup>
+                    <InputLabel id="linked-professor-label">{t('staff.professor-assigned')}</InputLabel>
+                    <Select
+                      labelId="linked-professor-label"
+                      key={column.accessorKey}
+                      label={column.header}
+                      name={column.accessorKey}
+                      value={values[column.accessorKey]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={Boolean(
+                        touched[column.accessorKey] &&
+                          errors[column.accessorKey]
+                      )}
+                      helperText={
+                        touched[column.accessorKey] &&
+                        errors[column.accessorKey]
+                      }
+                    >
+                      {staffEmails(staffs).map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormGroup>
+                  )
+                }
+
+                if ((column.accessorKey === 'linked_professor') && (!update || (values.role !== ROLES.TA))) {
+                  return null
+                }
+
                 return (
                   <TextField
                     key={column.accessorKey}

@@ -23,6 +23,7 @@ import Group from '../../../entities/Group'
 import groupService from '../../../services/groupService'
 import createGroupSchema from '../../../schemas/createGroupSchema'
 import { useTranslation } from 'react-i18next'
+import { professorEmail } from '../../../helpers/GetProfessorEmail'
 
 const GroupForm = ({
   open,
@@ -65,7 +66,7 @@ const GroupForm = ({
     update
       ? new Group(editingRow)
       : new Group({
-        professorEmail: JSON.parse(localStorage.getItem('userEmail'))
+        professorEmail: professorEmail()
       })
   )
 

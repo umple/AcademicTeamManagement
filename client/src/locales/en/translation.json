@@ -122,7 +122,8 @@
         "staff": "Staff",
         "add-staff": "Create Staff",
         "edit-staff": "Edit Staff",
-        "role": "Role"
+        "role": "Role",
+        "professor-assigned": "Professor Assigned To"
     },
     "project": {
         "project-name":"Project Name",

@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardMedia from '@material-ui/core/CardMedia'
 import { getUserEmail } from '../../helpers/UserEmail'
+import { getUserType } from '../../helpers/UserType'
+import { getUserLinkedProfessor } from '../../helpers/UserLinkedProfessor'
 import Box from '@mui/material/Box'
 import { CardContent } from '@mui/material'
 import GroupsSharpIcon from '@mui/icons-material/GroupsSharp'
@@ -47,15 +49,25 @@ const HomePage = () => {
   const classes = useStyles()
   const [professorEmail, setProfessorEmail] = useState(null)
 
+  const fetchUserEmail = async () => {
+    try {
+      const type = await getUserType()
+
+      if (type === 'TA') {
+        const email = await getUserLinkedProfessor()
+        setProfessorEmail(email)
+      } else {
+        const email = await getUserEmail()
+        setProfessorEmail(email)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   // Cache the value of the professor's email
   useEffect(() => {
-    getUserEmail()
-      .then((email) => {
-        setProfessorEmail(email)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    fetchUserEmail()
   }, [professorEmail])
 
   return (
@@ -81,18 +93,19 @@ const HomePage = () => {
           </Grid>
         </Grid>
       </Container>
-      <DashBoardInfo></DashBoardInfo>
+      { professorEmail && (
+        <DashBoardInfo professorEmail={professorEmail}></DashBoardInfo>
+      )}
     </div>
   )
 }
 
-const DashBoardInfo = () => {
+const DashBoardInfo = ({ professorEmail }) => {
   const [studentsCount, setStudentCount] = useState(0)
   const [groupsCount, setGroupCount] = useState(0)
   const [projectsCount, setProjectCount] = useState(0)
   const [sectionsCount, setSectionsCount] = useState(0)
   const { t } = useTranslation()
-  const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
 
   // get students
   const fetchStudents = async () => {

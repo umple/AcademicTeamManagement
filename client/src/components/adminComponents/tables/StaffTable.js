@@ -37,7 +37,7 @@ const StaffTable = () => {
     setTableLocalization(getTableLocalization(currentLanguage))
   }, [currentLanguage])
 
-  const defaultColumns = useMemo(
+  const columns = useMemo(
     () => [
       {
         accessorKey: 'email',
@@ -58,12 +58,15 @@ const StaffTable = () => {
       {
         accessorKey: 'role',
         header: t('staff.role')
+      },
+      {
+        accessorKey: 'linked_professor',
+        header: t('staff.professor-assigned')
       }
     ],
-    []
+    [currentLanguage]
   )
   // For the create profile modal
-  const [columns] = useState(defaultColumns)
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState([])
   const [deletion, setOpenDeletion] = useState(false)

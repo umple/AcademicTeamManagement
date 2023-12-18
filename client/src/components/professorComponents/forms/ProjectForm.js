@@ -22,6 +22,7 @@ import projectService from '../../../services/projectService'
 import professorProjectSchema from '../../../schemas/professorProjectSchema'
 import statusByValue from '../../common/StatusHelper'
 import { useTranslation } from 'react-i18next'
+import { professorEmail } from '../../../helpers/GetProfessorEmail'
 
 const ProjectForm = ({
   open,
@@ -34,7 +35,7 @@ const ProjectForm = ({
 
   const [initialProjectValues] = useState(
     new Project({
-      professorEmail: JSON.parse(localStorage.getItem('userEmail'))
+      professorEmail: professorEmail()
     })
   )
 

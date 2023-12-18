@@ -1,6 +1,6 @@
 from flask import jsonify, request, session
 from flask_cors import cross_origin
-from app.models import user
+from app.models import user, staff
 from app.entities.UserEntity import UserEntity
 import json
 from . import user_bp
@@ -48,6 +48,20 @@ def get_user_role_by_email():
             return jsonify(document["role"]), 200, {'Access-Control-Allow-Credentials': 'true'}
         else:
             return {"message": "Users list not found."}, 404, {'Access-Control-Allow-Credentials': 'true'}
+    except:
+        return {"message": "Internal server error."}, 503, {'Access-Control-Allow-Credentials': 'true'}
+    
+@cross_origin(supports_credentials=True)    
+@user_bp.route("/user/retrieve/user/linked/professor", methods=["GET"])
+def get_user_linked_professor_by_email():
+    try:
+        email = session.get("user")["preferred_username"]
+        user_document = user.get_user_by_email(email)
+        document = staff.get_staff_by_email(user_document["email"])
+        if document:
+            return jsonify(document["linked_professor"]), 200, {'Access-Control-Allow-Credentials': 'true'}
+        else:
+            return {"message": "User not found."}, 404, {'Access-Control-Allow-Credentials': 'true'}
     except:
         return {"message": "Internal server error."}, 503, {'Access-Control-Allow-Credentials': 'true'}
 

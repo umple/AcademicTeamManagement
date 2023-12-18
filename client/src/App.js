@@ -54,6 +54,14 @@ const App = () => {
                 <Route path="/Sections" element={<ProfessorSectionPage />}></Route>
               </Route>
 
+              <Route element={<RoleBasedRoutes allowedRole={ROLES.TA} />}>
+                <Route path="/HomeTA" element={<HomePage />}></Route>
+                <Route path="/StudentsTA" element={<ProfessorStudentPage />}></Route>
+                <Route exact path="/ProjectsTA" element={<ProfessorProjectPage />}></Route>
+                <Route path="/GroupViewTA" element={<ProfessorGroupPage />}></Route>
+                <Route path="/SectionsTA" element={<ProfessorSectionPage />}></Route>
+              </Route>
+
               <Route element={<RoleBasedRoutes allowedRole={ROLES.STUDENT} />}>
                 <Route path="/StudentHome" element={<StudentHomePage />}></Route>
                 <Route path="/StudentProjects" element={<StudentProjectPage />}></Route>

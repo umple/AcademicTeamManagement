@@ -19,6 +19,7 @@ import Student from '../../../entities/Student'
 import studentSchema from '../../../schemas/studentSchema'
 import sectionService from '../../../services/sectionService'
 import { useTranslation } from 'react-i18next'
+import { professorEmail } from '../../../helpers/GetProfessorEmail'
 
 const StudentForm = ({
   open,
@@ -69,7 +70,7 @@ const StudentForm = ({
 
   const [initialStudentValues] = useState(
     new Student({
-      professorEmail: JSON.parse(localStorage.getItem('userEmail'))
+      professorEmail: professorEmail()
     })
   )
 
