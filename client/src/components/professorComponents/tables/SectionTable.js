@@ -133,7 +133,7 @@ const SectionTable = () => {
       >
         {t('common.Sections')}
       </Typography>
-      { isUserTA && (
+      { (isUserTA !== null) && (
       <MaterialReactTable
         displayColumnDefOptions={{
           'mrt-row-actions': {
