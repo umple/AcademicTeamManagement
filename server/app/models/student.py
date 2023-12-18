@@ -32,6 +32,13 @@ def get_student_by_email(email):
     document['_id'] = str(document['_id'])
     return document
 
+def get_student_email_by_orgdefinedid(orgdefinedid):
+    document = studentsCollection.find_one({"orgdefinedid": orgdefinedid})
+    student_email = ''
+    if document:
+        student_email = str(document['email'])
+    return student_email
+
 def get_student_name_from_email(email):
     fullName = ""
     document = studentsCollection.find_one({"email": email})
