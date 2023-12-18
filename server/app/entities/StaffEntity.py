@@ -7,6 +7,7 @@ class StaffEntity:
         self._firstname = staff_data.get('firstname', '')
         self._lastname = staff_data.get('lastname', '')
         self._email = staff_data.get('email', '')
+        self._linked_professor = staff_data.get('linked_professor', '')
         self._username = staff_data.get('username', '')
         self._role = staff_data.get('role', '')
         
@@ -16,6 +17,7 @@ class StaffEntity:
             'firstname': self._firstname,
             'lastname': self._lastname,
             'email': self._email,
+            'linked_professor': self._linked_professor,
             'username': self._username,
             'role': self._role,
         }
@@ -51,6 +53,14 @@ class StaffEntity:
     @email.setter
     def email(self, email):
         self._email = email
+        
+    @property
+    def linked_professor(self):
+        return self._linked_professor
+    
+    @linked_professor.setter
+    def linked_professor(self, linked_professor):
+        self._linked_professor = linked_professor
 
     @property
     def username(self):
