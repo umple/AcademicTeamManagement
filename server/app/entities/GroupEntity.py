@@ -61,7 +61,7 @@ class GroupEntity:
     def interest(self):
         return self._interest
 
-    @members.setter
+    @interest.setter
     def interest(self, value):
         self._interest = value
 
