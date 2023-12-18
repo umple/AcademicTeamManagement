@@ -17,6 +17,7 @@ import { getUserType } from '../../../helpers/UserType'
 import groupService from '../../../services/groupService'
 import { ROLES } from '../../../helpers/Roles'
 import { FilterDataByProfessor } from '../../../helpers/FilterDataByProfessor'
+import { professorEmail } from '../../../helpers/GetProfessorEmail'
 
 const MoveStudentsModal = ({
   open,
@@ -50,10 +51,9 @@ const MoveStudentsModal = ({
         if (userType === ROLES.ADMIN) {
           setGroupsData(groups.groups) // show all data for admin users
         } else {
-          const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
           const filteredGroupTableData = FilterDataByProfessor(
             groups.groups,
-            professorEmail
+            professorEmail()
           )
           setGroupsData(filteredGroupTableData)
         }

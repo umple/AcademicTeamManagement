@@ -9,8 +9,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { clearCachedUserEmail } from '../../../helpers/UserEmail'
 import { clearCachedUserType, getUserType } from '../../../helpers/UserType'
-
 import { clearCachedUserName } from '../../../helpers/UserName'
+import { clearCachedUserLinkedProfessor } from '../../../helpers/UserLinkedProfessor'
 import './ResponsiveAppBar.css'
 
 const ResponsiveAppBar = () => {
@@ -133,6 +133,7 @@ const ResponsiveAppBar = () => {
     clearCachedUserType()
     clearCachedUserName()
     clearCachedUserEmail()
+    clearCachedUserLinkedProfessor()
     setAnchorElNav(null)
   }
 

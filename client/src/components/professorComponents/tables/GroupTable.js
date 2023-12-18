@@ -28,6 +28,7 @@ import { MRT_Localization_FR } from 'material-react-table/locales/fr'
 import { getUserType } from '../../../helpers/UserType'
 import { DEFAULT_PAGE_SIZE } from '../../../helpers/Constants'
 import { useLocation } from 'react-router-dom'
+import { professorEmail } from '../../../helpers/GetProfessorEmail'
 
 const GroupTable = () => {
   // For the create profile modal
@@ -218,10 +219,9 @@ const GroupTable = () => {
         if (userType === ROLES.ADMIN) {
           setStudents(students.students) // show all data if user is an admin
         } else {
-          const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
           const filteredStudentsTableData = FilterDataByProfessor(
             students.students,
-            professorEmail
+            professorEmail()
           ) // keep only the data that contains the professor's email
           setStudents(filteredStudentsTableData)
         }
@@ -250,10 +250,17 @@ const GroupTable = () => {
         if (userType === ROLES.ADMIN) {
           setTableData(groups.groups) // show all data for admin users
         } else {
-          const professorEmail = JSON.parse(localStorage.getItem('userEmail'))
+          const professorEmail = () => {
+            const userType = JSON.parse(localStorage.getItem('userType'))
+            if (userType === 'TA') {
+              return JSON.parse(localStorage.getItem('userLinkedProfessor'))
+            } else {
+              return JSON.parse(localStorage.getItem('userEmail'))
+            }
+          }
           const filteredGroupTableData = FilterDataByProfessor(
             groups.groups,
-            professorEmail
+            professorEmail()
           )
           setTableData(filteredGroupTableData)
         }

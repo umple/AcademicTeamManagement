@@ -42,6 +42,7 @@ import { MRT_Localization_EN } from 'material-react-table/locales/en'
 import { MRT_Localization_FR } from 'material-react-table/locales/fr'
 import MoveStudentsModal from '../forms/MoveStudentsModal'
 import { DEFAULT_PAGE_SIZE } from '../../../helpers/Constants'
+import { professorEmail } from '../../../helpers/GetProfessorEmail'
 
 const StudentTable = () => {
   // Handle translation of the page
@@ -111,6 +112,7 @@ const StudentTable = () => {
   const table = useRef(null)
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
   const [showAllRows, setShowAllRows] = useState(false)
+  const [isUserTA, setIsUserTA] = useState(false)
 
   // Expand the table to include rows for all table data
   const handleExpandTable = () => {
@@ -124,6 +126,11 @@ const StudentTable = () => {
     if (success) {
       setTimeout(() => setImportSuccess(false), 4000) // 5 seconds delay
     }
+  }
+
+  const fetchUserRole = async () => {
+    const userType = await getUserType()
+    setIsUserTA(userType === 'TA')
   }
 
   const fetchStudents = async () => {
@@ -143,10 +150,9 @@ const StudentTable = () => {
         if (userType === ROLES.ADMIN) {
           setTableData(students.students) // show all data if user is an admin
         } else {
-          const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
           const filteredStudentsTableData = FilterDataByProfessor(
             students.students,
-            professorEmail
+            professorEmail()
           ) // keep only the data that contains the professor's email
           setTableData(filteredStudentsTableData)
         }
@@ -159,6 +165,7 @@ const StudentTable = () => {
   }
 
   useEffect(() => {
+    fetchUserRole()
     fetchStudents()
   }, [refreshTrigger])
 
@@ -292,6 +299,7 @@ const StudentTable = () => {
               onClick={() => setImportModalOpen(true)}
               startIcon={<FileUploadIcon />}
               variant="contained"
+              disabled={isUserTA}
             >
               {t('students-table.import-students')}
             </Button>

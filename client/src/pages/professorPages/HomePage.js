@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardMedia from '@material-ui/core/CardMedia'
 import { getUserEmail } from '../../helpers/UserEmail'
+import { getUserType } from '../../helpers/UserType'
+import { getUserLinkedProfessor } from '../../helpers/UserLinkedProfessor'
 import Box from '@mui/material/Box'
 import { CardContent } from '@mui/material'
 import GroupsSharpIcon from '@mui/icons-material/GroupsSharp'
@@ -17,6 +19,7 @@ import sectionService from '../../services/sectionService'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { FilterDataByProfessor } from '../../helpers/FilterDataByProfessor'
+import { professorEmail } from '../../helpers/GetProfessorEmail'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,15 +50,25 @@ const HomePage = () => {
   const classes = useStyles()
   const [professorEmail, setProfessorEmail] = useState(null)
 
+  const fetchUserEmail = async () => {
+    try {
+      const type = await getUserType()
+
+      if (type === 'TA') {
+        const email = await getUserLinkedProfessor()
+        setProfessorEmail(email)
+      } else {
+        const email = await getUserEmail()
+        setProfessorEmail(email)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   // Cache the value of the professor's email
   useEffect(() => {
-    getUserEmail()
-      .then((email) => {
-        setProfessorEmail(email)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    fetchUserEmail()
   }, [professorEmail])
 
   return (
@@ -92,7 +105,6 @@ const DashBoardInfo = () => {
   const [projectsCount, setProjectCount] = useState(0)
   const [sectionsCount, setSectionsCount] = useState(0)
   const { t } = useTranslation()
-  const professorEmail = JSON.parse(localStorage.getItem('userEmail')) // get the cached value of the professor's email
 
   // get students
   const fetchStudents = async () => {
@@ -102,7 +114,7 @@ const DashBoardInfo = () => {
       if (students.students) {
         const filteredStudentsTableData = FilterDataByProfessor(
           students.students,
-          professorEmail
+          professorEmail()
         ) // keep only the data that contains the professor's email
         setStudentCount(filteredStudentsTableData.length ?? 0)
       }
@@ -119,7 +131,7 @@ const DashBoardInfo = () => {
       if (projects.projects) {
         const filteredProjectsTableData = FilterDataByProfessor(
           projects.projects,
-          professorEmail
+          professorEmail()
         ) // keep only the data that contains the professor's email
         setProjectCount(filteredProjectsTableData.length ?? 0)
       }
@@ -136,7 +148,7 @@ const DashBoardInfo = () => {
       if (groups.groups) {
         const filteredGroupsTableData = FilterDataByProfessor(
           groups.groups,
-          professorEmail
+          professorEmail()
         ) // keep only the data that contains the professor's email
         setGroupCount(filteredGroupsTableData.length ?? 0)
       }
