@@ -19,6 +19,7 @@ import staffService from '../../../services/staffService'
 import Staff from '../../../entities/Staff'
 import staffSchema from '../../../schemas/staffSchema'
 import { useTranslation } from 'react-i18next'
+import { ROLES } from '../../../helpers/Roles'
 
 const StaffForm = ({
   open,
@@ -32,9 +33,9 @@ const StaffForm = ({
   setEditingRow
 }) => {
   const cellValueMap = [
-    { value: 'admin', label: 'primary' },
-    { value: 'professor', label: 'secondary' },
-    { value: 'TA', label: 'secondary' }
+    { value: ROLES.ADMIN, label: 'primary' },
+    { value: ROLES.PROFESSOR, label: 'secondary' },
+    { value: ROLES.TA, label: 'secondary' }
   ]
   const [isloading, setIsLoading] = useState(false)
   const { t } = useTranslation()
@@ -43,9 +44,11 @@ const StaffForm = ({
     try {
       setIsLoading(true)
       // check if the staff is a TA
-      if (values.role === 'TA') {
+      if (values.role === ROLES.TA && values.linked_professor === '') {
         const Linked_professor_Email = await getUserEmail()
         values.linked_professor = Linked_professor_Email ?? ''
+      } else if (update && values.role !== ROLES.TA) {
+        values.linked_professor = ''
       }
       if (update) {
         await staffService.update(editingRow._id, values)
@@ -160,6 +163,30 @@ const StaffForm = ({
                     </FormGroup>
                   )
                 }
+
+                if ((column.accessorKey === 'linked_professor') && (values.role === ROLES.TA)) {
+                  return (
+                    <TextField
+                      key={column.accessorKey}
+                      label={column.header}
+                      name={column.accessorKey}
+                      value={values[column.accessorKey]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={Boolean(
+                        touched[column.accessorKey] && errors[column.accessorKey]
+                      )}
+                      helperText={
+                        touched[column.accessorKey] && errors[column.accessorKey]
+                      }
+                    />
+                  )
+                }
+
+                if ((column.accessorKey === 'linked_professor') && (!update || (values.role !== ROLES.TA))) {
+                  return null
+                }
+
                 return (
                   <TextField
                     key={column.accessorKey}
