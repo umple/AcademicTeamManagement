@@ -54,6 +54,15 @@ def get_groups_by_section(section):
         return result
     else:
         return None
+
+def get_group_members_emails(group_obj):
+    members_emails = []
+    if group_obj["members"] and len(group_obj["members"]) > 0:
+        for member_orgdefinedid in group_obj["members"]:
+            student_email = student.get_student_email_by_orgdefinedid(member_orgdefinedid)
+            if student_email != '':
+                members_emails.append(student_email)
+    return members_emails
     
 def add_student_to_group(student_email, group_id):
     student_obj = student.get_student_by_email(student_email)
