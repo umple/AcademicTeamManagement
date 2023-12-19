@@ -19,6 +19,7 @@ import projectService from '../../../services/projectService'
 import studentService from '../../../services/studentService'
 import sectionService from '../../../services/sectionService'
 import GroupForm from '../forms/GroupForm'
+import ChatIcon from '@mui/icons-material/Chat'
 import ConfirmDeletionModal from '../../common/ConfirmDeletionModal'
 import EditGroupModal from '../forms/EditGroupModal'
 import { ROLES } from '../../../helpers/Roles'
@@ -66,6 +67,39 @@ const GroupTable = () => {
   const handleExpandTable = () => {
     setShowAllRows(true)
     setPageSize(tableData.length)
+  }
+
+  // Redirect to MS Teams Chat
+  const handleMSTeamsRedirect = async (group_id) => {
+    try {
+      // get the current user's email
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/getuseremail`, {
+        method: 'GET',
+        credentials: 'include' // include cookies in the request
+      })
+      const data = await response.json()
+      const currentUserEmail = data.userEmail
+
+      // get the emails of group members
+      const members_emails = await groupService.getGroupMembersEmails(group_id)
+      if (members_emails.length === 0) {
+        alert('Cannot create an MS Teams chat because the group is empty')
+        return
+      }
+
+      // add the professor
+      members_emails.push(currentUserEmail)
+
+      // create the chat members
+      const users_emails = members_emails.join(',')
+
+      // redirect to the MS Teams chat
+      const teamsURL = `https://teams.microsoft.com/l/chat/0/0?users=${users_emails}&topicName=${group_id}`
+      window.open(teamsURL, '_blank')
+    } catch (error) {
+      console.error('Error creating MS Teams chat:', error)
+      throw error
+    }
   }
 
   // handle scrolling to the row selected
@@ -170,6 +204,23 @@ const GroupTable = () => {
       {
         accessorKey: 'notes',
         header: t('section.notes')
+      },
+      {
+        accessorKey: 'ms-teams',
+        header: 'MS Teams Chat',
+        Cell: ({ row }) => {
+          return (
+              <div>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  startIcon={<ChatIcon />}
+                  onClick={() => handleMSTeamsRedirect(row.getValue('group_id'))}
+                >{row.getValue('group_id')}
+                </Button>
+              </div>
+          )
+        }
       }
     ],
     [students, currentLanguage]
