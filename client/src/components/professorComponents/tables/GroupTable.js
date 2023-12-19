@@ -19,6 +19,7 @@ import projectService from '../../../services/projectService'
 import studentService from '../../../services/studentService'
 import sectionService from '../../../services/sectionService'
 import GroupForm from '../forms/GroupForm'
+import ChatIcon from '@mui/icons-material/Chat'
 import ConfirmDeletionModal from '../../common/ConfirmDeletionModal'
 import EditGroupModal from '../forms/EditGroupModal'
 import { ROLES } from '../../../helpers/Roles'
@@ -213,6 +214,7 @@ const GroupTable = () => {
                 <Button
                   color="primary"
                   variant="outlined"
+                  startIcon={<ChatIcon />}
                   onClick={() => handleMSTeamsRedirect(row.getValue('group_id'))}
                 >{row.getValue('group_id')}
                 </Button>
