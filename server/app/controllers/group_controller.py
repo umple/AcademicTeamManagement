@@ -155,6 +155,15 @@ def get_curr_user_group():
     if user_group == False:
         return jsonify({"error":"User is not in a group"}),200
     return jsonify(json.loads(json_util.dumps(user_group))), 200
+
+@group_bp.route("retrieve/group/members/emails/<id>", methods=["GET"])
+def get_group_members_emails(id):
+    group_obj = group.get_group_by_group_name(id)
+    if not group_obj:
+        return jsonify({"error":"Cannot get group members emails"}),400
+    members_emails = group.get_group_members_emails(group_obj)
+    return jsonify(members_emails), 200
+
     
 @group_bp.route("curr/user/in/group", methods=["GET"])
 def is_curr_user_in_group():
