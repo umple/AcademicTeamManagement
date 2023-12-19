@@ -41,6 +41,27 @@ const groupService = {
         return { success: false, message: error.message }
       })
   },
+  getGroupMembersEmails: async (group_id) => {
+    return fetch(`api/retrieve/group/members/emails/${group_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorMessage = await response.text()
+          throw new Error(`Failed to get the emails of group members: ${errorMessage}`)
+        }
+        return response.json()
+      })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        return { success: false, message: error.message }
+      })
+  },
   add: async (newGroupInfo) => {
     return fetch('api/group', {
       method: 'POST',
