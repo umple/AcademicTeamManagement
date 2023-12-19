@@ -68,6 +68,39 @@ const GroupTable = () => {
     setPageSize(tableData.length)
   }
 
+  // Redirect to MS Teams Chat
+  const handleMSTeamsRedirect = async (group_id) => {
+    try {
+      // get the current user's email
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/getuseremail`, {
+        method: 'GET',
+        credentials: 'include' // include cookies in the request
+      })
+      const data = await response.json()
+      const currentUserEmail = data.userEmail
+
+      // get the emails of group members
+      const members_emails = await groupService.getGroupMembersEmails(group_id)
+      if (members_emails.length === 0) {
+        alert('Cannot create an MS Teams chat because the group is empty')
+        return
+      }
+
+      // add the professor
+      members_emails.push(currentUserEmail)
+
+      // create the chat members
+      const users_emails = members_emails.join(',')
+
+      // redirect to the MS Teams chat
+      const teamsURL = `https://teams.microsoft.com/l/chat/0/0?users=${users_emails}&topicName=${group_id}`
+      window.open(teamsURL, '_blank')
+    } catch (error) {
+      console.error('Error creating MS Teams chat:', error)
+      throw error
+    }
+  }
+
   // handle scrolling to the row selected
   const scrollToRow = useCallback((rowId) => {
     const targetRow = document.getElementById(`row-${rowId}`)
@@ -170,6 +203,22 @@ const GroupTable = () => {
       {
         accessorKey: 'notes',
         header: t('section.notes')
+      },
+      {
+        accessorKey: 'ms-teams',
+        header: 'MS Teams Chat',
+        Cell: ({ row }) => {
+          return (
+              <div>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  onClick={() => handleMSTeamsRedirect(row.getValue('group_id'))}
+                >{row.getValue('group_id')}
+                </Button>
+              </div>
+          )
+        }
       }
     ],
     [students, currentLanguage]
