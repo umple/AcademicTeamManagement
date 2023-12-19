@@ -276,6 +276,10 @@ const GroupForm = ({
                   return null
                 }
 
+                if (column.accessorKey === 'ms-teams') {
+                  return null
+                }
+
                 return (
                   <TextField
                     key={column.accessorKey}
