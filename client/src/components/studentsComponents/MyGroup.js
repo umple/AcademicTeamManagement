@@ -1,6 +1,6 @@
 // MyGroup.js
 import React, { useState, useEffect, useMemo } from 'react'
-import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent, MenuItem, Select, TableCell } from '@mui/material'
+import { Box, Button, Typography, Grid, Alert, Snackbar, Card, CardContent, MenuItem, Select, TableCell, Tooltip, IconButton } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Link } from 'react-router-dom'
 import Chip from '@mui/material/Chip'
@@ -14,6 +14,8 @@ import { MRT_Localization_EN } from 'material-react-table/locales/en'
 import { MRT_Localization_FR } from 'material-react-table/locales/fr'
 import projectService from '../../services/projectService'
 import groupService from '../../services/groupService'
+import { Delete } from '@mui/icons-material'
+import ConfirmDeletionModal from '../common/ConfirmDeletionModal'
 
 const MyGroup = () => {
   const [group, setGroup] = useState({})
@@ -21,6 +23,9 @@ const MyGroup = () => {
   const [loading, setIsLoading] = useState(false)
   const [applications, setProjectApplications] = useState({})
   const [showAlert, setShowAlert] = useState(false)
+  const [deletion, setDeletion] = useState(false)
+  const [row, setDeleteRow] = useState()
+  const [refreshTrigger, setRefreshTrigger] = useState(false)
   const [isGroupStudentLocked, setIsGroupStudentLocked] = useState(false)
   const [isGroupProfessorLocked, setIsGroupProfessorLocked] = useState(false)
   const { t, i18n } = useTranslation()
@@ -35,6 +40,28 @@ const MyGroup = () => {
   useEffect(() => {
     setTableLocalization(getTableLocalization(currentLanguage))
   }, [currentLanguage])
+
+  // helper function to delete a project application
+  const handleDeleteApplication = async (row) => {
+    try {
+      fetch(`api/application/delete/${row.original._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then(() => {
+          fetchDataAndSetState()
+        })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setDeletion(false)
+    }
+  }
 
   const fetchDataAndSetState = async () => {
     // Check if the user has a group or not
@@ -69,7 +96,7 @@ const MyGroup = () => {
 
   useEffect(() => {
     fetchDataAndSetState()
-  }, [])
+  }, [refreshTrigger])
 
   // Handle changing the rank
   const rankingsAvailable = [...Array(11).keys()]
@@ -353,6 +380,9 @@ const MyGroup = () => {
           {typeof applications !== 'undefined' || applications
             ? (
             <Box sx={{ mt: 2, ml: 4, mr: 4 }}>
+              <Typography variant="h4" sx={{ mb: 2 }}>
+                  {t('project.project-applications')}
+              </Typography>
               <MaterialReactTable
                 columns={columns}
                 data={applications ?? applications.filter((app) => app.group_id === group.group_id)}
@@ -366,6 +396,24 @@ const MyGroup = () => {
                 enableDensityToggle={false}
                 initialState={{ showColumnFilters: true, showGlobalFilter: true, pagination: { pageSize: 200 } }}
                 localization={tableLocalization}
+                enableEditing
+                renderRowActions={({ row, table }) => (
+                  <Box sx={{ display: 'flex', gap: '1rem' }} id={`row-${row.original.group_id}`}>
+                    <Tooltip arrow placement="right" title="Delete">
+                      <IconButton
+                        disabled={row.original.status === 'Accepted' || row.original.status === 'Rejected'}
+                        color="error"
+                        name="deleteGroup"
+                        onClick={() => {
+                          setDeleteRow(row)
+                          setDeletion(true)
+                        }}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                )}
                 keyField="project"
                 customStyles={{
                   rows: {
@@ -375,6 +423,17 @@ const MyGroup = () => {
                   }
                 }}
               />
+
+              {deletion && (
+                <ConfirmDeletionModal
+                  setOpen={setDeletion}
+                  open={deletion}
+                  handleDeletion={handleDeleteApplication}
+                  setRefreshTrigger={setRefreshTrigger}
+                  row={row}
+                  type={'project'}
+                ></ConfirmDeletionModal>
+              )}
             </Box>
               )
             : (

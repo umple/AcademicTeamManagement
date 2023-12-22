@@ -140,8 +140,9 @@ def reviewApplication(applicationObject):
             return False, 400
         group.add_project_to_group(applicationObject["group_id"], applicationObject["project"])
         project.change_status(applicationObject["project"], "Underway")
-        _reject_other_applications(applicationObject["_id"], applicationObject["project"])
-    # x = applicationObject.pop(applicationObject["_id"], None)
+        _reject_other_applications_of_different_groups(applicationObject["_id"], applicationObject["project"])
+        _reject_other_applications_of_the_group(applicationObject["_id"], applicationObject["group_id"])
+
     id = ObjectId(applicationObject["_id"])
     applicationObject.pop("_id", None)
     result = projectApplicationCollection.update_one({"_id": id}, {"$set" : applicationObject})
@@ -155,7 +156,7 @@ def delete_application_by_id(id):
         print(e)
         return None
 
-def _reject_other_applications(accepted_project_id, project_name):
+def _reject_other_applications_of_different_groups(accepted_project_id, project_name):
     try:
         project_applications = projectApplicationCollection.find({"project": project_name})
         for document in project_applications:
@@ -169,3 +170,16 @@ def _reject_other_applications(accepted_project_id, project_name):
     except Exception as e:
         print(e)
     
+def _reject_other_applications_of_the_group(accepted_project_id, group_id):
+    try:
+        project_applications = projectApplicationCollection.find({"group_id": group_id})
+        for document in project_applications:
+            if str(document["_id"]) == accepted_project_id:
+                continue
+            
+            _ = projectApplicationCollection.update_one(
+                {"_id": document["_id"]},
+                {"$set": {"status": "Rejected"}}
+            )
+    except Exception as e:
+        print(e)
