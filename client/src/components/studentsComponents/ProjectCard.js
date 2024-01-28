@@ -100,7 +100,7 @@ const ProjectCard = ({
               color="primary"
               type="sumbit"
               disabled={
-                project.status !== 'Available' || group === null
+                project.status !== 'Available' || group === null || group === ''
               }
               className={classes.button}
               style={{ marginTop: '1rem' }}
