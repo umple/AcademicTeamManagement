@@ -5,7 +5,7 @@ TENANT_ID  = '5ee1d726-eaf0-4d71-bcf8-666152bb7058'
 
 CLIENT_ID = getDecryptedSecret("CLIENT_ID") # Application (client) ID of app registration
 
-CLIENT_SECRET = getDecryptedSecret("CLIENT_SECRET") # Placeholder - for use ONLY during testing.
+CLIENT_SECRET = getDecryptedSecret("CLIENT_SECRET") # New Secret key, expires on 01/02/2026
 
 AUTHORITY = getDecryptedSecret("AUTHORITY")  # For multi-tenant app
 
