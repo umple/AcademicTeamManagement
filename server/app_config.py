@@ -19,7 +19,7 @@ SESSION_TYPE = "filesystem"  # Specifies the token cache should be stored in ser
 
 CORS_HEADERS = 'Content-Type' # Set CORS
 
-SECRET_KEY = 'ee068ec2-179b-46ca-92d1-0e3e8f138ac5' # Secret Key to uinquly identify the app
+SECRET_KEY = getDecryptedSecret("APP_SECRET_KEY") # Secret Key to uinquly identify the app
 
 PERMANENT_SESSION_LIFETIME = timedelta(hours=5) # Set lifetime of the session to 5 hours
 
