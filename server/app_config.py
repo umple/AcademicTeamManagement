@@ -5,7 +5,7 @@ TENANT_ID  = '5ee1d726-eaf0-4d71-bcf8-666152bb7058'
 
 CLIENT_ID = getDecryptedSecret("CLIENT_ID") # Application (client) ID of app registration
 
-CLIENT_SECRET = getDecryptedSecret("CLIENT_SECRET") # Placeholder - for use ONLY during testing.
+CLIENT_SECRET = getDecryptedSecret("CLIENT_SECRET") # New Secret key, expires on 01/02/2026
 
 AUTHORITY = getDecryptedSecret("AUTHORITY")  # For multi-tenant app
 
@@ -19,7 +19,7 @@ SESSION_TYPE = "filesystem"  # Specifies the token cache should be stored in ser
 
 CORS_HEADERS = 'Content-Type' # Set CORS
 
-SECRET_KEY = 'ee068ec2-179b-46ca-92d1-0e3e8f138ac5' # Secret Key to uinquly identify the app
+SECRET_KEY = getDecryptedSecret("APP_SECRET_KEY") # Secret Key to uinquly identify the app
 
 PERMANENT_SESSION_LIFETIME = timedelta(hours=5) # Set lifetime of the session to 5 hours
 
