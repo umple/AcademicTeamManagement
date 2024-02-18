@@ -3,6 +3,7 @@ import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuIcon from '@mui/icons-material/Menu'
 import LanguageIcon from '@mui/icons-material/Language'
+import SettingsIcon from '@mui/icons-material/Settings'
 import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -45,6 +46,10 @@ const ResponsiveAppBar = () => {
       i18n.changeLanguage('en')
       localStorage.setItem('preferredLanguage', 'en')
     }
+  }
+
+  const settingsButton = () => {
+    navigate('/Settings')
   }
 
   // Nav elements to display for the students
@@ -241,8 +246,15 @@ const ResponsiveAppBar = () => {
             </Box>
             <Button
               onClick={changeLanguage}
+              // FIX: fix align, inherited margins are -4 and 8.
               endIcon={<LanguageIcon style={{ fontSize: 35 }}/>}
-              sx={{ mr: 2, color: 'white', borderColor: 'white' }}
+              sx={{ mx: 1, color: 'white', borderColor: 'white' }}
+            ></Button>
+            <Button
+              onClick={settingsButton}
+              // FIX: fix align, inherited margins are -4 and 8.
+              endIcon={<SettingsIcon style={{ fontSize: 35 }}/>}
+              sx={{ mx: 1, color: 'white', borderColor: 'white' }}
             ></Button>
             {
               isAuthenticated
