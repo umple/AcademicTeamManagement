@@ -26,6 +26,9 @@ import StudentHomePage from './pages/studentPages/StudentHomePage'
 import StudentMyGroupPage from './pages/studentPages/StudentMyGroupPage'
 import StudentProjectPage from './pages/studentPages/StudentProjectPage'
 
+// Settings page
+import SettingsPage from './pages/SettingsPage'
+
 const App = () => {
   return (
     <Router>
@@ -44,6 +47,7 @@ const App = () => {
                 <Route path="/AdminGroupView" element={<ProfessorGroupPage />}></Route>
                 <Route path="/AdminSections" element={<ProfessorSectionPage />}></Route>
                 <Route path="/AdminStaff" element={<AdminStaffPage />}></Route>
+                <Route path="/Settings" element={<SettingsPage />}></Route>
               </Route>
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR} />}>
