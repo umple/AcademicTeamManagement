@@ -10,6 +10,12 @@ export const csvOptions = (name) => ({
   useKeysAsHeaders: true
 })
 
+// global export
+export const handleGlobalExportData = () => {
+  console.log('test')
+}
+
+// export function for specific tables
 export const handleExportData = (tableData, columns, csvExporter) => {
   // clean up and organize data to be exported
   if (tableData.length === 0) {
