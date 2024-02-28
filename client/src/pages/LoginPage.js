@@ -69,43 +69,42 @@ const FooterContainer = styled.footer`
 `
 export default function LoginPage () {
   return (
-      <ThemeProvider theme={theme}>
-        <Background>
-
-          <CssBaseline />
-          <TopCenterContainer>
-            <Logo src={`${process.env.PUBLIC_URL}/universityofottawalogo.svg`} alt="University of Ottawa Logo" />
-          </TopCenterContainer>
-          <LoginButtonContainer>
-            <Box component="form" noValidate sx={{ mt: 1, width: '100%' }}>
-              <Link
-                  href={`${process.env.REACT_APP_BACKEND_HOST}/api/login`}
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  xs={{ mt: 3, mb: 2 }}
-              >
-                <Button size="large" fullWidth variant="contained" name="login" color="primary">
-                  Login
-                </Button>
-              </Link>
-            </Box>
-          </LoginButtonContainer>
-          <Container component="main" maxWidth="xl">
-            <LeftAlignedContainer>
-              <Container component="main" maxWidth="xl" style={{ padding: '20px', borderRadius: '8px' }}>
-                <h1>Academic Team Management</h1>
-              </Container>
-            </LeftAlignedContainer>
-          </Container>
-          <FooterContainer>
-            {2024} Academic Team Management.
-            This project is open source. For contributions, visit our
-            <a href='https://github.com/umple/AcademicTeamManagement/wiki' style={{ color: '#3498db', textDecoration: 'none', marginLeft: '5px' }}>
-              GitHub repository
-            </a>.
-          </FooterContainer>
-        </Background>
-      </ThemeProvider>
+    <ThemeProvider theme={theme}>
+      <Background>
+        <CssBaseline />
+        <TopCenterContainer>
+          <Logo src={`${process.env.PUBLIC_URL}/universityofottawalogo.svg`} alt="University of Ottawa Logo" />
+        </TopCenterContainer>
+        <LoginButtonContainer>
+          <Box component="form" noValidate sx={{ mt: 1, width: '100%' }}>
+            <Link
+                href={`${process.env.REACT_APP_BACKEND_HOST}/api/login`}
+                type="submit"
+                fullWidth
+                variant="contained"
+                xs={{ mt: 3, mb: 2 }}
+            >
+              <Button size="large" fullWidth variant="contained" name="login" color="primary">
+                Login
+              </Button>
+            </Link>
+          </Box>
+        </LoginButtonContainer>
+        <Container component="main" maxWidth="xl">
+          <LeftAlignedContainer>
+            <Container component="main" maxWidth="xl" style={{ padding: '20px', borderRadius: '8px' }}>
+              <h1>Academic Team Management</h1>
+            </Container>
+          </LeftAlignedContainer>
+        </Container>
+        <FooterContainer>
+          {2024} Academic Team Management.
+          This project is open source. For contributions, visit our
+          <a href='https://github.com/umple/AcademicTeamManagement/wiki' style={{ color: '#3498db', textDecoration: 'none', marginLeft: '5px' }}>
+            GitHub repository
+          </a>.
+        </FooterContainer>
+      </Background>
+    </ThemeProvider>
   )
 }
