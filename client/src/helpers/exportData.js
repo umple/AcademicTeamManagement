@@ -1,4 +1,10 @@
 import { getDate } from './dateHelper'
+// import StudentTable from '../components/professorComponents/tables/StudentTable'
+import groupService from '../services/groupService'
+import projectService from '../services/projectService'
+import sectionService from '../services/sectionService'
+import staffService from '../services/staffService'
+import studentService from '../services/studentService'
 
 export const csvOptions = (name) => ({
   filename: `${name}` + '-' + getDate(),
@@ -10,9 +16,43 @@ export const csvOptions = (name) => ({
   useKeysAsHeaders: true
 })
 
-// global export
-export const handleGlobalExportData = () => {
-  console.log('test')
+// global export - due to limiations of CSV format,
+// global export to CSV as one file is not possible.
+export const handleGlobalExportData = (csvExporter) => {
+  var exportData = {}
+  groupService.get()
+    .then((data) => {
+      exportData.groups = data.groups
+    })
+
+  projectService.get()
+    .then((data) => {
+      exportData.projects = data.projects
+    })
+
+  sectionService.get()
+    .then((data) => {
+      exportData.sections = data.sections
+    })
+
+  staffService.get()
+    .then((data) => {
+      exportData.staff = data.staff
+    })
+
+  studentService.get()
+    .then((data) => {
+      exportData.students = data.students
+      console.log(JSON.stringify(exportData))
+      const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportData)
+      )}`
+
+      const link = document.createElement('a')
+      link.href = jsonString
+      link.download = 'data.json'
+
+      link.click()
+    })
 }
 
 // export function for specific tables
