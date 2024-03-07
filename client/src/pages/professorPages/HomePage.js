@@ -19,6 +19,7 @@ import sectionService from '../../services/sectionService'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { FilterDataByProfessor } from '../../helpers/FilterDataByProfessor'
+import styled from 'styled-components'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -376,6 +377,13 @@ const DashBoardInfo = ({ professorEmail }) => {
           </Grid>
         </Grid>
       </Box>
+      <FooterContainer>
+        © {2023} Academic Team Management.
+        This project is open source. For contributions, visit our
+        <a href='https://github.com/umple/AcademicTeamManagement/wiki' style={{ color: '#3498db', textDecoration: 'none', marginLeft: '5px' }}>
+          GitHub repository
+        </a>.
+      </FooterContainer>
     </Container>
   )
 }
