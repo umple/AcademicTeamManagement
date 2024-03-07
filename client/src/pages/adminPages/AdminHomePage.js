@@ -16,7 +16,24 @@ import studentService from '../../services/studentService'
 import sectionService from '../../services/sectionService'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 
+const FooterContainer = styled.footer`
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  display: flex; // Use flexbox for layout
+  justify-content: center; // Center content horizontally
+  align-items: center; // Align items vertically
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  flex-wrap: nowrap; // Prevent wrapping by default
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  white-space: nowrap; // Prevent wrapping at the whitespace in the content
+  overflow-x: auto; // Allow horizontal scrolling if content is too wide
+`
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -327,6 +344,13 @@ const DashBoardInfo = () => {
           </Grid>
         </Grid>
       </Box>
+      <FooterContainer>
+        © {2023} Academic Team Management.
+        This project is open source. For contributions, visit our
+        <a href='https://github.com/umple/AcademicTeamManagement/wiki' style={{ color: '#3498db', textDecoration: 'none', marginLeft: '5px' }}>
+          GitHub repository
+        </a>.
+      </FooterContainer>
     </Container>
   )
 }
