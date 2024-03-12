@@ -1,1 +1,0 @@
-# Academic Team Management Docs
