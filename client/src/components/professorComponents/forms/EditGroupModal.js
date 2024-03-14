@@ -8,15 +8,15 @@ import {
   DialogTitle,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   Stack,
-  TextField
+  // createFilterOptions,
+  Autocomplete,
+  TextField,
+  Typography
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
-import { useTheme } from '@mui/material/styles'
 import { useFormik } from 'formik'
-
 import React, { useEffect, useState } from 'react'
 import Group from '../../../entities/Group'
 import groupService from '../../../services/groupService'
@@ -35,33 +35,10 @@ const EditGroupModal = ({
   setRefreshTrigger,
   setEditingRow
 }) => {
-  const ITEM_HEIGHT = 48
-  const ITEM_PADDING_TOP = 8
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250
-      }
-    }
-  }
-
-  function getStyles (name, members, theme) {
-    return {
-      fontWeight:
-        members.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium
-    }
-  }
-
-  const theme = useTheme()
-  const [members] = useState([])
-
   const [initialGroupValues] = useState(
     new Group(groupData.original)
   )
-
+  const [isFocused, setIsFocused] = useState(false)
   // Set the translation
   const { t } = useTranslation()
 
@@ -70,19 +47,16 @@ const EditGroupModal = ({
     setEditModalOpen(false)
     setFieldValue({})
   }
-
-  const clearGroupMembers = async () => {
-    try {
-      const isConfirmed = window.confirm('Are you sure you want to delete all group members?')
-      if (isConfirmed) {
-        await groupService.clearMembers(groupData.original._id)
-        window.location.reload()
-      }
-    } catch (error) {
-      console.log('Error clearing group members', error)
-    }
-  }
-
+  // const filterOptions = createFilterOptions({
+  //   matchFrom: 'start',
+  //   stringify: (option) => `${option.firstname} ${option.lastname}`
+  // })
+  const filterOptions = (options, { inputValue }) => {
+    return options.filter((option) =>
+      `${option.firstname} ${option.lastname}`.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
+  
   const onSubmit = async (values, actions) => {
     try {
       await groupService.update(groupData.original._id, values)
@@ -94,7 +68,23 @@ const EditGroupModal = ({
       actions.resetForm()
     }
   }
-
+  const handleDeleteMember = async (memberId) => {
+    // Attempt to remove the member from the group in the backend
+    try {
+      const result = await groupService.removeStudentFromGroup(groupData.original._id, memberId)
+      if (result && result.success) {
+        // Filter out the member to delete from the local state
+        const updatedMembers = values.members.filter(id => id !== memberId)
+        // Update the form field value to reflect the removed member
+        setFieldValue('members', updatedMembers, true)
+        console.log(result.message)// Optional: Log the success message
+      } else {
+        console.error('Failed to remove member from group')
+      }
+    } catch (error) {
+      console.error('Error removing member from group:', error)
+    }
+  }
   const {
     values,
     errors,
@@ -108,7 +98,6 @@ const EditGroupModal = ({
     validationSchema: createGroupSchema(groups, groupData.original._id),
     onSubmit
   })
-
   useEffect(() => {
     if (groupData) {
       Object.keys(groupData.original).forEach((field) => {
@@ -130,83 +119,72 @@ const EditGroupModal = ({
             }}
           >
             {columns.map((column) => {
+              if (column.accessorKey === 'group_number') {
+                return (
+                  <FormControl fullWidth margin="normal">
+                  <Typography variant="subtitle1">Group Number:</Typography>
+                  <TextField
+                    disabled
+                    value={groupData.original.group_number || 'Loading...'}
+                    helperText="This number is assigned automatically and cannot be changed."
+                  />
+                </FormControl>
+                )
+              }
               if (column.accessorKey === 'members') {
                 return (
-                  <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel id="demo-multiple-chip-label">
-                    {t('common.Members')}
-                    </InputLabel>
-                    <Select
-                      labelId="demo-multiple-chip-label"
-                      id="demo-multiple-chip"
-                      multiple
-                      name={column.accessorKey}
-                      value={values[column.accessorKey]}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={Boolean(
-                        touched[column.accessorKey] &&
-                          errors[column.accessorKey]
-                      )}
-                      helperText={
-                        touched[column.accessorKey] &&
-                        errors[column.accessorKey]
-                      }
-                      input={
-                        <OutlinedInput id="select-multiple-chip" label="Chip" />
-                      }
-                      renderValue={(selected) => (
-                        <Box
-                          sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
-                        >
-                          {selected.map((value) => {
-                            const student = students.find(
-                              (student) => student.orgdefinedid === value
-                            )
-                            const display =
-                              student.orgdefinedid +
-                              ' - ' +
-                              student.firstname +
-                              ' ' +
-                              student.lastname
-                            return (
-                              <Chip
-                                color="primary"
-                                key={value}
-                                label={display}
-                              />
-                            )
-                          })}
-                        </Box>
-                      )}
-                      MenuProps={MenuProps}
-                    >
-                      {students.length > 0 &&
-                        students.map((student) => {
-                          if (student.group === null || student.group === '') {
-                            return (
-                              <MenuItem
-                                key={student.orgdefinedid}
-                                value={student.orgdefinedid}
-                                style={getStyles(
-                                  student.firstname,
-                                  members,
-                                  theme
-                                )}
-                              >
-                                {student.orgdefinedid +
-                                  ' - ' +
-                                  student.firstname +
-                                  ' ' +
-                                  student.lastname}
-                              </MenuItem>
-                            )
-                          }
-                          return null
-                        })}
-                    </Select>
-                    {groupData.original.members && groupData.original.members.length > 0 && <Button variant="text" onClick={clearGroupMembers}>Clear Members</Button>}
+                  <React.Fragment key="members-section">
+                  {/* Display Chips for Selected Members Outside the Select */}
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {values.members.map((value) => {
+                      const student = students.find((student) => student.orgdefinedid === value)
+                      if (!student) return null // Skip rendering if student not found
+                      const display = `${student.orgdefinedid} - ${student.firstname} ${student.lastname}`
+                      return (
+                        <Chip
+                          color="primary"
+                          key={value}
+                          label={display}
+                          onDelete={(event) => {
+                            event.stopPropagation()// Prevent Select from opening
+                            handleDeleteMember(value).catch(console.error) // Handle async call
+                          }}
+                        />
+                      )
+                    })}
+                  </Box>
+                  <FormControl fullWidth sx={{ mt: 2 }}>
+                  <InputLabel id="demo-multiple-chip-label">{t('common.AddMembers')}</InputLabel>
+                  <Autocomplete
+                  multiple
+                  id="members-autocomplete"
+                  options={students}
+                  value={students.filter((student) => values.members.includes(student.orgdefinedid))}
+                  onChange={(event, newValue) => {
+                    setFieldValue('members', newValue.map((student) => student.orgdefinedid))
+                  }}
+                  getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
+                  filterOptions={filterOptions}
+                  renderTags={() => null}
+                  filterSelectedOptions
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label={isFocused ? '' : 'Search for students…'} // Clear the label when focused
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        shrink: false // Prevent the label from shrinking
+                      }}
+                    sx={{ mt: 2 }} // Adjust the top margin as needed
+                    />
+                  )}
+                  sx={{ m: 0, width: '100%' }}
+                />
                   </FormControl>
+              </React.Fragment>
                 )
               }
 
@@ -264,6 +242,7 @@ const EditGroupModal = ({
                         touched[column.accessorKey] &&
                         errors[column.accessorKey]
                       }
+                      disabled={true}
                     >
                       {sections.map((option) => (
                         <MenuItem key={option.name} value={option.name}>
