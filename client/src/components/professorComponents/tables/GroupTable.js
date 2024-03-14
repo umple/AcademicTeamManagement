@@ -122,6 +122,11 @@ const GroupTable = () => {
   const columns = useMemo(
     () => [
       {
+        accessorKey: 'group_number', // Assuming 'group_number' is the key in your data
+        header: t('common.GroupNumber'), // Localized header text
+
+      },
+      {
         accessorKey: 'group_id',
         header: t('common.Group')
       },
@@ -223,7 +228,7 @@ const GroupTable = () => {
         }
       }
     ],
-    [students, currentLanguage]
+    [students, currentLanguage,t]
   )
 
   const fetchProjects = async () => {

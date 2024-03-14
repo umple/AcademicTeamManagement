@@ -12,7 +12,9 @@ import {
   OutlinedInput,
   Select,
   Stack,
-  TextField
+  TextField, 
+  Typography,
+  Autocomplete
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/styles'
@@ -37,6 +39,8 @@ const GroupForm = ({
   update,
   editingRow
 }) => {
+  const [autoGroupNumber, setAutoGroupNumber] = useState('Will be assigned automatically')
+  const [isFocused, setIsFocused] = useState(false)
   const ITEM_HEIGHT = 48
   const ITEM_PADDING_TOP = 8
   const MenuProps = {
@@ -74,11 +78,21 @@ const GroupForm = ({
     try {
       setIsLoading(true)
       values.group_id = values.group_id.trim()
-      await groupService.add(values)
+      const addResponse = await groupService.add(values)
 
-      fetchData()
+      if (addResponse.success) {
+        // Update the UI or state with the new group number
+        setAutoGroupNumber(`Group Number: ${addResponse.groupNumber}`)
+
+        fetchData()
+              // Show a success message or handle the UI response
+        console.log(addResponse.message); // "Group added successfully"
+    } else {
+      // Handle the case where adding the group was not successful
+        console.error(addResponse.message); // Log or show the error message
+      }
     } catch (error) {
-      console.log('error', error)
+      console.log('Error adding group:', error)
     } finally {
       setIsLoading(false)
       handleClose()
@@ -92,6 +106,7 @@ const GroupForm = ({
     touched,
     handleBlur,
     handleChange,
+    setFieldValue,
     handleSubmit
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
@@ -123,154 +138,76 @@ const GroupForm = ({
               }}
             >
               {columns.map((column) => {
+                if (column.accessorKey === 'group_number') {
+                  return (
+                    <FormControl fullWidth margin="normal">
+                    <Typography variant="subtitle1">Group Number:</Typography>
+                    <TextField
+                      disabled
+                      value="Will be assigned automatically"
+                      helperText="Group number will be assigned automatically upon creation."
+                    />
+                  </FormControl>
+                  )
+                }
                 if (column.accessorKey === 'members') {
                   return (
-                    <FormControl sx={{ m: 1, width: 300 }}>
-                      <InputLabel id="demo-multiple-chip-label">
-                        {t('common.Members')}
-                      </InputLabel>
-                      <Select
-                        labelId="demo-multiple-chip-label"
-                        id="demo-multiple-chip"
-                        multiple
-                        name={column.accessorKey}
-                        value={values[column.accessorKey]}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={Boolean(
-                          touched[column.accessorKey] &&
-                            errors[column.accessorKey]
-                        )}
-                        helperText={
-                          touched[column.accessorKey] &&
-                          errors[column.accessorKey]
-                        }
-                        input={
-                          <OutlinedInput
-                            id="select-multiple-chip"
-                            label="Chip"
+                    <React.Fragment key="members-section">
+                    {/* Display Chips for Selected Members Outside the Select */}
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {values.members.map((value) => {
+                        const student = students.find((student) => student.orgdefinedid === value);
+                        if (!student) return null; // Skip rendering if student not found
+                        const display = `${student.orgdefinedid} - ${student.firstname} ${student.lastname}`;
+                        return (
+                          <Chip
+                            color="primary"
+                            key={value}
+                            label={display}
+                            onDelete={() => {
+                              const newMembers = values.members.filter((id) => id !== value);
+                              setFieldValue('members', newMembers);
+                            }}
                           />
-                        }
-                        renderValue={(selected) => (
-                          <Box
-                            sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
-                          >
-                            {selected.map((value) => {
-                              const student = students.find(
-                                (student) => student.orgdefinedid === value
-                              )
-                              const display =
-                                student.orgdefinedid +
-                                ' - ' +
-                                student.firstname +
-                                ' ' +
-                                student.lastname
-                              return (
-                                <Chip
-                                  color="primary"
-                                  key={value}
-                                  label={display}
-                                />
-                              )
-                            })}
-                          </Box>
-                        )}
-                        MenuProps={MenuProps}
-                      >
-                        {students.length > 0 &&
-                          students.map((student) => {
-                            if (
-                              student.group === null ||
-                              student.group === ''
-                            ) {
-                              return (
-                                <MenuItem
-                                  key={student.orgdefinedid}
-                                  value={student.orgdefinedid}
-                                  style={getStyles(
-                                    student.firstname,
-                                    members,
-                                    theme
-                                  )}
-                                >
-                                  {student.orgdefinedid +
-                                    ' - ' +
-                                    student.firstname +
-                                    ' ' +
-                                    student.lastname}
-                                </MenuItem>
-                              )
-                            }
-                            return null
-                          })}
-                      </Select>
-                    </FormControl>
-                  )
-                }
+                        );
+                      })}
+                    </Box>
+                  <FormControl fullWidth sx={{ mt: 2 }}>
+                  <InputLabel id="demo-multiple-chip-label">{t('common.Members')}</InputLabel>
+                  <Autocomplete
+                  multiple
+                  id="members-autocomplete"
+                  options={students}
+                  getOptionLabel={(option) => `${option.orgdefinedid} - ${option.firstname} ${option.lastname}`}
+                  value={students.filter((student) => values.members.includes(student.orgdefinedid))}
+                  onChange={(_event, newValue) => {
+                    setFieldValue('members', newValue.map((student) => student.orgdefinedid));
+                  }}
+                  filterOptions={(options, { inputValue }) => options.filter((option) =>
+                    `${option.firstname} ${option.lastname}`.toLowerCase().includes(inputValue.toLowerCase())
+                  )}
+                  renderTags={() => null}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label={isFocused ? '' : 'Search for students…'} // Clear the label when focused
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      InputLabelProps={{
+                        ...params.InputLabelProps,
+                        shrink: false // Prevent the label from shrinking
+                      }}
+                    sx={{ mt: 2 }} 
+                    />
+                  )}
+                  sx={{ m: 0, width: '100%' }}
+                  />
 
-                if (column.accessorKey === 'project') {
-                  return (
-                    <FormControl>
-                      <InputLabel id="project-label">
-                        {t('common.Project')}
-                      </InputLabel>
-                      <Select
-                        labelId="project-label"
-                        key={column.accessorKey}
-                        name={column.accessorKey}
-                        value={values[column.accessorKey]}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={Boolean(
-                          touched[column.accessorKey] &&
-                            errors[column.accessorKey]
-                        )}
-                        helperText={
-                          touched[column.accessorKey] &&
-                          errors[column.accessorKey]
-                        }
-                      >
-                        {projects.map((option) => (
-                          <MenuItem key={option.project} value={option.project}>
-                            {option.project}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  )
-                }
-
-                if (column.accessorKey === 'sections') {
-                  return (
-                    <FormControl>
-                      <InputLabel id="section-label">
-                        {t('common.Section')}
-                      </InputLabel>
-                      <Select
-                        labelId="section-label"
-                        key={column.accessorKey}
-                        name={column.accessorKey}
-                        value={values[column.accessorKey]}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={Boolean(
-                          touched[column.accessorKey] &&
-                            errors[column.accessorKey]
-                        )}
-                        helperText={
-                          touched[column.accessorKey] &&
-                          errors[column.accessorKey]
-                        }
-                      >
-                        {sections.map((option) => (
-                          <MenuItem key={option.name} value={option.name}>
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  )
-                }
+                </FormControl>
+              </React.Fragment>
+                )
+              }
 
                 if (column.accessorKey === 'interest') {
                   return null
