@@ -9,7 +9,6 @@ import {
   DialogTitle,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   Stack,
   TextField, 
@@ -41,29 +40,7 @@ const GroupForm = ({
 }) => {
   const [autoGroupNumber, setAutoGroupNumber] = useState('Will be assigned automatically')
   const [isFocused, setIsFocused] = useState(false)
-  const ITEM_HEIGHT = 48
-  const ITEM_PADDING_TOP = 8
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250
-      }
-    }
-  }
   const { t } = useTranslation()
-
-  function getStyles (name, members, theme) {
-    return {
-      fontWeight:
-        members.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium
-    }
-  }
-
-  const theme = useTheme()
-  const [members] = useState([])
   const [isloading, setIsLoading] = useState(false)
 
   const [initialGroupValues] = useState(
@@ -156,20 +133,20 @@ const GroupForm = ({
                     {/* Display Chips for Selected Members Outside the Select */}
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {values.members.map((value) => {
-                        const student = students.find((student) => student.orgdefinedid === value);
-                        if (!student) return null; // Skip rendering if student not found
-                        const display = `${student.orgdefinedid} - ${student.firstname} ${student.lastname}`;
+                        const student = students.find((student) => student.orgdefinedid === value)
+                        if (!student) return null // Skip rendering if student not found
+                        const display = `${student.orgdefinedid} - ${student.firstname} ${student.lastname}`
                         return (
                           <Chip
                             color="primary"
                             key={value}
                             label={display}
                             onDelete={() => {
-                              const newMembers = values.members.filter((id) => id !== value);
-                              setFieldValue('members', newMembers);
+                              const newMembers = values.members.filter((id) => id !== value)
+                              setFieldValue('members', newMembers)
                             }}
                           />
-                        );
+                        )
                       })}
                     </Box>
                   <FormControl fullWidth sx={{ mt: 2 }}>
@@ -181,7 +158,7 @@ const GroupForm = ({
                   getOptionLabel={(option) => `${option.orgdefinedid} - ${option.firstname} ${option.lastname}`}
                   value={students.filter((student) => values.members.includes(student.orgdefinedid))}
                   onChange={(_event, newValue) => {
-                    setFieldValue('members', newValue.map((student) => student.orgdefinedid));
+                    setFieldValue('members', newValue.map((student) => student.orgdefinedid))
                   }}
                   filterOptions={(options, { inputValue }) => options.filter((option) =>
                     `${option.firstname} ${option.lastname}`.toLowerCase().includes(inputValue.toLowerCase())
@@ -198,7 +175,7 @@ const GroupForm = ({
                         ...params.InputLabelProps,
                         shrink: false // Prevent the label from shrinking
                       }}
-                    sx={{ mt: 2 }} 
+                    sx={{ mt: 2 }} // Adjust the top margin as needed
                     />
                   )}
                   sx={{ m: 0, width: '100%' }}
@@ -208,6 +185,69 @@ const GroupForm = ({
               </React.Fragment>
                 )
               }
+		if (column.accessorKey === 'project') {
+                  return (
+                    <FormControl>
+                      <InputLabel id="project-label">
+                        {t('common.Project')}
+                      </InputLabel>
+                      <Select
+                        labelId="project-label"
+                        key={column.accessorKey}
+                        name={column.accessorKey}
+                        value={values[column.accessorKey]}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={Boolean(
+                          touched[column.accessorKey] &&
+                            errors[column.accessorKey]
+                        )}
+                        helperText={
+                          touched[column.accessorKey] &&
+                          errors[column.accessorKey]
+                        }
+                      >
+                        {projects.map((option) => (
+                          <MenuItem key={option.project} value={option.project}>
+                            {option.project}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )
+                }
+
+                if (column.accessorKey === 'sections') {
+                  return (
+                    <FormControl>
+                      <InputLabel id="section-label">
+                        {t('common.Section')}
+                      </InputLabel>
+                      <Select
+                        labelId="section-label"
+                        key={column.accessorKey}
+                        name={column.accessorKey}
+                        value={values[column.accessorKey]}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={Boolean(
+                          touched[column.accessorKey] &&
+                            errors[column.accessorKey]
+                        )}
+                        helperText={
+                          touched[column.accessorKey] &&
+                          errors[column.accessorKey]
+                        }
+                      >
+                        {sections.map((option) => (
+                          <MenuItem key={option.name} value={option.name}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )
+                }
 
                 if (column.accessorKey === 'interest') {
                   return null
@@ -249,3 +289,4 @@ const GroupForm = ({
 }
 
 export default GroupForm
+
