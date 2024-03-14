@@ -11,11 +11,14 @@ import {
   MenuItem,
   Select,
   Stack,
-  TextField,
+  TextField, 
+  Typography,
   Autocomplete
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
+import { useTheme } from '@mui/material/styles'
 import { useFormik } from 'formik'
+
 import React, { useState } from 'react'
 import Group from '../../../entities/Group'
 import groupService from '../../../services/groupService'
@@ -52,11 +55,21 @@ const GroupForm = ({
     try {
       setIsLoading(true)
       values.group_id = values.group_id.trim()
-      await groupService.add(values)
+      const addResponse = await groupService.add(values)
 
-      fetchData()
+      if (addResponse.success) {
+        // Update the UI or state with the new group number
+        setAutoGroupNumber(`Group Number: ${addResponse.groupNumber}`)
+
+        fetchData()
+              // Show a success message or handle the UI response
+        console.log(addResponse.message); // "Group added successfully"
+    } else {
+      // Handle the case where adding the group was not successful
+        console.error(addResponse.message); // Log or show the error message
+      }
     } catch (error) {
-      console.log('error', error)
+      console.log('Error adding group:', error)
     } finally {
       setIsLoading(false)
       handleClose()
@@ -70,6 +83,7 @@ const GroupForm = ({
     touched,
     handleBlur,
     handleChange,
+    setFieldValue,
     handleSubmit
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
@@ -101,6 +115,18 @@ const GroupForm = ({
               }}
             >
               {columns.map((column) => {
+                if (column.accessorKey === 'group_number') {
+                  return (
+                    <FormControl fullWidth margin="normal">
+                    <Typography variant="subtitle1">Group Number:</Typography>
+                    <TextField
+                      disabled
+                      value="Will be assigned automatically"
+                      helperText="Group number will be assigned automatically upon creation."
+                    />
+                  </FormControl>
+                  )
+                }
                 if (column.accessorKey === 'members') {
                   return (
                     <React.Fragment key="members-section">

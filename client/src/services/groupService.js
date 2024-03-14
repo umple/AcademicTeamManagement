@@ -70,14 +70,19 @@ const groupService = {
       },
       body: JSON.stringify(newGroupInfo)
     })
-      .then((response) => {
+      .then(async(response) => {
         if (!response.ok) {
-          return response.text().then((errorMessage) => {
+          const errorMessage = await response.text();
             throw new Error(`Failed to add group: ${errorMessage}`)
+          }
+          return response.json(); // This will handle the JSON response which includes the group number
           })
-        }
-        return { success: true, message: 'Group added successfully' }
-      })
+        
+          .then((data) => {
+            // Assuming the backend sends back an object with group_number and possibly other details
+            console.log(`Group added successfully with group number: ${data.group_number}`);
+            return { success: true, message: 'Group added successfully', groupNumber: data.group_number };
+          })
       .catch((error) => {
         console.error(error)
       })
@@ -127,6 +132,22 @@ const groupService = {
       })
       .catch((error) => {
         console.error(error)
+      })
+  },
+  removeStudentFromGroup: async (group_id, orgdefinedId) => {
+    return fetch(`/api/remove/group/member/${group_id}/${orgdefinedId}`, {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(errorMessage => {
+            throw new Error(`Failed to remove student from group: ${errorMessage}`)
+          })
+        }
+        return { success: true, message: 'Student removed from group successfully' }
+      })
+      .catch(error => {
+        console.error('Error removing student from group:', error)
       })
   },
   studentLockGroup: async (group) => {
