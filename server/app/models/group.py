@@ -6,7 +6,6 @@ import app.models.project_application as project_application
 import app.models.section as section
 
 groupCollection = db["groups"]
-groupCollection.create_index([("group_number", 1)], unique=True)
 
 def get_all_groups():
     group_Collection = []
@@ -21,29 +20,20 @@ def delete_all_groups():
 
 def add_group(group_obj):
     try:
-        highest_group = groupCollection.find().sort("group_number", -1).limit(1)
-        highest_group_number = 0
-        for group in highest_group:
-            highest_group_number = group.get("group_number", 0)
-        next_group_number = highest_group_number + 1
-
-        # Assign the next group number to the group object
-        group_obj["group_number"] = next_group_number
-        if "members" in group_obj and group_obj["members"]:
-            for org in group_obj["members"]:
-                student.assign_group_to_student(org, groupName=group_obj["group_id"])
-
-        if "interest" in group_obj and group_obj["interest"] and group_obj["interest"] != '':
+        if group_obj.members:
+            for org in group_obj.members:
+                student.assign_group_to_student(org, groupName=group_obj.group_id)
+                
         # Create project applications if students are interested in projects
-            _create_project_applications_for_interested_projects(group_obj)
+        _create_project_applications_for_interested_projects(group_obj)
 
         # add project to group if it exists
-        if "project" in group_obj and group_obj["project"] and group_obj["project"] != '':
-            project.add_group_to_project(group_obj["project"], group_obj["group_id"])
-            project.change_status(group_obj["project"], "Underway")
+        if group_obj.project and group_obj.project != '':
+            project.add_group_to_project(group_obj.project, group_obj.group_id)
+            project.change_status(group_obj.project, "Underway")
         
-        insert_result = groupCollection.insert_one(group_obj)
-        return insert_result, next_group_number
+        result = groupCollection.insert_one(group_obj.to_json())
+        return result
     except Exception as e:
         # Raise the exception so it can be caught and handled in the calling code
         raise e
@@ -58,11 +48,8 @@ def get_group(id):
 def get_group_by_group_name(name):
     result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
     if result:
-        print(f"Retrieved group for unique_id {name}: {result}")
-        print(f"ggggggg")
         return result
     else:
-        print(f"No group found for unique_id {name}")
         return None
     
 def get_groups_by_section(section):
@@ -128,27 +115,15 @@ def remove_student_from_group_by_email(group_id, email):
     result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
     return result
 
-# def remove_student_from_group(group_id , orgdefinedid):
-#     group = get_group_by_group_name(group_id)
-#     if orgdefinedid in group["members"]:
-#         group["members"].remove(orgdefinedid)
-#         print(group)
-#         result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
-#         return result
+def remove_student_from_group(group_id , orgdefinedid):
+    group = get_group_by_group_name(group_id)
+    if orgdefinedid in group["members"]:
+        group["members"].remove(orgdefinedid)
+        print(group)
+        result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
+        return result
     
-#     return False
-
-def remove_student_from_group(id, orgdefinedId):
-    originalGroup  = get_group(id)  # Assuming this fetches the group correctly
-    
-    for orgdefinedId in originalGroup["members"]:
-            _ = student.assign_group_to_student(orgdefinedId, groupName=None)
-            print(f"lololol {orgdefinedId}")
-    result = groupCollection.update_one(
-        {"_id": ObjectId(id)},
-        {"$set": {"members": []}}
-    )
-    return result
+    return False
 
 def get_user_group(user_email):
     student_obj = student.get_student_by_email(user_email)
