@@ -3,8 +3,10 @@ import { Button, Box, Container, CssBaseline } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import styled from 'styled-components'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import FileUploadIcon from '@mui/icons-material/FileUpload'
 import { ExportToCsv } from 'export-to-csv'
 import { csvOptions, handleGlobalExportData } from '../helpers/exportData'
+import ImportData from '../helpers/importData'
 
 const theme = createTheme()
 const csvExporter = new ExportToCsv(csvOptions('AcademicTeamsExport-'))
@@ -39,6 +41,16 @@ export default function SettingsPage () {
             >
               Export data as JSON
             </Button>
+            <Button
+              color="primary"
+              style={{ marginTop: '10px' }}
+              onClick={() => handleGlobalExportData(csvExporter)}
+              startIcon={<FileUploadIcon />}
+              variant="contained"
+            >
+              Import JSON data (WARNING: THIS WILL OVERWRITE ALL DATA)
+            </Button>
+            <ImportData/>
           </Box>
         </WhiteContainer>
       </Container>
