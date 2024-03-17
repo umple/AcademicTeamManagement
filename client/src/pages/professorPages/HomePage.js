@@ -19,7 +19,7 @@ import sectionService from '../../services/sectionService'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { FilterDataByProfessor } from '../../helpers/FilterDataByProfessor'
-import styled from 'styled-components'
+import Footer from '../../components/common/Footer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,24 +44,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '75%' // 16:9 aspect ratio
   }
 }))
-
-// Styles
-const FooterContainer = styled.footer`
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  display: flex; // Use flexbox for layout
-  justify-content: center; // Center content horizontally
-  align-items: center; // Align items vertically
-  padding: 20px;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  flex-wrap: nowrap; // Prevent wrapping by default
-  font-family: 'Helvetica', 'Arial', sans-serif;
-  white-space: nowrap; // Prevent wrapping at the whitespace in the content
-  overflow-x: auto; // Allow horizontal scrolling if content is too wide
-`
 
 const HomePage = () => {
   const { t } = useTranslation()
@@ -395,13 +377,7 @@ const DashBoardInfo = ({ professorEmail }) => {
           </Grid>
         </Grid>
       </Box>
-      <FooterContainer>
-        © {2023} Academic Team Management.
-        This project is open source. For contributions, visit our
-        <a href='https://github.com/umple/AcademicTeamManagement/wiki' style={{ color: '#3498db', textDecoration: 'none', marginLeft: '5px' }}>
-          GitHub repository
-        </a>.
-      </FooterContainer>
+      <Footer/>
     </Container>
   )
 }
