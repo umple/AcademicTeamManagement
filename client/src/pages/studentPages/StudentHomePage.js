@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { getUserName } from '../../helpers/UserName'
 import { getUserEmail } from '../../helpers/UserEmail'
 import { useTranslation } from 'react-i18next'
+import Footer from '../../components/common/Footer'
 import {
   makeStyles,
   Grid,
@@ -60,18 +61,19 @@ function StudentHomePage () {
   }, [studentEmail])
 
   return (
-        <div className={classes.root}>
-            <Grid container spacing={4} justifyContent="center" alignItems="center">
-                <Grid item sm={6} className={classes.column1}>
-                    <Typography variant="h3" className={classes.title} gutterBottom>
-                        {t('common.academic-team-management')}
-                    </Typography>
-                    <Typography variant="h2" className={classes.welcomeText} gutterBottom>
-                        {t('home.welcome')} {userName}!
-                    </Typography>
-                </Grid>
-            </Grid>
-        </div>
+    <div className={classes.root}>
+      <Grid container spacing={4} justifyContent="center" alignItems="center">
+        <Grid item sm={6} className={classes.column1}>
+          <Typography variant="h3" className={classes.title} gutterBottom>
+            {t('common.academic-team-management')}
+          </Typography>
+          <Typography variant="h2" className={classes.welcomeText} gutterBottom>
+            {t('home.welcome')} {userName}!
+          </Typography>
+        </Grid>
+      </Grid>
+    <Footer/>
+    </div>
   )
 }
 
