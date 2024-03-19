@@ -2,7 +2,6 @@ import AdbIcon from '@mui/icons-material/Adb'
 import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuIcon from '@mui/icons-material/Menu'
-import LanguageIcon from '@mui/icons-material/Language'
 import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -241,7 +240,7 @@ const ResponsiveAppBar = () => {
             </Box>
             <Button
               onClick={changeLanguage}
-              endIcon={<LanguageIcon style={{ fontSize: 35 }}/>}
+              endIcon={<img src={`${process.env.PUBLIC_URL}/lang.png`} alt="Language Icon" style={{ width: 75, height: 50 }}/>}
               sx={{ mr: 2, color: 'white', borderColor: 'white' }}
             ></Button>
             {
