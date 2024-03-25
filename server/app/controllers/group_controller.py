@@ -28,10 +28,13 @@ def get_groups():
 def add_group():
     try:
         group_obj = json.loads(request.data)
-        group_entity = GroupEntity(group_obj)
+        # group_entity = GroupEntity(group_obj)
         
-        result = group.add_group(group_entity)
-        return jsonify(str(result.inserted_id)), 201
+        insert_result, next_group_number = group.add_group(group_obj)
+        response_data = {"message": "Group added successfully", 
+                         "group_number": next_group_number, 
+                         "id": str(insert_result.inserted_id)}
+        return jsonify(response_data), 201
     except Exception as e:
         # Handle the exception and return an error response
         error_message = str(e)  # Get the error message as a string
@@ -141,13 +144,13 @@ def add_student_to_group():
     else:
         return jsonify({"error": "Failed to add student to group"}), 400
     
-@group_bp.route("/remove/group/member/<id>", methods=["DELETE"])
-def remove_student_from_group(id):
-    curr_user_email = session.get("user")["preferred_username"]
-    if group.remove_student_from_group_by_email(id ,curr_user_email):
-        return jsonify({"message": f"Removed {curr_user_email} to group "})
+@group_bp.route("/remove/group/member/<group_id>/<orgdefinedId>", methods=["DELETE"])
+def remove_student_from_group_route(group_id, orgdefinedId):
+    # Attempt to remove the student from the group
+    if group.remove_student_from_group(group_id, orgdefinedId):
+        return jsonify({"message": "Student removed from the group successfully"}), 200
     else:
-        return jsonify({"error": "Failed to add student to group"}), 400
+        return jsonify({"error": "Failed to remove student from the group or student not in group"}), 404
     
 @group_bp.route("retrieve/curr/user/group", methods=["GET"])
 def get_curr_user_group():
@@ -172,4 +175,3 @@ def is_curr_user_in_group():
         return jsonify({"message": "User is in a Group"})
     else:
         return jsonify({"error":"User is not in a group"}), 400
- 

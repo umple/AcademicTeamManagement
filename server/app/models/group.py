@@ -6,6 +6,7 @@ import app.models.project_application as project_application
 import app.models.section as section
 
 groupCollection = db["groups"]
+groupCollection.create_index([("group_number", 1)], unique=True)
 
 def get_all_groups():
     group_Collection = []
@@ -16,20 +17,29 @@ def get_all_groups():
 
 def add_group(group_obj):
     try:
-        if group_obj.members:
-            for org in group_obj.members:
-                student.assign_group_to_student(org, groupName=group_obj.group_id)
-                
+        highest_group = groupCollection.find().sort("group_number", -1).limit(1)
+        highest_group_number = 0
+        for group in highest_group:
+            highest_group_number = group.get("group_number", 0)
+        next_group_number = highest_group_number + 1
+
+        # Assign the next group number to the group object
+        group_obj["group_number"] = next_group_number
+        if "members" in group_obj and group_obj["members"]:
+            for org in group_obj["members"]:
+                student.assign_group_to_student(org, groupName=group_obj["group_id"], groupNumber= group_obj["group_number"])
+
+        if "interest" in group_obj and group_obj["interest"] and group_obj["interest"] != '':
         # Create project applications if students are interested in projects
-        _create_project_applications_for_interested_projects(group_obj)
+            _create_project_applications_for_interested_projects(group_obj)
 
         # add project to group if it exists
-        if group_obj.project and group_obj.project != '':
-            project.add_group_to_project(group_obj.project, group_obj.group_id)
-            project.change_status(group_obj.project, "Underway")
+        if "project" in group_obj and group_obj["project"] and group_obj["project"] != '':
+            project.add_group_to_project(group_obj["project"], group_obj["group_id"])
+            project.change_status(group_obj["project"], "Underway")
         
-        result = groupCollection.insert_one(group_obj.to_json())
-        return result
+        insert_result = groupCollection.insert_one(group_obj)
+        return insert_result, next_group_number
     except Exception as e:
         # Raise the exception so it can be caught and handled in the calling code
         raise e
@@ -74,7 +84,7 @@ def add_student_to_group(student_email, group_id):
     result = groupCollection.update_one(
         {"_id": ObjectId(group_obj["_id"])},
         {"$push": {"members": str(student_obj["orgdefinedid"])}})
-    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"])
+    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"], group_obj["group_number"])
     if result.modified_count > 0:
         return True
     
@@ -83,16 +93,26 @@ def add_student_to_group(student_email, group_id):
 def add_student_to_group_by_group_id(student_email, group_id):
     student_obj = student.get_student_by_email(student_email)
     group_obj = get_group_by_group_name(group_id)
+    group_number = group_obj.get("group_number")
 
     if student_obj["orgdefinedid"] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"group_id": group_id},
-        {"$push": {"members": str(student_obj["orgdefinedid"])}})
-    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"])
+        {"$push": {"members": str(student_obj["orgdefinedid"])}}
+        )
+    if result.modified_count == 0:
+        print("Failed to add student to group.")
+        return False
+    
+    print({"members": str(student_obj["orgdefinedid"])})
+    updated_group_obj = get_group_by_group_name(group_id)  # Fetch again to verify
+    print("Updated group members:", updated_group_obj.get("members"))
+    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"], group_number)
     if result.modified_count > 0:
-        return True
+        student_result = student.studentsCollection.update_one({"orgdefinedid": student_obj["orgdefinedid"]}, {"$set": {"group": group_id, "group_number":group_number}})
+        return student_result.modified_count > 0
     
     return False
 
@@ -111,15 +131,31 @@ def remove_student_from_group_by_email(group_id, email):
     result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
     return result
 
-def remove_student_from_group(group_id , orgdefinedid):
+def bulk_remove_students_from_group(group_id , orgdefinedid):
     group = get_group_by_group_name(group_id)
     if orgdefinedid in group["members"]:
         group["members"].remove(orgdefinedid)
-        print(group)
-        result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
-        return result
+        group_result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
+
+        if group_result.modified_count > 0:
+            student_result = student.studentsCollection.update_one(
+                {"orgdefinedid": orgdefinedid}, 
+                {"$unset": {"group": None, "group_number": None}}
+            )
+            return student_result.modified_count > 0
     
     return False
+
+def remove_student_from_group(id, orgdefinedId):
+    originalGroup  = get_group(id)  # Assuming this fetches the group correctly
+    
+    for orgdefinedId in originalGroup["members"]:
+            _ = student.assign_group_to_student(orgdefinedId, groupName=None, groupNumber=None)
+    result = groupCollection.update_one(
+        {"_id": ObjectId(id)},
+        {"$set": {"members": []}}
+    )
+    return result
 
 def get_user_group(user_email):
     student_obj = student.get_student_by_email(user_email)
@@ -151,7 +187,7 @@ def update_group_by_id(id, group_obj):
         
         if "members" in group_obj and group_obj["members"]:
             for org in group_obj["members"]:
-                student.assign_group_to_student(org, groupName=group_obj["group_id"])
+                student.assign_group_to_student(org, groupName=group_obj["group_id"], groupNumber=group_obj["group_number"])
         else:
             group_obj["members"] = []
 
@@ -160,7 +196,7 @@ def update_group_by_id(id, group_obj):
             _update_group_name_to_project_applications(original_group["group_id"], group_obj["group_id"])
             
             for orgdefinedId in group_obj["members"]:
-                result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
+                result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"], groupNumber= group_obj["group_number"])
                 
         # Update the group lock if the section has changed
         if "sections" not in original_group or original_group["sections"] != group_obj["sections"]:
@@ -248,7 +284,7 @@ def student_unlock_group_by_id(id, group_obj):
 def delete_group_by_id(id):
     originalGroup  = get_group(id)
     for orgdefinedId in originalGroup["members"]:
-            result = student.assign_group_to_student(orgdefinedId, groupName=None)
+            result = student.assign_group_to_student(orgdefinedId, groupName=None, groupNumber=None)
     result = groupCollection.delete_one({"_id": ObjectId(id)})
     project.change_status(originalGroup["project"], "Available")
     project.remove_group_from_project(originalGroup["project"])
@@ -259,7 +295,7 @@ def delete_group_by_id(id):
 def clear_group_members(id):
     originalGroup  = get_group(id)
     for orgdefinedId in originalGroup["members"]:
-            _ = student.assign_group_to_student(orgdefinedId, groupName=None)
+            _ = student.assign_group_to_student(orgdefinedId, groupName=None, groupNumber=None)
     result = groupCollection.update_one(
         {"_id": ObjectId(id)},
         {"$set": {"members": []}}

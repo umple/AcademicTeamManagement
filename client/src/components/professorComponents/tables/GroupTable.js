@@ -122,6 +122,10 @@ const GroupTable = () => {
   const columns = useMemo(
     () => [
       {
+        accessorKey: 'group_number',
+        header: t('common.GroupNumber')
+      },
+      {
         accessorKey: 'group_id',
         header: t('common.Group')
       },

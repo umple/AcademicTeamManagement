@@ -153,6 +153,9 @@ const EditStudentForm = ({
               if (column.accessorKey === 'group') {
                 return null
               }
+              if (column.accessorKey === 'group_number') {
+                return null // Do not render anything for 'group_number'
+              }
               return (
               <TextField
                 key={column.accessorKey}
@@ -172,7 +175,7 @@ const EditStudentForm = ({
             })}
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ p: '1.25rem' }}>
+        <DialogActions sx={{ p: '1.25rem', position: 'sticky', bottom: 0, backgroundColor: 'white' }}>
           <Button onClick={handleClose}>{t('common.Cancel')}</Button>
           <Button color="secondary" type="submit" variant="contained">
             {studentData?.original ? t('common.Save') : t('common.Create')}

@@ -70,13 +70,18 @@ const groupService = {
       },
       body: JSON.stringify(newGroupInfo)
     })
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
-          return response.text().then((errorMessage) => {
-            throw new Error(`Failed to add group: ${errorMessage}`)
-          })
+          const errorMessage = await response.text()
+          throw new Error(`Failed to add group: ${errorMessage}`)
+
         }
-        return { success: true, message: 'Group added successfully' }
+        return response.json()
+      })
+
+      .then((data) => {
+
+        return { success: true, message: 'Group added successfully', groupNumber: data.group_number }
       })
       .catch((error) => {
         console.error(error)
@@ -126,6 +131,22 @@ const groupService = {
         return { success: true, message: 'Group updated successfully' }
       })
       .catch((error) => {
+        console.error(error)
+      })
+  },
+  removeStudentFromGroup: async (group_id, orgdefinedId) => {
+    return fetch(`/api/remove/group/member/${group_id}/${orgdefinedId}`, {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(errorMessage => {
+            throw new Error(`Failed to remove student from group: ${errorMessage}`)
+          })
+        }
+        return { success: true, message: 'Student removed from group successfully' }
+      })
+      .catch(error => {
         console.error(error)
       })
   },

@@ -66,6 +66,7 @@ const ImportStudents = (props) => {
   const classes = useStyles()
   const [file, setFile] = useState(null)
   const [section, setSection] = useState('')
+  const [selectedSection, setSelectedSection] = useState('')
   const [isDragActive, setIsDragActive] = useState(false) // State to track if a file is being dragged over the drop area
   const [progress, setProgress] = useState(0)
   const [isImporting, setIsImporting] = useState(false)
@@ -91,6 +92,12 @@ const ImportStudents = (props) => {
 
   const handleChange = (event) => {
     setFile(event.target.files[0])
+  }
+
+  const handleSectionChange = (event) => {
+    const newSection = event.target.value
+    setSelectedSection(newSection) // Update local UI state
+    setSection(newSection) // Also call setSection for any additional logic
   }
 
   const handleSubmit = async (event) => {
@@ -182,12 +189,14 @@ const ImportStudents = (props) => {
         <Select
           fullWidth
           defaultValue=""
+          value={selectedSection} // Use selectedSection as the value
           labelId="section-select-label"
           name="section"
           label="Section"
           variant="outlined"
           id="select-section"
-          onChange={(e) => setSection(e.target.value)}
+          onChange={handleSectionChange} // Use handleSectionChange to handle changes
+          // onChange={(e) => setSection(e.target.value)}
         >
           {sections.map((option) => (
             <MenuItem key={option.name} value={option.name}>
@@ -276,7 +285,7 @@ const ImportStudents = (props) => {
                     style={{ all: 'unset' }}
                     href="assets/student_import_template.xlsx"
                   >
-                    {t('students-table.download-template')}
+                    {t('students-table.ExportToCsv-template')}
                   </a>
                 </Button>
               </label>
