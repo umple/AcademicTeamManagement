@@ -90,6 +90,10 @@ const StudentTable = () => {
         header: t('table.final-grade')
       },
       {
+        accessorKey: 'group_number',
+        header: t('common.GroupNumber')
+      },
+      {
         accessorKey: 'group',
         header: t('table.group')
       }

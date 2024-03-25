@@ -52,9 +52,17 @@ const GroupForm = ({
     try {
       setIsLoading(true)
       values.group_id = values.group_id.trim()
-      await groupService.add(values)
+      const addResponse = await groupService.add(values)
 
-      fetchData()
+      if (addResponse.success) {
+        // Update the UI or state with the new group number
+        setAutoGroupNumber(`Group Number: ${addResponse.groupNumber}`)
+
+        fetchData()
+        console.log(addResponse.message) // "Group added successfully"
+      } else {
+        console.error(addResponse.message) // Log or show the error message
+      }
     } catch (error) {
       console.log('error', error)
     } finally {
@@ -70,6 +78,7 @@ const GroupForm = ({
     touched,
     handleBlur,
     handleChange,
+    setFieldValue,
     handleSubmit
   } = useFormik({
     initialValues: initialGroupValues.toJSON(),
@@ -101,6 +110,18 @@ const GroupForm = ({
               }}
             >
               {columns.map((column) => {
+                  if (column.accessorKey === 'group_number') {
+                    return (
+                      <FormControl fullWidth margin="normal">
+                        <InputLabel id="group_number_section">{t('common.GroupNumber')}</InputLabel>
+                        <TextField
+                          disabled
+                          value="Will be assigned automatically"
+                          helperText="Group number will be assigned automatically upon creation."
+                        />
+                      </FormControl>
+                    )
+                  }
                 if (column.accessorKey === 'members') {
                   return (
                     <React.Fragment key="members-section">
@@ -128,7 +149,7 @@ const GroupForm = ({
                   <Autocomplete
                   multiple
                   id="members-autocomplete"
-                  options={students}
+                  options={students.filter((student) => !student.group)}
                   getOptionLabel={(option) => `${option.orgdefinedid} - ${option.firstname} ${option.lastname}`}
                   value={students.filter((student) => values.members.includes(student.orgdefinedid))}
                   onChange={(_event, newValue) => {
@@ -142,14 +163,14 @@ const GroupForm = ({
                     <TextField
                       {...params}
                       variant="outlined"
-                      label={isFocused ? '' : 'Search for students…'} // Clear the label when focused
+                      label={isFocused ? '' : 'Search for students…'}
                       onFocus={() => setIsFocused(true)}
                       onBlur={() => setIsFocused(false)}
                       InputLabelProps={{
                         ...params.InputLabelProps,
-                        shrink: false // Prevent the label from shrinking
+                        shrink: false
                       }}
-                    sx={{ mt: 2 }} // Adjust the top margin as needed
+                      sx={{ mt: 2 }}
                     />
                   )}
                   sx={{ m: 0, width: '100%' }}
@@ -159,7 +180,7 @@ const GroupForm = ({
               </React.Fragment>
                 )
               }
-		if (column.accessorKey === 'project') {
+                if (column.accessorKey === 'project') {
                   return (
                     <FormControl>
                       <InputLabel id="project-label">
@@ -250,7 +271,7 @@ const GroupForm = ({
               })}
             </Stack>
           </DialogContent>
-          <DialogActions sx={{ p: '1.25rem' }}>
+          <DialogActions sx={{ p: '1.25rem', position: 'sticky', bottom: 0, backgroundColor: 'white'}}>
             <Button onClick={handleClose}>{t('common.Cancel')}</Button>
             <Button color="secondary" type="submit" variant="contained">
               {t('common.Create')}

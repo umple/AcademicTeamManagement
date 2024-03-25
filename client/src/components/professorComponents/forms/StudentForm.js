@@ -101,6 +101,9 @@ const StudentForm = ({
             }}
           >
             {columns.map((column) => {
+              if (column.accessorKey === 'group_number') {
+                return null // Do not render anything for 'group_number'
+              }
               if (column.accessorKey === 'sections') {
                 return (
                   <FormControl fullWidth>
@@ -156,7 +159,7 @@ const StudentForm = ({
             })}
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ p: '1.25rem' }}>
+        <DialogActions sx={{ p: '1.25rem', position: 'sticky', bottom: 0, backgroundColor: 'white' }}>
           <Button onClick={handleClose}>{t('common.Cancel')}</Button>
           <Button color="secondary" type="submit" name="submitForm" variant="contained">
             {t('common.Create')}
