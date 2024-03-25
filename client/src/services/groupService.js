@@ -74,13 +74,11 @@ const groupService = {
         if (!response.ok) {
           const errorMessage = await response.text()
           throw new Error(`Failed to add group: ${errorMessage}`)
-
         }
         return response.json()
       })
 
       .then((data) => {
-
         return { success: true, message: 'Group added successfully', groupNumber: data.group_number }
       })
       .catch((error) => {
