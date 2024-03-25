@@ -26,8 +26,13 @@ def get_staff_by_id(a):
 
 def get_staff_by_email(email):
     document = staffCollection.find_one({"email": email})
-    document["email"] = str(document["email"])
-    return document
+
+    if document is None:
+        return None
+
+    else:
+        document["email"] = str(document["email"])
+        return document
 
 def update_staff_by_id(id, staff_obj):
     old_staff = staffCollection.find_one({"_id": ObjectId(id)})

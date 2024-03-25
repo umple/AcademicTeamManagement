@@ -37,6 +37,38 @@ def add_group():
         error_message = str(e)  # Get the error message as a string
         return {"message": error_message}, 500
 
+@group_bp.route("/importGroupsBulk", methods=["POST"])
+def import_groups_bulk():
+    global start_time, total_records, processed_records
+
+    try:
+        # start_time = time.time()
+        data = request.json
+        
+        total_records = len(data['groups'])
+
+        for item in data['groups']:
+            group_entity = GroupEntity(item)
+            result = group.add_group(group_entity)
+                # processed_records += 1
+
+        # start_time = None
+        # total_records = 0
+        # processed_records = 0
+        return {"message": "groups imported successfully."}, 201
+
+    except Exception as e:
+        return {'message': data['groups']}, 500
+
+@group_bp.route("/group/deleteAllGroups", methods=["DELETE"])
+def delete_all_groups():
+    try:
+        result = group.delete_all_groups()
+        return {'message': 'deleted all groups successfully.'}, 201
+
+    except Exception as e:
+        return {'message': 'An error occurred: ' + str(e)}, 500
+
 # PUT Request to update a group info
 @group_bp.route("/group/update", methods=["PUT"])    
 def update_group_by_id():

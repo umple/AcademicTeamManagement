@@ -1,17 +1,55 @@
+from app.models import section
+from app.models import group
+from app.models import staff
 class StudentEntity:
     def __init__(self, student_id, student_data):
         if student_data is None:
             student_data = {}
-        self._student_id = student_id
-        self._orgdefinedid = student_data.get('orgdefinedid', '')
-        self._firstname = student_data.get('firstname', '')
-        self._lastname = student_data.get('lastname', '')
-        self._email = student_data.get('email', '')
-        self._username = student_data.get('username', '')
-        self._sections = student_data.get('sections', '')
-        self._finalGrade = student_data.get('finalGrade', '')
-        self._group =  student_data.get('group', '')
-        self._professorEmail = student_data.get('professorEmail', None)
+
+        # IF TYPE IS REG DICT DO THIS
+        if type(student_data) == dict:
+            self._student_id = student_id
+            self._orgdefinedid = student_data['Student ID']
+            self._firstname = student_data['First Name']
+            self._lastname = student_data['Last Name']
+            self._email = student_data['Email']
+            self._username = student_data['Username']
+
+            # CHECK IF SECTION VALID
+            if(section.get_section_by_name(student_data['Section']) is None):
+                self._sections = ""
+
+            else:
+                self._sections = student_data['Section']
+
+            self._finalGrade = student_data['Final Grade']
+
+            #CHECK IF GROUP VALID
+            if (group.get_group_by_group_name(student_data['Group']) is None):
+                self._group = ""
+
+            else:
+                self._group =  student_data['Group']
+
+            # CHECK IF PROF VALID
+            if (staff.get_staff_by_email(student_data['professorEmail']) is None):
+                self._professorEmail = ""
+
+            else:
+                self._professorEmail = student_data['professorEmail']
+
+        # ELSE DO THIS
+        else:
+            self._student_id = student_id
+            self._orgdefinedid = student_data.get('orgdefinedid', '')
+            self._firstname = student_data.get('firstname', '')
+            self._lastname = student_data.get('lastname', '')
+            self._email = student_data.get('email', '')
+            self._username = student_data.get('username', '')
+            self._sections = student_data.get('sections', '')
+            self._finalGrade = student_data.get('finalGrade', '')
+            self._group =  student_data.get('group', '')
+            self._professorEmail = student_data.get('professorEmail', None)
         
     def to_json(self):
         return {
