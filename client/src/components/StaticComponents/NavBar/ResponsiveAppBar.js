@@ -240,7 +240,7 @@ const ResponsiveAppBar = () => {
             </Box>
             <Button
               onClick={changeLanguage}
-              endIcon={<img src={`${process.env.PUBLIC_URL}/lang.png`} alt="Language Icon" style={{ width: 75, height: 50 }}/>}
+              endIcon={<img src={`${process.env.PUBLIC_URL}/lang.png`} id = 'LanguageIcon' alt="Language Icon" style={{ width: 75, height: 50 }}/>}
               sx={{ mr: 2, color: 'white', borderColor: 'white' }}
             ></Button>
             {
