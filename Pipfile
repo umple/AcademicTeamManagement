@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 setuptools = "*"
 <<<<<<< HEAD
@@ -31,10 +32,14 @@ coverage = "*"
 =======
 setuptools = "*"
 >>>>>>> c982d47 (finished restructuring entity files)
+=======
+setuptools = "*"
+>>>>>>> f3997d6 (finished restructuring entity files)
 
 [dev-packages]
 
 [requires]
+<<<<<<< HEAD
 <<<<<<< HEAD
 python_version = "3"
 
@@ -47,3 +52,6 @@ prod_unit_test = "coverage run -m unittest discover -v tests/pipeline_tests/unit
 =======
 python_version = "3.12"
 >>>>>>> c982d47 (finished restructuring entity files)
+=======
+python_version = "3.12"
+>>>>>>> f3997d6 (finished restructuring entity files)
