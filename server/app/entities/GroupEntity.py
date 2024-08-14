@@ -3,10 +3,8 @@ class GroupEntity:
         if group_data is None:
             group_data = {}
         self._group_id = group_data.get('group_id', '')
-        self._project = group_data.get('project', '')
-        self._professorEmail = group_data.get('professorEmail', '')
-        self._members = group_data.get('members', [])
-        self._interest = group_data.get('interest', [])
+        self._interested_project_ids = group_data.get('interested_project_ids', '')
+        self._assigned_project_ids = group_data.get('_assigned_project_ids', '')
         self._sections = group_data.get('sections', '')
         self._notes = group_data.get('notes', '')
         self._studentLock = group_data.get('studentLock', False)
@@ -15,7 +13,7 @@ class GroupEntity:
     def to_json(self):
         return {
             'group_id': self._group_id,
-            'project': self._project,
+            'interested_project_ids': self._project,
             'professorEmail': self._professorEmail,
             'members': self._members,
             'interest': self._interest,
@@ -34,11 +32,11 @@ class GroupEntity:
         self._group_id = value
 
     @property
-    def project(self):
+    def interested_project_ids(self):
         return self._project
 
-    @project.setter
-    def project(self, value):
+    @interested_project_ids.setter
+    def interested_project_ids(self, value):
         self._project = value
         
     @property

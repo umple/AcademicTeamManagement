@@ -20,6 +20,7 @@ msal = "*"
 jwt = "*"
 mongomock = "*"
 coverage = "*"
+setuptools = "*"
 
 [dev-packages]
 

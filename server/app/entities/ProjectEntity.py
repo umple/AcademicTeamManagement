@@ -2,38 +2,38 @@ class ProjectEntity:
     def __init__(self, project_data=None):
         if project_data is None:
             project_data = {}
-        self._project = project_data.get('project', '')
+        self._project_name = project_data.get('project_name', '')
         self._description = project_data.get('description', '')
         self._clientName = project_data.get('clientName', '')
         self._clientEmail = project_data.get('clientEmail', '')
         self._status = project_data.get('status', 'new')
         self._interested_groups = project_data.get('interested_groups', [])
         self._group = project_data.get('group', '')
-        self._professorEmail = project_data.get('professorEmail', '')
+        self._professor = project_data.get('professor', '')
         self._visibility = project_data.get('visibility', '')
         self._notes = project_data.get('notes', '')
     
     def to_json(self):
         return {
-            'project': self._project,
+            'project_name': self._project_name,
             'description': self._description,
             'clientName': self._clientName,
             'clientEmail': self._clientEmail,
             'status': self._status,
             'interested_groups': self._interested_groups,
             'group': self._group,
-            'professorEmail': self._professorEmail,
+            'professor': self._professor,
             'visibility': self._visibility,
             'notes': self._notes
         }
 
     @property
-    def project(self):
-        return self._project
+    def project_name(self):
+        return self._project_name
 
-    @project.setter
-    def project(self, value):
-        self._project = value
+    @project_name.setter
+    def project_name(self, value):
+        self._project_name = value
 
     @property
     def description(self):
@@ -84,12 +84,12 @@ class ProjectEntity:
         self._group = value
 
     @property
-    def professorEmail(self):
-        return self._professorEmail
+    def professor(self):
+        return self._professor
 
-    @professorEmail.setter
-    def professorEmail(self, value):
-        self._professorEmail = value
+    @professor.setter
+    def professor(self, value):
+        self._professor = value
 
     @property
     def visibility(self):
