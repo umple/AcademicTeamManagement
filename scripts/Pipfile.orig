@@ -1,0 +1,15 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+[dev-packages]
+
+[requires]
+<<<<<<< HEAD
+python_version = "3.11"
+=======
+python_version = "3.12"
+>>>>>>> 99f3eb9 (finished restructuring entity files)
