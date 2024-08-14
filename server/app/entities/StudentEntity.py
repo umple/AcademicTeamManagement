@@ -1,108 +1,47 @@
-class StudentEntity:
-    def __init__(self, student_id, student_data):
-        if student_data is None:
-            student_data = {}
-        self._student_id = student_id
-        self._orgdefinedid = student_data.get('orgdefinedid', '')
-        self._firstname = student_data.get('firstname', '')
-        self._lastname = student_data.get('lastname', '')
-        self._email = student_data.get('email', '')
-        self._username = student_data.get('username', '')
-        self._sections = student_data.get('sections', '')
-        self._finalGrade = student_data.get('finalGrade', '')
-        self._group =  student_data.get('group', '')
-        self._professorEmail = student_data.get('professorEmail', None)
+from app.entities.UserEntity import UserEntity
+class StudentEntity(UserEntity):
+    def __init__(self, student_data):
+        super().__init__(
+            id, 
+            student_data.get('role'),
+            student_data.get('email'),
+            student_data.get('firstname'),
+            student_data.get('lastname'),
+            student_data.get('is_admin'),
+            student_data.get('section_ids'))
+
+        self._student_number = student_data.get('student_number')
+        self._final_grade = student_data.get('final_grade')
+        self._group_id = student_data.get('group_id')
         
     def to_json(self):
         return {
-            '_id': self._student_id,
-            'orgdefinedid': self._orgdefinedid,
-            'firstname': self._firstname,
-            'lastname': self._lastname,
-            'email': self._email,
-            'username': self._username,
-            'sections': self._sections,
-            'finalGrade': self._finalGrade,
-            'group': self._group,
-            'professorEmail': self._professorEmail
+            '_id': self._id,
+            'student_number': self._student_number,
+            'final_grade': self._final_grade,
+            'group_id': self._group_id,
         }
-
-    @property
-    def student_id(self):
-        return self._student_id
-    
-    @student_id.setter
-    def student_id(self, student_id):
-        self._student_id = student_id
         
     @property
-    def orgdefinedid(self):
-        return self._orgdefinedid
+    def student_number(self):
+        return self._student_number
     
-    @orgdefinedid.setter
-    def orgdefinedid(self, orgdefinedid):
-        self._orgdefinedid = orgdefinedid
-
-    @property
-    def firstname(self):
-        return self._firstname
-
-    @firstname.setter
-    def firstname(self, firstname):
-        self._firstname = firstname
-
-    @property
-    def lastname(self):
-        return self._lastname
-
-    @lastname.setter
-    def set_lastname(self, lastname):
-        self._lastname = lastname
-
-    @property
-    def email(self):
-        return self._email
-    
-    @email.setter
-    def email(self, email):
-        self._email = email
-
-    @property
-    def username(self):
-        return self._username
-
-    @username.setter
-    def username(self, username):
-        self._username = username
+    @student_number.setter
+    def student_number(self, student_number):
+        self._student_number = student_number
         
     @property
-    def sections(self):
-        return self._sections
-
-    @sections.setter
-    def sections(self, sections):
-        self._sections = sections
-        
-    @property
-    def finalGrade(self):
+    def final_grade(self):
         return self._finalGrade
 
-    @finalGrade.setter
-    def finalGrade(self, finalGrade):
-        self._finalGrade = finalGrade
+    @final_grade.setter
+    def final_grade(self, final_grade):
+        self._finalGrade = final_grade
 
     @property
-    def group(self):
-        return self._group
+    def group_id(self):
+        return self._group_id
 
-    @group.setter
-    def group(self, group):
-        self._group = group
-
-    @property
-    def professor_email(self):
-        return self._professorEmail
-
-    @professor_email.setter
-    def professor_email(self, professor_email):
-        self._professorEmail = professor_email
+    @group_id.setter
+    def group_id(self, group_id):
+        self._group_id = group_id

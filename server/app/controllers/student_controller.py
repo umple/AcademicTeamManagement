@@ -145,6 +145,7 @@ def update_group_bulk_students():
     except Exception as e:
         return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
 
+# can be removed once per table importing is deprecated
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
     global start_time, total_records, processed_records
