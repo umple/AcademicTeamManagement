@@ -173,6 +173,7 @@ def import_students_bulk():
     except Exception as e:
         return {'message': data['students']}, 500
 
+# can be removed once per table importing is deprecated
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
     global start_time, total_records, processed_records
