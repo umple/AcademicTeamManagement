@@ -2,24 +2,19 @@ class GroupEntity:
     def __init__(self, id, group_data=None):
         if group_data is None:
             group_data = {}
-        self._id = id
-        self._group_number = group_data.get('group_number', '')
-        self._group_name = group_data.get('name', '')
+        self._group_id = group_data.get('group_id', '')
         self._interested_project_ids = group_data.get('interested_project_ids', '')
-        self._assigned_project_id = group_data.get('assigned_project_id', '')
-        self._members = group_data.get('members', '')
-        self._related_sections = group_data.get('related_sections', '')
+        self._assigned_project_ids = group_data.get('_assigned_project_ids', '')
+        self._sections = group_data.get('sections', '')
         self._notes = group_data.get('notes', '')
         self._studentLock = group_data.get('studentLock', False)
         self._professorLock = group_data.get('professorLock', False)
     
     def to_json(self):
         return {
-            '_id': self._id,
-            'group_number': self._group_number,
-            'group_name': self._group_name,
-            'interested_project_ids': self._interested_project_ids,
-            'assigned_project_id': self._assigned_project_id,
+            'group_id': self._group_id,
+            'interested_project_ids': self._project,
+            'professorEmail': self._professorEmail,
             'members': self._members,
             'related_sections': self._related_sections,
             'notes': self._notes,
@@ -39,13 +34,13 @@ class GroupEntity:
         self._interested_project_ids = value
 
     @property
-    def assigned_project_id(self):
-        return self._assigned_project_id
+    def interested_project_ids(self):
+        return self._project
 
-    @assigned_project_id.setter
-    def assigned_project_id(self, value):
-        self._assigned_project_id = value
-
+    @interested_project_ids.setter
+    def interested_project_ids(self, value):
+        self._project = value
+        
     @property
     def professorEmail(self):
         return self._professorEmail

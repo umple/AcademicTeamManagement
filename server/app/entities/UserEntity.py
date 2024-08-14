@@ -6,11 +6,16 @@ class UserEntity:
         self._firstname = firstname
         self._lastname = lastname
         self._is_admin = is_admin
+
+        if section_ids == None:
+            self._section_ids = []
+
+        else:
+            self._section_ids = section_ids
         
     def to_json(self):
         return {
             '_id': self._id,
-            'role': self._role,
             'email': self._email,
             'firstname': self._firstname,
             'lastname': self._lastname,
@@ -21,12 +26,12 @@ class UserEntity:
         return self._id
 
     @property
-    def role(self):
-        return self._role
+    def id(self):
+        return self._id
     
-    @role.setter
-    def role(self, role):
-        self._role = role
+    @id.setter
+    def id(self, id):
+        self._id = id
 
 
     @property

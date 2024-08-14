@@ -1,4 +1,4 @@
-from app.models import user, staff, group
+from app.models import user, staff
 from .__init__ import db
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
@@ -17,11 +17,9 @@ def get_all_student():
 def add_student(student_obj):
     # check if attached prof is valid
     try:
-        # professor = staff.get_staff_by_id(student_obj.professorId)
-        # if professor is None:
-        #     student_obj.professorId = None
-        if student_obj.group_id and group.get_group(student_obj.group_id) == None:
-                raise KeyError("Student group id is invalid or can't be found")
+        professor = staff.get_staff_by_id(student_obj.professorId)
+        if professor is None:
+            student_obj.professorId = None
 
         result = studentsCollection.insert_one(student_obj.to_json())
         return result
@@ -34,8 +32,8 @@ def add_student(student_obj):
 # wouldn't it be better to only get a student object from the api
 # then get whatever attributes you need from there?
 
-def get_student(id):
-    document = studentsCollection.find_one({"_id": ObjectId(id)})
+def get_student_by_id(a):
+    document = studentsCollection.find_one({"_id": ObjectId(a)})
     return document
 
 def get_student_by_email(email):

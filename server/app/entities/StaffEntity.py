@@ -1,6 +1,6 @@
 from app.entities.UserEntity import UserEntity
 class StaffEntity(UserEntity):
-    def __init__(self, id, staff_data):
+    def __init__(self, staff_data):
         super().__init__(
             id, 
             staff_data.get('role'),
@@ -16,10 +16,6 @@ class StaffEntity(UserEntity):
         return {
             '_id': self._id,
             'role': self._role,
-            'email': self._email,
-            'firstname': self._firstname,
-            'lastname': self._lastname,
-            'is_admin': self._is_admin,
         }
 
     @property
