@@ -6,6 +6,15 @@ class UserEntity:
         self._firstname = firstname
         self._lastname = lastname
         self._is_admin = is_admin
+<<<<<<< HEAD
+=======
+
+        if section_ids == None:
+            self._section_ids = []
+
+        else:
+            self._section_ids = section_ids
+>>>>>>> 99f3eb9 (finished restructuring entity files)
         
     def to_json(self):
         return {
@@ -26,7 +35,10 @@ class UserEntity:
     @id.setter
     def id(self, id):
         self._id = id
+<<<<<<< HEAD
 
+=======
+>>>>>>> 99f3eb9 (finished restructuring entity files)
 
     @property
     def email(self):

@@ -2,7 +2,10 @@ class ProjectEntity:
     def __init__(self, id, project_data):
         if project_data is None:
             project_data = {}
+<<<<<<< HEAD
         self._id = id
+=======
+>>>>>>> 99f3eb9 (finished restructuring entity files)
         self._project_name = project_data.get('project_name', '')
         self._description = project_data.get('description', '')
         self._clientName = project_data.get('clientName', '')
@@ -16,7 +19,10 @@ class ProjectEntity:
     
     def to_json(self):
         return {
+<<<<<<< HEAD
             '_id': self._id,
+=======
+>>>>>>> 99f3eb9 (finished restructuring entity files)
             'project_name': self._project_name,
             'description': self._description,
             'clientName': self._clientName,
@@ -29,6 +35,7 @@ class ProjectEntity:
             'notes': self._notes
         }
 
+<<<<<<< HEAD
     def get_id(self):
         return self._id
 
@@ -36,6 +43,12 @@ class ProjectEntity:
     def project_name(self):
         return self._project_name
 
+=======
+    @property
+    def project_name(self):
+        return self._project_name
+
+>>>>>>> 99f3eb9 (finished restructuring entity files)
     @project_name.setter
     def project_name(self, value):
         self._project_name = value
