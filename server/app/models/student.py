@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 from app.models import user, staff, group
-=======
-from app.models import user, staff
->>>>>>> 99f3eb9 (finished restructuring entity files)
 from .__init__ import db
 from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
@@ -22,17 +18,11 @@ def get_all_student():
 def add_student(student_obj):
     # check if attached prof is valid
     try:
-<<<<<<< HEAD
         # professor = staff.get_staff_by_id(student_obj.professorId)
         # if professor is None:
         #     student_obj.professorId = None
-        if student_obj.group_id and group.get_group(student_obj.group_id) == None:
-                raise KeyError("Student group id is invalid or can't be found")
-=======
-        professor = staff.get_staff_by_id(student_obj.professorId)
-        if professor is None:
-            student_obj.professorId = None
->>>>>>> 99f3eb9 (finished restructuring entity files)
+        if group.get_group(student_obj.group_id) == None:
+            raise KeyError("Student group id is invalid or can't be found")
 
         result = studentsCollection.insert_one(student_obj.to_json())
         return result

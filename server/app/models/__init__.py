@@ -10,10 +10,11 @@ client = MongoClient(
     host=os.getenv("MONGODB_HOST"),
     port=PORT,
     username=os.getenv("MONGODB_INITDB_ROOT_USERNAME"),
-    password=os.getenv("MONGODB_INITDB_ROOT_PASSWORD"),
+    password="pass",
     authSource="AcademicTeamManagementDB"
 )
 
+# client = MongoClient("localhost", 27017, username="root", password="pass", authSource="AcademicTeamManagementDB")   
 # Main database
 db = client.AcademicTeamManagementDB
 
