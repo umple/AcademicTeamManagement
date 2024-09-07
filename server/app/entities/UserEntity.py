@@ -16,19 +16,28 @@ class UserEntity:
     def to_json(self):
         return {
             '_id': self._id,
+            'role': self._role,
             'email': self._email,
             'firstname': self._firstname,
             'lastname': self._lastname,
             'is_admin': self._is_admin
         }
 
-    @property
-    def id(self):
-        return self._id
+    # @property
+    # def id(self):
+    #     return self._id
     
-    @id.setter
-    def id(self, id):
-        self._id = id
+    # @id.setter
+    # def id(self, id):
+    #     self._id = id
+    @property
+    def role(self):
+        return self._role
+    
+    @role.setter
+    def role(self, role):
+        self._role = role
+
 
     @property
     def email(self):

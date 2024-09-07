@@ -2,8 +2,9 @@ from flask import jsonify, request, session
 from flask_cors import cross_origin
 from app.models import user, staff
 from app.entities.UserEntity import UserEntity
-import json
+import json, traceback
 from . import user_bp
+from bson import ObjectId
 
 
 # GET Request to retreive all users from the collection
@@ -21,22 +22,22 @@ def get_users():
             return {"message": "Users list is empty."}, 200
         else:
             return {"message": "Users list not found."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+    except Exception as e:
+        return {"message": "Internal server error." + traceback.format_exc()}, 503
 
 # POST Request to add a new user to the list
 @user_bp.route("/user", methods=["POST"])
 def add_user():
     try:
         user_obj = json.loads(request.data)
-        user_entity = UserEntity(user_obj)
+        user_entity = UserEntity(ObjectId(), user_obj['role'], user_obj['email'], user_obj['firstname'], user_obj['lastname'], user_obj['is_admin'])
         result = user.add_user(user_entity)
         if result:
             return jsonify(str(result.inserted_id)), 201
         else:
             return {"message": "Could not add user."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+    except Exception as e:
+        return {"message": "Internal server error." + traceback.format_exc()}, 503
 
 @cross_origin(supports_credentials=True)    
 @user_bp.route("/user/retrieve/user/role", methods=["GET"])
