@@ -1,9 +1,9 @@
 from app.entities.UserEntity import UserEntity
 class StudentEntity(UserEntity):
-    def __init__(self, student_data):
+    def __init__(self, id, student_data):
         super().__init__(
             id, 
-            student_data.get('role'),
+            "student",
             student_data.get('email'),
             student_data.get('firstname'),
             student_data.get('lastname'),
@@ -17,6 +17,11 @@ class StudentEntity(UserEntity):
     def to_json(self):
         return {
             '_id': self._id,
+            'role': self._role,
+            'email': self._email,
+            'firstname': self._firstname,
+            'lastname': self._lastname,
+            'is_admin': self._is_admin,
             'student_number': self._student_number,
             'final_grade': self._final_grade,
             'group_id': self._group_id,

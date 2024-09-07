@@ -3,10 +3,11 @@ from security import azure
 import os
 from bson import ObjectId
 
-usersCollection = db["users"]
+usersCollection = db.users
 
 def get_all_users():
     user_list = []
+
     for document in usersCollection.find():
         document["_id"] = str(document["_id"])
         user_list.append(document)
