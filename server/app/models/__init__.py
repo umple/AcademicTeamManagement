@@ -10,17 +10,19 @@ client = MongoClient(
     host=os.getenv("MONGODB_HOST"),
     port=PORT,
     username=os.getenv("MONGODB_INITDB_ROOT_USERNAME"),
-    password=os.getenv("MONGODB_INITDB_ROOT_PASSWORD"),
+    password="pass",
     authSource="AcademicTeamManagementDB"
-)   
+)
+
+# client = MongoClient("localhost", 27017, username="root", password="pass", authSource="AcademicTeamManagementDB")   
 # Main database
-db = client["AcademicTeamManagementDB"]
+db = client.AcademicTeamManagementDB
 
 # Check if a testing environment is running
-if os.getenv('ENVIRONMENT') == 'TESTING':
-    # Create a testing database
-    print("In a Test Environment")
-    client = mongomock.MongoClient()
-    db = client.db
+# if os.getenv('ENVIRONMENT') == 'TESTING':
+#     # Create a testing database
+#     print("In a Test Environment")
+#     client = mongomock.MongoClient()
+#     db = client.db
 
 

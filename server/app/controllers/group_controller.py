@@ -6,8 +6,8 @@ from pymongo.errors import WriteError
 import json
 from . import group_bp
  
-@group_bp.route("/groups", methods=["GET"])
-def get_groups():
+@group_bp.route("/GetAllGroups", methods=["GET"])
+def get_all_groups():
     try:
         group_list = group.get_all_groups()
         if group_list:
@@ -24,7 +24,7 @@ def get_groups():
         return {"message": "Internal server error."}, 503
 
 
-@group_bp.route("/group", methods=["POST"])
+@group_bp.route("/AddGroup", methods=["POST"])
 def add_group():
     try:
         group_obj = json.loads(request.data)

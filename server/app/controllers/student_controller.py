@@ -39,16 +39,15 @@ def add_student():
         student_id = ObjectId()
         student_obj = json.loads(request.data)
         student_entity = StudentEntity(student_id, student_obj)
-        user_entity = UserEntity(student_id, "student", student_obj)
         result = student.add_student(student_entity)
         if result:
             # Add the student as a user
-            _ = user.add_user(user_entity)
+            # _ = user.add_user(user_entity)
             return jsonify(str(result.inserted_id)), 201
         else:
-            return {"message": "Could not add student."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+            return {"message": result}, 404
+    except Exception as e:
+        return {"message": repr(e)}, 503
     
 @student_bp.route("/student/<email>", methods=["GET"])
 def get_student_by_email(email):
