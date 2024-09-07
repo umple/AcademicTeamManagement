@@ -43,7 +43,7 @@ def add_student():
         print(result)
         if result:
             # Add the student as a user
-            _ = user.add_user(student_entity)
+            # _ = user.add_user(user_entity)
             return jsonify(str(result.inserted_id)), 201
         else:
             return {"message": result}, 404
