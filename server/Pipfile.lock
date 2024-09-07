@@ -3,6 +3,7 @@
         "hash": {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             "sha256": "c37b49f3a63db32b8fe4e387e16bb84ca5499e9365ecc5de2aab4148fcd09a03"
         },
         "pipfile-spec": 6,
@@ -11,12 +12,17 @@
 =======
 =======
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
             "sha256": "88f04c65a95fa3eb4ae80de6c64e088d8515a77e5019fd1fa975486a6caeeb90"
         },
         "pipfile-spec": 6,
         "requires": {
             "python_version": "3"
+<<<<<<< HEAD
 >>>>>>> 43c143f (working on validations)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "sources": [
             {
@@ -61,6 +67,9 @@
         "certifi": {
             "hashes": [
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:922820b53db7a7257ffbda3f597266d435245903d80737e34f8a45ff3e3230d8",
                 "sha256:bec941d2aa8195e248a60b31ff9f0558284cf01a52591ceda73ea9afffd69fd9"
             ],
@@ -139,6 +148,7 @@
             ],
             "markers": "platform_python_implementation != 'PyPy'",
             "version": "==1.17.1"
+<<<<<<< HEAD
 =======
                 "sha256:5a1e7645bc0ec61a09e26c36f6106dd4cf40c6db3a1fb6352b0244e7fb057c7b",
                 "sha256:c198e21b1289c2ab85ee4e67bb4b4ef3ead0892059901a8d5b622f24a1101e90"
@@ -219,6 +229,8 @@
             "markers": "platform_python_implementation != 'PyPy'",
             "version": "==1.17.0"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "charset-normalizer": {
             "hashes": [
@@ -406,6 +418,9 @@
         "cryptography": {
             "hashes": [
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:014f58110f53237ace6a408b5beb6c427b64e084eb451ef25a28308270086494",
                 "sha256:1bbcce1a551e262dfbafb6e6252f1ae36a248e615ca44ba302df077a846a8806",
                 "sha256:203e92a75716d8cfb491dc47c79e17d0d9207ccffcbcb35f598fbe463ae3444d",
@@ -440,17 +455,21 @@
         "dnspython": {
             "hashes": [
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "sha256:b4c34b7d10b51bcc3a5071e7b8dee77939f1e878477eeecc965e9835f63c6c86",
                 "sha256:ce9c432eda0dc91cf618a5cedf1a4e142651196bbcd2c80e89ed5a907e5cfaf1"
             ],
             "markers": "python_version >= '3.9'",
             "version": "==2.7.0"
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:5ef3b9680161f6fa89daf8ad451b5f1a33b18ae8a1c6778cdf4b43f08c0a6e50",
                 "sha256:e8f0f9c23a7b7cb99ded64e6c3a6f3e701d78f50c55e002b839dea7225cff7cc"
             ],
             "markers": "python_version >= '3.8'",
             "version": "==2.6.1"
+<<<<<<< HEAD
 >>>>>>> 43c143f (working on validations)
 =======
                 "sha256:0663585d02f76929792470451a5ba64424acc3cd5227b03921dab0e2f27b1709",
@@ -492,6 +511,8 @@
             "markers": "python_version >= '3.8'",
             "version": "==2.6.1"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "et-xmlfile": {
             "hashes": [
@@ -513,11 +534,15 @@
         "flask-cors": {
             "hashes": [
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:5aadb4b950c4e93745034594d9f3ea6591f734bb3662e16e255ffbf5e89c88ef",
                 "sha256:b9e307d082a9261c100d8fb0ba909eec6a228ed1b60a8315fd85f783d61910bc"
             ],
             "index": "pypi",
             "version": "==5.0.0"
+<<<<<<< HEAD
 =======
                 "sha256:eeb69b342142fdbf4766ad99357a7f3876a2ceb77689dc10ff912aac06c389e4",
                 "sha256:f2a704e4458665580c074b714c4627dd5a306b333deb9074d0b1794dfa2fb677"
@@ -525,6 +550,8 @@
             "index": "pypi",
             "version": "==4.0.1"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "flask-jwt-extended": {
             "hashes": [
@@ -557,17 +584,21 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9",
                 "sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3"
             ],
             "markers": "python_version >= '3.6'",
             "version": "==3.10"
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:050b4e5baadcd44d760cedbd2b8e639f2ff89bbc7a5730fcc662954303377aac",
                 "sha256:d838c2c0ed6fced7693d5e8ab8e734d5f8fda53a039c0164afb0b82e771e3603"
             ],
             "markers": "python_version >= '3.6'",
             "version": "==3.8"
+<<<<<<< HEAD
 >>>>>>> 43c143f (working on validations)
 =======
                 "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9",
@@ -583,6 +614,8 @@
             "markers": "python_version >= '3.5'",
             "version": "==3.7"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "itsdangerous": {
             "hashes": [
@@ -678,17 +711,21 @@
             "hashes": [
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "sha256:9241d2cec7274b9736dbe8edacb19528ff66af3b3779b324d79ecc4201227f31",
                 "sha256:ff78f1944bf0cdcfc291ece198357db805c2f0db39e814bcef8a43c9f53e8a81"
             ],
             "index": "pypi",
             "version": "==4.2.0.post1"
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:08a24938a05c80c69b6b8b19a09888d38d8c6e7328547f94d46cadb7f47209f2",
                 "sha256:f06cd62afb8ae3ef63ba31349abd220a657ef0dd4f0243a29587c5213f931b7d"
             ],
             "index": "pypi",
             "version": "==4.1.2"
+<<<<<<< HEAD
 >>>>>>> 43c143f (working on validations)
 =======
                 "sha256:9241d2cec7274b9736dbe8edacb19528ff66af3b3779b324d79ecc4201227f31",
@@ -701,12 +738,18 @@
         "msal": {
             "hashes": [
 <<<<<<< HEAD
+=======
+        },
+        "msal": {
+            "hashes": [
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:2c4f189cf9cc8f00c80045f66d39b7c0f3ed45873fd3d1f2af9f22db2e12ff4b",
                 "sha256:96bc37cff82ebe4b160d5fc0f1196f6ca8b50e274ecd0ec5bf69c438514086e7"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==1.31.0"
+<<<<<<< HEAD
 =======
                 "sha256:423872177410cb61683566dc3932db7a76f661a5d2f6f52f02a047f101e1c1de",
                 "sha256:b4bf00850092e465157d814efa24a18f788284c9a479491024d62903085ea2fb"
@@ -715,6 +758,8 @@
             "markers": "python_version >= '3.7'",
             "version": "==1.30.0"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "msgspec": {
             "hashes": [
@@ -760,6 +805,7 @@
         },
         "numpy": {
             "hashes": [
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 "sha256:05b2d4e667895cc55e3ff2b56077e4c8a5604361fc21a042845ea3ad67465aa8",
@@ -820,6 +866,8 @@
             "markers": "python_version >= '3.10'",
             "version": "==2.1.2"
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:046356b19d7ad1890c751b99acad5e82dc4a02232013bd9a9a712fddf8eb60f5",
                 "sha256:0b8cc2715a84b7c3b161f9ebbd942740aaed913584cae9cdc7f8ad5ad41943d0",
                 "sha256:0d07841fd284718feffe7dd17a63a2e6c78679b2d386d3e82f44f0108c905550",
@@ -877,6 +925,7 @@
             "index": "pypi",
             "markers": "python_version >= '3.10'",
             "version": "==2.1.1"
+<<<<<<< HEAD
 >>>>>>> 43c143f (working on validations)
 =======
                 "sha256:08458fbf403bff5e2b45f08eda195d4b0c9b35682311da5a5a0a0925b11b9bd8",
@@ -929,6 +978,8 @@
             "markers": "python_version >= '3.9'",
             "version": "==2.0.1"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "oauthlib": {
             "hashes": [
@@ -957,6 +1008,7 @@
         },
         "pandas": {
             "hashes": [
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1067,6 +1119,8 @@
             "version": "==0.6.1"
 >>>>>>> f72dd2d (rewrote pipfile)
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:001910ad31abc7bf06f49dcc903755d2f7f3a9186c0c040b827e522e9cef0863",
                 "sha256:0ca6377b8fca51815f382bd0b697a0814c8bda55115678cbc94c30aacbb6eff2",
                 "sha256:0cace394b6ea70c01ca1595f839cf193df35d1575986e484ad35c4aeae7266c1",
@@ -1108,7 +1162,10 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==0.6.0"
+<<<<<<< HEAD
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "pycparser": {
             "hashes": [
@@ -1131,6 +1188,7 @@
         },
         "pymongo": {
             "hashes": [
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1198,6 +1256,8 @@
             "markers": "python_version >= '3.8'",
             "version": "==4.10.1"
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:0fc18b3a093f3db008c5fea0e980dbd3b743449eee29b5718bc2dc15ab5088bb",
                 "sha256:16e5019f75f6827bb5354b6fef8dfc9d6c7446894a27346e03134d290eb9e758",
                 "sha256:180d5eb1dc28b62853e2f88017775c4500b07548ed28c0bd9c005c3d7bc52526",
@@ -1252,6 +1312,7 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==4.8.0"
+<<<<<<< HEAD
 >>>>>>> 43c143f (working on validations)
 =======
                 "sha256:0087eb80d7d253479b974e5b531a75433942bbdd3ab28c7c4677176815288c52",
@@ -1374,6 +1435,8 @@
             "markers": "python_version >= '3.8'",
             "version": "==4.8.0"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "python-dateutil": {
             "hashes": [
@@ -1388,15 +1451,19 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "sha256:2aa355083c50a0f93fa581709deac0c9ad65cca8a9e9beac660adcbd493c798a",
                 "sha256:31c7c1817eb7fae7ca4b8c7ee50c72f93aa2dd863de768e1ef4245d426aa0725"
             ],
             "version": "==2024.2"
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:2a29735ea9c18baf14b448846bde5a48030ed267578472d8955cd0e7443a9812",
                 "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"
             ],
             "version": "==2024.1"
+<<<<<<< HEAD
 >>>>>>> 43c143f (working on validations)
 =======
                 "sha256:2aa355083c50a0f93fa581709deac0c9ad65cca8a9e9beac660adcbd493c798a",
@@ -1410,6 +1477,8 @@
             ],
             "version": "==2024.1"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "requests": {
             "hashes": [
@@ -1448,6 +1517,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "sha256:35ab7fd3bcd95e6b7fd704e4a1539513edad446c097797f2985e0e4b960772f2",
                 "sha256:d59a21b17a275fb872a9c3dae73963160ae079f1049ed956880cd7c09b120538"
             ],
@@ -1455,12 +1525,15 @@
             "markers": "python_version >= '3.8'",
             "version": "==75.1.0"
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:5f4c08aa4d3ebcb57a50c33b1b07e94315d7fc7230f7115e47fc99776c8ce308",
                 "sha256:95b40ed940a1c67eb70fc099094bd6e99c6ee7c23aa2306f4d2697ba7916f9c6"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==74.1.2"
+<<<<<<< HEAD
 >>>>>>> 43c143f (working on validations)
 =======
                 "sha256:35ab7fd3bcd95e6b7fd704e4a1539513edad446c097797f2985e0e4b960772f2",
@@ -1478,6 +1551,8 @@
             "markers": "python_version >= '3.8'",
             "version": "==72.2.0"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> 79d1a4a (working on validations)
         },
         "six": {
             "hashes": [
@@ -1489,6 +1564,7 @@
         },
         "tzdata": {
             "hashes": [
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1537,6 +1613,8 @@
             "markers": "python_version >= '3.8'",
             "version": "==3.0.4"
 =======
+=======
+>>>>>>> 79d1a4a (working on validations)
                 "sha256:2674120f8d891909751c38abcdfd386ac0a5a1127954fbc332af6b5ceae07efd",
                 "sha256:9068bc196136463f5245e51efda838afa15aaeca9903f49050dfa2679db4d252"
             ],
@@ -1553,12 +1631,20 @@
         },
         "werkzeug": {
             "hashes": [
+<<<<<<< HEAD
                 "sha256:097e5bfda9f0aba8da6b8545146def481d06aa7d3266e7448e2cccf67dd8bd18",
                 "sha256:fc9645dc43e03e4d630d23143a04a7f947a9a3b5727cd535fdfe155a17cc48c8"
             ],
             "markers": "python_version >= '3.8'",
             "version": "==3.0.3"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+                "sha256:02c9eb92b7d6c06f31a782811505d2157837cea66aaede3e217c7c27c039476c",
+                "sha256:34f2371506b250df4d4f84bfe7b0921e4762525762bbd936614909fe25cd7306"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==3.0.4"
+>>>>>>> 79d1a4a (working on validations)
         }
     },
     "develop": {}
