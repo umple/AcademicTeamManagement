@@ -35,8 +35,10 @@ def get_user_by_email(email):
     return document
 
 def update_user_by_id(id, user_obj):
+    data = user_obj.to_json()
+    del data["_id"]
     result = usersCollection.update_one({"_id": ObjectId(id)}, {
-        "$set":user_obj.to_json()
+        "$set":data
     })
     return result
 

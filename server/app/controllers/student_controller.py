@@ -42,23 +42,23 @@ def add_student():
         result = student.add_student(student_entity)
         if result:
             # Add the student as a user
-            # _ = user.add_user(user_entity)
+            _ = user.add_user(student_entity)
             return jsonify(str(result.inserted_id)), 201
         else:
             return {"message": result}, 404
     except Exception as e:
         return {"message": repr(e)}, 503
     
-@student_bp.route("/student/<email>", methods=["GET"])
-def get_student_by_email(email):
-    try:
-        document = student.get_student_by_email(email)
-        if document:
-            return jsonify(document), 200
-        else:
-            return {"message": "Student is not found."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+# @student_bp.route("/student/<email>", methods=["GET"])
+# def get_student_by_email(email):
+#     try:
+#         document = student.get_student_by_email(email)
+#         if document:
+#             return jsonify(document), 200
+#         else:
+#             return {"message": "Student is not found."}, 404
+#     except:
+#         return {"message": "Internal server error."}, 503
 
 # GET Request to get a student by id
 @student_bp.route("/student/<id>", methods=["GET"])
@@ -66,24 +66,27 @@ def get_student_by_id(id):
     try:
         document = student.get_student_by_id(id)
         if document:
+            document['_id'] = str(document['_id'])
             return jsonify(document), 200
         else:
             return {"message": "Students list not found."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+    except Exception as e:
+        return {"message": "Internal server eor."+repr(e)}, 503
 
 # PUT Request to update a student info
 @student_bp.route("/student/update/<id>", methods=["PUT"])
 def update_student_by_id(id):
     try:
         student_obj = StudentEntity(id, json.loads(request.data))
+        # del student_obj["_id"]
         result = student.update_student_by_id(id, student_obj)
+        _ = user.update_user_by_id(id, student_obj)
         if result:
-            return jsonify(str(result.modified_count)), 200
+            return jsonify(str(result)), 200
         else:
             return {"message": "Could not edit student."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+    except Exception as e:
+        return {"message": "Internal server error."+repr(e)}, 503
 
 # DELETE Request to remove a student from the collection
 @student_bp.route("/student/delete/<id>", methods=["DELETE"])
