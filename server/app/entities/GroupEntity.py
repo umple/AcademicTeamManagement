@@ -4,12 +4,8 @@ class GroupEntity:
             group_data = {}
         self._group_id = group_data.get('group_id', '')
         self._interested_project_ids = group_data.get('interested_project_ids', '')
-<<<<<<< HEAD
         self._assigned_project_ids = group_data.get('assigned_project_ids', '')
         self._members = group_data.get('members', '')
-=======
-        self._assigned_project_ids = group_data.get('_assigned_project_ids', '')
->>>>>>> 99f3eb9 (finished restructuring entity files)
         self._sections = group_data.get('sections', '')
         self._notes = group_data.get('notes', '')
         self._studentLock = group_data.get('studentLock', False)
@@ -18,13 +14,8 @@ class GroupEntity:
     def to_json(self):
         return {
             'group_id': self._group_id,
-<<<<<<< HEAD
             'interested_project_ids': self._interested_project_ids,
             'assigned_project_ids': self._assigned_project_ids,
-=======
-            'interested_project_ids': self._project,
-            'professorEmail': self._professorEmail,
->>>>>>> 99f3eb9 (finished restructuring entity files)
             'members': self._members,
             'sections': self._sections,
             'notes': self._notes,
