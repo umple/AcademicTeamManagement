@@ -81,13 +81,13 @@ def add_student_to_group(student_email, group_id):
     student_obj = student.get_student_by_email(student_email)
     group_obj = get_group(group_id)
 
-    if student_obj["orgdefinedid"] in group_obj['members']:
+    if student_obj["student_number"] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"_id": ObjectId(group_obj["_id"])},
-        {"$push": {"members": str(student_obj["orgdefinedid"])}})
-    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"], group_obj["group_number"])
+        {"$push": {"members": str(student_obj["student_number"])}})
+    student.assign_group_to_student(student_obj["student_number"], group_obj["group_id"])
     if result.modified_count > 0:
         return True
     
@@ -98,27 +98,33 @@ def add_student_to_group_by_group_id(student_email, group_id):
     group_obj = get_group_by_group_name(group_id)
     group_number = group_obj.get("group_number")
 
-    if student_obj["orgdefinedid"] in group_obj['members']:
+    if student_obj["student_number"] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"group_id": group_id},
-        {"$push": {"members": str(student_obj["orgdefinedid"])}}
-        )
-    if result.modified_count == 0:
-        print("Failed to add student to group.")
-        return False
-    
-    print({"members": str(student_obj["orgdefinedid"])})
-    updated_group_obj = get_group_by_group_name(group_id)  # Fetch again to verify
-    print("Updated group members:", updated_group_obj.get("members"))
-    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"], group_number)
+        {"$push": {"members": str(student_obj["student_number"])}})
+    student.assign_group_to_student(student_obj["student_number"], group_obj["group_id"])
     if result.modified_count > 0:
         student_result = student.studentsCollection.update_one({"orgdefinedid": student_obj["orgdefinedid"]}, {"$set": {"group": group_id, "group_number":group_number}})
         return student_result.modified_count > 0
     
     return False
 
+def remove_student_from_group_by_email(group_id, email):
+    group = get_group_by_group_name(group_id)
+    student_obj = student.get_student_by_email(email)
+    if student_obj["student_number"] not in group['members']:
+        return False
+    group["members"].remove(student_obj["student_number"])
+    student.remove_student_from_group(student_obj["student_number"])
+    
+    # unlock the group again
+    if "studentLock" in group and group["studentLock"]:
+        group["studentLock"] = False
+    
+    result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
+    return result
 
 def bulk_remove_students_from_group(group_id , orgdefinedid):
     group = get_group_by_group_name(group_id)
@@ -149,7 +155,7 @@ def remove_student_from_group(id, orgdefinedId):
 def get_user_group(user_email):
     student_obj = student.get_student_by_email(user_email)
     group = groupCollection.find_one(
-        {"members": {"$in" : [student_obj["orgdefinedid"]]}})
+        {"members": {"$in" : [student_obj["student_number"]]}})
     
     if group != None:
         return group

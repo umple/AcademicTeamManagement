@@ -31,18 +31,20 @@ def add_staff():
     try:
         staff_id = ObjectId()
         staff_obj = json.loads(request.data)
-        staff_role = staff_obj.get('role', '')
+
+        if staff_obj['role'].lower() not in ['ta','professor','admin']:
+            raise ValueError('Role for staff must be TA, professor, or admin.')
+
         staff_entity = StaffEntity(staff_id, staff_obj)
-        user_entity = UserEntity(staff_id, staff_role, staff_obj)
         result = staff.add_staff(staff_entity)
         if result:
-            # Add the student as a user
-            _ = user.add_user(user_entity)
+            # Add the staff as a user
+            _ = user.add_user(staff_entity)
             return jsonify(str(result.inserted_id)), 201
         else:
             return {"message": "Could not add staff."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+    except Exception as e:
+        return {"message": "Internal server error."+repr(e)}, 503
     
 @staff_bp.route("/staff/<email>", methods=["GET"])
 def get_staff_by_email(email):
@@ -73,6 +75,7 @@ def update_staff_by_id(id):
     try:
         staff_obj = StaffEntity(id, json.loads(request.data))
         result = staff.update_staff_by_id(id, staff_obj)
+        _ = user.update_user_by_id(id, staff_obj)
         if result:
             return jsonify(str(result.modified_count)), 200
         else:
