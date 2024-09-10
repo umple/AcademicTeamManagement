@@ -91,7 +91,11 @@ def assign_group_to_student(id, group_id):
     result = studentsCollection.update_one(
         {"_id" : ObjectId(id)}, 
         {"$set" : {
+<<<<<<< HEAD
             "group_id": str(group_id)
+=======
+            "group_id": ObjectId(group_id)
+>>>>>>> e6a86b3 (refactoring model files)
         }
         }
     )
@@ -166,7 +170,11 @@ def delete_students_by_ids(student_ids):
 
 def delete_student_by_id(a):
     try:
+<<<<<<< HEAD
         student_to_delete = get_student(ObjectId(a))
+=======
+        student_to_delete = get_student_by_id(ObjectId(a))
+>>>>>>> e6a86b3 (refactoring model files)
         if student_to_delete is not None:
             # Check if the student is in a group and try to remove them
             group_id = student_to_delete.get("group")
