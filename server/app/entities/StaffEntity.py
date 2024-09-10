@@ -1,10 +1,6 @@
 from app.entities.UserEntity import UserEntity
 class StaffEntity(UserEntity):
-<<<<<<< HEAD
     def __init__(self, id, staff_data):
-=======
-    def __init__(self, staff_data):
->>>>>>> 99f3eb9 (finished restructuring entity files)
         super().__init__(
             id, 
             staff_data.get('role'),
@@ -20,13 +16,10 @@ class StaffEntity(UserEntity):
         return {
             '_id': self._id,
             'role': self._role,
-<<<<<<< HEAD
             'email': self._email,
             'firstname': self._firstname,
             'lastname': self._lastname,
             'is_admin': self._is_admin,
-=======
->>>>>>> 99f3eb9 (finished restructuring entity files)
         }
 
     @property

@@ -21,8 +21,8 @@ def add_student(student_obj):
         # professor = staff.get_staff_by_id(student_obj.professorId)
         # if professor is None:
         #     student_obj.professorId = None
-        if student_obj.group_id and group.get_group(student_obj.group_id) == None:
-                raise KeyError("Student group id is invalid or can't be found")
+        if group.get_group(student_obj.group_id) == None:
+            raise KeyError("Student group id is invalid or can't be found")
 
         result = studentsCollection.insert_one(student_obj.to_json())
         return result
