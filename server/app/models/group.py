@@ -68,13 +68,13 @@ def add_student_to_group(student_email, group_id):
     student_obj = student.get_student_by_email(student_email)
     group_obj = get_group(group_id)
 
-    if student_obj["orgdefinedid"] in group_obj['members']:
+    if student_obj["student_number"] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"_id": ObjectId(group_obj["_id"])},
-        {"$push": {"members": str(student_obj["orgdefinedid"])}})
-    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"])
+        {"$push": {"members": str(student_obj["student_number"])}})
+    student.assign_group_to_student(student_obj["student_number"], group_obj["group_id"])
     if result.modified_count > 0:
         return True
     
@@ -84,13 +84,13 @@ def add_student_to_group_by_group_id(student_email, group_id):
     student_obj = student.get_student_by_email(student_email)
     group_obj = get_group_by_group_name(group_id)
 
-    if student_obj["orgdefinedid"] in group_obj['members']:
+    if student_obj["student_number"] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"group_id": group_id},
-        {"$push": {"members": str(student_obj["orgdefinedid"])}})
-    student.assign_group_to_student(student_obj["orgdefinedid"], group_obj["group_id"])
+        {"$push": {"members": str(student_obj["student_number"])}})
+    student.assign_group_to_student(student_obj["student_number"], group_obj["group_id"])
     if result.modified_count > 0:
         return True
     
@@ -99,10 +99,10 @@ def add_student_to_group_by_group_id(student_email, group_id):
 def remove_student_from_group_by_email(group_id, email):
     group = get_group_by_group_name(group_id)
     student_obj = student.get_student_by_email(email)
-    if student_obj["orgdefinedid"] not in group['members']:
+    if student_obj["student_number"] not in group['members']:
         return False
-    group["members"].remove(student_obj["orgdefinedid"])
-    student.remove_student_from_group(student_obj["orgdefinedid"])
+    group["members"].remove(student_obj["student_number"])
+    student.remove_student_from_group(student_obj["student_number"])
     
     # unlock the group again
     if "studentLock" in group and group["studentLock"]:
@@ -124,7 +124,7 @@ def remove_student_from_group(group_id , orgdefinedid):
 def get_user_group(user_email):
     student_obj = student.get_student_by_email(user_email)
     group = groupCollection.find_one(
-        {"members": {"$in" : [student_obj["orgdefinedid"]]}})
+        {"members": {"$in" : [student_obj["student_number"]]}})
     
     if group != None:
         return group

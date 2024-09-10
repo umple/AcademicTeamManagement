@@ -26,6 +26,7 @@ def get_users():
         return {"message": "Internal server error." + traceback.format_exc()}, 503
 
 # POST Request to add a new user to the list
+# If student/staff etc are superclasses should one be able to add a user on its own?
 @user_bp.route("/user", methods=["POST"])
 def add_user():
     try:
@@ -67,39 +68,42 @@ def get_user_linked_professor_by_email():
         return {"message": "Internal server error."}, 503, {'Access-Control-Allow-Credentials': 'true'}
 
 # GET Request to get a user by id
-@user_bp.route("/user/<id>", methods=["GET"])
-def get_user_by_id(id):
-    try:
-        document = user.get_user_by_id(id)
-        if document:
-            return jsonify(document), 200
-        else:
-            return {"message": "users list not found."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+# SHOULD ONLY BE DONE FROM THE /student/ or from /staff/
+# @user_bp.route("/user/<id>", methods=["GET"])
+# def get_user_by_id(id):
+#     try:
+#         document = user.get_user_by_id(id)
+#         if document:
+#             return jsonify(document), 200
+#         else:
+#             return {"message": "users list not found."}, 404
+#     except:
+#         return {"message": "Internal server error."}, 503
 
 # PUT Request to update a user info
-@user_bp.route("/user/update/<id>", methods=["PUT"])
-def update_user_by_id(id):
-    try:
-        user_obj = UserEntity(json.loads(request.data))
-        result = user.update_user_by_id(id, user_obj)
-        if result:
-            return jsonify(str(result.modified_count)), 200
-        else:
-            return {"message": "Could not edit user."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+# SHOULD ONLY BE DONE FROM THE /student/update or from /staff/update
+# @user_bp.route("/user/update/<id>", methods=["PUT"])
+# def update_user_by_id(id):
+#     try:
+#         user_obj = UserEntity(json.loads(request.data))
+#         result = user.update_user_by_id(id, user_obj)
+#         if result:
+#             return jsonify(str(result.modified_count)), 200
+#         else:
+#             return {"message": "Could not edit user."}, 404
+#     except:
+#         return {"message": "Internal server error."}, 503
 
 # DELETE Request to remove a user from the collection
-@user_bp.route("/user/delete/<id>", methods=["DELETE"])
-def delete_user_by_id(id):
-    try:
-        result = user.delete_user_by_id(id)
-        return jsonify({"message": f"User deleted successfully.", "deleted_count": result}), 200
-    except ValueError as ve:
-        return {"message": str(ve)}, 400  # Bad Request
-    except Exception as e:
-        return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
+# SHOULD ONLY BE DONE FROM THE /student/delete or from /staff/delete
+# @user_bp.route("/user/delete/<id>", methods=["DELETE"])
+# def delete_user_by_id(id):
+#     try:
+#         result = user.delete_user_by_id(id)
+#         return jsonify({"message": f"User deleted successfully.", "deleted_count": result}), 200
+#     except ValueError as ve:
+#         return {"message": str(ve)}, 400  # Bad Request
+#     except Exception as e:
+#         return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
 
  
