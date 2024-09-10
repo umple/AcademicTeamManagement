@@ -43,12 +43,12 @@ def get_student_by_email(email):
     document['_id'] = str(document['_id'])
     return document
 
-def get_student_email_by_orgdefinedid(orgdefinedid):
-    document = studentsCollection.find_one({"orgdefinedid": orgdefinedid})
-    student_email = ''
-    if document:
-        student_email = str(document['email'])
-    return student_email
+# def get_student_email_by_orgdefinedid(orgdefinedid):
+#     document = studentsCollection.find_one({"orgdefinedid": orgdefinedid})
+#     student_email = ''
+#     if document:
+#         student_email = str(document['email'])
+#     return student_email
 
 def get_student_name_from_email(email):
     fullName = ""
@@ -81,11 +81,11 @@ def update_student_by_id(id, student_obj):
     })
     return result
 
-def assign_group_to_student(orgdefinedid, groupName):
+def assign_group_to_student(id, group_id):
     result = studentsCollection.update_one(
-        {"orgdefinedid" : orgdefinedid}, 
+        {"_id" : ObjectId(id)}, 
         {"$set" : {
-            "group": groupName
+            "group_id": ObjectId(group_id)
         }
         }
     )
@@ -94,22 +94,22 @@ def assign_group_to_student(orgdefinedid, groupName):
 def update_section_for_student(id, new_section):
     result = studentsCollection.update_one(
         {"_id": ObjectId(id)}, 
-        {"$set" : {
+        {"$addToSet" : {
             "sections": new_section
         }
         }
     )
     return result
 
-def remove_student_from_group(orgdefinedid):
-    result = studentsCollection.update_one(
-        {"orgdefinedid" : orgdefinedid}, 
-        {"$set" : {
-            "group": None
-        }
-        }
-    )
-    return result
+# def remove_student_from_group(orgdefinedid):
+#     result = studentsCollection.update_one(
+#         {"orgdefinedid" : orgdefinedid}, 
+#         {"$set" : {
+#             "group": None
+#         }
+#         }
+#     )
+#     return result
 
 def bulk_group_update_students_by_ids(student_ids, new_group):
     try:
@@ -117,7 +117,7 @@ def bulk_group_update_students_by_ids(student_ids, new_group):
         
         for student_id in student_ids:
             student = get_student_by_id(student_id)
-            orgdefinedid = student["orgdefinedid"]
+            id = student["_id"]
             student_old_group = student["group"]
             student_email = student["email"]
             
@@ -146,11 +146,11 @@ def delete_students_by_ids(student_ids):
 
         for student_id in student_ids:
             # Call the existing delete_student_by_id function for each ID
-            result = delete_student_by_id(student_id)
+            result = delete_student_by_id(ObjectId(student_id))
 
             # Check if the deletion was successful
             if result == "works":
-                _ = user.delete_user_by_id(student_id) # remove the related user too
+                _ = user.delete_user_by_id(ObjectId(student_id)) # remove the related user too
                 deleted_count += 1
 
         return deleted_count
@@ -160,15 +160,15 @@ def delete_students_by_ids(student_ids):
 
 def delete_student_by_id(a):
     try:
-        student_to_delete = get_student_by_id(a)
+        student_to_delete = get_student_by_id(ObjectId(a))
         if student_to_delete is not None:
             # Check if the student is in a group and try to remove them
             group_id = student_to_delete.get("group")
             if group_id is not None and group_id != "":
-                orgdefinedid = student_to_delete["orgdefinedid"]
-                result = group.remove_student_from_group(group_id, orgdefinedid)
+                student_id = student_to_delete["_id"]
+                result = group.remove_student_from_group(group_id, student_id)
                 if not result:
-                    return {"message": f"Failed to remove student {orgdefinedid} from the group."}, 500
+                    return {"message": f"Failed to remove student {student_id} from the group."}, 500
  
             # Delete the student document
             result = studentsCollection.delete_one({"_id": ObjectId(a)})
