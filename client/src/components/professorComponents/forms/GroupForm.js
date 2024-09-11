@@ -35,7 +35,7 @@ const GroupForm = ({
   update,
   editingRow
 }) => {
-  const [autoGroupNumber, setAutoGroupNumber] = useState('Will be assigned automatically')
+  const [setAutoGroupNumber] = useState('Will be assigned automatically')
   const [isFocused, setIsFocused] = useState(false)
   const { t } = useTranslation()
   const [isloading, setIsLoading] = useState(false)
@@ -110,18 +110,18 @@ const GroupForm = ({
               }}
             >
               {columns.map((column) => {
-                  if (column.accessorKey === 'group_number') {
-                    return (
-                      <FormControl fullWidth margin="normal">
-                        <InputLabel id="group_number_section">{t('common.GroupNumber')}</InputLabel>
-                        <TextField
-                          disabled
-                          value="Will be assigned automatically"
-                          helperText="Group number will be assigned automatically upon creation."
-                        />
-                      </FormControl>
-                    )
-                  }
+                if (column.accessorKey === 'group_number') {
+                  return (
+                    <FormControl fullWidth margin="normal">
+                      <InputLabel id="group_number_section">{t('common.GroupNumber')}</InputLabel>
+                      <TextField
+                        disabled
+                        value="Will be assigned automatically"
+                        helperText="Group number will be assigned automatically upon creation."
+                      />
+                    </FormControl>
+                  )
+                }
                 if (column.accessorKey === 'members') {
                   return (
                     <React.Fragment key="members-section">
@@ -178,8 +178,8 @@ const GroupForm = ({
 
                 </FormControl>
               </React.Fragment>
-                )
-              }
+                  )
+                }
                 if (column.accessorKey === 'project') {
                   return (
                     <FormControl>
@@ -271,7 +271,7 @@ const GroupForm = ({
               })}
             </Stack>
           </DialogContent>
-          <DialogActions sx={{ p: '1.25rem', position: 'sticky', bottom: 0, backgroundColor: 'white'}}>
+          <DialogActions sx={{ p: '1.25rem', position: 'sticky', bottom: 0, backgroundColor: 'white' }}>
             <Button onClick={handleClose}>{t('common.Cancel')}</Button>
             <Button color="secondary" type="submit" variant="contained">
               {t('common.Create')}
@@ -284,4 +284,3 @@ const GroupForm = ({
 }
 
 export default GroupForm
-

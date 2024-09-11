@@ -3,3 +3,39 @@
     padding: 0;
      
 }
+
+.nav-container {
+    width: 100%;
+  }
+  
+  .nav__logo img {
+    height: 40px; /* Adjust according to your logo size */
+  }
+  
+  .AppBar {
+    background-color: transparent;
+    box-shadow: none;
+  }
+  
+  .Toolbar {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .nav-link {
+    color: white;
+    text-transform: uppercase;
+    margin-right: 20px;
+  }
+  
+  .nav__logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav__section-divider {
+    border-bottom: 1px solid white;
+    width: 100%;
+    margin: 0 1rem;
+  }
+  

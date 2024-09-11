@@ -20,11 +20,12 @@ msal = "*"
 jwt = "*"
 mongomock = "*"
 coverage = "*"
+setuptools = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3"
+python_version = "3.12"
 
 [scripts]
 start-prod = "python run.py"

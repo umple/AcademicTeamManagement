@@ -72,7 +72,6 @@ const EditGroupModal = ({
         const updatedMembers = values.members.filter(id => id !== memberId)
         // Update the form field value to reflect the removed member
         setFieldValue('members', updatedMembers, true)
-
       } else {
         console.error('Failed to remove member from group')
       }
@@ -154,7 +153,7 @@ const EditGroupModal = ({
                       <Autocomplete
                         multiple
                         id="members-autocomplete"
-                        options={students.filter((student) => 
+                        options={students.filter((student) =>
                           !student.group || // Include students not in any group
                           values.members.includes(student.orgdefinedid) // Include currently selected members
                         )}
