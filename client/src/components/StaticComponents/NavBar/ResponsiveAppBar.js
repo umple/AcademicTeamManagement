@@ -230,7 +230,94 @@ const ResponsiveAppBar = () => {
           </Box>
           {/* Regular Menu for larger screens */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: '20px' }}>
+    <div className="nav-container">
+      {/* First Level: Logo on the left, Login/Logout + Language on the right */}
+      <AppBar sx={{ bgcolor: 'transparent', boxShadow: 'none', position: 'absolute', padding: '0 6rem' }}>
+        <Toolbar style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          {/* Left Section: Logo */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <a href="/" className="nav__logo">
+              <img src="/assets/Logo-white.svg" alt="Logo" style={{ height: '40px' }} />
+            </a>
+          </Box>
+          {/* Right Section: Language Toggle and Login/Logout */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Button
+              onClick={changeLanguage}
+              startIcon={<LanguageIcon />}
+              sx={{ color: 'white', textTransform: 'none', marginRight: 2 }}>
+              {currentLanguage.toUpperCase()}
+            </Button>
+            {isAuthenticated
+              ? (
+              <Button
+              href={`${process.env.REACT_APP_BACKEND_HOST}/api/logout`}
+                onClick={handleLogout}
+                startIcon={<LogoutIcon />}
+                sx={{ color: 'white', textTransform: 'none' }}>
+                {t('common.log-out')}
+              </Button>
+                )
+              : (
+              <Button
+                onClick={handleLogIn}
+                startIcon={<LoginIcon />}
+                sx={{ color: 'white', textTransform: 'none' }}>
+                {t('common.log-in')}
+              </Button>
+                )}
+          </Box>
+        </Toolbar>
+        {/* Horizontal Line separating the two sections */}
+        <div className="nav__section-divider" />
+        {/* Second Level: Navigation Links */}
+        <Toolbar style={{ justifyContent: 'flex-start', padding: '0 1rem' }}>
+          {/* Mobile Menu (Fluid Options) */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit">
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left'
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' }
+              }}>
+              {Object.entries(pages).map(([key, value]) => (
+                <MenuItem key={key} component="a" href={value.value} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{pages[key].key}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          {/* Regular Menu for larger screens */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: '20px' }}>
             {Object.entries(pages).map(([key, value]) => (
+              <Button
+                key={key}
+                href={value.value}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                className="nav-link">
+                {pages[key].key}
+              </Button>
               <Button
                 key={key}
                 href={value.value}
@@ -272,7 +359,10 @@ const ResponsiveAppBar = () => {
                 </Button>
             }
           </Toolbar>
+          </Box>
+        </Toolbar>
       </AppBar>
+    </div>
     </div>
   )
 }
