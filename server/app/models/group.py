@@ -14,6 +14,10 @@ def get_all_groups():
         group_Collection.append(document)
     return group_Collection
 
+def delete_all_groups():
+    for document in groupCollection.find():
+        delete_group_by_id(document['_id'])
+
 def add_group(group_obj):
     try:
         if group_obj.members:
@@ -43,7 +47,7 @@ def get_group(id):
 
 def get_group_by_group_name(name):
     result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
-    if result:
+    if result is not None:
         return result
     else:
         return None
@@ -248,7 +252,7 @@ def student_unlock_group_by_id(id, group_obj):
 def delete_group_by_id(id):
     originalGroup  = get_group(id)
     for orgdefinedId in originalGroup["members"]:
-            result = student.assign_group_to_student(orgdefinedId, groupName=None)
+        result = student.assign_group_to_student(orgdefinedId, groupName=None)
     result = groupCollection.delete_one({"_id": ObjectId(id)})
     project.change_status(originalGroup["project"], "Available")
     project.remove_group_from_project(originalGroup["project"])

@@ -105,8 +105,43 @@ const ImportData = (props) => {
       fileContents = JSON.parse(result)
 
       console.log(fileContents.students)
-      clearInterval(pollInterval) // ERASE THIS WHEN API REQUEST IMPLEMENTED
 
+      fetch('api/importStudentBulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fileContents)
+      })
+
+      setProgress(progress + 20)
+
+      fetch('api/importGroupsBulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fileContents)
+      })
+
+      // fetch('api/importStudentBulk', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(fileContents)
+      // })
+
+      // fetch('api/importStudentBulk', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(fileContents)
+      // })
+
+      // fetch('api/importStudentBulk', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(fileContents)
+      // })
+
+        .then(() => {
+          clearInterval(pollInterval)
+          setIsImporting(false)
+        })
       // IMPLEMENT NEW GLOBAL EXPORT CALL IN THE API (CONTROLLERS/STUDENT_CONTROLLER)
       // THAT ACCEPTS JSON AS PAYLOAD. DEPRECATE IMPORT STUDENT CALL
     }
