@@ -49,6 +49,13 @@ jobs:
         with:
           name: Failed Tests Screenshots
           path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/client/cypress/screenshots
+      - name: Upload Screenshot of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Failed Tests Screenshots
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/client/cypress/screenshots
+
   unit-tests:
     runs-on: ubuntu-latest
     env:
@@ -84,6 +91,11 @@ jobs:
           coverage report
       - name: Upload coverage report as artifact
         uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/server/htmlcov
+      - name: Upload coverage report as artifact
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/server/htmlcov
