@@ -49,6 +49,12 @@ jobs:
         working-directory: ./client
       - name: Upload Screenshot of failed tests
         if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Failed Tests Screenshots
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/client/cypress/screenshots
+      - name: Upload Screenshot of failed tests
+        if: failure()
         uses: actions/upload-artifact@v2
         with:
           name: Failed Tests Screenshots
@@ -91,6 +97,12 @@ jobs:
         with:
           name: coverage-report
           path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/server/htmlcov
+      - name: Upload coverage report as artifact
+        uses: actions/upload-artifact@4
+        with:
+          name: coverage-report
+          path: /home/runner/work/AcademicTeamManagement/AcademicTeamManagement/server/htmlcov
+          
   react-unit-tests:
     runs-on: ubuntu-latest
     defaults:
