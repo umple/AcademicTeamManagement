@@ -1,4 +1,3 @@
-
 import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -146,15 +145,21 @@ const ResponsiveAppBar = () => {
     return null
   }
 
+  const homePagePaths = ['/StudentHome', '/ProfessorHome', '/HomeTA', '/AdminHome']
+  const isHomePage = homePagePaths.includes(location.pathname)
+
+  const navTextColor = isHomePage ? 'white' : 'black'
+  const logoSrc = isHomePage ? '/assets/Logo-white.svg' : '/assets/logo.svg'
+
   return (
     <div className="nav-container">
       {/* First Level: Logo on the left, Login/Logout + Language on the right */}
-      <AppBar sx={{ bgcolor: 'transparent', boxShadow: 'none', position: 'absolute', padding: '0 6rem' }}>
+      <AppBar sx={{ bgcolor: 'transparent', boxShadow: 'none', position: 'absolute', padding: '0 6rem', marginTop: '1rem' }}>
         <Toolbar style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           {/* Left Section: Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <a href="/" className="nav__logo">
-              <img src="/assets/Logo-white.svg" alt="Logo" style={{ height: '40px' }} />
+              <img src={logoSrc} alt="Logo" style={{ height: '40px' }} />
             </a>
           </Box>
           {/* Right Section: Language Toggle and Login/Logout */}
@@ -162,7 +167,7 @@ const ResponsiveAppBar = () => {
             <Button
               onClick={changeLanguage}
               startIcon={<LanguageIcon />}
-              sx={{ color: 'white', textTransform: 'none', marginRight: 2 }}>
+              sx={{ color: navTextColor, textTransform: 'none', marginRight: 2 }}>
               {currentLanguage.toUpperCase()}
             </Button>
             {isAuthenticated
@@ -171,7 +176,7 @@ const ResponsiveAppBar = () => {
                 href={`${process.env.REACT_APP_BACKEND_HOST}/api/logout`}
                 onClick={handleLogout}
                 startIcon={<LogoutIcon />}
-                sx={{ color: 'white', textTransform: 'none' }}>
+                sx={{ color: navTextColor, textTransform: 'none' }}>
                 {t('common.log-out')}
               </Button>
                 )
@@ -179,18 +184,18 @@ const ResponsiveAppBar = () => {
               <Button
                 onClick={handleLogIn}
                 startIcon={<LoginIcon />}
-                sx={{ color: 'white', textTransform: 'none' }}>
+                sx={{ color: navTextColor, textTransform: 'none' }}>
                  {t('common.log-in')}
               </Button>
                 )}
           </Box>
         </Toolbar>
         {/* Horizontal Line separating the two sections */}
-        <div className="nav__section-divider" />
+        <div className="nav__section-divider" style={{ borderBottom: `1px solid ${navTextColor}` }}/>
         {/* Second Level: Navigation Links */}
         <Toolbar style={{ justifyContent: 'flex-start', padding: '0 1rem' }}>
           {/* Mobile Menu (Fluid Options) */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, color: navTextColor }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -231,7 +236,7 @@ const ResponsiveAppBar = () => {
                 key={key}
                 href={value.value}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: navTextColor, display: 'block' }}
                 className="nav-link">
                 {pages[key].key}
               </Button>

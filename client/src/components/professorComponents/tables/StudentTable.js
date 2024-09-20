@@ -207,8 +207,8 @@ const StudentTable = () => {
       <Typography
         variant="h2"
         align="center"
-        fontWeight="fontWeightBold"
-        sx={{ marginBottom: '0.5rem' }}
+        fontWeight="fontWeight"
+        sx={{ marginBottom: '1rem', marginTop: '9rem' }}
       >
         {t('students-table.students')}
       </Typography>

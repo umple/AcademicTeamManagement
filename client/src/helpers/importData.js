@@ -99,10 +99,9 @@ const ImportData = (props) => {
     }, 500) // Poll every 1 second (adjust as needed)
 
     const reader = new FileReader()
-    var fileContents = {}
     reader.onload = function (event) {
       const result = event.target.result
-      fileContents = JSON.parse(result)
+      const fileContents = JSON.parse(result)
 
       console.log(fileContents.students)
 

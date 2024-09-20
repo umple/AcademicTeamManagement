@@ -19,7 +19,7 @@ export const csvOptions = (name) => ({
 // global export - due to limiations of CSV format,
 // global export to CSV as one file is not possible.
 export const handleGlobalExportData = (csvExporter) => {
-  var exportData = {}
+  const exportData = {}
   groupService.get()
     .then((data) => {
       exportData.groups = data.groups

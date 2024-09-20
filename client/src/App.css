@@ -1,7 +1,9 @@
-#nav{ 
-    margin-bottom: 5%;
+/* Ensure the navbar has no margin at the bottom */
+#nav {
+    margin-bottom: 0; /* Remove the bottom margin so background flows directly under it */
 }
-
-body{
- background: #f3f3f3;
-}
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;  /* Prevent horizontal scrolling */
+  }
