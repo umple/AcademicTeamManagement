@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { getUserName } from '../../helpers/UserName'
 import { getUserEmail } from '../../helpers/UserEmail'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import Footer from '../../components/common/Footer'
 import groupService from '../../services/groupService'
 import {
@@ -10,7 +11,8 @@ import {
   Grid,
   Box,
   Chip,
-  Typography
+  Typography,
+  Button
 } from '@material-ui/core'
 import studentService from '../../services/studentService'
 
@@ -32,6 +34,14 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '2rem',
     fontWeight: 500,
     color: '#616161'
+  },
+  noGroupMessage: {
+    fontSize: '1.2rem',
+    marginTop: theme.spacing(2),
+    color: '#ff1744'
+  },
+  groupButton: {
+    marginTop: theme.spacing(2)
   }
 }))
 
@@ -139,12 +149,25 @@ function StudentHomePage () {
             </>
               )
             : (
-            <Typography variant="body1">{t('group-table.no-group')}</Typography>
+            <>
+              <Typography variant="h6" className={classes.noGroupMessage}>
+                {t("Looks like you haven't found a group yet.")}
+              </Typography>
+              <Button
+                component={Link}
+                to="/studentGroups"
+                variant="contained"
+                color="primary"
+                className={classes.groupButton}
+              >
+                {t('Find or Create a Group')}
+              </Button>
+            </>
               )
         }
       </Box>
 
-    <Footer/>
+      <Footer/>
     </div>
   )
 }
