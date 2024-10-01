@@ -37,9 +37,9 @@ def add_group(group_obj):
             _create_project_applications_for_interested_projects(group_obj)
 
         # add project to group if it exists
-        if "project" in group_obj and group_obj["project"] and group_obj["project"] != '':
-            project.add_group_to_project(group_obj["project"], group_obj["group_id"])
-            project.change_status(group_obj["project"], "Underway")
+        if group_obj.assigned_project_id and group_obj.assigned_project_id != '':
+            project.add_group_to_project(group_obj.assigned_project_id, group_obj.group_id)
+            project.change_status(group_obj.assigned_project_id, "Underway")
         
         insert_result = groupCollection.insert_one(group_obj)
         return insert_result, next_group_number
@@ -54,12 +54,12 @@ def get_group(id):
     else:
         return None
 
-def get_group_by_group_name(name):
-    result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
-    if result:
-        return result
-    else:
-        return None
+# def get_group_by_group_name(name):
+#     result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
+#     if result:
+#         return result
+#     else:
+#         return None
     
 def get_groups_by_section(section):
     result = groupCollection.find({"sections": str(section)})
@@ -77,11 +77,11 @@ def get_group_members_emails(group_obj):
                 members_emails.append(student_email)
     return members_emails
     
-def add_student_to_group(student_email, group_id):
-    student_obj = student.get_student_by_email(student_email)
-    group_obj = get_group(group_id)
+def add_student_to_group(student_id, group_id):
+    student_obj = student.get_student_by_id(ObjectId(student_id))
+    group_obj = get_group(ObjectId(group_id))
 
-    if student_obj["student_number"] in group_obj['members']:
+    if student_obj["_id"] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
@@ -330,12 +330,12 @@ def _update_group_name_to_project_applications(old_grpoup_name, new_group_name):
         
 # Create project applications if students are interested in projects
 def _create_project_applications_for_interested_projects(group_obj):
-    if group_obj.interest and len(group_obj.interest) > 0:
+    if group_obj.interested_project_ids and len(group_obj.interested_project_ids) > 0:
         # get the email of the student who submitted the group application
         # if exists, or just assign the group id to it
         student_email = group_obj.group_id
         if group_obj.members and len(group_obj.members) > 0:
             student_email = student.get_student_email_by_orgdefinedid(group_obj.members[0])
             
-        for project_name in group_obj.interest:
+        for project_name in group_obj.interested_project_ids:
             project_application.create_application(project_name, student_email, group_obj.group_id)

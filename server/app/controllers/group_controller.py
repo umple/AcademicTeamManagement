@@ -3,7 +3,7 @@ from app.entities.GroupEntity import GroupEntity
 from app.models import group
 from bson import ObjectId, json_util
 from pymongo.errors import WriteError
-import json
+import json, traceback
 from . import group_bp
  
 @group_bp.route("/groups", methods=["GET"])
@@ -28,7 +28,8 @@ def get_all_groups():
 def add_group():
     try:
         group_obj = json.loads(request.data)
-        # group_entity = GroupEntity(group_obj)
+        group_id = ObjectId()
+        group_entity = GroupEntity(group_id, group_obj)
         
         insert_result, next_group_number = group.add_group(group_obj)
         response_data = {"message": "Group added successfully", 
@@ -37,8 +38,7 @@ def add_group():
         return jsonify(response_data), 201
     except Exception as e:
         # Handle the exception and return an error response
-        error_message = str(e)  # Get the error message as a string
-        return {"message": error_message}, 500
+        return {"message": traceback.format_exc()}, 500
 
 @group_bp.route("/importGroupsBulk", methods=["POST"])
 def import_groups_bulk():
