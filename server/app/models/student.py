@@ -34,8 +34,8 @@ def add_student(student_obj):
 # wouldn't it be better to only get a student object from the api
 # then get whatever attributes you need from there?
 
-def get_student_by_id(a):
-    document = studentsCollection.find_one({"_id": ObjectId(a)})
+def get_student(id):
+    document = studentsCollection.find_one({"_id": ObjectId(id)})
     return document
 
 def get_student_by_email(email):

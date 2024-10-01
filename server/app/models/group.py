@@ -4,6 +4,7 @@ import app.models.student as student
 import app.models.project as project
 import app.models.project_application as project_application
 import app.models.section as section
+from bson import ObjectId  # Assuming you are using MongoDB
 
 groupCollection = db["groups"]
 
@@ -40,13 +41,6 @@ def get_group(id):
         return result
     else:
         return None
-
-# def get_group_by_group_name(name):
-#     result = groupCollection.find_one({"group_id": str(name)},  {"_id": 0})
-#     if result:
-#         return result
-#     else:
-#         return None
     
 def get_groups_by_section(section):
     result = groupCollection.find({"sections": str(section)})
@@ -55,68 +49,35 @@ def get_groups_by_section(section):
     else:
         return None
 
-def get_group_members_emails(group_obj):
-    members_emails = []
+def get_group_members(group_obj):
+    members = []
     if group_obj["members"] and len(group_obj["members"]) > 0:
-        for member_orgdefinedid in group_obj["members"]:
-            student_email = student.get_student_email_by_orgdefinedid(member_orgdefinedid)
-            if student_email != '':
-                members_emails.append(student_email)
-    return members_emails
+        for member in group_obj["members"]:
+            student_id = student.get_student(member)['_id']
+            members.append(student_email)
+    return members
     
-def add_student_to_group(student_id, group_id):
-    student_obj = student.get_student_by_id(ObjectId(student_id))
+def add_student_to_group(group_id, student_id):
+    student_obj = student.get_student(ObjectId(student_id))
     group_obj = get_group(ObjectId(group_id))
 
-    if student_obj["_id"] in group_obj['members']:
+    if student_obj['_id'] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"_id": ObjectId(group_obj["_id"])},
-        {"$push": {"members": str(student_obj["student_number"])}})
-    student.assign_group_to_student(student_obj["student_number"], group_obj["group_id"])
+        {"$push": {"members": str(student_obj['_id'])}})
+    student.assign_group_to_student(student_obj['_id'], group_obj['_id'])
     if result.modified_count > 0:
         return True
     
     return False
 
-def add_student_to_group_by_group_id(student_email, group_id):
-    student_obj = student.get_student_by_email(student_email)
-    group_obj = get_group_by_group_name(group_id)
-
-    if student_obj["student_number"] in group_obj['members']:
-        return False
-    
-    result = groupCollection.update_one(
-        {"group_id": group_id},
-        {"$push": {"members": str(student_obj["student_number"])}})
-    student.assign_group_to_student(student_obj["student_number"], group_obj["group_id"])
-    if result.modified_count > 0:
-        return True
-    
-    return False
-
-def remove_student_from_group_by_email(group_id, email):
-    group = get_group_by_group_name(group_id)
-    student_obj = student.get_student_by_email(email)
-    if student_obj["student_number"] not in group['members']:
-        return False
-    group["members"].remove(student_obj["student_number"])
-    student.remove_student_from_group(student_obj["student_number"])
-    
-    # unlock the group again
-    if "studentLock" in group and group["studentLock"]:
-        group["studentLock"] = False
-    
-    result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
-    return result
-
-def remove_student_from_group(group_id , orgdefinedid):
-    group = get_group_by_group_name(group_id)
-    if orgdefinedid in group["members"]:
-        group["members"].remove(orgdefinedid)
-        print(group)
-        result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
+def remove_student_from_group(group_id, student_id):
+    group = get_group(ObjectId(group_id))
+    if student_id in group["members"]:
+        group["members"].remove(ObjectId(student_id))
+        result = groupCollection.update_one({"group_id": ObjectId(group_id)},  {"$set" : group})
         return result
     
     return False
@@ -139,7 +100,6 @@ def is_user_in_group(user_name):
     else:
         return False
 
-from bson import ObjectId  # Assuming you are using MongoDB
 
 def update_group_by_id(id, group_obj): 
     try:
@@ -250,9 +210,9 @@ def delete_group_by_id(id):
     for orgdefinedId in originalGroup["members"]:
             result = student.assign_group_to_student(orgdefinedId, groupName=None)
     result = groupCollection.delete_one({"_id": ObjectId(id)})
-    project.change_status(originalGroup["project"], "Available")
-    project.remove_group_from_project(originalGroup["project"])
-    project_application.remove_applications_of_group(originalGroup["group_id"])
+    project.change_status(originalGroup["assigned_project_id"], "Available")
+    project.remove_group_from_project(originalGroup["assigned_project_id"])
+    project_application.remove_applications_of_group(originalGroup["_id"])
 
     return result
 
@@ -267,22 +227,19 @@ def clear_group_members(id):
     return result
     
 
-def add_project_to_group(groupName,projectName):
+def add_project_to_group(group_id,project_id):
     result = groupCollection.update_one(
-            {"group_id": groupName},
-            {"$set": {"project": projectName}}
+            {"_id": group_id},
+            {"$set": {"assigned_project_id": project_id}}
         )
     return result
 
-def remove_project_from_group(projectName):
-    for group in groupCollection.find({"project": projectName}):
-        result = groupCollection.update_one(
-            {"group_id": group["group_id"]},
-            {"$set" : {"project": ""}}
-        )
-        if not result:
-            return result
-    return True
+def remove_project_from_group(group_id):
+    result = groupCollection.update_one(
+        {"_id": ObjectId(group_id)},
+        {"$set" : {"assigned_project_id": ""}}
+    )
+    return result
 
 def _update_group_lock_for_new_section(new_section_name):
     new_section = section.get_section_by_name(new_section_name)
