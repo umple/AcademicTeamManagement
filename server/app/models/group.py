@@ -74,49 +74,26 @@ def add_student_to_group(group_id, student_id):
     student_obj = student.get_student(ObjectId(student_id))
     group_obj = get_group(ObjectId(group_id))
 
-    if student_obj["student_number"] in group_obj['members']:
+    if student_obj['_id'] in group_obj['members']:
         return False
     
     result = groupCollection.update_one(
         {"_id": ObjectId(group_obj["_id"])},
-        {"$push": {"members": str(student_obj["student_number"])}})
-    student.assign_group_to_student(student_obj["student_number"], group_obj["group_id"])
+        {"$push": {"members": str(student_obj['_id'])}})
+    student.assign_group_to_student(student_obj['_id'], group_obj['_id'])
     if result.modified_count > 0:
         return True
     
     return False
 
-def add_student_to_group_by_group_id(student_email, group_id):
-    student_obj = student.get_student_by_email(student_email)
-    group_obj = get_group_by_group_name(group_id)
-
-    if student_obj["student_number"] in group_obj['members']:
-        return False
-    
-    result = groupCollection.update_one(
-        {"group_id": group_id},
-        {"$push": {"members": str(student_obj["student_number"])}})
-    student.assign_group_to_student(student_obj["student_number"], group_obj["group_id"])
-    if result.modified_count > 0:
-        return True
+def remove_student_from_group(group_id, student_id):
+    group = get_group(ObjectId(group_id))
+    if student_id in group["members"]:
+        group["members"].remove(ObjectId(student_id))
+        result = groupCollection.update_one({"group_id": ObjectId(group_id)},  {"$set" : group})
+        return result
     
     return False
-
-def remove_student_from_group_by_email(group_id, email):
-    group = get_group_by_group_name(group_id)
-    student_obj = student.get_student_by_email(email)
-    if student_obj["student_number"] not in group['members']:
-        return False
-    group["members"].remove(student_obj["student_number"])
-    student.remove_student_from_group(student_obj["student_number"])
-    
-    for orgdefinedId in originalGroup["members"]:
-            _ = student.assign_group_to_student(orgdefinedId, groupName=None, groupNumber=None)
-    result = groupCollection.update_one(
-        {"_id": ObjectId(id)},
-        {"$set": {"members": []}}
-    )
-    return result
 
 def get_user_group(user_email):
     student_obj = student.get_student_by_email(user_email)

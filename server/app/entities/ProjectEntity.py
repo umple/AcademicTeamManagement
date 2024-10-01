@@ -2,6 +2,7 @@ class ProjectEntity:
     def __init__(self, id, project_data):
         if project_data is None:
             project_data = {}
+        self._id = id
         self._project_name = project_data.get('project_name', '')
         self._description = project_data.get('description', '')
         self._clientName = project_data.get('clientName', '')
@@ -15,6 +16,7 @@ class ProjectEntity:
     
     def to_json(self):
         return {
+            '_id': self._id,
             'project_name': self._project_name,
             'description': self._description,
             'clientName': self._clientName,
