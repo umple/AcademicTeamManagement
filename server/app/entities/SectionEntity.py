@@ -1,7 +1,8 @@
 class SectionEntity:
-    def __init__(self, Section_data):
+    def __init__(self, id, Section_data):
         if Section_data is None:
             Section_data = {}
+        self._id = id
         self._name = Section_data.get('name', '')
         self._term = Section_data.get('term', '')
         self._year = Section_data.get('year', '')
@@ -10,12 +11,16 @@ class SectionEntity:
         
     def to_json(self):
         return {
+            '_id': self._id,
             'name': self._name,
             'term': self._term,
             'year': self._year,
             'notes': self._notes,
             'lock': self._lock
         }
+
+    def get_id(self):
+        return self._id
 
     @property
     def name(self):

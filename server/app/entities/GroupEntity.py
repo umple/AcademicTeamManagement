@@ -27,13 +27,8 @@ class GroupEntity:
             'professorLock': self._professorLock
         }
 
-    # @property
-    # def _id(self):
-    #     return self._id
-
-    # @_id.setter
-    # def _id(self, value):
-    #     self._id = value
+    def get_id(self):
+        return self._id
 
     @property
     def interested_project_ids(self):
