@@ -5,8 +5,31 @@ name = "pypi"
 
 [packages]
 setuptools = "*"
+flask = "*"
+flask-restful = "*"
+flask-cors = "*"
+openpyxl = "*"
+pandas = "*"
+requests-oauthlib = "*"
+pymongo = "*"
+rsa = "*"
+numpy = "*"
+flask-jwt-extended = "*"
+adal = "*"
+flask-session = "*"
+msal = "*"
+jwt = "*"
+mongomock = "*"
+coverage = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "3"
+
+[scripts]
+start-prod = "python run.py"
+start-stage = "python run.py"
+start-dev = "nodemon run.py"
+test-unit = "python3 -m unittest discover -v  tests/unit test_*.py"
+prod_unit_test = "coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py"
