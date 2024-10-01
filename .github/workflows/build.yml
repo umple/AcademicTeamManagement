@@ -37,6 +37,11 @@ jobs:
           npm run build 
         env:
           CI: false
+      - name: Upload React Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-build
+          path: ./client/build/    
       - name: Docker build
         uses: docker/build-push-action@v4
         with:
@@ -78,4 +83,9 @@ jobs:
           context: server
           build-args: |
             PRIVATE_KEY=${{secrets.PRIVATE_KEY}}
+      - name: Upload Flask Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: flask-build
+          path: ./server/
 
