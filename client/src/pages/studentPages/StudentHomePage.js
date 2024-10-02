@@ -3,16 +3,17 @@ import React, { useState, useEffect } from 'react'
 import { getUserName } from '../../helpers/UserName'
 import { getUserEmail } from '../../helpers/UserEmail'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
 import Footer from '../../components/common/Footer'
 import groupService from '../../services/groupService'
 import {
   makeStyles,
   Grid,
-  Typography,
+  Chip,
   Paper,
-  Button
+  Button,
+  Typography
 } from '@material-ui/core'
+import { useNavigate } from 'react-router-dom'
 import studentService from '../../services/studentService'
 
 // Styles
@@ -34,39 +35,19 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     color: '#616161'
   },
-  noGroupMessage: {
-    fontSize: '1.2rem',
-    marginTop: theme.spacing(2),
-    color: '#ff1744'
-  },
   infoBox: {
     padding: theme.spacing(3),
     borderRadius: '30px',
     backgroundColor: '#a4a0a5',
     marginBottom: theme.spacing(2),
     textAlign: 'left',
-    width: '90%'
+    transition: 'background-color 0.3s ease-in-out'
   },
-  infoTitle: {
-    fontSize: '1.5rem',
-    fontWeight: 600,
-    color: '#ffffff'
+  infoBoxInGroup: {
+    backgroundColor: '#800020',
+    color: '#fff'
   },
-  infoSubtitle: {
-    fontSize: '1rem',
-    fontWeight: 400,
-    color: '#ffffff',
-    marginBottom: theme.spacing(2)
-  },
-  infoButton: {
-    marginTop: theme.spacing(2),
-    backgroundColor: '#2e3f51',
-    color: '#fff',
-    '&:hover': {
-      backgroundColor: '#1565c0'
-    }
-  },
-  groupButton: {
+  button: {
     marginTop: theme.spacing(2)
   }
 }))
@@ -75,10 +56,11 @@ const useStyles = makeStyles((theme) => ({
 function StudentHomePage () {
   const { t } = useTranslation()
   const classes = useStyles()
+  const navigate = useNavigate()
   const [userName, setUserName] = useState('')
   const [studentEmail, setStudentEmail] = useState(null)
-  const [setGroupInfo] = useState(null) // state for group info
-  const [setStudents] = useState([])
+  const [groupInfo, setGroupInfo] = useState(null) // state for group info
+  const [students, setStudents] = useState([])
 
   // Retrieve the username
   useEffect(() => {
@@ -130,6 +112,16 @@ function StudentHomePage () {
     fetchGroup()
   }, [])
 
+  // Function to get student name by ID
+  const getStudentNameById = (id) => {
+    const student = students.find((student) => student.orgdefinedid === id)
+    return student ? student.firstname + ' ' + student.lastname : 'Unknown'
+  }
+
+  // Determine if the student is in a group or has a project
+  const isInGroup = groupInfo && groupInfo.group_id
+  const hasProject = groupInfo && groupInfo.project
+
   return (
     <div className={classes.root}>
       <Grid container spacing={4} justifyContent="center" alignItems="center">
@@ -143,48 +135,80 @@ function StudentHomePage () {
         </Grid>
       </Grid>
 
-      <Grid container spacing={4} justifyContent="center" alignItems="center">
-        {/* Group Info Section */}
-        <Grid item xs={12} sm={6}>
-          <Paper elevation={3} className={classes.infoBox}>
-            <Typography variant="h5" className={classes.infoTitle}>
-              {t('GROUP INFO')}
+      {/* Group Info Section */}
+      <Paper
+        elevation={3}
+        className={`${classes.infoBox} ${isInGroup ? classes.infoBoxInGroup : ''}`}
+      >
+        <Typography variant="h5">
+          {t('Group Info')}
+        </Typography>
+        {isInGroup
+          ? (
+          <>
+            <Typography variant="body1">
+              <strong>{t('Group Name')}:</strong> {groupInfo.group_id}
             </Typography>
-            <Typography variant="body1" className={classes.infoSubtitle}>
+            <Typography variant="body1">
+              <strong>{t('common.Project')}:</strong> {hasProject ? groupInfo.project : 'No project assigned'}
+            </Typography>
+            <Typography variant="h6">{t('common.Members')}:</Typography>
+            {groupInfo.members && groupInfo.members.length > 0
+              ? groupInfo.members.map((memberID, index) => (
+                  <Chip key={index} label={getStudentNameById(memberID)} color="primary" style={{ margin: 5 }} />
+              ))
+              : <Typography variant="body2">{t('common.no-members')}</Typography>}
+          </>
+            )
+          : (
+          <>
+            <Typography variant="body1">
               {t("Looks like you're not in a group yet")}
             </Typography>
             <Button
-              component={Link}
-              to="/studentGroups"
               variant="contained"
-              className={classes.infoButton}
+              color="primary"
+              className={classes.button}
+              onClick={() => navigate('/StudentGroups')}
             >
-              {t('Join a group or create a group')}
+              {t('Join a group or create a new group')}
             </Button>
-          </Paper>
-        </Grid>
+          </>
+            )}
+      </Paper>
 
-        {/* Project Info Section */}
-        <Grid item xs={12} sm={6}>
-          <Paper elevation={3} className={classes.infoBox}>
-            <Typography variant="h5" className={classes.infoTitle}>
-              {t('PROJECT INFO')}
-            </Typography>
-            <Typography variant="body1" className={classes.infoSubtitle}>
+      {/* Project Info Section */}
+      <Paper
+        elevation={3}
+        className={`${classes.infoBox} ${hasProject ? classes.infoBoxInGroup : ''}`}
+      >
+        <Typography variant="h5">
+          {t('Project Info')}
+        </Typography>
+        {hasProject
+          ? (
+          <Typography variant="body1">
+            <strong>{t('Project Name')}:</strong> {groupInfo.project}
+          </Typography>
+            )
+          : (
+          <>
+            <Typography variant="body1">
               {t('You must be in a group before you have a project')}
             </Typography>
             <Button
-              component={Link}
-              to="/StudentProjects"
               variant="contained"
-              className={classes.infoButton}
+              color="primary"
+              className={classes.button}
+              onClick={() => navigate('/StudentProjects')}
             >
               {t('Browse projects')}
             </Button>
-          </Paper>
-        </Grid>
-      </Grid>
-      <Footer/>
+          </>
+            )}
+      </Paper>
+
+    <Footer/>
     </div>
   )
 }
