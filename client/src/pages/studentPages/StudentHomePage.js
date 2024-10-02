@@ -9,9 +9,8 @@ import groupService from '../../services/groupService'
 import {
   makeStyles,
   Grid,
-  Box,
-  Chip,
   Typography,
+  Paper,
   Button
 } from '@material-ui/core'
 import studentService from '../../services/studentService'
@@ -40,6 +39,33 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     color: '#ff1744'
   },
+  infoBox: {
+    padding: theme.spacing(3),
+    borderRadius: '30px',
+    backgroundColor: '#a4a0a5',
+    marginBottom: theme.spacing(2),
+    textAlign: 'left',
+    width: '90%'
+  },
+  infoTitle: {
+    fontSize: '1.5rem',
+    fontWeight: 600,
+    color: '#ffffff'
+  },
+  infoSubtitle: {
+    fontSize: '1rem',
+    fontWeight: 400,
+    color: '#ffffff',
+    marginBottom: theme.spacing(2)
+  },
+  infoButton: {
+    marginTop: theme.spacing(2),
+    backgroundColor: '#2e3f51',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#1565c0'
+    }
+  },
   groupButton: {
     marginTop: theme.spacing(2)
   }
@@ -51,8 +77,8 @@ function StudentHomePage () {
   const classes = useStyles()
   const [userName, setUserName] = useState('')
   const [studentEmail, setStudentEmail] = useState(null)
-  const [groupInfo, setGroupInfo] = useState(null) // state for group info
-  const [students, setStudents] = useState([])
+  const [setGroupInfo] = useState(null) // state for group info
+  const [setStudents] = useState([])
 
   // Retrieve the username
   useEffect(() => {
@@ -104,12 +130,6 @@ function StudentHomePage () {
     fetchGroup()
   }, [])
 
-  // Function to get student name by ID
-  const getStudentNameById = (id) => {
-    const student = students.find((student) => student.orgdefinedid === id)
-    return student ? student.firstname + ' ' + student.lastname : 'Unknown'
-  }
-
   return (
     <div className={classes.root}>
       <Grid container spacing={4} justifyContent="center" alignItems="center">
@@ -123,50 +143,47 @@ function StudentHomePage () {
         </Grid>
       </Grid>
 
-      <Box className={classes.groupInfo}>
-        {
-          groupInfo
-            ? (
-            <>
-              <Typography variant="h5">{t('Group Info')}</Typography>
-              <Typography variant="body1">
-                <strong>{t('Group Name')}:</strong> {groupInfo.group_id}
-              </Typography>
-              <Typography variant="body1">
-                <strong>{t('common.Project')}:</strong> {groupInfo.project || 'No project assigned'}
-              </Typography>
+      <Grid container spacing={4} justifyContent="center" alignItems="center">
+        {/* Group Info Section */}
+        <Grid item xs={12} sm={6}>
+          <Paper elevation={3} className={classes.infoBox}>
+            <Typography variant="h5" className={classes.infoTitle}>
+              {t('GROUP INFO')}
+            </Typography>
+            <Typography variant="body1" className={classes.infoSubtitle}>
+              {t("Looks like you're not in a group yet")}
+            </Typography>
+            <Button
+              component={Link}
+              to="/studentGroups"
+              variant="contained"
+              className={classes.infoButton}
+            >
+              {t('Join a group or create a group')}
+            </Button>
+          </Paper>
+        </Grid>
 
-              <Typography variant="h6">{t('common.Members')}:</Typography>
-              {groupInfo.members && groupInfo.members.length > 0
-                ? (
-                    groupInfo.members.map((memberID, index) => (
-                  <Chip key={index} label={getStudentNameById(memberID)} color="primary" style={{ margin: 5 }} />
-                    ))
-                  )
-                : (
-                <Typography variant="body2">{t('common.no-members')}</Typography>
-                  )}
-            </>
-              )
-            : (
-            <>
-              <Typography variant="h6" className={classes.noGroupMessage}>
-                {t("Looks like you haven't found a group yet.")}
-              </Typography>
-              <Button
-                component={Link}
-                to="/studentGroups"
-                variant="contained"
-                color="primary"
-                className={classes.groupButton}
-              >
-                {t('Find or Create a Group')}
-              </Button>
-            </>
-              )
-        }
-      </Box>
-
+        {/* Project Info Section */}
+        <Grid item xs={12} sm={6}>
+          <Paper elevation={3} className={classes.infoBox}>
+            <Typography variant="h5" className={classes.infoTitle}>
+              {t('PROJECT INFO')}
+            </Typography>
+            <Typography variant="body1" className={classes.infoSubtitle}>
+              {t('You must be in a group before you have a project')}
+            </Typography>
+            <Button
+              component={Link}
+              to="/StudentProjects"
+              variant="contained"
+              className={classes.infoButton}
+            >
+              {t('Browse projects')}
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
       <Footer/>
     </div>
   )
