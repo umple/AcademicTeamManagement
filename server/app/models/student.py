@@ -4,6 +4,7 @@ from bson import ObjectId
 from app.utils.data_conversion import clean_up_json_data
 import pandas as pd
 from flask import session
+import traceback
 
 studentsCollection = db["students"]
 
@@ -26,7 +27,7 @@ def add_student(student_obj):
         result = studentsCollection.insert_one(student_obj.to_json())
         return result
     except Exception as e:
-        print(f"Error adding student: {e}")
+        print(f"Error adding student: " + traceback.format_exc())
         return None
 
 # are all these get x by y functions necessary?

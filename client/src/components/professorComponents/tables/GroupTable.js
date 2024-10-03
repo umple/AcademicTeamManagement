@@ -112,7 +112,7 @@ const GroupTable = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
-    const groupId = params.get('group_id')
+    const groupId = params.get('_id')
 
     if (groupId && tableData.length > 0) {
       scrollToRow(groupId)
@@ -122,7 +122,7 @@ const GroupTable = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'group_id',
+        accessorKey: 'group_name',
         header: t('common.Group')
       },
       {
@@ -136,7 +136,7 @@ const GroupTable = () => {
             if (students.length !== 0) {
               return cell.getValue('members').map((value, index) => {
                 const student = students.find((student) => {
-                  return student.orgdefinedid === value
+                  return student._id === value
                 })
 
                 if (typeof student !== 'undefined') {
@@ -166,13 +166,13 @@ const GroupTable = () => {
         }
       },
       {
-        accessorKey: 'project',
+        accessorKey: 'assigned_project_id',
         header: t('common.Project'),
         Cell: ({ cell }) => {
-          if (cell.getValue('project').length > 0) {
+          if (cell.getValue('assigned_project_id').length > 0) {
             return (
               <div>
-                <Chip sx = {{ marginBottom: '5px' }} color="secondary" label={cell.getValue('project')}/>
+                <Chip sx = {{ marginBottom: '5px' }} color="secondary" label={cell.getValue('assigned_project_id')}/>
               </div>
             )
           } else {
@@ -181,11 +181,11 @@ const GroupTable = () => {
         }
       },
       {
-        accessorKey: 'interest',
+        accessorKey: 'interested_project_ids',
         header: t('common.interested-projects'),
         Cell: ({ cell }) => {
-          if (Array.isArray(cell.getValue('interest')) && cell.getValue('interest').length > 0) {
-            return cell.getValue('interest').map((value, index) => {
+          if (Array.isArray(cell.getValue('interested_project_ids')) && cell.getValue('interested_project_ids').length > 0) {
+            return cell.getValue('interested_project_ids').map((value, index) => {
               return (
                   <div>
                     <Chip sx = {{ marginBottom: '5px' }} color="primary" label={value}/>

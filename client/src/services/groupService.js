@@ -94,7 +94,7 @@ const groupService = {
       })
   },
   update: async (id, values) => {
-    return fetch('/api/group/update', {
+    return fetch(`/api/group/update/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

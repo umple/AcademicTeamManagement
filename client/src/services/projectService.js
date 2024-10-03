@@ -43,7 +43,7 @@ const projectService = {
       })
   },
   update: async (id, values) => {
-    return fetch('/api/project/update', {
+    return fetch(`/api/project/update/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

@@ -161,10 +161,10 @@ const EditGroupModal = ({
                         >
                           {selected.map((value) => {
                             const student = students.find(
-                              (student) => student.orgdefinedid === value
+                              (student) => student._id === value
                             )
                             const display =
-                              student.orgdefinedid +
+                              student._id +
                               ' - ' +
                               student.firstname +
                               ' ' +

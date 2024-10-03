@@ -157,7 +157,7 @@ const GroupForm = ({
                           >
                             {selected.map((value) => {
                               const student = students.find(
-                                (student) => student.orgdefinedid === value
+                                (student) => student.id === value
                               )
                               const display =
                                 student.orgdefinedid +
@@ -185,15 +185,15 @@ const GroupForm = ({
                             ) {
                               return (
                                 <MenuItem
-                                  key={student.orgdefinedid}
-                                  value={student.orgdefinedid}
+                                  key={student.id}
+                                  value={student.id}
                                   style={getStyles(
                                     student.firstname,
                                     members,
                                     theme
                                   )}
                                 >
-                                  {student.orgdefinedid +
+                                  {student.id +
                                     ' - ' +
                                     student.firstname +
                                     ' ' +

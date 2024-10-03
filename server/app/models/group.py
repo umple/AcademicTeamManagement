@@ -103,39 +103,41 @@ def is_user_in_group(user_name):
 
 def update_group_by_id(id, group_obj): 
     try:
-        original_group = get_group(id)
-        group_obj.pop("_id", None)
-        
-        if not original_group:
-            return "Group not found"
-        
-        if "members" in group_obj and group_obj["members"]:
-            for org in group_obj["members"]:
-                student.assign_group_to_student(org, groupName=group_obj["group_id"])
-        else:
-            group_obj["members"] = []
+        original_group = groupCollection.find_one({"_id": ObjectId(id)})
+        data = group_obj.to_json()
+        del data['_id']
 
-        if original_group["group_id"] != group_obj["group_id"]:          
-            # update the project applications related to have the group name
-            _update_group_name_to_project_applications(original_group["group_id"], group_obj["group_id"])
+        # REVISIT
+        # if not original_group:
+        #     return "Group not found"
+        
+        # if "members" in group_obj and group_obj["members"]:
+        #     for org in group_obj["members"]:
+        #         student.assign_group_to_student(org, groupName=group_obj["group_id"])
+        # else:
+        #     group_obj["members"] = []
+
+        # if original_group["group_id"] != group_obj["group_id"]:          
+        #     # update the project applications related to have the group name
+        #     _update_group_name_to_project_applications(original_group["group_id"], group_obj["group_id"])
             
-            for orgdefinedId in group_obj["members"]:
-                result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
+        #     for orgdefinedId in group_obj["members"]:
+        #         result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
                 
-        # Update the group lock if the section has changed
-        if "sections" not in original_group or original_group["sections"] != group_obj["sections"]:
-            group_obj["professorLock"] = _update_group_lock_for_new_section(group_obj["sections"])
+        # # Update the group lock if the section has changed
+        # if "sections" not in original_group or original_group["sections"] != group_obj["sections"]:
+        #     group_obj["professorLock"] = _update_group_lock_for_new_section(group_obj["sections"])
         
-        # Update old project if the group's project has been changed
-        if original_group["project"] != group_obj["project"]:
-            _ = project.remove_group_from_project(original_group["project"])
-            _ = project.change_status(original_group["project"], "Available")
+        # # Update old project if the group's project has been changed
+        # if original_group["project"] != group_obj["project"]:
+        #     _ = project.remove_group_from_project(original_group["project"])
+        #     _ = project.change_status(original_group["project"], "Available")
 
         
-        project.add_group_to_project(group_obj["project"],group_obj["group_id"])
-        project.change_status(group_obj["project"], "Underway")
+        # project.add_group_to_project(group_obj["project"],group_obj["group_id"])
+        # project.change_status(group_obj["project"], "Underway")
         
-        result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": group_obj})
+        result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": data})
         
         return result.modified_count > 0
     

@@ -1,18 +1,15 @@
 const student = [
   {
-    OrgDefinedId: "300111111",
-    Username: "username1",
-    LastName: "Lastname1",
-    FirstName: "Firstname1",
-    Email: "email1@example.com",
+    email: "email1@example.com",
+    firstname: "Firstname1",
+    lastname: "Lastname1",
+    is_admin: false,
   },
   {
-    OrgDefinedId: "300111112",
-    Username: "username2",
-    LastName: "Lastname2",
-    FirstName: "Firstname2",
-    Email: "email2@example.com",
-    professorEmail: "",
+    email: "email2@example.com",
+    firstname: "Firstname2",
+    lastname: "Lastname2",
+    is_admin: false,
   },
 ];
 
@@ -51,15 +48,11 @@ describe("Submit Group Form", () => {
       method: "POST",
       url: "/api/student", // Replace with the correct URL for the student endpoint
       body: {
-        orgdefinedid: "300111311",
+        email: "email1@example.com",
         firstname: "username1",
         lastname: "Lastname1",
-        email: "email1@example.com",
-        username: "TESTsa",
-        sections: "",
-        finalGrade: "",
-        group: "",
-        professorEmail: "test@uottawa.ca",
+        student_number: "300111311",
+        is_admin: false,
       }, // Adjust the request body as needed
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +66,7 @@ describe("Submit Group Form", () => {
       method: "POST",
       url: "/api/project", // Replace with the correct URL
       body: {
-        _id: "your-project-id", // Replace with a unique project ID
+        // _id: "your-project-id", // Replace with a unique project ID
         project: "MYGROUPTEST",
         description: "TEST",
         clientName: "ROBERT",

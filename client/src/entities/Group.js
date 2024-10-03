@@ -1,7 +1,7 @@
 class Group {
-  constructor (groupData = {}) {
-    this.group_id = groupData.group_id || ''
-    this.project = groupData.project || ''
+  constructor (groupData) {
+    this._id = groupData._id
+    this.assigned_project_id = groupData.assigned_project_id || ''
     this.professorEmail = groupData.professorEmail || ''
     this.members = groupData.members || []
     this.interest = groupData.interest || []
@@ -11,20 +11,12 @@ class Group {
     this.professorLock = groupData.professorLock || false
   }
 
-  get group_id () {
-    return this._group_id
+  get assigned_project_id () {
+    return this._assigned_project_id
   }
 
-  set group_id (value) {
-    this._group_id = value
-  }
-
-  get project () {
-    return this._project
-  }
-
-  set project (value) {
-    this._project = value
+  set assigned_project_id (value) {
+    this._assigned_project_id = value
   }
 
   get professorEmail () {
@@ -61,8 +53,8 @@ class Group {
 
   toJSON () {
     return {
-      group_id: this.group_id,
-      project: this.project,
+      _id: this._id,
+      assigned_project_id: this.assigned_project_id,
       professorEmail: this.professorEmail,
       members: this.members,
       interest: this.interest,

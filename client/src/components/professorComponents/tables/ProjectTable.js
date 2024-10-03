@@ -57,7 +57,7 @@ const ProjectTable = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'project',
+        accessorKey: 'project_name',
         header: t('project.project-name')
       },
       {

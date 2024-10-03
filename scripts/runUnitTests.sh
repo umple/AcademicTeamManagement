@@ -8,7 +8,7 @@ export MONGO=27017
 export FLASK=5001
 export ENV=DEV
 export MONGODB_INITDB_ROOT_USERNAME=root
-export MONGODB_INITDB_ROOT_PASSWORD= #add your password here
+export MONGODB_INITDB_ROOT_PASSWORD=pass
 export MONGODB_HOST=localhost
 export BACKEND_HOST=http://localhost:5001
 

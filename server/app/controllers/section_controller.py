@@ -1,7 +1,8 @@
 from flask import jsonify, request
 from app.models import section
-from app.entities.SectionEntity import SectionEntity
 import json
+from bson import ObjectId
+from app.entities.SectionEntity import SectionEntity
 from . import section_bp
 
 
@@ -28,14 +29,15 @@ def get_sections():
 def add_section():
     try:
         section_obj = json.loads(request.data)
-        section_entity = SectionEntity(section_obj)
+        section_id = ObjectId()
+        section_entity = SectionEntity(section_id,section_obj)
         result = section.add_section(section_entity)
         if result:
             return jsonify(str(result.inserted_id)), 201
         else:
             return {"message": "Could not add section."}, 404
-    except:
-        return {"message": "Internal server error."}, 503
+    except Exception as e:
+        return {"message": "Internal server error. " +repr(e)}, 503
     
 @section_bp.route("/section/<name>", methods=["GET"])
 def get_section_by_name(name):

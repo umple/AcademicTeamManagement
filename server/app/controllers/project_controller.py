@@ -32,29 +32,24 @@ def get_projects():
 def add_Project():
     try:
         project_data = json.loads(request.data)
-        project_entity = ProjectEntity(project_data)
+        project_id = ObjectId()
+        project_entity = ProjectEntity(project_id, project_data)
         result = project.add_project(project_entity)
         return jsonify(str(result.inserted_id)), 200
     except Exception as e:
         return {"message": e}, 503
 
 
-@project_bp.route("/project/update", methods=["PUT"])
-def update_project_by_id():
+@project_bp.route("/project/update/<id>", methods=["PUT"])
+def update_project_by_id(id):
     try:
-        project_obj = request.json
-        project_id = project_obj["_id"]
-        if not ObjectId.is_valid(project_id):
-            return {"message": "Invalid project ID."}, 400
+        project_obj = ProjectEntity(id, json.loads(request.data))
 
-        if not project_obj:
-            return {"message": "Invalid JSON data in the request body."}, 400
-
-        result = project.update_project_by_id(project_id, project_obj)
-        if result.modified_count > 0:
-            return jsonify({"message": "Project updated successfully."}), 200
+        result = project.update_project_by_id(id, project_obj)
+        if result:
+            return jsonify(str(result.modified_count)), 200
         else:
-            return {"message": "Project not found or update failed."}, 404
+            return {"message": "Project not found or update failed.{}".format(result)}, 404
     except WriteError as e:
         return {"message": "An error occurred while updating the project." + str(e)}, 500
     except Exception as e:
