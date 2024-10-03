@@ -33,7 +33,16 @@
         "lock-groups": "Lock Groups",
         "status": "Status",
         "lock": "Lock",
-        "unlock": "Unlock"
+        "unlock": "Unlock",
+        "Group Info": "Group Info",
+        "not-in-group": "Looks like you're not in a group yet",
+        "find-or-create-group": "Find a group or create a new group",
+        "project-info": "Project Info",
+        "group-before-project": "You must be in a group before you have a project",
+        "browse-projects": "Browse projects",
+        "no-project-assigned": "You have not been assigned a project",
+        "project-name": "Project Name"
+
     },
     "table": {
         "student-id": "Student ID",
