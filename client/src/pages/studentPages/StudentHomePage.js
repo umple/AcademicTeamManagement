@@ -139,6 +139,8 @@ function StudentHomePage () {
       <Paper
         elevation={3}
         className={`${classes.infoBox} ${isInGroup ? classes.infoBoxInGroup : ''}`}
+        onClick={isInGroup ? () => navigate('/MyGroup') : null}
+        style={{ cursor: isInGroup ? 'pointer' : 'default' }}
       >
         <Typography variant="h5">
           {t('Group Info')}
@@ -148,9 +150,6 @@ function StudentHomePage () {
           <>
             <Typography variant="body1">
               <strong>{t('Group Name')}:</strong> {groupInfo.group_id}
-            </Typography>
-            <Typography variant="body1">
-              <strong>{t('common.Project')}:</strong> {hasProject ? groupInfo.project : 'No project assigned'}
             </Typography>
             <Typography variant="h6">{t('common.Members')}:</Typography>
             {groupInfo.members && groupInfo.members.length > 0
@@ -171,7 +170,7 @@ function StudentHomePage () {
               className={classes.button}
               onClick={() => navigate('/StudentGroups')}
             >
-              {t('Join a group or create a new group')}
+              {t('Find a group or create a new group')}
             </Button>
           </>
             )}
@@ -181,6 +180,8 @@ function StudentHomePage () {
       <Paper
         elevation={3}
         className={`${classes.infoBox} ${hasProject ? classes.infoBoxInGroup : ''}`}
+        onClick={hasProject ? () => navigate('/MyGroup') : null}
+        style={{ cursor: hasProject ? 'pointer' : 'default' }}
       >
         <Typography variant="h5">
           {t('Project Info')}
@@ -194,7 +195,10 @@ function StudentHomePage () {
           : (
           <>
             <Typography variant="body1">
-              {t('You must be in a group before you have a project')}
+              {isInGroup
+                ? t('No project assigned')
+                : t('You must be in a group before you have a project')
+              }
             </Typography>
             <Button
               variant="contained"
