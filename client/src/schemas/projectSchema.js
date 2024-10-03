@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 // Define the Yup schema for validation
 const projectSchema = (projects, _id) => {
   const schema = Yup.object().shape({
-    project: Yup.string().required('Project Title is required').test('is-unique', 'Project Title already exists', function (value) {
+    project_name: Yup.string().required('Project Title is required').test('is-unique', 'Project Title already exists', function (value) {
       if (projects && projects.length > 0) {
         const project = projects.find(
           (project) => project._id !== _id && project.project === value

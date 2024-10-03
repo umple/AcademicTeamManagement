@@ -2,10 +2,10 @@ import * as Yup from 'yup'
 
 const studentSchema = (students, _id) => {
   const studentSchema = Yup.object().shape({
-    orgdefinedid: Yup.string().required('Org Defined ID is required').matches(/^\d{6,9}$/, 'Org Defined ID must be a 6-9-digit number').test('is-unique', 'Student ID already exists', function (value) {
+    student_number: Yup.string().required('Org Defined ID is required').matches(/^\d{6,9}$/, 'Org Defined ID must be a 6-9-digit number').test('is-unique', 'Student ID already exists', function (value) {
       if (students && students.length > 0) {
         const group = students.find(
-          (student) => student._id !== _id && student.orgdefinedid === value
+          (student) => student._id !== _id && student.student_number === value
         )
         return typeof group === 'undefined'
       } else {

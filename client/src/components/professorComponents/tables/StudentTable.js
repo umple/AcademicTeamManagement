@@ -62,7 +62,7 @@ const StudentTable = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'orgdefinedid',
+        accessorKey: 'student_number',
         header: t('table.student-id')
       },
       {

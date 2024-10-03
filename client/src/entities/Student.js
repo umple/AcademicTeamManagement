@@ -1,6 +1,7 @@
 class Student {
   constructor (props) {
-    this._orgdefinedid = props.orgdefinedid || ''
+    this._id = props._id
+    this._student_number = props.student_number || ''
     this._username = props.username || ''
     this._lastname = props.lastname || ''
     this._firstname = props.firstname || ''
@@ -15,8 +16,8 @@ class Student {
   }
 
   // Getter methods
-  get orgdefinedid () {
-    return this._orgdefinedid
+  get student_number () {
+    return this._student_number
   }
 
   get username () {
@@ -56,8 +57,8 @@ class Student {
   }
 
   // Setter methods
-  set orgdefinedid (orgdefinedid) {
-    this._orgdefinedid = orgdefinedid
+  set student_number (student_number) {
+    this._student_number = student_number
   }
 
   set username (username) {
@@ -115,7 +116,8 @@ class Student {
 
   toRequestBody () {
     return {
-      orgdefinedid: this._orgdefinedid,
+      _id: this._id,
+      student_number: this._student_number,
       firstname: this._firstname,
       lastname: this._lastname,
       email: this._email,
@@ -130,7 +132,8 @@ class Student {
 
   toRequestJSON () {
     return {
-      orgdefinedid: this._orgdefinedid,
+      _id: this._id,
+      student_number: this._student_number,
       firstname: this._firstname,
       lastname: this._lastname,
       email: this._email,

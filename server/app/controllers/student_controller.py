@@ -40,6 +40,7 @@ def add_student():
         student_obj = json.loads(request.data)
         student_entity = StudentEntity(student_id, student_obj)
         result = student.add_student(student_entity)
+        print(result)
         if result:
             # Add the student as a user
             _ = user.add_user(student_entity)

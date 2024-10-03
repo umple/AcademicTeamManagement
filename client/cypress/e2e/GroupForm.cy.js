@@ -1,18 +1,15 @@
 const student = [
   {
-    OrgDefinedId: "300111111",
-    Username: "username1",
-    LastName: "Lastname1",
-    FirstName: "Firstname1",
-    Email: "email1@example.com",
+    email: "email1@example.com",
+    firstname: "Firstname1",
+    lastname: "Lastname1",
+    is_admin: false,
   },
   {
-    OrgDefinedId: "300111112",
-    Username: "username2",
-    LastName: "Lastname2",
-    FirstName: "Firstname2",
-    Email: "email2@example.com",
-    professorEmail: "",
+    email: "email2@example.com",
+    firstname: "Firstname2",
+    lastname: "Lastname2",
+    is_admin: false,
   },
 ];
 

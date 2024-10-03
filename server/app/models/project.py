@@ -46,17 +46,20 @@ def add_project(project_obj):
         print(f"Error adding project: {e}")
         return None
 
-def update_project_by_id(id, updated_fields):
-    original_project = get_project(id)   
-    updated_fields.pop("_id", None)
+def update_project_by_id(id, product_obj):
+    original_project = projectCollection.find_one({"_id": ObjectId(id)})
+    data = product_obj.to_json()
+    del data["_id"]
 
-    if original_project and (original_project["project"] != updated_fields["project"]):          
+
+    # REVISIT
+    if original_project and (original_project["project_name"] != data["project_name"]):          
         # update the project applications related to have the new project name
-        _update_project_name_to_project_applications(original_project["project"], updated_fields["project"])
+        _update_project_name_to_project_applications(original_project["project_name"], data["project_name"])
 
     result = projectCollection.update_one(
         {"_id": ObjectId(id)},
-        {"$set": updated_fields}
+        {"$set": data}
     )
     
     return result
@@ -79,11 +82,11 @@ def add_group_to_project(projectName, group_id):
     # project = get_project_by_name(projectName)
     # if project["status"] == "assigned":
     #     return False
-    result1 = projectCollection.update_one(
+    result = projectCollection.update_one(
             {"project": projectName},
             {"$set": {"group": group_id}}
         )
-    return result1
+    return result
 
 def remove_group_from_project(projectName):
     result = projectCollection.update_one(

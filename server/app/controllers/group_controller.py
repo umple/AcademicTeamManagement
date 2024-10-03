@@ -73,18 +73,11 @@ def delete_all_groups():
         return {'message': 'An error occurred: ' + str(e)}, 500
 
 # PUT Request to update a group info
-@group_bp.route("/group/update", methods=["PUT"])    
-def update_group_by_id():
+@group_bp.route("/group/update/<id>", methods=["PUT"])    
+def update_group_by_id(id):
     try:
-        group_obj = request.json
-        group_id = group_obj["_id"]
-        if not ObjectId.is_valid(group_id):
-            return {"message": "Invalid group ID."}, 400
-
-        if not group_obj:
-            return {"message": "Invalid JSON data in the request body."}, 400
-
-        result = group.update_group_by_id(group_id, group_obj)
+        group_obj = GroupEntity(id, json.loads(request.data))
+        result = group.update_group_by_id(id, group_obj)
         if result:
             return jsonify({"message": "Group updated successfully."}), 200
         else:
