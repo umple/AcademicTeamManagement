@@ -1,3 +1,4 @@
+/** @jest-environment jsdom */
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter, Route, Routes, MemoryRouter } from "react-router-dom";
