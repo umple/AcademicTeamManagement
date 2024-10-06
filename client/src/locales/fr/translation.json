@@ -34,7 +34,7 @@
         "status": "Statut",
         "lock": "Verrouiller",
         "unlock": "Déverrouiller",
-        "Group Info": "Informations sur le groupe",
+        "group-info": "Informations sur le groupe",
         "not-in-group": "On dirait que vous n'êtes pas encore dans un groupe",
         "find-or-create-group": "Rejoignez un groupe ou creez un nouveau groupe",
         "project-info": "Information sur le projet",

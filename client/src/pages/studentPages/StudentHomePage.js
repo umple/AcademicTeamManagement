@@ -143,7 +143,7 @@ function StudentHomePage () {
         style={{ cursor: isInGroup ? 'pointer' : 'default' }}
       >
         <Typography variant="h5">
-          {t('Group Info')}
+          {t('common.group-info')}
         </Typography>
         {isInGroup
           ? (
@@ -162,7 +162,7 @@ function StudentHomePage () {
           : (
           <>
             <Typography variant="body1">
-              {t("Looks like you're not in a group yet")}
+              {t('common.not-in-group')}
             </Typography>
             <Button
               variant="contained"
@@ -170,7 +170,7 @@ function StudentHomePage () {
               className={classes.button}
               onClick={() => navigate('/StudentGroups')}
             >
-              {t('Find a group or create a new group')}
+              {t('common.find-or-create-group')}
             </Button>
           </>
             )}
@@ -189,15 +189,15 @@ function StudentHomePage () {
         {hasProject
           ? (
           <Typography variant="body1">
-            <strong>{t('Project Name')}:</strong> {groupInfo.project}
+            <strong>{t('common.project-name')}:</strong> {groupInfo.project}
           </Typography>
             )
           : (
           <>
             <Typography variant="body1">
               {isInGroup
-                ? t('No project assigned')
-                : t('You must be in a group before you have a project')
+                ? t('common.no-project-assigned')
+                : t('common.group-before-project')
               }
             </Typography>
             <Button
