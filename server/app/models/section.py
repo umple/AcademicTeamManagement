@@ -25,7 +25,12 @@ def get_section_by_id(a):
 
 def get_section_by_name(name):
     document = sectionsCollection.find_one({"name": name})
-    document["name"] = str(document["name"])
+    if(document is not None):
+        document["name"] = str(document["name"])
+
+    else:
+        return None
+
     return document
 
 def update_section_by_id(id, section_obj):

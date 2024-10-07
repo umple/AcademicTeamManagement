@@ -15,7 +15,8 @@
         "learn-more": "Learn More",
         "Project": "Project",
         "projects": "Projects",
-        "Group": "Group",
+        "Group": "Group Name",
+        "GroupNumber": "Group Number",
         "Student": "Student",
         "Staff": "Staff",
         "Section": "Section",
@@ -23,6 +24,7 @@
         "Agree": "Agree",
         "Disagree": "Disagree",
         "Members": "Members",
+        "AddMembers": "Add Members",
         "current-project": "Current project",
         "interested-projects": "Interested projects",
         "display-all": "Display all",
@@ -52,7 +54,7 @@
         "email": "Email",
         "sections": "Section",
         "final-grade": "Final Grade",
-        "group": "Group"
+        "group": "Group Name"
     },
     "header": {
         "navbar": {

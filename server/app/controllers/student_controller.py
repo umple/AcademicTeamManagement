@@ -145,6 +145,34 @@ def update_group_bulk_students():
     except Exception as e:
         return {"message": "Internal server error.", "error": str(e)}, 500  # Internal Server Error
 
+@student_bp.route("/importStudentBulk", methods=["POST"])
+def import_students_bulk():
+    global start_time, total_records, processed_records
+
+    try:
+        start_time = time.time()
+        data = request.json
+        
+        total_records = len(data['students'])
+
+        for item in data['students']:
+            student_id = ObjectId()
+            student_entity = StudentEntity(student_id, item)
+            user_entity = UserEntity(student_id, "student", item)
+            result = student.add_student(student_entity)
+            if result:
+                _ = user.add_user(user_entity)
+
+                processed_records += 1
+
+        start_time = None
+        total_records = 0
+        processed_records = 0
+        return {"message": "Students imported successfully."}, 201
+
+    except Exception as e:
+        return {'message': data['students']}, 500
+
 @student_bp.route("/importStudent", methods=["POST"])
 def import_students():
     global start_time, total_records, processed_records

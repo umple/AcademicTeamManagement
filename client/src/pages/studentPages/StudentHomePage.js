@@ -25,7 +25,10 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontSize: '4rem',
-    fontWeight: 700
+    fontWeight: 700,
+    marginBottom: '0 rem',
+    marginTop: '7rem',
+    textAlign: 'center'
   },
   column1: {
     paddingLeft: 50
@@ -33,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
   welcomeText: {
     fontSize: '2rem',
     fontWeight: 500,
-    color: '#616161'
+    color: '#616161',
+    textAlign: 'center'
   },
   infoBox: {
     padding: theme.spacing(3),

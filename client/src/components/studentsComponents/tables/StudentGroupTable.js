@@ -219,7 +219,7 @@ const StudentGroupTable = () => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h2" align="center" fontWeight="fontWeightBold" sx={{ marginBottom: '0.5rem' }}>{t('group-table.student-groups')}</Typography>
+      <Typography variant="h2" align="center" fontWeight="fontWeight" sx={{ marginBottom: '1rem', marginTop: '9rem' }}>{t('group-table.student-groups')}</Typography>
       <Button
         variant="contained"
         color="primary"

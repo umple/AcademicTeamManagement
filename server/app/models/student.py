@@ -70,11 +70,12 @@ def update_student_by_id(id, student_obj):
     })
     return result
 
-def assign_group_to_student(orgdefinedid, groupName):
+def assign_group_to_student(orgdefinedid, groupName, groupNumber):
     result = studentsCollection.update_one(
         {"orgdefinedid" : orgdefinedid}, 
         {"$set" : {
-            "group": groupName
+            "group": groupName,
+            "group_number": groupNumber  # Add the group number to the student document
         }
         }
     )
@@ -94,7 +95,8 @@ def remove_student_from_group(orgdefinedid):
     result = studentsCollection.update_one(
         {"orgdefinedid" : orgdefinedid}, 
         {"$set" : {
-            "group": None
+            "group": None,
+            "group_number": None  # Add the group number to the student document
         }
         }
     )
@@ -112,8 +114,8 @@ def bulk_group_update_students_by_ids(student_ids, new_group):
             
             # remove the student from the group, if it exists
             if student_old_group != '' and student_old_group != None:
-                group.remove_student_from_group(student_old_group, orgdefinedid)
-                        
+                group.bulk_remove_students_from_group(student_old_group, orgdefinedid)
+                
             if new_group != 'null':
                 # add the student to the new groupgroup_id
                 group.add_student_to_group_by_group_id(student_email, new_group)
@@ -153,11 +155,11 @@ def delete_student_by_id(a):
         if student_to_delete is not None:
             # Check if the student is in a group and try to remove them
             group_id = student_to_delete.get("group")
-            if group_id is not None and group_id != "":
-                orgdefinedid = student_to_delete["orgdefinedid"]
-                result = group.remove_student_from_group(group_id, orgdefinedid)
-                if not result:
-                    return {"message": f"Failed to remove student {orgdefinedid} from the group."}, 500
+            # if group_id is not None and group_id != "":
+            #     orgdefinedid = student_to_delete["orgdefinedid"]
+            #     result = group.remove_student_from_group(group_id, orgdefinedid)
+            #     if not result:
+            #         return {"message": f"Failed to remove student {orgdefinedid} from the group."}, 500
  
             # Delete the student document
             result = studentsCollection.delete_one({"_id": ObjectId(a)})

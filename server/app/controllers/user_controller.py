@@ -42,13 +42,15 @@ def add_user():
 @user_bp.route("/user/retrieve/user/role", methods=["GET"])
 def get_user_role_by_email():
     try:
-        email = session.get("user")["preferred_username"]
+        print('\n\n{}\n\n'.format(session.get("user")))
+        email = session.get("user")["email"]
         document = user.get_user_by_email(email)
         if document:
             return jsonify(document["role"]), 200, {'Access-Control-Allow-Credentials': 'true'}
         else:
             return {"message": "Users list not found."}, 404, {'Access-Control-Allow-Credentials': 'true'}
-    except:
+    except Exception as e:
+        print(repr(e))
         return {"message": "Internal server error."}, 503, {'Access-Control-Allow-Credentials': 'true'}
     
 @cross_origin(supports_credentials=True)    
