@@ -128,7 +128,7 @@ class TestGroupModification(unittest.TestCase):
         mock_get_student_by_email.return_value = {"orgdefinedid": "12345", "email": "test@example.com"}
         # Add student to the group
         group.add_student_to_group("test@example.com", self.group["_id"])
-        actual = group.remove_student_from_group_by_email(self.group["group_id"], "test@example.com")
+        actual = group.remove_student_from_group_by_email(self.group["_id"], "test@example.com")
         self.assertTrue(actual)
 
         # Validate member is removed
@@ -142,7 +142,7 @@ class TestGroupModification(unittest.TestCase):
         # Add student to the group
         group.add_student_to_group("test@example.com", self.group["_id"])
         # Remove student from the group
-        actual = group.remove_student_from_group(self.group["group_id"], "12345")
+        actual = group.remove_student_from_group(self.group["_id"], "12345")
         self.assertTrue(actual)
 
         # Validate member is removed

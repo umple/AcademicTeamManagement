@@ -17,6 +17,7 @@ class StudentDataManager:
             "orgdefinedid": "1234",
             "username": "1234user",
             "lastname": "Doe",
+            "Last Name": "Doe",
             "firstname": "jane",
             "First Name": "Jane",
             "email": "janedoe@gmail.com",
