@@ -6,7 +6,6 @@ import app.models.project_application as project_application
 import app.models.section as section
 
 groupCollection = db["groups"]
-groupCollection.create_index([("group_number", 1)], unique=True)
 
 def get_all_groups():
     group_Collection = []
