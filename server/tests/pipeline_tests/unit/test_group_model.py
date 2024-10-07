@@ -10,6 +10,7 @@ class GroupDataManager:
         group_json_sample = {
             "_id": ObjectId(),
             "group_id": "Test Group",
+            "group_number": "1",
             "project": None,
             "professorEmail": "prof@test.com",
             "members": [],

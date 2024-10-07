@@ -13,6 +13,7 @@ class StudentDataManager:
 
         student_json_sample = {    
             "_id": str(ObjectId()),
+            "Student ID": "1234", 
             "orgdefinedid": "1234",
             "username": "1234user",
             "lastname": "Doe",
@@ -175,7 +176,7 @@ class TestStudentModification(unittest.TestCase):
     #     self.assertDictEqual(actualStudent, exceptedStudent)
     
     def test_assign_group_to_student(self):
-        actual = student.assign_group_to_student(self.student["orgdefinedid"], "Mock Group")
+        actual = student.assign_group_to_student(self.student["orgdefinedid"], "Mock Group", "Group1")
         self.assertTrue(actual)
 
         #validate group name is correct
