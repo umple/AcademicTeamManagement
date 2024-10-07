@@ -6,6 +6,7 @@ import Card from '@mui/material/Card'
 import { CardContent } from '@mui/material'
 import GroupsSharpIcon from '@mui/icons-material/GroupsSharp'
 import ClassIcon from '@mui/icons-material/Class'
+import Tooltip from '@mui/material/Tooltip'
 import PersonIcon from '@mui/icons-material/Person'
 import DesignServicesSharpIcon from '@mui/icons-material/DesignServicesSharp'
 import projectService from '../../services/projectService'
@@ -14,6 +15,7 @@ import studentService from '../../services/studentService'
 import sectionService from '../../services/sectionService'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,10 +36,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'flex-start', // Align left like in the second screenshot
+    alignItems: 'flex-start',
     color: '#fff',
     padding: theme.spacing(4),
-    paddingLeft: '80px' // Add some padding on the left for better alignment
+    paddingLeft: '80px'
   },
   rightSection: {
     backgroundColor: '#212121',
@@ -50,13 +52,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4)
   },
   title: {
-    fontSize: '5rem', // Increased title size for greater prominence
+    fontSize: '5rem',
     fontWeight: 700,
     textAlign: 'left',
-    lineHeight: '1.2' // Adjust line height for better compactness
+    lineHeight: '1.2'
   },
   cardStyle: {
-    height: '220px', // Card size
+    height: '220px',
     width: '220px',
     backgroundColor: '#fff',
     borderRadius: '10px',
@@ -66,26 +68,26 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    border: '1px solid #e0e0e0', // Add subtle border
+    border: '1px solid #e0e0e0',
     '&:hover': {
       boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
       transform: 'scale(1.05)'
     }
   },
   iconStyle: {
-    fontSize: '90px', // Slightly reduce the icon size to fit better with the text
-    color: '#000' // Black icons for white background
+    fontSize: '90px',
+    color: '#000'
   },
   badgeStyle: {
     fontWeight: 'bold',
     marginTop: theme.spacing(1),
-    fontSize: '1.5rem', // Adjust label size
-    color: '#8f001a' // Use the theme color for labels
+    fontSize: '1.5rem',
+    color: '#8f001a'
   },
   numberStyle: {
     color: '#8f001a',
     fontWeight: 'bold',
-    fontSize: '2.5rem', // Large font for numbers
+    fontSize: '2.5rem',
     marginTop: theme.spacing(1)
   },
   contentStyle: {
@@ -96,10 +98,49 @@ const useStyles = makeStyles((theme) => ({
   },
   gridContainer: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)', // Align cards in two columns
-    gap: theme.spacing(3) // Add consistent spacing between cards
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: theme.spacing(3)
+  },
+  // Tooltip styles
+  customTooltip: {
+    fontSize: '16px',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    color: '#fff',
+    padding: '12px 16px',
+    borderRadius: '8px',
+    maxWidth: '200px',
+    textAlign: 'center',
+    boxShadow: '0px 0px 15px rgba(0, 0, 0, 0.3)'
+  },
+  customTooltipArrow: {
+    color: 'rgba(0, 0, 0, 0.85)'
+  },
+  // Card hover effect styles
+  dashboardCard: {
+    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.2)'
+    }
   }
 }))
+
+const FooterContainer = styled.footer`
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  flex-wrap: nowrap;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  white-space: nowrap;
+  overflow-x: auto;
+`
 
 const AdminHomePage = () => {
   const classes = useStyles()
@@ -107,10 +148,7 @@ const AdminHomePage = () => {
 
   return (
     <div>
-      {/* Navbar */}
-      <ResponsiveAppBar />  {/* Include the navbar at the top */}
-
-      {/* Main Content */}
+      <ResponsiveAppBar />
       <div className={classes.root}>
         <Grid container style={{ height: '100vh', width: '100vw', margin: 0, padding: 0 }}>
           {/* Left Section (Title) */}
@@ -126,17 +164,28 @@ const AdminHomePage = () => {
           </Grid>
         </Grid>
       </div>
+      <FooterContainer>
+        © {new Date().getFullYear()} Academic Team Management. This project is open source. For contributions, visit our
+        <a href='https://github.com/umple/AcademicTeamManagement/wiki' style={{ color: '#3498db', textDecoration: 'none', marginLeft: '5px' }}>
+          GitHub repository
+        </a>.
+      </FooterContainer>
     </div>
   )
 }
 
 const DashBoardInfo = () => {
+  const classes = useStyles()
   const [studentsCount, setStudentCount] = useState(113)
   const [groupsCount, setGroupCount] = useState(4)
   const [projectsCount, setProjectCount] = useState(5)
   const [sectionsCount, setSectionsCount] = useState(2)
   const { t } = useTranslation()
-  const classes = useStyles()
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    setIsLoaded(true)
+  }, [])
 
   useEffect(() => {
     studentService.get().then((data) => {
@@ -154,67 +203,97 @@ const DashBoardInfo = () => {
   }, [])
 
   return (
+    isLoaded && (
     <div className={classes.gridContainer}>
       {/* Projects Card */}
       <Link to="/AdminProjects" style={{ textDecoration: 'none' }}>
-        <Card className={classes.cardStyle}>
-          <CardContent className={classes.contentStyle}>
-            <DesignServicesSharpIcon className={classes.iconStyle} />
-            <Typography className={classes.badgeStyle}>
-              {t('header.navbar.projects')}
-            </Typography>
-            <Typography className={classes.numberStyle}>
-              {projectsCount}
-            </Typography>
-          </CardContent>
-        </Card>
+        <Tooltip
+          title="Create and manage projects, update their status, and handle groups' requests."
+          arrow
+          placement="top"
+          classes={{ tooltip: classes.customTooltip, arrow: classes.customTooltipArrow }}
+        >
+          <Card className={`${classes.cardStyle} ${classes.dashboardCard}`}>
+            <CardContent className={classes.contentStyle}>
+              <DesignServicesSharpIcon className={classes.iconStyle} />
+              <Typography className={classes.badgeStyle}>
+                {t('header.navbar.projects')}
+              </Typography>
+              <Typography className={classes.numberStyle}>
+                {projectsCount}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Tooltip>
       </Link>
 
       {/* Groups Card */}
       <Link to="/AdminGroupView" style={{ textDecoration: 'none' }}>
-        <Card className={classes.cardStyle}>
-          <CardContent className={classes.contentStyle}>
-            <GroupsSharpIcon className={classes.iconStyle} />
-            <Typography className={classes.badgeStyle}>
-              {t('header.navbar.groups')}
-            </Typography>
-            <Typography className={classes.numberStyle}>
-              {groupsCount}
-            </Typography>
-          </CardContent>
-        </Card>
+        <Tooltip
+          title="Import, add, or remove groups, manage members, and assign projects."
+          arrow
+          placement="top"
+          classes={{ tooltip: classes.customTooltip, arrow: classes.customTooltipArrow }}
+        >
+          <Card className={`${classes.cardStyle} ${classes.dashboardCard}`}>
+            <CardContent className={classes.contentStyle}>
+              <GroupsSharpIcon className={classes.iconStyle} />
+              <Typography className={classes.badgeStyle}>
+                {t('header.navbar.groups')}
+              </Typography>
+              <Typography className={classes.numberStyle}>
+                {groupsCount}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Tooltip>
       </Link>
 
       {/* Students Card */}
       <Link to="/AdminStudents" style={{ textDecoration: 'none' }}>
-        <Card className={classes.cardStyle}>
-          <CardContent className={classes.contentStyle}>
-            <PersonIcon className={classes.iconStyle} />
-            <Typography className={classes.badgeStyle}>
-              {t('header.navbar.students')}
-            </Typography>
-            <Typography className={classes.numberStyle}>
-              {studentsCount}
-            </Typography>
-          </CardContent>
-        </Card>
+        <Tooltip
+          title="Import, edit, and view all students, their profiles, and their group number."
+          arrow
+          placement="bottom"
+          classes={{ tooltip: classes.customTooltip, arrow: classes.customTooltipArrow }}
+        >
+          <Card className={`${classes.cardStyle} ${classes.dashboardCard}`}>
+            <CardContent className={classes.contentStyle}>
+              <PersonIcon className={classes.iconStyle} />
+              <Typography className={classes.badgeStyle}>
+                {t('header.navbar.students')}
+              </Typography>
+              <Typography className={classes.numberStyle}>
+                {studentsCount}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Tooltip>
       </Link>
 
       {/* Sections Card */}
       <Link to="/AdminSections" style={{ textDecoration: 'none' }}>
-        <Card className={classes.cardStyle}>
-          <CardContent className={classes.contentStyle}>
-            <ClassIcon className={classes.iconStyle} />
-            <Typography className={classes.badgeStyle}>
-              {t('header.navbar.sections')}
-            </Typography>
-            <Typography className={classes.numberStyle}>
-              {sectionsCount}
-            </Typography>
-          </CardContent>
-        </Card>
+        <Tooltip
+          title="Create, manage, and view all course-related sections."
+          arrow
+          placement="bottom"
+          classes={{ tooltip: classes.customTooltip, arrow: classes.customTooltipArrow }}
+        >
+          <Card className={`${classes.cardStyle} ${classes.dashboardCard}`}>
+            <CardContent className={classes.contentStyle}>
+              <ClassIcon className={classes.iconStyle} />
+              <Typography className={classes.badgeStyle}>
+                {t('header.navbar.sections')}
+              </Typography>
+              <Typography className={classes.numberStyle}>
+                {sectionsCount}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Tooltip>
       </Link>
     </div>
+    )
   )
 }
 

@@ -145,7 +145,7 @@ const ResponsiveAppBar = () => {
     return null
   }
 
-  const homePagePaths = ['/StudentHome', '/ProfessorHome', '/HomeTA', '/AdminHome']
+  const homePagePaths = ['/ProfessorHome', '/HomeTA', '/AdminHome']
   const isHomePage = homePagePaths.includes(location.pathname)
 
   const navTextColor = isHomePage ? 'white' : 'black'

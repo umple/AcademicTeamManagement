@@ -106,7 +106,7 @@ function StudentProjects () {
       </Snackbar>
 
       <Box>
-        <Typography variant="h2" align="center" fontWeight="fontWeightBold">
+        <Typography variant="h2" align="center" fontWeight="fontWeight" sx={{ marginBottom: '1rem', marginTop: '9rem' }}>
           {t('project.student-projects')}
         </Typography>
       </Box>
