@@ -33,7 +33,15 @@
         "lock-groups": "Verrouiller les Groupes",
         "status": "Statut",
         "lock": "Verrouiller",
-        "unlock": "Déverrouiller"
+        "unlock": "Déverrouiller",
+        "group-info": "Informations sur le groupe",
+        "not-in-group": "On dirait que vous n'êtes pas encore dans un groupe",
+        "find-or-create-group": "Rejoignez un groupe ou creez un nouveau groupe",
+        "project-info": "Information sur le projet",
+        "group-before-project": "Vous devez être dans un groupe avant de pouvoir avoir un projet",
+        "browse-projects": "Voir les projets",
+        "no-project-assigned": "Aucun projet ne vous a été attribué",
+        "project-name": "Nom du projet"
     },
     "table": {
         "student-id": "Identifiant",

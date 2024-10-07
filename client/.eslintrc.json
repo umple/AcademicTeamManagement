@@ -20,5 +20,18 @@
         "react/prop-types": "off",
         "react/jsx-key": "off",
         "camelcase": "off"
-    }
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "overrides": [
+        {
+            "files": ["**/*.test.js", "**/*.test.jsx"],
+            "env": {
+                "jest": true
+            }
+        }
+    ]
 }
