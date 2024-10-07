@@ -120,22 +120,6 @@ def add_student_to_group_by_group_id(student_email, group_id):
     
     return False
 
-def remove_student_from_group_by_email(group_id, email):
-    group = get_group_by_group_name(group_id)
-    if group is None:
-        return False
-    student_obj = student.get_student_by_email(email)
-    if student_obj["orgdefinedid"] not in group['members']:
-        return False
-    group["members"].remove(student_obj["orgdefinedid"])
-    student.remove_student_from_group(student_obj["orgdefinedid"])
-    
-    # unlock the group again
-    if "studentLock" in group and group["studentLock"]:
-        group["studentLock"] = False
-    
-    result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
-    return result
 
 def bulk_remove_students_from_group(group_id , orgdefinedid):
     group = get_group_by_group_name(group_id)

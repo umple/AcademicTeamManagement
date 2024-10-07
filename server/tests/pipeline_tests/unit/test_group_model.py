@@ -123,19 +123,6 @@ class TestGroupModification(unittest.TestCase):
         self.assertTrue("12345" in actualMembers)
 
     @patch('app.models.student.get_student_by_email')
-    def test_remove_student_from_group_by_email(self, mock_get_student_by_email):
-        # Mock the behavior of get_student_by_email
-        mock_get_student_by_email.return_value = {"orgdefinedid": "12345", "email": "test@example.com"}
-        # Add student to the group
-        group.add_student_to_group("test@example.com", self.group["_id"])
-        actual = group.remove_student_from_group_by_email(self.group["_id"], "test@example.com")
-        self.assertTrue(actual)
-
-        # Validate member is removed
-        actualMembers = group.get_group(self.group["_id"])["members"]
-        self.assertFalse("12345" in actualMembers)
-
-    @patch('app.models.student.get_student_by_email')
     def test_remove_student_from_group(self, mock_get_student_by_email):
         # Mock the behavior of get_student_by_email
         mock_get_student_by_email.return_value = {"orgdefinedid": "12345", "email": "test@example.com"}
