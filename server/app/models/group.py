@@ -122,6 +122,8 @@ def add_student_to_group_by_group_id(student_email, group_id):
 
 def remove_student_from_group_by_email(group_id, email):
     group = get_group_by_group_name(group_id)
+    if group is None:
+        return False
     student_obj = student.get_student_by_email(email)
     if student_obj["orgdefinedid"] not in group['members']:
         return False
