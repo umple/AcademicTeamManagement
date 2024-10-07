@@ -18,6 +18,7 @@ class StudentDataManager:
             "username": "1234user",
             "lastname": "Doe",
             "firstname": "jane",
+            "First Name": "Jane",
             "email": "janedoe@gmail.com",
             "sections": None,
             "final grade": None,
