@@ -198,7 +198,7 @@ const GroupTable = () => {
         }
       },
       {
-        accessorKey: 'sections',
+        accessorKey: 'related_sections',
         header: t('common.Section')
       },
       {

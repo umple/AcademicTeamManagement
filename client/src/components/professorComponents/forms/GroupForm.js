@@ -73,7 +73,7 @@ const GroupForm = ({
   const onSubmit = async (values, actions) => {
     try {
       setIsLoading(true)
-      values.group_id = values.group_id.trim()
+      // values.group_id = values.group_id.trim()
       await groupService.add(values)
 
       fetchData()
@@ -157,10 +157,10 @@ const GroupForm = ({
                           >
                             {selected.map((value) => {
                               const student = students.find(
-                                (student) => student.id === value
+                                (student) => student._id === value
                               )
                               const display =
-                                student.orgdefinedid +
+                                student.student_number +
                                 ' - ' +
                                 student.firstname +
                                 ' ' +
@@ -180,20 +180,20 @@ const GroupForm = ({
                         {students.length > 0 &&
                           students.map((student) => {
                             if (
-                              student.group === null ||
-                              student.group === ''
+                              student.group_id === null ||
+                              student.group_id === ''
                             ) {
                               return (
                                 <MenuItem
-                                  key={student.id}
-                                  value={student.id}
+                                  key={student._id}
+                                  value={student._id}
                                   style={getStyles(
                                     student.firstname,
                                     members,
                                     theme
                                   )}
                                 >
-                                  {student.id +
+                                  {student.student_number +
                                     ' - ' +
                                     student.firstname +
                                     ' ' +
@@ -240,7 +240,7 @@ const GroupForm = ({
                   )
                 }
 
-                if (column.accessorKey === 'sections') {
+                if (column.accessorKey === 'related_sections') {
                   return (
                     <FormControl>
                       <InputLabel id="section-label">

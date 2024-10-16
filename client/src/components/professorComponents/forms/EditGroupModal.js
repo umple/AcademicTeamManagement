@@ -183,18 +183,18 @@ const EditGroupModal = ({
                     >
                       {students.length > 0 &&
                         students.map((student) => {
-                          if (student.group === null || student.group === '') {
+                          if (student.group_id === null || student.group_id === '') {
                             return (
                               <MenuItem
-                                key={student.orgdefinedid}
-                                value={student.orgdefinedid}
+                                key={student._id}
+                                value={student._id}
                                 style={getStyles(
                                   student.firstname,
                                   members,
                                   theme
                                 )}
                               >
-                                {student.orgdefinedid +
+                                {student.student_number +
                                   ' - ' +
                                   student.firstname +
                                   ' ' +
@@ -245,7 +245,7 @@ const EditGroupModal = ({
                 )
               }
 
-              if (column.accessorKey === 'sections') {
+              if (column.accessorKey === 'related_sections') {
                 return (
                   <FormControl>
                     <InputLabel id="section-label">{t('common.Section')}</InputLabel>
@@ -253,7 +253,7 @@ const EditGroupModal = ({
                       labelId="section-label"
                       key={column.accessorKey}
                       name={column.accessorKey}
-                      defaultValue={groupData.original.sections}
+                      defaultValue={groupData.original.related_sections}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       error={Boolean(

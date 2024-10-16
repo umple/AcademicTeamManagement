@@ -1,11 +1,12 @@
 class Group {
   constructor (groupData) {
     this._id = groupData._id
+    // this.group_number = groupData.group_number
     this.assigned_project_id = groupData.assigned_project_id || ''
     this.professorEmail = groupData.professorEmail || ''
     this.members = groupData.members || []
     this.interest = groupData.interest || []
-    this.sections = groupData.sections || ''
+    this.related_sections = groupData.related_sections || ''
     this.notes = groupData.notes || ''
     this.studentLock = groupData.studentLock || false
     this.professorLock = groupData.professorLock || false
@@ -54,11 +55,12 @@ class Group {
   toJSON () {
     return {
       _id: this._id,
+      group_number: this.group_number,
       assigned_project_id: this.assigned_project_id,
       professorEmail: this.professorEmail,
       members: this.members,
       interest: this.interest,
-      sections: this.sections,
+      related_sections: this.related_sections,
       notes: this.notes,
       studentLock: this.studentLock,
       professorLock: this.professorLock

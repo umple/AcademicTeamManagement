@@ -19,7 +19,7 @@ def add_group(group_obj):
     try:
         if group_obj.members:
             for org in group_obj.members:
-                student.assign_group_to_student(org, groupName=group_obj.group_id)
+                student.assign_group_to_student(org, group_obj._id)
                 
         # Create project applications if students are interested in projects
         _create_project_applications_for_interested_projects(group_obj)
@@ -76,8 +76,8 @@ def add_student_to_group(group_id, student_id):
 def remove_student_from_group(group_id, student_id):
     group = get_group(ObjectId(group_id))
     if student_id in group["members"]:
-        group["members"].remove(ObjectId(student_id))
-        result = groupCollection.update_one({"group_id": ObjectId(group_id)},  {"$set" : group})
+        group["members"].remove(student_id)
+        result = groupCollection.update_one({"group_id": group_id},  {"$set" : group})
         return result
     
     return False
@@ -138,7 +138,9 @@ def update_group_by_id(id, group_obj):
         # project.change_status(group_obj["project"], "Underway")
         
         result = groupCollection.update_one({"_id": ObjectId(id)}, {"$set": data})
-        
+        print('\n\n{}\n\n'.format(result))
+
+        # REVISIT - should the function return false if update=original?
         return result.modified_count > 0
     
     except Exception as e:

@@ -117,7 +117,9 @@ describe("Submit Group Form", () => {
 
     cy.get('button[name="create-new-group"]').click();
     // Example: Fill out the form fields and submit the form
-    cy.get('input[name="group_id"]').type(groupData.group_id);
+
+    // REVISIT
+    // cy.get('input[name="group_number"]').type(groupData.group_number);
     cy.get(
       '[tabindex="0"][role="button"][aria-expanded="false"][aria-haspopup="listbox"][id="demo-multiple-chip"]'
     ).click();

@@ -23,6 +23,10 @@ def get_all_groups():
     except:
         return {"message": "Internal server error."}, 503
 
+# REVISIT
+# @group_bp.route("/group/<id>", methods=["GET"])
+# def get_group():
+
 
 @group_bp.route("/group", methods=["POST"])
 def add_group():
@@ -43,6 +47,7 @@ def update_group_by_id(id):
     try:
         group_obj = GroupEntity(id, json.loads(request.data))
         result = group.update_group_by_id(id, group_obj)
+
         if result:
             return jsonify({"message": "Group updated successfully."}), 200
         else:
