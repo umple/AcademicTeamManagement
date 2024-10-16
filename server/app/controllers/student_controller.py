@@ -63,9 +63,9 @@ def add_student():
 
 # GET Request to get a student by id
 @student_bp.route("/student/<id>", methods=["GET"])
-def get_student_by_id(id):
+def get_student(id):
     try:
-        document = student.get_student_by_id(id)
+        document = student.get_student(id)
         if document:
             document['_id'] = str(document['_id'])
             return jsonify(document), 200

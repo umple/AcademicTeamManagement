@@ -124,18 +124,21 @@ def update_group_by_id(id, group_obj):
         # if not original_group:
         #     return "Group not found"
         
-        # if "members" in group_obj and group_obj["members"]:
-        #     for org in group_obj["members"]:
-        #         student.assign_group_to_student(org, groupName=group_obj["group_id"])
-        # else:
-        #     group_obj["members"] = []
+        if not original_group:
+            return "Group not found"
+        
+        if "members" in group_obj and group_obj["members"]:
+            for org in group_obj["members"]:
+                student.assign_group_to_student(org, groupName=group_obj["group_id"], groupNumber=group_obj["group_number"])
+        else:
+            group_obj["members"] = []
 
         # if original_group["group_id"] != group_obj["group_id"]:          
         #     # update the project applications related to have the group name
         #     _update_group_name_to_project_applications(original_group["group_id"], group_obj["group_id"])
             
-        #     for orgdefinedId in group_obj["members"]:
-        #         result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"])
+            for orgdefinedId in group_obj["members"]:
+                result = student.assign_group_to_student(orgdefinedId, groupName=group_obj["group_id"], groupNumber= group_obj["group_number"])
                 
         # # Update the group lock if the section has changed
         # if "sections" not in original_group or original_group["sections"] != group_obj["sections"]:
