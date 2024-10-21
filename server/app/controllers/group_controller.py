@@ -6,7 +6,7 @@ from pymongo.errors import WriteError
 import json, traceback
 from . import group_bp
  
-@group_bp.route("/GetAllGroups", methods=["GET"])
+@group_bp.route("/groups", methods=["GET"])
 def get_all_groups():
     try:
         group_list = group.get_all_groups()
@@ -23,8 +23,12 @@ def get_all_groups():
     except:
         return {"message": "Internal server error."}, 503
 
+# REVISIT
+# @group_bp.route("/group/<id>", methods=["GET"])
+# def get_group():
 
-@group_bp.route("/AddGroup", methods=["POST"])
+
+@group_bp.route("/group", methods=["POST"])
 def add_group():
     try:
         group_obj = json.loads(request.data)
@@ -73,18 +77,12 @@ def delete_all_groups():
         return {'message': 'An error occurred: ' + str(e)}, 500
 
 # PUT Request to update a group info
-@group_bp.route("/group/update", methods=["PUT"])    
-def update_group_by_id():
+@group_bp.route("/group/update/<id>", methods=["PUT"])    
+def update_group_by_id(id):
     try:
-        group_obj = request.json
-        group_id = group_obj["_id"]
-        if not ObjectId.is_valid(group_id):
-            return {"message": "Invalid group ID."}, 400
+        group_obj = GroupEntity(id, json.loads(request.data))
+        result = group.update_group_by_id(id, group_obj)
 
-        if not group_obj:
-            return {"message": "Invalid JSON data in the request body."}, 400
-
-        result = group.update_group_by_id(group_id, group_obj)
         if result:
             return jsonify({"message": "Group updated successfully."}), 200
         else:

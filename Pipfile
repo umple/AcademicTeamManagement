@@ -4,54 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 setuptools = "*"
-<<<<<<< HEAD
->>>>>>> 99f3eb9 (finished restructuring entity files)
-=======
-flask = "*"
-flask-restful = "*"
-flask-cors = "*"
-openpyxl = "*"
-pandas = "*"
-requests-oauthlib = "*"
-pymongo = "*"
-rsa = "*"
-numpy = "*"
-flask-jwt-extended = "*"
-adal = "*"
-flask-session = "*"
-msal = "*"
-jwt = "*"
-mongomock = "*"
-coverage = "*"
->>>>>>> f72dd2d (rewrote pipfile)
-=======
-setuptools = "*"
->>>>>>> c982d47 (finished restructuring entity files)
-=======
-setuptools = "*"
->>>>>>> f3997d6 (finished restructuring entity files)
 
 [dev-packages]
 
 [requires]
-<<<<<<< HEAD
-<<<<<<< HEAD
-python_version = "3"
-
-[scripts]
-start-prod = "python run.py"
-start-stage = "python run.py"
-start-dev = "nodemon run.py"
-test-unit = "python3 -m unittest discover -v  tests/unit test_*.py"
-prod_unit_test = "coverage run -m unittest discover -v tests/pipeline_tests/unit test_*.py"
-=======
 python_version = "3.12"
->>>>>>> c982d47 (finished restructuring entity files)
-=======
-python_version = "3.12"
->>>>>>> f3997d6 (finished restructuring entity files)
