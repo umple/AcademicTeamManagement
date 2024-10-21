@@ -2,22 +2,26 @@ class GroupEntity:
     def __init__(self, id, group_data=None):
         if group_data is None:
             group_data = {}
-        self._group_id = group_data.get('group_id', '')
+        self._id = id
+        self._group_number = group_data.get('group_number', '')
+        self._group_name = group_data.get('name', '')
         self._interested_project_ids = group_data.get('interested_project_ids', '')
-        self._assigned_project_ids = group_data.get('assigned_project_ids', '')
+        self._assigned_project_id = group_data.get('assigned_project_id', '')
         self._members = group_data.get('members', '')
-        self._sections = group_data.get('sections', '')
+        self._related_sections = group_data.get('related_sections', '')
         self._notes = group_data.get('notes', '')
         self._studentLock = group_data.get('studentLock', False)
         self._professorLock = group_data.get('professorLock', False)
     
     def to_json(self):
         return {
-            'group_id': self._group_id,
+            '_id': self._id,
+            'group_number': self._group_number,
+            'group_name': self._group_name,
             'interested_project_ids': self._interested_project_ids,
-            'assigned_project_ids': self._assigned_project_ids,
+            'assigned_project_id': self._assigned_project_id,
             'members': self._members,
-            'sections': self._sections,
+            'related_sections': self._related_sections,
             'notes': self._notes,
             'studentLock': self._studentLock,
             'professorLock': self._professorLock
@@ -28,7 +32,6 @@ class GroupEntity:
 
     @property
     def interested_project_ids(self):
-<<<<<<< HEAD
         return self._interested_project_ids
 
     @interested_project_ids.setter
@@ -36,15 +39,13 @@ class GroupEntity:
         self._interested_project_ids = value
 
     @property
-    def interested_project_ids(self):
-=======
->>>>>>> 99f3eb9 (finished restructuring entity files)
-        return self._project
+    def assigned_project_id(self):
+        return self._assigned_project_id
 
-    @interested_project_ids.setter
-    def interested_project_ids(self, value):
-        self._project = value
-        
+    @assigned_project_id.setter
+    def assigned_project_id(self, value):
+        self._assigned_project_id = value
+
     @property
     def professorEmail(self):
         return self._professorEmail

@@ -36,12 +36,6 @@ class ProjectEntity:
     def project_name(self):
         return self._project_name
 
-=======
-    @property
-    def project_name(self):
-        return self._project_name
-
->>>>>>> 99f3eb9 (finished restructuring entity files)
     @project_name.setter
     def project_name(self, value):
         self._project_name = value

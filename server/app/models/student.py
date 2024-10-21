@@ -21,8 +21,8 @@ def add_student(student_obj):
         # professor = staff.get_staff_by_id(student_obj.professorId)
         # if professor is None:
         #     student_obj.professorId = None
-        if group.get_group(student_obj.group_id) == None:
-            raise KeyError("Student group id is invalid or can't be found")
+        if student_obj.group_id and group.get_group(student_obj.group_id) == None:
+                raise KeyError("Student group id is invalid or can't be found")
 
         result = studentsCollection.insert_one(student_obj.to_json())
         return result
@@ -35,13 +35,8 @@ def add_student(student_obj):
 # wouldn't it be better to only get a student object from the api
 # then get whatever attributes you need from there?
 
-<<<<<<< HEAD
 def get_student(id):
     document = studentsCollection.find_one({"_id": ObjectId(id)})
-=======
-def get_student_by_id(a):
-    document = studentsCollection.find_one({"_id": ObjectId(a)})
->>>>>>> 99f3eb9 (finished restructuring entity files)
     return document
 
 def get_student_by_email(email):
@@ -129,8 +124,8 @@ def bulk_group_update_students_by_ids(student_ids, new_group):
             
             # remove the student from the group, if it exists
             if student_old_group != '' and student_old_group != None:
-                group.bulk_remove_students_from_group(student_old_group, orgdefinedid)
-                
+                group.remove_student_from_group(student_old_group, orgdefinedid)
+                        
             if new_group != 'null':
                 # add the student to the new groupgroup_id
                 group.add_student_to_group_by_group_id(student_email, new_group)
