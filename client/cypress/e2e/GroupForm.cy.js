@@ -43,50 +43,46 @@ describe("Submit Group Form", () => {
     cy.visit("http://localhost:3000/GroupView");
   });
 
-  // it("should fill out a group form and submit it", () => {
-  //   cy.request({
-  //     method: "POST",
-  //     url: "/api/student", // Replace with the correct URL for the student endpoint
-  //     body: {
-  //       orgdefinedid: "300111311",
-  //       firstname: "username1",
-  //       lastname: "Lastname1",
-  //       email: "email1@example.com",
-  //       username: "TESTsa",
-  //       sections: "",
-  //       finalGrade: "",
-  //       group: "",
-  //       professorEmail: "test@uottawa.ca",
-  //     }, // Adjust the request body as needed
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   }).then((response) => {
-  //     body_id = response.body;
-  //     expect(response.status).to.equal(201);
-  //   });
+  it("should fill out a group form and submit it", () => {
+    cy.request({
+      method: "POST",
+      url: "/api/student", // Replace with the correct URL for the student endpoint
+      body: {
+        email: "email1@example.com",
+        firstname: "username1",
+        lastname: "Lastname1",
+        student_number: "300111311",
+        is_admin: false,
+      }, // Adjust the request body as needed
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      body_id = response.body;
+      expect(response.status).to.equal(201);
+    });
 
-  //   cy.request({
-  //     method: "POST",
-  //     url: "/api/project", // Replace with the correct URL
-  //     body: {
-  //       _id: "your-project-id", // Replace with a unique project ID
-  //       project: "MYGROUPTEST",
-  //       description: "TEST",
-  //       clientName: "ROBERT",
-  //       clientEmail: "TEST@hotmail.com",
-  //       status: "Available",
-  //       professorEmail: "test@uottawa.ca",
-  //       group: "1",
-  //       notes: "Notes",
-  //     },
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   }).then((response) => {
-  //     project_id = response.body;
-  //     expect(response.status).to.equal(200);
-  //   });
+    cy.request({
+      method: "POST",
+      url: "/api/project", // Replace with the correct URL
+      body: {
+        // _id: "your-project-id", // Replace with a unique project ID
+        project: "MYGROUPTEST",
+        description: "TEST",
+        clientName: "ROBERT",
+        clientEmail: "TEST@hotmail.com",
+        status: "Available",
+        professorEmail: "test@uottawa.ca",
+        group: "1",
+        notes: "Notes",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      project_id = response.body;
+      expect(response.status).to.equal(200);
+    });
 
   //   // Add a section
   //   cy.request({

@@ -112,13 +112,85 @@ const GroupForm = ({
               {columns.map((column) => {
                 if (column.accessorKey === 'group_number') {
                   return (
-                    <FormControl fullWidth margin="normal">
-                      <InputLabel id="group_number_section">{t('common.GroupNumber')}</InputLabel>
-                      <TextField
-                        disabled
-                        value="Will be assigned automatically"
-                        helperText="Group number will be assigned automatically upon creation."
-                      />
+                    <FormControl sx={{ m: 1, width: 300 }}>
+                      <InputLabel id="demo-multiple-chip-label">
+                        {t('common.Members')}
+                      </InputLabel>
+                      <Select
+                        labelId="demo-multiple-chip-label"
+                        id="demo-multiple-chip"
+                        multiple
+                        name={column.accessorKey}
+                        value={values[column.accessorKey]}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={Boolean(
+                          touched[column.accessorKey] &&
+                            errors[column.accessorKey]
+                        )}
+                        helperText={
+                          touched[column.accessorKey] &&
+                          errors[column.accessorKey]
+                        }
+                        input={
+                          <OutlinedInput
+                            id="select-multiple-chip"
+                            label="Chip"
+                          />
+                        }
+                        renderValue={(selected) => (
+                          <Box
+                            sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+                          >
+                            {selected.map((value) => {
+                              const student = students.find(
+                                (student) => student.id === value
+                              )
+                              const display =
+                                student.orgdefinedid +
+                                ' - ' +
+                                student.firstname +
+                                ' ' +
+                                student.lastname
+                              return (
+                                <Chip
+                                  color="primary"
+                                  key={value}
+                                  label={display}
+                                />
+                              )
+                            })}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {students.length > 0 &&
+                          students.map((student) => {
+                            if (
+                              student.group === null ||
+                              student.group === ''
+                            ) {
+                              return (
+                                <MenuItem
+                                  key={student.id}
+                                  value={student.id}
+                                  style={getStyles(
+                                    student.firstname,
+                                    members,
+                                    theme
+                                  )}
+                                >
+                                  {student.id +
+                                    ' - ' +
+                                    student.firstname +
+                                    ' ' +
+                                    student.lastname}
+                                </MenuItem>
+                              )
+                            }
+                            return null
+                          })}
+                      </Select>
                     </FormControl>
                   )
                 }
