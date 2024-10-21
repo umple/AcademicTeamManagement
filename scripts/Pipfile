@@ -11,6 +11,7 @@ name = "pypi"
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 python_version = "3.11"
 =======
 python_version = "3.12"
@@ -21,3 +22,6 @@ python_version = "3.12"
 =======
 python_version = "3.12"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+python_version = "3.12"
+>>>>>>> origin/databaseRehab

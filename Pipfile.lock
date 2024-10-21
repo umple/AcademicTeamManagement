@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             "sha256": "702ad05de9bc9de99a4807c8dde1686f31e0041d7b5f6f6b74861195a52110f5"
 =======
             "sha256": "31e17dd7c70e9583b1b8830bc62b617e046d9249b25c2a7037249f66ad64cf20"
@@ -14,6 +15,9 @@
 =======
             "sha256": "31e17dd7c70e9583b1b8830bc62b617e046d9249b25c2a7037249f66ad64cf20"
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+            "sha256": "31e17dd7c70e9583b1b8830bc62b617e046d9249b25c2a7037249f66ad64cf20"
+>>>>>>> origin/databaseRehab
         },
         "pipfile-spec": 6,
         "requires": {
@@ -30,12 +34,15 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "default": {},
 =======
 =======
 >>>>>>> c982d47 (finished restructuring entity files)
 =======
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> origin/databaseRehab
     "default": {
         "setuptools": {
             "hashes": [
@@ -49,10 +56,13 @@
     },
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 99f3eb9 (finished restructuring entity files)
 =======
 >>>>>>> c982d47 (finished restructuring entity files)
 =======
 >>>>>>> f3997d6 (finished restructuring entity files)
+=======
+>>>>>>> origin/databaseRehab
     "develop": {}
 }
