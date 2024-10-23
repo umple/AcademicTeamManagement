@@ -70,6 +70,7 @@ const GroupForm = ({
       handleClose()
       actions.resetForm()
     }
+    window.location.reload(true)
   }
 
   const {
