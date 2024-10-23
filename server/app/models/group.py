@@ -42,10 +42,7 @@ def add_group(group_obj):
             project.change_status(group_obj["project"], "Underway")
         
         insert_result = groupCollection.insert_one(group_obj)
-        # get the updated group list
-        updated_groups = get_all_groups()
-
-        return {"status": "success", "groups": updated_groups}
+        return insert_result, next_group_number
     except Exception as e:
         # Raise the exception so it can be caught and handled in the calling code
         raise e
