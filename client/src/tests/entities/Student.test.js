@@ -1,4 +1,4 @@
-import Student from '../../entities/Student' // adjust the path based on your project structure
+import Student from '../../entities/Student'
 
 describe('Student class', () => {
   let student
