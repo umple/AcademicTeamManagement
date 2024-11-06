@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import MaterialReactTable from 'material-react-table'
+import Tooltip from '@mui/material/Tooltip'
 
 import {
   Box,
@@ -220,15 +221,40 @@ const StudentGroupTable = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h2" align="center" fontWeight="fontWeight" sx={{ marginBottom: '1rem', marginTop: '9rem' }}>{t('group-table.student-groups')}</Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        disabled={isCurrentUserInGroup}
-        onClick={openCreateStudentGroupModal} // Open the create student group modal when the button is clicked
-        sx={{ marginBottom: '1rem' }}
+      <Tooltip
+        title={isCurrentUserInGroup ? 'You are already in a group and not able to create another group' : ''}
+        arrow
+        componentsProps={{
+          tooltip: {
+            sx: {
+              backgroundColor: '#f44336',
+              color: 'white',
+              fontSize: '14px',
+              padding: '10px 15px',
+              borderRadius: '4px',
+              boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.2)',
+              marginLeft: '13px'
+            }
+          },
+          arrow: {
+            sx: {
+              color: '#f44336'
+            }
+          }
+        }}
       >
-        {t('group-table.create-group')}
-      </Button>
+        <span>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={isCurrentUserInGroup}
+            onClick={openCreateStudentGroupModal}
+            sx={{ marginBottom: '1rem' }}
+          >
+            {t('group-table.create-group')}
+          </Button>
+        </span>
+      </Tooltip>
       {(update || createModalOpen) && (
         <StudentGroupForm
           columns={columns}
@@ -257,118 +283,124 @@ const StudentGroupTable = () => {
             <CircularProgress />
           )
         : (
-            <MaterialReactTable
-              displayColumnDefOptions={{
-                'mrt-row-actions': {
-                  muiTableHeadCellProps: {
-                    align: 'center'
+          <MaterialReactTable
+            displayColumnDefOptions={{
+              'mrt-row-actions': {
+                muiTableHeadCellProps: {
+                  align: 'center'
+                },
+                size: 120
+              }
+            }}
+
+            enablePagination={false}
+            columns={columns}
+            data={tableData}
+            editingMode="modal"
+            enableColumnOrdering
+            enableColumnResizing
+            columnResizeMode="onChange" // default is "onEnd"
+            defaultColumn={{
+              minSize: 100,
+              size: 150 // default size is usually 180
+            }}
+            enableEditing
+            localization={tableLocalization}
+            initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact' }}
+            renderRowActions={({ row, table }) => {
+              const joinGroup = () => {
+                fetch('api/add/group/member', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
                   },
-                  size: 120
-                }
-              }}
-
-              enablePagination={false}
-              columns={columns}
-              data={tableData}
-              editingMode="modal"
-              enableColumnOrdering
-              enableColumnResizing
-              columnResizeMode="onChange" // default is "onEnd"
-              defaultColumn={{
-                minSize: 100,
-                size: 150 // default size is usually 180
-              }}
-              enableEditing
-              localization={tableLocalization}
-              initialState={{ showColumnFilters: false, showGlobalFilter: true, density: 'compact' }}
-              renderRowActions={({ row, table }) => {
-                const joinGroup = () => {
-                  fetch('api/add/group/member', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(row)
+                  body: JSON.stringify(row)
+                })
+                  .then((response) => {
+                    if (!response.ok) {
+                      throw new Error('Something happened')
+                    }
+                    return response.json()
                   })
-                    .then((response) => {
-                      if (!response.ok) {
-                        throw new Error('Something happened')
-                      }
-                      return response.json()
-                    })
-                    .then((data) => {
-                      fetchData()
-                      setShowAlert(false)
-                      setShowJoinedTeam(true)
-                    })
-                    .catch((error) => {
-                      console.error('Error:', error)
-                    })
+                  .then((data) => {
+                    fetchData()
+                    setShowAlert(false)
+                    setShowJoinedTeam(true)
+                  })
+                  .catch((error) => {
+                    console.error('Error:', error)
+                  })
+              }
+
+              const isLastStudentInGroup = () => {
+                return !(group && groupMembers.length > 1)
+              }
+
+              const handleLeaveGroup = async (orgdefinedId) => {
+                console.log('Entered handleLeaveGroup')
+
+                if (isLastStudentInGroup()) {
+                  alert('There should be at least one member in the group')
+                  return
                 }
 
-                const isLastStudentInGroup = () => {
-                  return !(group && groupMembers.length > 1)
-                }
-
-                const handleLeaveGroup = () => {
-                  if (isLastStudentInGroup()) {
-                    alert('There should be at least one member in the group')
-                    return
-                  }
-                  fetch(`api/remove/group/member/${group}`, {
+                try {
+                  const response = await fetch(`/api/remove/group/member/${group}/${orgdefinedId}`, {
                     method: 'DELETE',
                     headers: {
                       'Content-Type': 'application/json'
                     }
                   })
-                    .then((response) => {
-                      return response.json()
-                    })
-                    .then((data) => {
-                      fetchData()
-                      setGroup({})
-                      setisCurrentUserInGroup(false)
-                    })
-                    .catch((error) => console.error(error))
-                }
 
-                const handleAlertClose = (event, reason) => {
-                  if (reason === 'clickaway') {
-                    return
+                  if (!response.ok) {
+                    console.error(`Failed to leave group: ${response.status} ${response.statusText}`)
+                    throw new Error(`Failed to leave group: ${response.status} ${response.statusText}`)
                   }
-                  setShowAlert(false)
+                  fetchData()
+                  setGroup({})
+                  setisCurrentUserInGroup(false)
+                } catch (error) {
+                  console.error('Error leaving group:', error)
                 }
+              }
 
-                const handleJoinClick = async () => {
-                  joinGroup()
+              const handleAlertClose = (event, reason) => {
+                if (reason === 'clickaway') {
+                  return
                 }
+                setShowAlert(false)
+              }
 
-                return (
-                  <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-                    <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || (typeof group !== 'undefined' && row.original.group_id === group) || row.original.members.length >= 5 || row.original.professorLock || row.original.studentLock || (row.original.sections !== currentStudent.sections)}>{t('group-table.join')}</Button>
-                    {row.original.group_id === group && <Button disabled={row.original.professorLock} color= "error" onClick={() => handleLeaveGroup()}> {t('common.Leave')} </Button>}
-                    <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-                      <Alert
-                        onClose={handleAlertClose}
-                        severity="warning"
-                        action={
-                          <>
-                            <Button color="inherit" onClick={() => setShowAlert(false)}>
-                              {t('common.Cancel')}
-                            </Button>
-                            <Button color="inherit" onClick={joinGroup}>
-                              {t('group-table.join')}
-                            </Button>
-                          </>
-                        }
-                      >
-                        {t('group-table.confirmation')}
-                      </Alert>
-                    </Snackbar>
-                  </Box>
-                )
-              }}
-            />)}
+              const handleJoinClick = async () => {
+                joinGroup()
+              }
+
+              return (
+                <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
+                  <Button onClick={() => handleJoinClick()} disabled={isCurrentUserInGroup || (typeof group !== 'undefined' && row.original.group_id === group) || row.original.members.length >= 5 || row.original.professorLock || row.original.studentLock || (row.original.sections !== currentStudent.sections)}>{t('group-table.join')}</Button>
+                  {row.original.group_id === group && <Button disabled={row.original.professorLock} color="error" onClick={() => handleLeaveGroup(currentStudent.orgdefinedid)}> {t('common.Leave')} </Button>}
+                  <Snackbar open={showAlert} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                    <Alert
+                      onClose={handleAlertClose}
+                      severity="warning"
+                      action={
+                        <>
+                          <Button color="inherit" onClick={() => setShowAlert(false)}>
+                            {t('common.Cancel')}
+                          </Button>
+                          <Button color="inherit" onClick={joinGroup}>
+                            {t('group-table.join')}
+                          </Button>
+                        </>
+                      }
+                    >
+                      {t('group-table.confirmation')}
+                    </Alert>
+                  </Snackbar>
+                </Box>
+              )
+            }}
+          />)}
     </Box>
   )
 }

@@ -10,8 +10,9 @@ import {
   InputLabel,
   Select
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import studentService from '../../../services/studentService'
+import { RefreshContext } from '../../../contexts/RefreshContext'
 import { useTranslation } from 'react-i18next'
 import { getUserType } from '../../../helpers/UserType'
 import groupService from '../../../services/groupService'
@@ -26,6 +27,7 @@ const MoveStudentsModal = ({
   fetchStudents,
   setRowSelection
 }) => {
+  const { setRefreshTrigger } = useContext(RefreshContext)
   // Set the translation
   const { t } = useTranslation()
 
@@ -78,7 +80,9 @@ const MoveStudentsModal = ({
       await studentService.updateGroupBulkStudents(studentsSelected, newGroup)
       setMoveStudentsModalOpen(false)
       setRowSelection({})
-      fetchStudents()
+      await fetchStudents()
+      await fetchGroups()
+      setRefreshTrigger(prev => !prev)
     } catch (error) {
       console.log(error)
     }

@@ -14,6 +14,7 @@ import {
   TextField,
   Autocomplete
 } from '@mui/material'
+import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 import { useFormik } from 'formik'
 import React, { useState } from 'react'
@@ -30,12 +31,13 @@ const GroupForm = ({
   projects,
   students,
   sections,
+  setRefreshTrigger,
   groups,
   setCreateModalOpen,
   update,
   editingRow
 }) => {
-  const [setAutoGroupNumber] = useState('Will be assigned automatically')
+  const [, setAutoGroupNumber] = useState('Will be assigned automatically')
   const [isFocused, setIsFocused] = useState(false)
   const { t } = useTranslation()
   const [isloading, setIsLoading] = useState(false)
@@ -55,10 +57,11 @@ const GroupForm = ({
       const addResponse = await groupService.add(values)
 
       if (addResponse.success) {
+        await fetchData()
         // Update the UI or state with the new group number
         setAutoGroupNumber(`Group Number: ${addResponse.groupNumber}`)
+        setRefreshTrigger(prev => !prev)
 
-        fetchData()
         console.log(addResponse.message) // "Group added successfully"
       } else {
         console.error(addResponse.message) // Log or show the error message
@@ -240,6 +243,13 @@ const GroupForm = ({
                           </MenuItem>
                         ))}
                       </Select>
+                      {touched[column.accessorKey] && errors[column.accessorKey]
+                        ? (
+                      <Typography variant="caption" color="error" sx={{ mt: 1 }}>
+                      {errors[column.accessorKey]} {/* Display the error message */}
+                      </Typography>
+                          )
+                        : null}
                     </FormControl>
                   )
                 }

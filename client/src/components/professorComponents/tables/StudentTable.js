@@ -23,12 +23,15 @@ import React, {
   useEffect,
   useMemo,
   useState,
-  useRef
+  useRef,
+  useContext
 } from 'react'
 import { FilterDataByProfessor } from '../../../helpers/FilterDataByProfessor'
 import { csvOptions, handleExportData } from '../../../helpers/exportData'
 import studentService from '../../../services/studentService'
+import groupService from '../../../services/groupService'
 import ImportStudents from '../ImportStudents'
+import { RefreshContext } from '../../../contexts/RefreshContext'
 import StudentForm from '../forms/StudentForm'
 import { useStyles } from './styles/StudentTableStyles'
 import ConfirmDeletionModal from '../../common/ConfirmDeletionModal'
@@ -112,7 +115,7 @@ const StudentTable = () => {
   const [editingRow, setEditingRow] = useState(null)
   const [deletionModal, setDeletionModal] = useState(false)
   const [moveStudentsModalOpen, setMoveStudentsModalOpen] = useState(false)
-  const [refreshTrigger, setRefreshTrigger] = useState(false)
+  const { refreshTrigger, setRefreshTrigger } = useContext(RefreshContext)
   const table = useRef(null)
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
   const [showAllRows, setShowAllRows] = useState(false)
@@ -141,6 +144,7 @@ const StudentTable = () => {
     try {
       let userType = ''
       const students = await studentService.get()
+      console.log('Fetched students in StudentTable after creation:', students)
 
       await getUserType()
         .then((type) => {
@@ -168,16 +172,35 @@ const StudentTable = () => {
     }
   }
 
-  useEffect(() => {
-    fetchUserRole()
-    fetchStudents()
-  }, [refreshTrigger])
+  const fetchGroups = async () => {
+    try {
+      const groups = await groupService.get()
+
+      const userType = await getUserType().catch((error) => {
+        console.error(error)
+      })
+
+      if (groups.groups && groups.message !== 'Group list is empty.') {
+        let filteredGroupTableData
+
+        if (userType === ROLES.ADMIN) {
+          filteredGroupTableData = groups.groups// Show all data for admin users
+        } else {
+          filteredGroupTableData = FilterDataByProfessor(groups.groups, professorEmail())// Filter data for professors
+        }
+        console.log(filteredGroupTableData)
+      }
+    } catch (error) {
+      console.error('Error fetching groups:', error)
+    }
+  }
 
   const handleDeletion = async (row) => {
     try {
       await studentService.delete(row.original._id)
       setOpenDeletion(false)
       fetchStudents()
+      fetchGroups()
     } catch (error) {
       console.log(error)
     }
@@ -189,10 +212,17 @@ const StudentTable = () => {
       setDeletionModal(false)
       setRowSelection({})
       fetchStudents()
+      fetchGroups()
     } catch (error) {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    fetchUserRole()
+    fetchStudents()
+    fetchGroups()
+  }, [refreshTrigger])
 
   const csvExporter = new ExportToCsv(csvOptions('StudentsFromAcTeams-'))
   const [isImportModalOpen, setImportModalOpen] = useState(false)
@@ -380,6 +410,7 @@ const StudentTable = () => {
                 studentsSelected={rowSelection}
                 fetchStudents={fetchStudents}
                 setRowSelection={setRowSelection}
+                setRefreshTrigger={setRefreshTrigger}
               />
             )}
           </Box>

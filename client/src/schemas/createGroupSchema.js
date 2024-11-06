@@ -18,7 +18,7 @@ const createGroupSchema = (groups, _id) => {
       }),
     // project: Yup.string().required("Project name is required"),
     // members: Yup.array().min(1, "At least one member is required"),
-    sections: Yup.string().required('Section is required'),
+    sections: Yup.string().required('You should at least choose a section for this group'),
     notes: Yup.string()
   })
   return groupSchema

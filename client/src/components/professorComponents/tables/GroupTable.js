@@ -11,10 +11,11 @@ import {
 import Chip from '@mui/material/Chip'
 import { ExportToCsv } from 'export-to-csv' // or use your library of choice here
 import MaterialReactTable from 'material-react-table'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, useContext } from 'react'
 import { FilterDataByProfessor } from '../../../helpers/FilterDataByProfessor'
 import { csvOptions, handleExportData } from '../../../helpers/exportData'
 import groupService from '../../../services/groupService'
+import { RefreshContext } from '../../../contexts/RefreshContext'
 import projectService from '../../../services/projectService'
 import studentService from '../../../services/studentService'
 import sectionService from '../../../services/sectionService'
@@ -42,10 +43,10 @@ const GroupTable = () => {
   const [message] = useState('')
   const [deletion, setDeletion] = useState(false)
   const [row, setDeleteRow] = useState()
-  const [refreshTrigger, setRefreshTrigger] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingRow, setEditingRow] = useState(null)
   const location = useLocation()
+  const { refreshTrigger, setRefreshTrigger } = useContext(RefreshContext)
 
   // handle translation
   const { t, i18n } = useTranslation()
@@ -133,31 +134,25 @@ const GroupTable = () => {
         accessorKey: 'members',
         header: t('common.Members'),
         Cell: ({ cell }) => {
-          if (
-            Array.isArray(cell.getValue('members')) &&
-            cell.getValue('members').length > 0
-          ) {
-            if (students.length !== 0) {
-              return cell.getValue('members').map((value, index) => {
-                const student = students.find((student) => {
-                  return student.orgdefinedid === value
-                })
+          const membersArray = cell.getValue()
 
-                if (typeof student !== 'undefined') {
-                  const display = student.firstname + ' ' + student.lastname
-                  return (
-                    <div>
-                      <Chip
-                        sx={{ marginBottom: '5px' }}
-                        color="success"
-                        label={display}
-                      />
-                    </div>
-                  )
-                }
-                return null
-              })
-            }
+          if (Array.isArray(membersArray) && membersArray.length > 0) {
+            return membersArray.map((value, index) => {
+              const student = students.find(student => student.orgdefinedid === value)
+              if (student) {
+                const display = `${student.firstname} ${student.lastname}`
+                return (
+                  <div key={index}>
+                    <Chip
+                      sx={{ marginBottom: '5px' }}
+                      color="success"
+                      label={display}
+                    />
+                  </div>
+                )
+              }
+              return null
+            })
           } else {
             return (
               <Chip
@@ -333,8 +328,15 @@ const GroupTable = () => {
   const handleDeletion = async (row) => {
     try {
       await groupService.delete(row.original._id)
+
+      const studentsInGroup = tableData.filter(student => student.group === row.original.group_id)
+      await Promise.all(studentsInGroup.map(student => {
+        return studentService.update(student._id, { group: null, group_number: null })
+      }))
+
       setDeletion(false)
       fetchData()
+      setRefreshTrigger(prev => !prev)
     } catch (error) {
       console.log(error)
     }
@@ -434,6 +436,7 @@ const GroupTable = () => {
         students={students}
         sections={sections}
         groups={tableData}
+        setRefreshTrigger={setRefreshTrigger}
       />
 
       {pageSize === DEFAULT_PAGE_SIZE &&
