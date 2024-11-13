@@ -26,6 +26,9 @@ $ pipenv run start-dev
 # Execute the `test-unit` script
 $ pipenv run test-unit
 ```
+## Architecture Information
+![image](https://github.com/user-attachments/assets/52e0326e-d3ce-4600-80ad-b4199af48eab)
+
 
 ## FAQ
 
