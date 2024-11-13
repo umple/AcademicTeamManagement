@@ -135,16 +135,14 @@ def bulk_remove_students_from_group(group_id , orgdefinedid):
     
     return False
 
-def remove_student_from_group(id, orgdefinedId):
-    originalGroup  = get_group(id)  # Assuming this fetches the group correctly
-    
-    for orgdefinedId in originalGroup["members"]:
-            _ = student.assign_group_to_student(orgdefinedId, groupName=None, groupNumber=None)
-    result = groupCollection.update_one(
-        {"_id": ObjectId(id)},
-        {"$set": {"members": []}}
+def remove_student_from_group(group_id, orgdefinedId):
+    groupCollection.update_one(
+        {"group_id": group_id},
+        {"$pull": {"members": orgdefinedId}}
     )
-    return result
+    student.assign_group_to_student(orgdefinedId, groupName=None, groupNumber=None)
+
+    return True
 
 def get_user_group(user_email):
     student_obj = student.get_student_by_email(user_email)

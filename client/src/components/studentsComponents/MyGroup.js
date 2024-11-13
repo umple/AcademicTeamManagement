@@ -18,6 +18,7 @@ import { Delete } from '@mui/icons-material'
 import ConfirmDeletionModal from '../common/ConfirmDeletionModal'
 
 const MyGroup = () => {
+  const [currentStudent, setCurrentStudent] = useState({})
   const [group, setGroup] = useState({})
   const [students, setStudents] = useState()
   const [loading, setIsLoading] = useState(false)
@@ -85,6 +86,9 @@ const MyGroup = () => {
       const studentsData = await fetchData('api/students')
       studentsData && setStudents(studentsData.students)
 
+      const userEmail = JSON.parse(localStorage.getItem('userEmail'))
+      const currentStudentData = studentsData.students.find(student => student.email === userEmail)
+      setCurrentStudent(currentStudentData)
       const projectApplicationsData = await fetchData('api/retrieve/project/application')
       projectApplicationsData && setProjectApplications(projectApplicationsData)
     } catch (error) {
@@ -144,7 +148,8 @@ const MyGroup = () => {
         alert('There should be at least one member in the group')
         return
       }
-      const response = await fetch(`api/remove/group/member/${group.group_id}`, {
+      const orgdefinedId = currentStudent.orgdefinedid
+      const response = await fetch(`api/remove/group/member/${group.group_id}/${orgdefinedId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -222,7 +227,7 @@ const MyGroup = () => {
   }
 
   return (
-    <Box sx={{ mt: 3 }}>
+    <Box sx={{ mt: 3, marginTop: '10rem' }}>
       <Snackbar
         open={showAlert}
         onClose={() => setShowAlert(false)}
@@ -380,7 +385,7 @@ const MyGroup = () => {
           {typeof applications !== 'undefined' || applications
             ? (
             <Box sx={{ mt: 2, ml: 4, mr: 4 }}>
-              <Typography variant="h4" sx={{ mb: 2 }}>
+              <Typography variant="h2" align="center" fontWeight="fontWeight" sx={{ mb: 2 }}>
                   {t('project.project-applications')}
               </Typography>
               <MaterialReactTable

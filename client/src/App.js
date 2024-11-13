@@ -1,10 +1,13 @@
+import React, { useEffect } from 'react' // Import useEffect
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import './App.css'
+import { RefreshProvider } from './contexts/RefreshContext'
 import PrivateRoutes from './Authentication/PrivateRoutes'
 import RoleBasedRoutes from './Authentication/RoleBasedRoutes'
 import ResponsiveAppBar from './components/StaticComponents/NavBar/ResponsiveAppBar'
 import PageNotFound from './components/StaticComponents/PageNotFound/PageNotFound'
 import { ROLES } from './helpers/Roles'
+import { getUserEmail } from './helpers/UserEmail'
 
 // login page
 import LoginPage from './pages/LoginPage'
@@ -30,7 +33,21 @@ import StudentProjectPage from './pages/studentPages/StudentProjectPage'
 import SettingsPage from './pages/SettingsPage'
 
 const App = () => {
+  useEffect(() => {
+    // Fetch user email once the app loads
+    const fetchUserEmail = async () => {
+      try {
+        const email = await getUserEmail()
+        console.log('Fetched user email after app load:', email)
+      } catch (error) {
+        console.error('Error fetching user email on app load:', error)
+      }
+    }
+
+    fetchUserEmail()
+  }, [])
   return (
+    <RefreshProvider>
     <Router>
       <div>
         <div className="App">
@@ -82,6 +99,7 @@ const App = () => {
         </div>
       </div>
     </Router>
+    </RefreshProvider>
   )
 }
 
