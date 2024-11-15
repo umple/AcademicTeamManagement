@@ -6,11 +6,11 @@ export const getUserType = async () => {
     return cachedUserType // Return the cached value if available
   }
 
-  const cachedValue = localStorage.getItem(CACHE_KEY)
-  if (cachedValue !== 'undefined' && cachedValue !== null) {
-    cachedUserType = JSON.parse(cachedValue)
-    return cachedUserType
-  }
+  // const cachedValue = localStorage.getItem(CACHE_KEY)
+  // if (cachedValue !== 'undefined' && cachedValue !== null) {
+  //   cachedUserType = JSON.parse(cachedValue)
+  //   return cachedUserType
+  // }
 
   // check the user type from the database based on the user email
   try {
