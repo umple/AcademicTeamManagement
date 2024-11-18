@@ -43,7 +43,8 @@ def add_user():
 def get_user_role_by_email():
     try:
         print('\n\n{}\n\n'.format(session.get("user")))
-        email = session.get("user")["email"]
+        # email = session.get("user")["email"]
+        email = session.get("user")["preferred_username"]
         document = user.get_user_by_email(email)
         if document:
             return jsonify(document["role"]), 200, {'Access-Control-Allow-Credentials': 'true'}
