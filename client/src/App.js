@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react' // Import useEffect
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Route, BrowserRouter as Router, Routes, Navigate } from 'react-router-dom'
 import './App.css'
 import { RefreshProvider } from './contexts/RefreshContext'
 import PrivateRoutes from './Authentication/PrivateRoutes'
@@ -65,6 +65,7 @@ const App = () => {
                 <Route path="/AdminSections" element={<ProfessorSectionPage />}></Route>
                 <Route path="/AdminStaff" element={<AdminStaffPage />}></Route>
                 <Route path="/Settings" element={<SettingsPage />}></Route>
+                <Route path="/ProfessorHome" element={<Navigate to="/AdminHome" />}></Route>
               </Route>
 
               <Route element={<RoleBasedRoutes allowedRole={ROLES.PROFESSOR} />}>
