@@ -1,3 +1,5 @@
+// Initializes i18n for internationalization in the app and enables language support with English and French translations.
+
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 

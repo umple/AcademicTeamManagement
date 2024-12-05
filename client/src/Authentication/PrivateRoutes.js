@@ -1,3 +1,7 @@
+// Only authenticated users can access certain routes.
+// If the user is authenticated, it renders the child components (via Outlet).
+// If not, the user is redirected to the login page.
+
 import { useState } from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
 
