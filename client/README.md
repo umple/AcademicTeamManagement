@@ -1,70 +1,51 @@
-# Getting Started with Create React App
+# Client - Academic Team Management
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This directory contains the frontend code for the **Academic Team Management** web application, built with **React**. The client side is responsible for providing a user-friendly interface for managing academic teams, students, and projects.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Role-Based Access**: Secure navigation and functionality based on user roles (e.g., Student, Professor, Admin).
+- **Dynamic Translations**: Supports English and French through i18n integration.
+- **Responsive Design**: Optimized for desktop and mobile devices.
+- **State Management**: Efficient state handling using React's `useState` and `useEffect`.
 
-### `npm start`
+## Structure Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Components**: Reusable UI elements like buttons, forms, and modals.
+- **Pages**: Views that correspond to application routes (e.g., Dashboard, Student Groups, Projects).
+- **Helpers**: Utility functions and quick scripts for handling specific tasks like session checks.
+- **Services**: Comprehensive modules for API interaction and data fetching.
+- **Styles**: CSS and styling configurations for maintaining a consistent design.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Key Files
 
-### `npm test`
+- **`App.js`**: Main application entry point, defines routing and layout.
+- **`i18n.js`**: Handles app localization and translations.
+- **`.env`**: Configuration file for environment variables (e.g., backend API URL).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Development Workflow
 
-### `npm run build`
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+2. **Run Development Server**:
+   ```bash
+   npm start
+   ```
+   The app will be accessible at `http://localhost:3000`.
+3. **Build for Production**:
+   ```bash
+   npm run build
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Environment Variables
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **`REACT_APP_BACKEND_HOST`**: Backend API URL (e.g., `http://localhost:5000`).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Technologies Used
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **React**: For building the user interface.
+- **React Router**: For navigation and routing.
+- **i18next**: For internationalization.
+- **Axios/Fetch**: For API communication.
